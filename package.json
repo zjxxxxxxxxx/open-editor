@@ -1,0 +1,58 @@
+{
+  "private": true,
+  "name": "@open-editor/monorepo",
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "packageManager": "pnpm@7.29.3",
+  "type": "module",
+  "scripts": {
+    "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
+    "clean": "rimraf -g '{packages/**/{.turbo,dist},node_modules/.cache/*}'",
+    "dev": "turbo run dev --filter @open-editor/* --log-order grouped",
+    "dev:watch": "turbo run dev:watch --filter @open-editor/* --log-order stream",
+    "example": "esno scripts/example.ts",
+    "lint": "pnpm eslint . --ext .ts,.tsx",
+    "format": "prettier --write '**/*.{ts,tsx,md}'",
+    "install:ci": "pnpm --filter @open-editor/* install",
+    "install:hook": "simple-git-hooks",
+    "postinstall": "pnpm install:hook",
+    "release": "pnpm build && changeset publish --registry=https://registry.npmjs.com/",
+    "test": "turbo run test",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^0.4.8",
+    "@changesets/cli": "^2.26.2",
+    "@rollup/plugin-commonjs": "^25.0.3",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-typescript": "^11.1.2",
+    "@types/node": "^20.4.2",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "chalk": "^5.3.0",
+    "concurrently": "^8.2.0",
+    "consola": "^3.2.3",
+    "enquirer": "^2.3.6",
+    "eslint": "^8.44.0",
+    "esno": "^0.17.0",
+    "fast-glob": "^3.3.0",
+    "minimist": "^1.2.8",
+    "prettier": "^3.0.0",
+    "rimraf": "^5.0.1",
+    "rollup": "^3.26.2",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "simple-git-hooks": "^2.8.1",
+    "tslib": "^2.6.0",
+    "turbo": "^1.10.7",
+    "typescript": "^5.1.6"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint && pnpm format && pnpm typecheck && pnpm build"
+  }
+}
