@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "es2015",
+    "module": "ESNext",
+    "strict": false,
+    "noEmit": true,
+    "stripInternal": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules"],
+  "include": ["scripts/**/*", "rollup.config.ts"]
+}

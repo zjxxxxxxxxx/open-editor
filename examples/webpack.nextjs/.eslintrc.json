@@ -1,0 +1,6 @@
+{
+  "extends": "next",
+  "rules": {
+    "next/no-html-link-for-pages": 0
+  }
+}

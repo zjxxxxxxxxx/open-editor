@@ -1,0 +1,42 @@
+{
+  "name": "@open-editor/server",
+  "version": "0.0.0",
+  "description": "internal utils shared across @open-editor packages",
+  "main": "dist/server.cjs.js",
+  "module": "dist/server.esm.js",
+  "types": "dist/server.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "esno ../../scripts/build.ts",
+    "ok": "esno src/index.ts",
+    "dev": "pnpm build -d",
+    "dev:watch": "pnpm dev -w",
+    "test": "node console.log('@open-editor/server test')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/server"
+  },
+  "keywords": [
+    "open-editor"
+  ],
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/server#readme",
+  "dependencies": {
+    "@open-editor/shared": "workspace:^0.0.0",
+    "connect": "^3.7.0",
+    "cors": "^2.8.5",
+    "launch-editor": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/connect": "^3.4.35",
+    "@types/cors": "^2.8.13"
+  }
+}
