@@ -17,6 +17,7 @@ export default [buildBundles(), buildDTS()];
 
 function buildBundles(): RollupOptions {
   const input = [entryFile];
+
   const bundles: OutputOptions[] = [
     {
       file: resolve(__PACKAGE_ROOT__, packageJson.module),
@@ -44,7 +45,7 @@ function buildBundles(): RollupOptions {
     plugins: [
       esbuildPlugin({
         tsconfig: tsconfigFile,
-        target: __DEV__ ? 'esnext' : 'es2015',
+        target: __DEV__ ? 'es6' : 'es6',
         minify: !__DEV__,
       }),
       nodeResolve(),

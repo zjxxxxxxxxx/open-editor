@@ -1,4 +1,4 @@
-import { HTML_ROOT_ELEMENT } from './constants';
+import { InternalElements } from './constants';
 import { defineElements } from './elements/defineElements';
 import { HTMLRootElement } from './elements/defineRootElement';
 
@@ -8,9 +8,9 @@ export interface SetupClientOptions {
    */
   enablePointer?: boolean;
   /**
-   *
+   * internal server address
    */
-  port: number;
+  serverAddress: string;
 }
 
 export function setupClient(options: SetupClientOptions) {
@@ -18,11 +18,13 @@ export function setupClient(options: SetupClientOptions) {
   defineElements();
 
   window.addEventListener('DOMContentLoaded', () => {
-    const { enablePointer = true, port } = options;
-    const root = document.createElement(HTML_ROOT_ELEMENT) as HTMLRootElement;
+    const { enablePointer = true, serverAddress } = options;
+    const root = document.createElement(
+      InternalElements.HTML_ROOT_ELEMENT,
+    ) as HTMLRootElement;
     root.setOptions({
       enablePointer,
-      port,
+      serverAddress,
     });
     document.body.appendChild(root);
   });

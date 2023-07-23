@@ -1,17 +1,20 @@
-import {
-  HTML_OVERLAY_ELEMENT,
-  HTML_POINTER_ELEMENT,
-  HTML_ROOT_ELEMENT,
-} from '../constants';
+import { OPEN_EDITOR_PATH } from '@open-editor/shared';
+import { InternalElements } from '../constants';
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLPointerElement } from './definePointerElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
-import { resolveFilename } from '../utils/resolveFilename';
-import { OPEN_EDITOR_PATH } from '@open-editor/shared';
+import { resolveSource } from '../utils/resolveSource';
+import { applyAttribute } from '../utils/element';
 
 export interface HTMLRootElementOptions {
-  enablePointer: boolean;
-  port: number;
+  /**
+   * render the pointer into the browser
+   */
+  enablePointer?: boolean;
+  /**
+   * internal server address
+   */
+  serverAddress: string;
 }
 
 export interface HTMLRootElement extends HTMLElement {
@@ -32,7 +35,9 @@ export function defineRootElement() {
 
     set #active(value) {
       this.#_active = value;
-      this.#pointer?.setAttribute('active', String(value));
+      applyAttribute(this.#pointer, {
+        active: value,
+      });
     }
 
     #mousePoint: MouseEvent;
@@ -42,10 +47,10 @@ export function defineRootElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
       this.#overlay = document.createElement(
-        HTML_OVERLAY_ELEMENT,
+        InternalElements.HTML_OVERLAY_ELEMENT,
       ) as HTMLOverlayElement;
       this.#pointer = document.createElement(
-        HTML_POINTER_ELEMENT,
+        InternalElements.HTML_POINTER_ELEMENT,
       ) as HTMLPointerElement;
 
       shadow.appendChild(this.#overlay);
@@ -56,7 +61,9 @@ export function defineRootElement() {
       this.#options = options;
 
       if (options.enablePointer) {
-        this.#pointer.setAttribute('enable', 'true');
+        applyAttribute(this.#pointer, {
+          enable: true,
+        });
       }
     }
 
@@ -64,14 +71,14 @@ export function defineRootElement() {
       window.addEventListener('keydown', this.#onKeydown);
       window.addEventListener('mousemove', this.#onMousePointChange);
 
-      this.#pointer.addEventListener('activechange', this.#onActiveChange);
+      this.#pointer.addEventListener('toggle', this.#toggleActive);
     }
 
     disconnectedCallback() {
       window.removeEventListener('keydown', this.#onKeydown);
       window.removeEventListener('mousemove', this.#onMousePointChange);
 
-      this.#pointer.removeEventListener('activechange', this.#onActiveChange);
+      this.#pointer.removeEventListener('toggle', this.#toggleActive);
 
       this.#cleanupHandlers();
     }
@@ -81,9 +88,9 @@ export function defineRootElement() {
     };
 
     #onKeydown = (event: KeyboardEvent) => {
-      // start
-      if (event.altKey && event.shiftKey && event.keyCode === 79) {
-        this.#setupHandlers();
+      // toggle
+      if (event.altKey && event.metaKey && event.keyCode === 79) {
+        this.#toggleActive();
       }
       // stop
       else if (event.keyCode === 27) {
@@ -91,8 +98,8 @@ export function defineRootElement() {
       }
     };
 
-    #onActiveChange = (event: CustomEvent) => {
-      if (event.detail) {
+    #toggleActive = () => {
+      if (!this.#active) {
         this.#setupHandlers();
       } else {
         this.#cleanupHandlers();
@@ -131,10 +138,10 @@ export function defineRootElement() {
     }
 
     #openEditor(element: HTMLElement) {
-      const { port } = this.#options;
-      const filename = resolveFilename(element);
-      if (filename) {
-        fetch(`http://localhost:${port}${OPEN_EDITOR_PATH}${filename}`).then(
+      const { serverAddress } = this.#options;
+      const source = resolveSource(element);
+      if (source) {
+        fetch(`http://${serverAddress}${OPEN_EDITOR_PATH}${source.fileName}`).then(
           () => {
             this.#cleanupHandlers();
           },
@@ -143,5 +150,5 @@ export function defineRootElement() {
     }
   }
 
-  customElements.define(HTML_ROOT_ELEMENT, RootElement);
+  customElements.define(InternalElements.HTML_ROOT_ELEMENT, RootElement);
 }

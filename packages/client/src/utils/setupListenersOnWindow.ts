@@ -1,4 +1,10 @@
-import { isInternalElement } from './isInternalElement';
+import { InternalElements } from '../constants';
+
+const internalElements: string[] = Object.values(InternalElements);
+export function isInternalElement(element: HTMLElement) {
+  return internalElements.includes(element.localName);
+}
+
 
 export interface SetupHandlersOptions {
   onChangeElement(element: HTMLElement): void;
@@ -90,3 +96,5 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   registerListenersOnWindow();
   return removeListenersOnWindow;
 }
+
+ 

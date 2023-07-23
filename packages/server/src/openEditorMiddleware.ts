@@ -19,10 +19,14 @@ export function openEditorMiddleware({
       return;
     }
 
-    const filename = decodeURIComponent(pathname);
+    let filename = decodeURIComponent(pathname);
+    if (!filename.startsWith(rootDir)) {
+      filename = path.resolve(rootDir, filename.replace(/^\//, ''));
+    }
+    
     try {
       const file = fs.readFileSync(filename, 'utf-8');
-      openEditor(path.resolve(rootDir, filename));
+      openEditor(filename);
       res.setHeader('Content-Type', 'text/javascript');
       res.end(file);
     } catch {

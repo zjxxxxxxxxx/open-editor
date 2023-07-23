@@ -6,7 +6,8 @@
   "module": "dist/webpack.esm.js",
   "types": "dist/webpack.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "client-runtime.js"
   ],
   "scripts": {
     "build": "esno ../../scripts/build.ts",
@@ -29,7 +30,7 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack#readme",
   "dependencies": {
-    "@open-editor/client-runtime": "workspace:^0.0.0",
+    "@open-editor/client": "workspace:^0.0.0",
     "@open-editor/server": "workspace:^0.0.0",
     "@open-editor/shared": "workspace:^0.0.0",
     "querystring": "^0.2.1"

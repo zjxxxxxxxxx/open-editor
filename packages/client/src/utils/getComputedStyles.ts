@@ -7,13 +7,21 @@ export interface ComputedStyle {
   bottom: number;
 }
 
-export const emptyComputedStyle = {
+const emptyComputedStyle = {
   width: 0,
   height: 0,
   top: 0,
   right: 0,
   left: 0,
   bottom: 0,
+};
+
+export const emptyComputedStyles = {
+  posttion: emptyComputedStyle,
+  margin: emptyComputedStyle,
+  border: emptyComputedStyle,
+  padding: emptyComputedStyle,
+  content: emptyComputedStyle,
 };
 
 export function getComputedStyles(
@@ -83,16 +91,19 @@ export function getComputedStyles(
   const contentHeight = paddingHeight;
 
   const posttionTop = domRect.top - marginTop;
+  const posttionRight = domRect.right + marginRight;
+  const posttionBottom= domRect.bottom + marginBottom;
   const posttionLeft = domRect.left - marginLeft;
   const posttionWidth = marginWidth + marginLeft + marginRight;
   const posttionHeight = marginHeight + marginTop + marginBottom;
 
   return {
     posttion: {
-      ...emptyComputedStyle,
       width: posttionWidth,
       height: posttionHeight,
       top: posttionTop,
+      right: posttionRight, 
+      bottom: posttionBottom,
       left: posttionLeft,
     },
     margin: {
