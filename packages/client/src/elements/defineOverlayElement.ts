@@ -1,9 +1,10 @@
-import { HTML_OVERLAY_ELEMENT } from '../constants';
+import {   InternalElements } from '../constants';
 import {
   ComputedStyle,
-  emptyComputedStyle,
+  emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
+import { applyStyle } from '../utils/element';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
@@ -13,10 +14,10 @@ export interface HTMLOverlayElement extends HTMLElement {
 
 export function defineOverlayElement() {
   const overlayStyles = {
-    margin: 'rgba(255, 155, 0, 0.3)',
-    border: 'rgba(255, 200, 50, 0.3)',
-    padding: 'rgba(77, 200, 0, 0.3)',
-    content: 'rgba(120, 170, 210, 0.7)',
+    margin: 'rgba(255, 155, 0)',
+    border: 'rgba(255, 200, 50)',
+    padding: 'rgb(200, 255, 185)',
+    content: 'rgb(120, 170, 210)',
   };
 
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
@@ -44,16 +45,26 @@ export function defineOverlayElement() {
       this.#borderRect.appendChild(this.#paddingRect);
       this.#paddingRect.appendChild(this.#contentRect);
 
-      this.#posttionRect.style.position = 'fixed';
-      this.#posttionRect.style.zIndex = '10000';
-      this.#posttionRect.style.transform = 'translateZ(10000px)';
-      this.#posttionRect.style.display = 'none';
-      this.#posttionRect.style.pointerEvents = 'none';
-
-      this.#marginRect.style.borderColor = overlayStyles.margin;
-      this.#borderRect.style.borderColor = overlayStyles.border;
-      this.#paddingRect.style.borderColor = overlayStyles.padding;
-      this.#contentRect.style.backgroundColor = overlayStyles.content;
+      applyStyle(this.#posttionRect, {
+        position: 'fixed',
+        zIndex: '10000',
+        opacity: '0.5',
+        transform: 'translateZ(10000px)',
+        display: 'none',
+        pointerEvents: 'none',
+      });
+      applyStyle(this.#marginRect, {
+        borderColor: overlayStyles.margin,
+      });
+      applyStyle(this.#borderRect, {
+        borderColor: overlayStyles.border,
+      });
+      applyStyle(this.#paddingRect, {
+        borderColor: overlayStyles.padding,
+      });
+      applyStyle(this.#contentRect, {
+        background: overlayStyles.content,
+      });
     }
 
     connectedCallback() {
@@ -65,19 +76,17 @@ export function defineOverlayElement() {
     }
 
     public open() {
-      this.#updateStyles({
-        posttion: emptyComputedStyle,
-        margin: emptyComputedStyle,
-        border: emptyComputedStyle,
-        padding: emptyComputedStyle,
-        content: emptyComputedStyle,
+      this.#updateStyles(emptyComputedStyles);
+      applyStyle(this.#posttionRect, {
+        display: 'block',
       });
-      this.#posttionRect.style.display = 'block';
     }
 
     public close() {
       this.#activeElement = null;
-      this.#posttionRect.style.display = 'none';
+      applyStyle(this.#posttionRect, {
+        display: 'none',
+      });
     }
 
     public update(element: HTMLElement) {
@@ -89,30 +98,36 @@ export function defineOverlayElement() {
       if (this.#activeElement) {
         const styles = getComputedStyles(this.#activeElement);
         this.#updateStyles(styles);
+      } else {
+        this.#updateStyles(emptyComputedStyles);
       }
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
-      this.#posttionRect.style.width = `${styles.posttion.width}px`;
-      this.#posttionRect.style.height = `${styles.posttion.height}px`;
-      this.#posttionRect.style.top = `${styles.posttion.top}px`;
-      this.#posttionRect.style.left = `${styles.posttion.left}px`;
-
-      this.#contentRect.style.width = `${styles.content.width}px`;
-      this.#contentRect.style.height = `${styles.content.height}px`;
-
-      wrapBoxRectStyle(this.#marginRect, styles.margin);
-      wrapBoxRectStyle(this.#borderRect, styles.border);
-      wrapBoxRectStyle(this.#paddingRect, styles.padding);
+      applyStyle(this.#posttionRect, {
+        width: `${styles.posttion.width}px`,
+        height: `${styles.posttion.height}px`,
+        top: `${styles.posttion.top}px`,
+        left: `${styles.posttion.left}px`,
+      });
+      applyStyle(this.#contentRect, {
+        width: `${styles.content.width}px`,
+        height: `${styles.content.height}px`,
+      });
+      applyRectStyle(this.#marginRect, styles.margin);
+      applyRectStyle(this.#borderRect, styles.border);
+      applyRectStyle(this.#paddingRect, styles.padding);
     }
   }
 
-  customElements.define(HTML_OVERLAY_ELEMENT, OverlayElement);
-}
+  function applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
+    applyStyle(rect, {
+      width: `${style.width}px`,
+      height: `${style.height}px`,
+      borderWidth: `${style.top}px ${style.right}px ${style.bottom}px ${style.left}px`,
+      borderStyle: 'solid',
+    });
+  }
 
-function wrapBoxRectStyle(boxRect: HTMLElement, style: ComputedStyle) {
-  boxRect.style.width = `${style.width}px`;
-  boxRect.style.height = `${style.height}px`;
-  boxRect.style.borderWidth = `${style.top}px ${style.right}px ${style.bottom}px ${style.left}px`;
-  boxRect.style.borderStyle = 'solid';
+  customElements.define(InternalElements.HTML_OVERLAY_ELEMENT, OverlayElement);
 }

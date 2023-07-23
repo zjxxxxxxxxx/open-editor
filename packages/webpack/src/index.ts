@@ -1,19 +1,12 @@
 import type webpack from 'webpack';
+import type { SetupClientOptions } from '@open-editor/client';
+import type { SetupServerOptions } from '@open-editor/server';
 import qs from 'querystring';
-import { setupServer } from '@open-editor/server';
+import { getServerAddress } from './getServerAddress';
 
-export interface OpenEditorPluginOptions {
-  /**
-   * source rootDir path
-   *
-   * @default process.cwd()
-   */
-  rootDir?: string;
-  /**
-   * render the pointer into the browser
-   */
-  enablePointer?: boolean;
-}
+export type OpenEditorPluginOptions = Partial<
+  SetupClientOptions & SetupServerOptions
+>;
 
 export class OpenEditorPlugin {
   opts: OpenEditorPluginOptions;
@@ -30,21 +23,69 @@ export class OpenEditorPlugin {
       return;
     }
 
-    const { rootDir, enablePointer } = this.opts;
-    const { EntryPlugin } = compiler.webpack;
+    const { EntryPlugin } = compiler.webpack ?? {};
 
-    function addEntry(port: number) {
-      const query = qs.stringify({
-        enablePointer,
-        port,
+    if (EntryPlugin) {
+      resolveClientRuntimeEntry(this.opts, (clientRuntimeEntry) => {
+        new EntryPlugin(compiler.context, clientRuntimeEntry, {
+          name: undefined,
+        }).apply(compiler);
       });
-      const entry =
-        require.resolve('@open-editor/client-runtime') + `?${query}`;
-      new EntryPlugin(compiler.context, entry, { name: undefined }).apply(
-        compiler,
+    } else {
+      const originalEntry = compiler.options.entry;
+
+      compiler.options.entry = () =>
+        resolveClientRuntimeEntry(this.opts, (clientRuntimeEntry) => {
+          return injectClientRuntimeEntry(originalEntry, clientRuntimeEntry);
+        });
+      compiler.hooks.entryOption.call(
+        compiler.options.context,
+        compiler.options.entry,
       );
     }
-
-    setupServer({ rootDir }).then(addEntry);
   }
+}
+
+function injectClientRuntimeEntry(
+  originalEntry: webpack.EntryNormalized,
+  clientRuntimeEntry: string,
+) {
+  if (typeof originalEntry === 'function') {
+    return Promise.resolve(originalEntry()).then((originalEntry) => {
+      return injectClientRuntimeEntry(originalEntry, clientRuntimeEntry);
+    });
+  }
+
+  if (!originalEntry || typeof originalEntry !== 'object') {
+    // @ts-ignore
+    originalEntry = [].concat(originalEntry);
+  }
+
+  if (Array.isArray(originalEntry)) {
+    return [...originalEntry, clientRuntimeEntry];
+  }
+
+  return Object.fromEntries(
+    Object.entries(originalEntry).map(([key, entry]) => [
+      key,
+      injectClientRuntimeEntry(entry, clientRuntimeEntry),
+    ]),
+  );
+}
+
+async function resolveClientRuntimeEntry(
+  options: OpenEditorPluginOptions,
+  callback: (serverAddress: string) => any,
+) {
+  const { enablePointer } = options;
+
+  return getServerAddress(options).then((serverAddress) => {
+    const entry = require.resolve('../client-runtime');
+    const query = qs.stringify({
+      enablePointer,
+      serverAddress,
+    });
+
+    return callback(`${entry}?${query}`);
+  });
 }

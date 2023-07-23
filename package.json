@@ -6,10 +6,9 @@
     "packages/*"
   ],
   "packageManager": "pnpm@7.29.3",
-  "type": "module",
   "scripts": {
     "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
-    "clean": "rimraf -g '{packages/**/{.turbo,dist},node_modules/.cache/*}'",
+    "clean": "rimraf -g '{packages/**/.turbo,node_modules/.cache}'",
     "dev": "turbo run dev --filter @open-editor/* --log-order grouped",
     "dev:watch": "turbo run dev:watch --filter @open-editor/* --log-order stream",
     "example": "esno scripts/example.ts",
@@ -18,9 +17,10 @@
     "install:ci": "pnpm --filter @open-editor/* install",
     "install:hook": "simple-git-hooks",
     "postinstall": "pnpm install:hook",
-    "release": "pnpm build && changeset publish --registry=https://registry.npmjs.com/",
+    "release": "pnpm build && changeset publish",
     "test": "turbo run test",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "update": "changeset version && pnpm format"
   },
   "engines": {
     "node": ">=16.0.0"

@@ -9,7 +9,6 @@
   "fixed": [
     [
       "@open-editor/client",
-      "@open-editor/client-runtime",
       "@open-editor/server",
       "@open-editor/shared",
       "@open-editor/webpack"

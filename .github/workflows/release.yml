@@ -1,9 +1,7 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -32,6 +30,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
+          version: pnpm update
           publish: pnpm release
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'

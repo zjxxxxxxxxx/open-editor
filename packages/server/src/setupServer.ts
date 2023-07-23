@@ -22,14 +22,17 @@ export function setupServer(options: SetupServerOptions = {}) {
 }
 
 function startServer(server: http.Server) {
-  return new Promise<number>((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
     server.on('error', reject);
+    // auto port
     server.listen(undefined, () => {
-      const address = server.address()!;
-      const port = Number(
-        typeof address === 'string' ? address.match(/\d+$/)![0] : address.port,
-      );
-      resolve(port);
+      let serverAddress = server.address()!;
+      if (typeof serverAddress !== 'string') {
+        serverAddress = `${serverAddress.address}:${serverAddress.port}`;
+      }
+      serverAddress = serverAddress.replace(/^::/, '0.0.0.0');
+
+      resolve(serverAddress);
     });
   });
 }
