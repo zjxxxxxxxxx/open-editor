@@ -5,7 +5,6 @@ export function isInternalElement(element: HTMLElement) {
   return internalElements.includes(element.localName);
 }
 
-
 export interface SetupHandlersOptions {
   onChangeElement(element: HTMLElement): void;
   onOpenEditor(element: HTMLElement): void;
@@ -68,7 +67,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     window.removeEventListener('touchmove', onSilence, true);
   }
 
-  function onClick(event: MouseEvent) {
+  function onClick(event: Event) {
     const element = event.target as HTMLElement;
     if (!isInternalElement(element)) {
       onSilence(event);
@@ -76,7 +75,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     }
   }
 
-  function onPointerOver(event: PointerEvent) {
+  function onPointerOver(event: Event) {
     const element = event.target as HTMLElement;
     if (!isInternalElement(element)) {
       onSilence(event);
@@ -84,17 +83,15 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     }
   }
 
-  function onSilence(event: MouseEvent) {
+  function onSilence(event: Event) {
     const element = event.target as HTMLElement;
     if (!isInternalElement(element)) {
-      event.preventDefault();
-      event.stopPropagation();
-      event.stopImmediatePropagation();
+      event.preventDefault?.();
+      event.stopPropagation?.();
+      event.stopImmediatePropagation?.();
     }
   }
 
   registerListenersOnWindow();
   return removeListenersOnWindow;
 }
-
- 

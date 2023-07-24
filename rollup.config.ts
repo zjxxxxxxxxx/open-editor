@@ -36,7 +36,7 @@ function buildBundles(): RollupOptions {
     output: bundles,
     external(source) {
       if (source.startsWith('@')) {
-        return source !== '@open-editor/shared';
+        return true;
       }
       //     module           === module
       //     module           !== /src/module
@@ -45,7 +45,7 @@ function buildBundles(): RollupOptions {
     plugins: [
       esbuildPlugin({
         tsconfig: tsconfigFile,
-        target: __DEV__ ? 'es6' : 'es6',
+        target: __DEV__ ? 'esnext' : 'es6',
         minify: !__DEV__,
       }),
       nodeResolve(),

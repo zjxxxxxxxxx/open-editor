@@ -6,8 +6,6 @@ export function defineTooltipElement() {
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
     constructor() {
       super();
-
-      
     }
   }
 

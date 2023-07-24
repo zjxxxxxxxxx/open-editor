@@ -26,7 +26,7 @@ export class OpenEditorPlugin {
     const { EntryPlugin } = compiler.webpack ?? {};
 
     if (EntryPlugin) {
-      resolveClientRuntimeEntry(this.opts, (clientRuntimeEntry) => {
+      resolveClientRuntime(this.opts, (clientRuntimeEntry) => {
         new EntryPlugin(compiler.context, clientRuntimeEntry, {
           name: undefined,
         }).apply(compiler);
@@ -35,24 +35,42 @@ export class OpenEditorPlugin {
       const originalEntry = compiler.options.entry;
 
       compiler.options.entry = () =>
-        resolveClientRuntimeEntry(this.opts, (clientRuntimeEntry) => {
-          return injectClientRuntimeEntry(originalEntry, clientRuntimeEntry);
+        resolveClientRuntime(this.opts, (clientRuntimeEntry) => {
+          return injectClientRuntime(originalEntry, clientRuntimeEntry);
         });
       compiler.hooks.entryOption.call(
-        compiler.options.context,
+        compiler.options.context!,
         compiler.options.entry,
       );
     }
   }
 }
 
-function injectClientRuntimeEntry(
+async function resolveClientRuntime<
+  Callback extends (clientRuntimeEntry: string) => any,
+>(
+  options: OpenEditorPluginOptions,
+  callback: Callback,
+): Promise<ReturnType<Callback>> {
+  const { enablePointer } = options;
+
+  const entry = require.resolve('../client-runtime');
+  const serverAddress = await getServerAddress(options);
+  const query = qs.stringify({
+    enablePointer,
+    serverAddress,
+  });
+
+  return callback(`${entry}?${query}`);
+}
+
+function injectClientRuntime(
   originalEntry: webpack.EntryNormalized,
   clientRuntimeEntry: string,
-) {
+): any {
   if (typeof originalEntry === 'function') {
     return Promise.resolve(originalEntry()).then((originalEntry) => {
-      return injectClientRuntimeEntry(originalEntry, clientRuntimeEntry);
+      return injectClientRuntime(originalEntry, clientRuntimeEntry);
     });
   }
 
@@ -68,24 +86,7 @@ function injectClientRuntimeEntry(
   return Object.fromEntries(
     Object.entries(originalEntry).map(([key, entry]) => [
       key,
-      injectClientRuntimeEntry(entry, clientRuntimeEntry),
+      injectClientRuntime(entry, clientRuntimeEntry),
     ]),
   );
-}
-
-async function resolveClientRuntimeEntry(
-  options: OpenEditorPluginOptions,
-  callback: (serverAddress: string) => any,
-) {
-  const { enablePointer } = options;
-
-  return getServerAddress(options).then((serverAddress) => {
-    const entry = require.resolve('../client-runtime');
-    const query = qs.stringify({
-      enablePointer,
-      serverAddress,
-    });
-
-    return callback(`${entry}?${query}`);
-  });
 }

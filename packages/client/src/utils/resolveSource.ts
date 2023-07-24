@@ -2,36 +2,37 @@ import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
 
 export interface ElementSource {
-  elementName: string;
-  componentName: string;
-  fileName: string;
+  element: string;
+  component: string;
+  file: string;
 }
 
 export function resolveSource(element: HTMLElement) {
-  const elementName = element.localName;
-
   const resolvedKey = resolveKey(element);
   if (!resolvedKey) {
     console.error(
-      `@open-editor/client: no component containing <${elementName}/> was found.`,
+      `@open-editor/client: no component containing <${element.localName}/> was found.`,
     );
     return;
   }
 
-  let source: Omit<ElementSource, 'elementName'> | undefined;
+  let source: Omit<ElementSource, 'element'> | undefined;
   if (resolvedKey === '__vueParentComponent') {
-    source = resolveSourceFromVue(element[resolvedKey]);
+    source = resolveSourceFromVue((element as any)[resolvedKey]);
   } else {
-    source = resolveSourceFromReact(element[resolvedKey]);
+    source = resolveSourceFromReact((element as any)[resolvedKey]);
   }
   if (!source) {
     console.error(
-      `@open-editor/client: no file containing <${elementName}/> was found.`,
+      `@open-editor/client: no file containing <${element.localName}/> was found.`,
     );
     return;
   }
 
-  return source;
+  return {
+    element: element.localName,
+    ...source,
+  };
 }
 
 function resolveKey(element: HTMLElement) {
@@ -42,27 +43,27 @@ function resolveKey(element: HTMLElement) {
   }
 }
 
-function resolveSourceFromVue(instance: ComponentInternalInstance) {
-  while (!instance.type?.__file) {
+function resolveSourceFromVue(instance: ComponentInternalInstance | null) {
+  while (instance && !instance.type?.__file) {
     instance = instance.parent;
   }
   if (!instance) return;
 
   return {
-    componentName: instance.type.__name,
-    fileName: ensureFileName(instance.type.__file),
+    component: instance.type.__name!,
+    file: ensureFileName(instance.type.__file!),
   };
 }
 
-function resolveSourceFromReact(fiber: Fiber) {
-  while (!fiber._debugSource) {
+function resolveSourceFromReact(fiber: Fiber | null | undefined) {
+  while (fiber && !fiber._debugSource) {
     fiber = fiber._debugOwner;
   }
   if (!fiber) return;
 
   return {
-    componentName: fiber._debugOwner.type.name,
-    fileName: ensureFileName(fiber._debugSource.fileName),
+    component: fiber._debugOwner!.type.name!,
+    file: ensureFileName(fiber._debugSource!.fileName!),
   };
 }
 

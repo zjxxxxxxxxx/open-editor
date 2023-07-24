@@ -1,1 +1,1 @@
-module 'launch-editor';
+declare module 'launch-editor';
