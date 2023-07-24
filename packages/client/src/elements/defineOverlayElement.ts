@@ -5,6 +5,7 @@ import {
   getComputedStyles,
 } from '../utils/getComputedStyles';
 import { applyStyle } from '../utils/element';
+import { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
@@ -14,6 +15,8 @@ export interface HTMLOverlayElement extends HTMLElement {
 
 export function defineOverlayElement() {
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
+    #tooltip: HTMLTooltipElement;
+
     #posttionRect: HTMLElement;
     #marginRect: HTMLElement;
     #borderRect: HTMLElement;
@@ -26,17 +29,14 @@ export function defineOverlayElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+      this.#tooltip = document.createElement(
+        InternalElements.HTML_TOOLTIP_ELEMENT,
+      ) as HTMLTooltipElement;
       this.#posttionRect = document.createElement('div');
       this.#marginRect = document.createElement('div');
       this.#borderRect = document.createElement('div');
       this.#paddingRect = document.createElement('div');
       this.#contentRect = document.createElement('div');
-
-      shadow.appendChild(this.#posttionRect);
-      this.#posttionRect.appendChild(this.#marginRect);
-      this.#marginRect.appendChild(this.#borderRect);
-      this.#borderRect.appendChild(this.#paddingRect);
-      this.#paddingRect.appendChild(this.#contentRect);
 
       applyStyle(this.#posttionRect, {
         position: 'fixed',
@@ -58,6 +58,13 @@ export function defineOverlayElement() {
       applyStyle(this.#contentRect, {
         background: Colors.OVERLAY_CONTENT_RECT,
       });
+
+      shadow.appendChild(this.#tooltip);
+      shadow.appendChild(this.#posttionRect);
+      this.#posttionRect.appendChild(this.#marginRect);
+      this.#marginRect.appendChild(this.#borderRect);
+      this.#borderRect.appendChild(this.#paddingRect);
+      this.#paddingRect.appendChild(this.#contentRect);
     }
 
     connectedCallback() {
@@ -71,6 +78,8 @@ export function defineOverlayElement() {
     }
 
     public open() {
+      this.#tooltip.open();
+
       this.#updateStyles(emptyComputedStyles);
       applyStyle(this.#posttionRect, {
         display: 'block',
@@ -78,6 +87,8 @@ export function defineOverlayElement() {
     }
 
     public close() {
+      this.#tooltip.close();
+
       this.#activeElement = undefined;
       applyStyle(this.#posttionRect, {
         display: 'none',
@@ -90,15 +101,15 @@ export function defineOverlayElement() {
     }
 
     #reUpdate = () => {
-      if (this.#activeElement) {
-        const styles = getComputedStyles(this.#activeElement);
-        this.#updateStyles(styles);
-      } else {
-        this.#updateStyles(emptyComputedStyles);
-      }
+      const styles = this.#activeElement
+        ? getComputedStyles(this.#activeElement)
+        : emptyComputedStyles;
+      this.#updateStyles(styles);
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
+      this.#tooltip.update(this.#activeElement, styles.posttion);
+
       applyStyle(this.#posttionRect, {
         width: `${styles.posttion.width}px`,
         height: `${styles.posttion.height}px`,

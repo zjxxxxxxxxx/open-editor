@@ -18,3 +18,16 @@ export function applyAttribute(
     }
   }
 }
+
+export function getWindowSize() {
+  return {
+    windowWidth:
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth,
+    windowHeight:
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight,
+  };
+}
