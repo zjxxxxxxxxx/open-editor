@@ -1,5 +1,4 @@
 {
-  "private": true,
   "name": "@open-editor/shared",
   "version": "0.0.0",
   "description": "internal utils shared across @open-editor packages",

@@ -32,7 +32,7 @@ function startServer(server: http.Server) {
       }
       serverAddress = serverAddress.replace(/^::/, '0.0.0.0');
 
-      resolve(serverAddress);
+      resolve(`http://${serverAddress}`);
     });
   });
 }

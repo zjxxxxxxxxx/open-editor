@@ -23,10 +23,10 @@ export function openEditorMiddleware({
     if (!filename.startsWith(rootDir)) {
       filename = path.resolve(rootDir, filename.replace(/^\//, ''));
     }
-    
+
     try {
       const file = fs.readFileSync(filename, 'utf-8');
-      openEditor(filename);
+      openEditor(filename + ':1:1');
       res.setHeader('Content-Type', 'text/javascript');
       res.end(file);
     } catch {

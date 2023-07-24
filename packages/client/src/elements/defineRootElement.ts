@@ -1,4 +1,4 @@
-import { OPEN_EDITOR_PATH } from '@open-editor/shared';
+import { ServerApis } from '@open-editor/shared';
 import { InternalElements } from '../constants';
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLPointerElement } from './definePointerElement';
@@ -23,11 +23,11 @@ export interface HTMLRootElement extends HTMLElement {
 
 export function defineRootElement() {
   class RootElement extends HTMLElement implements HTMLRootElement {
-    #options: HTMLRootElementOptions;
+    #options!: HTMLRootElementOptions;
     #overlay: HTMLOverlayElement;
     #pointer: HTMLPointerElement;
 
-    #_active: boolean;
+    #_active!: boolean;
 
     get #active() {
       return this.#_active;
@@ -40,7 +40,7 @@ export function defineRootElement() {
       });
     }
 
-    #mousePoint: MouseEvent;
+    #mousePoint!: MouseEvent;
 
     constructor() {
       super();
@@ -127,21 +127,21 @@ export function defineRootElement() {
       }
     }
 
-    #cleanupListenersOnWindow: () => void;
+    #cleanupListenersOnWindow?: () => void;
 
     #cleanupHandlers() {
       if (!this.#active) return;
       this.#active = false;
 
       this.#overlay.close();
-      this.#cleanupListenersOnWindow();
+      this.#cleanupListenersOnWindow?.();
     }
 
     #openEditor(element: HTMLElement) {
       const { serverAddress } = this.#options;
       const source = resolveSource(element);
       if (source) {
-        fetch(`http://${serverAddress}${OPEN_EDITOR_PATH}${source.fileName}`).then(
+        fetch(`${serverAddress}${ServerApis.OPEN_EDITOR}${source.file}`).then(
           () => {
             this.#cleanupHandlers();
           },

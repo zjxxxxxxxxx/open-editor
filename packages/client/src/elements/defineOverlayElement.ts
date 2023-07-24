@@ -1,4 +1,4 @@
-import {   InternalElements } from '../constants';
+import { Colors, InternalElements } from '../constants';
 import {
   ComputedStyle,
   emptyComputedStyles,
@@ -13,13 +13,6 @@ export interface HTMLOverlayElement extends HTMLElement {
 }
 
 export function defineOverlayElement() {
-  const overlayStyles = {
-    margin: 'rgba(255, 155, 0)',
-    border: 'rgba(255, 200, 50)',
-    padding: 'rgb(200, 255, 185)',
-    content: 'rgb(120, 170, 210)',
-  };
-
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     #posttionRect: HTMLElement;
     #marginRect: HTMLElement;
@@ -27,7 +20,7 @@ export function defineOverlayElement() {
     #paddingRect: HTMLElement;
     #contentRect: HTMLElement;
 
-    #activeElement: HTMLElement;
+    #activeElement?: HTMLElement;
 
     constructor() {
       super();
@@ -54,25 +47,27 @@ export function defineOverlayElement() {
         pointerEvents: 'none',
       });
       applyStyle(this.#marginRect, {
-        borderColor: overlayStyles.margin,
+        borderColor: Colors.OVERLAY_MARGIN_RECT,
       });
       applyStyle(this.#borderRect, {
-        borderColor: overlayStyles.border,
+        borderColor: Colors.OVERLAY_BORDER_RECT,
       });
       applyStyle(this.#paddingRect, {
-        borderColor: overlayStyles.padding,
+        borderColor: Colors.OVERLAY_PADDING_RECT,
       });
       applyStyle(this.#contentRect, {
-        background: overlayStyles.content,
+        background: Colors.OVERLAY_CONTENT_RECT,
       });
     }
 
     connectedCallback() {
       window.addEventListener('resize', this.#reUpdate);
+      window.addEventListener('scroll', this.#reUpdate);
     }
 
     disconnectedCallback() {
       window.removeEventListener('resize', this.#reUpdate);
+      window.removeEventListener('scroll', this.#reUpdate);
     }
 
     public open() {
@@ -83,7 +78,7 @@ export function defineOverlayElement() {
     }
 
     public close() {
-      this.#activeElement = null;
+      this.#activeElement = undefined;
       applyStyle(this.#posttionRect, {
         display: 'none',
       });

@@ -92,7 +92,7 @@ export function getComputedStyles(
 
   const posttionTop = domRect.top - marginTop;
   const posttionRight = domRect.right + marginRight;
-  const posttionBottom= domRect.bottom + marginBottom;
+  const posttionBottom = domRect.bottom + marginBottom;
   const posttionLeft = domRect.left - marginLeft;
   const posttionWidth = marginWidth + marginLeft + marginRight;
   const posttionHeight = marginHeight + marginTop + marginBottom;
@@ -102,7 +102,7 @@ export function getComputedStyles(
       width: posttionWidth,
       height: posttionHeight,
       top: posttionTop,
-      right: posttionRight, 
+      right: posttionRight,
       bottom: posttionBottom,
       left: posttionLeft,
     },

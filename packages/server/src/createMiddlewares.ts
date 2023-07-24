@@ -1,6 +1,6 @@
 import connect from 'connect';
 import corsMiddleware from 'cors';
-import { OPEN_EDITOR_PATH } from '@open-editor/shared';
+import { ServerApis } from '@open-editor/shared';
 import { openEditorMiddleware } from './openEditorMiddleware';
 
 export interface CreateMiddlewaresOptions {
@@ -17,7 +17,7 @@ export function createMiddlewares(options: CreateMiddlewaresOptions) {
   const middlewares = connect();
 
   middlewares.use(corsMiddleware({ methods: 'GET' }));
-  middlewares.use(OPEN_EDITOR_PATH, openEditorMiddleware({ rootDir }));
+  middlewares.use(ServerApis.OPEN_EDITOR, openEditorMiddleware({ rootDir }));
 
   return middlewares;
 }

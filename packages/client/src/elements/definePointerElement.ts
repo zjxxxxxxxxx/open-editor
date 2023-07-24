@@ -1,4 +1,4 @@
-import { InternalElements } from '../constants';
+import { Colors, InternalElements } from '../constants';
 import { applyStyle } from '../utils/element';
 
 export interface HTMLPointerElement extends HTMLElement {}
@@ -26,9 +26,11 @@ export function definePointerElement() {
         padding: '8px',
         width: '24px',
         height: '24px',
-        color: '#ffffff',
-        filter: 'drop-shadow(0 0 1px #666666)',
         cursor: 'pointer',
+      });
+      applyStyle(this.#button, {
+        color: Colors.POINTER_DEFAULT,
+        filter: `drop-shadow(0 0 1px ${Colors.POINTER_DEFAULT_SHADOW})`,
       });
 
       this.#button.innerHTML = `
@@ -40,7 +42,7 @@ export function definePointerElement() {
       shadow.appendChild(this.#button);
     }
 
-    attributeChangedCallback(name, _, newValue) {
+    attributeChangedCallback(name: string, _: never, newValue: string) {
       switch (name) {
         case 'enable':
           if (newValue === 'true') {
@@ -57,13 +59,13 @@ export function definePointerElement() {
         case 'active':
           if (newValue === 'true') {
             applyStyle(this.#button, {
-              color: '#61dafb',
+              color: Colors.POINTER_ACTIVE,
               filter: '',
             });
           } else {
             applyStyle(this.#button, {
-              color: '#ffffff',
-              filter: 'drop-shadow(0 0 1px #666666)',
+              color: Colors.POINTER_DEFAULT,
+              filter: `drop-shadow(0 0 1px ${Colors.POINTER_DEFAULT_SHADOW})`,
             });
           }
           break;
