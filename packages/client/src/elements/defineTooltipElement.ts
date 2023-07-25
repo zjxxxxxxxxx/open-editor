@@ -1,4 +1,4 @@
-import { applyStyle, cssUtils, getWindowSize } from '../utils/element';
+import { applyStyle, cssUtils } from '../utils/element';
 import type { ComputedStyle } from '../utils/getComputedStyles';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
@@ -43,12 +43,17 @@ export function defineTooltipElement() {
       });
       applyStyle(this.#element, {
         color: Colors.TOOLTIP_ELEMENT_COLOR,
+        fontSize: '14px',
       });
       applyStyle(this.#component, {
         color: Colors.SUCCESS,
+        fontSize: '16px',
       });
       applyStyle(this.#file, {
-        color: '#fff',
+        paddingTop: '5px',
+        color: Colors.TOOLTIP_FILE_COLOR,
+        fontSize: '14px',
+        textDecoration: 'underline',
       });
 
       this.#container.appendChild(this.#element);
@@ -112,7 +117,7 @@ export function defineTooltipElement() {
     }
 
     #updatePosition(style: ComputedStyle) {
-      const { windowWidth, windowHeight } = getWindowSize();
+      const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
       const { clientWidth: containerWidth, clientHeight: containerHeight } =
         this.#container;
 

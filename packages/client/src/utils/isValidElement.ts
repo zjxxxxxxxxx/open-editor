@@ -1,10 +1,8 @@
-import { InternalElements } from '../constants';
+import { isInternalElement } from './isInternalElement';
 
-const filterElements: string[] = [
-  'html',
-  'bpdy',
-  ...Object.values(InternalElements),
-];
+const filterElements = ['html', 'body'];
 export function isValidElement(element: HTMLElement) {
-  return !filterElements.includes(element.localName);
+  return (
+    !isInternalElement(element) && !filterElements.includes(element.localName)
+  );
 }

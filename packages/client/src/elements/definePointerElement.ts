@@ -29,7 +29,7 @@ export function definePointerElement() {
         cursor: 'pointer',
       });
       applyStyle(this.#button, {
-        color: Colors.POINTER_DEFAULT,
+        color: Colors.POINTER_COLOR,
       });
 
       this.#button.innerHTML = `
@@ -58,11 +58,11 @@ export function definePointerElement() {
         case 'active':
           if (newValue === 'true') {
             applyStyle(this.#button, {
-              color: Colors.POINTER_ACTIVE,
+              color: Colors.POINTER_ACTIVE_COLOR,
             });
           } else {
             applyStyle(this.#button, {
-              color: Colors.POINTER_DEFAULT,
+              color: Colors.POINTER_COLOR,
             });
           }
           break;
