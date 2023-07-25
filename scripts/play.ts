@@ -1,5 +1,5 @@
-import { readdirSync } from 'node:fs';
-import path from 'node:path';
+import { readdirSync } from 'fs';
+import path from 'path';
 import enquirer from 'enquirer';
 import consola from 'consola';
 import { exec, readjson, safeExit } from './utils';
@@ -7,7 +7,7 @@ import { exec, readjson, safeExit } from './utils';
 safeExit(main);
 
 async function main() {
-  const playgroundRoot = 'playground';
+  const playgroundRoot = 'playgrounds';
 
   const playgroundPath = path.resolve(playgroundRoot);
   const playgroundItems = readdirSync(playgroundPath);

@@ -1,9 +1,9 @@
-const { OpenEditorPlugin } = require('@open-editor/webpack');
+const { OpenEditorWebpackPlugin } = require('@open-editor/webpack');
 
 module.exports = function override(config, env) {
   if (env === 'development') {
     config.plugins.push(
-      new OpenEditorPlugin({
+      new OpenEditorWebpackPlugin({
         enablePointer: true,
       }),
     );

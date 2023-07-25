@@ -1,6 +1,6 @@
-import { readFileSync } from 'node:fs';
-import { basename, resolve } from 'node:path';
-import { gzipSync } from 'node:zlib';
+import { readFileSync } from 'fs';
+import { basename, resolve } from 'path';
+import { gzipSync } from 'zlib';
 import fg from 'fast-glob';
 import minimist from 'minimist';
 import consola from 'consola';

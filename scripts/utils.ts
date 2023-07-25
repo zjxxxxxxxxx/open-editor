@@ -1,7 +1,7 @@
-import { isPromise } from 'node:util/types';
-import { ExecSyncOptions, execSync } from 'node:child_process';
-import { PathOrFileDescriptor, readFileSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { isPromise } from 'util/types';
+import { ExecSyncOptions, execSync } from 'child_process';
+import { PathOrFileDescriptor, readFileSync, writeFileSync } from 'fs';
+import { fileURLToPath } from 'url';
 
 // Project root
 export const __dirname = fileURLToPath(new URL('../', import.meta.url));

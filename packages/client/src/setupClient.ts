@@ -1,6 +1,6 @@
 import { InternalElements } from './constants';
 import { defineElements } from './elements/defineElements';
-import { HTMLRootElement } from './elements/defineRootElement';
+import { HTMLInspectElement } from './elements/defineInspectElement';
 
 export interface SetupClientOptions {
   /**
@@ -20,8 +20,8 @@ export function setupClient(options: SetupClientOptions) {
   window.addEventListener('DOMContentLoaded', () => {
     const { enablePointer = true, serverAddress } = options;
     const root = document.createElement(
-      InternalElements.HTML_ROOT_ELEMENT,
-    ) as HTMLRootElement;
+      InternalElements.HTML_INSPECT_ELEMENT,
+    ) as HTMLInspectElement;
     root.setOptions({
       enablePointer,
       serverAddress,

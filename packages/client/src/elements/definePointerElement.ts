@@ -30,7 +30,6 @@ export function definePointerElement() {
       });
       applyStyle(this.#button, {
         color: Colors.POINTER_DEFAULT,
-        filter: `drop-shadow(0 0 1px ${Colors.POINTER_DEFAULT_SHADOW})`,
       });
 
       this.#button.innerHTML = `
@@ -60,12 +59,10 @@ export function definePointerElement() {
           if (newValue === 'true') {
             applyStyle(this.#button, {
               color: Colors.POINTER_ACTIVE,
-              filter: '',
             });
           } else {
             applyStyle(this.#button, {
               color: Colors.POINTER_DEFAULT,
-              filter: `drop-shadow(0 0 1px ${Colors.POINTER_DEFAULT_SHADOW})`,
             });
           }
           break;

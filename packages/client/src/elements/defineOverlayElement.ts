@@ -1,11 +1,11 @@
-import { Colors, InternalElements } from '../constants';
 import {
   ComputedStyle,
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { applyStyle } from '../utils/element';
-import { HTMLTooltipElement } from './defineTooltipElement';
+import { applyStyle, cssUtils } from '../utils/element';
+import { Colors, InternalElements } from '../constants';
+import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
@@ -96,8 +96,10 @@ export function defineOverlayElement() {
     }
 
     public update(element: HTMLElement) {
-      this.#activeElement = element;
-      this.#reUpdate();
+      if (!['html', 'body'].includes(element.localName)) {
+        this.#activeElement = element;
+        this.#reUpdate();
+      }
     }
 
     #reUpdate = () => {
@@ -128,9 +130,11 @@ export function defineOverlayElement() {
 
   function applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
     applyStyle(rect, {
-      width: `${style.width}px`,
-      height: `${style.height}px`,
-      borderWidth: `${style.top}px ${style.right}px ${style.bottom}px ${style.left}px`,
+      width: cssUtils.px(style.width),
+      height: cssUtils.px(style.height),
+      borderWidth: `${cssUtils.px(style.top)} ${cssUtils.px(
+        style.right,
+      )} ${cssUtils.px(style.bottom)} ${cssUtils.px(style.left)}`,
       borderStyle: 'solid',
     });
   }
