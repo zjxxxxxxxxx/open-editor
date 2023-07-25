@@ -10,7 +10,7 @@ import type { HTMLTooltipElement } from './defineTooltipElement';
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(element: HTMLElement): void;
+  update(element?: HTMLElement): void;
 }
 
 export function defineOverlayElement() {
@@ -96,10 +96,8 @@ export function defineOverlayElement() {
     }
 
     public update(element: HTMLElement) {
-      if (!['html', 'body'].includes(element.localName)) {
-        this.#activeElement = element;
-        this.#reUpdate();
-      }
+      this.#activeElement = element;
+      this.#reUpdate();
     }
 
     #reUpdate = () => {

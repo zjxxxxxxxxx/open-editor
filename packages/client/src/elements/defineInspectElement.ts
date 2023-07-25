@@ -6,7 +6,6 @@ import { InternalElements } from '../constants';
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLPointerElement } from './definePointerElement';
 import { isValidElement } from '../utils/isValidElement';
- 
 
 export interface HTMLInspectElementOptions {
   /**
