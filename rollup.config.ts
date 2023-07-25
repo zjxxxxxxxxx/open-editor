@@ -1,4 +1,4 @@
-import { basename, resolve } from 'node:path';
+import { basename, resolve } from 'path';
 import { OutputOptions, RollupOptions } from 'rollup';
 import esbuildPlugin from 'rollup-plugin-esbuild';
 import dtsPlugin from 'rollup-plugin-dts';

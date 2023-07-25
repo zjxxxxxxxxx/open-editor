@@ -1,4 +1,4 @@
-import http from 'node:http';
+import http from 'http';
 import { createMiddlewares } from './createMiddlewares';
 
 export interface SetupServerOptions {
@@ -17,6 +17,7 @@ export function setupServer(options: SetupServerOptions = {}) {
     rootDir,
   });
   const httpServer = http.createServer(middlewares);
+  process.on('exit', httpServer.close);
 
   return startServer(httpServer);
 }

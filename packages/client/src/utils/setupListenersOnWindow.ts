@@ -1,9 +1,4 @@
-import { InternalElements } from '../constants';
-
-const internalElements: string[] = Object.values(InternalElements);
-export function isInternalElement(element: HTMLElement) {
-  return internalElements.includes(element.localName);
-}
+import { isValidElement } from './isValidElement';
 
 export interface SetupHandlersOptions {
   onChangeElement(element: HTMLElement): void;
@@ -69,7 +64,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
   function onClick(event: Event) {
     const element = event.target as HTMLElement;
-    if (!isInternalElement(element)) {
+    if (isValidElement(element)) {
       onSilence(event);
       onOpenEditor(element);
     }
@@ -77,7 +72,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
   function onPointerOver(event: Event) {
     const element = event.target as HTMLElement;
-    if (!isInternalElement(element)) {
+    if (isValidElement(element)) {
       onSilence(event);
       onChangeElement(element);
     }
@@ -85,7 +80,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
   function onSilence(event: Event) {
     const element = event.target as HTMLElement;
-    if (!isInternalElement(element)) {
+    if (isValidElement(element)) {
       event.preventDefault?.();
       event.stopPropagation?.();
       event.stopImmediatePropagation?.();

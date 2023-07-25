@@ -4,34 +4,25 @@ import type { ComponentInternalInstance } from '@vue/runtime-core';
 export interface ElementSource {
   element: string;
   component: string;
-  file: string;
+  file?: string;
 }
 
-export function resolveSource(element: HTMLElement) {
-  const resolvedKey = resolveKey(element);
-  if (!resolvedKey) {
-    console.error(
-      `@open-editor/client: no component containing <${element.localName}/> was found.`,
-    );
-    return;
-  }
+export function resolveSource(element: HTMLElement): ElementSource {
+  let source: Partial<ElementSource> = {};
 
-  let source: Omit<ElementSource, 'element'> | undefined;
-  if (resolvedKey === '__vueParentComponent') {
-    source = resolveSourceFromVue((element as any)[resolvedKey]);
-  } else {
-    source = resolveSourceFromReact((element as any)[resolvedKey]);
-  }
-  if (!source) {
-    console.error(
-      `@open-editor/client: no file containing <${element.localName}/> was found.`,
-    );
-    return;
+  const resolvedKey = resolveKey(element);
+  if (resolvedKey) {
+    if (resolvedKey === '__vueParentComponent') {
+      source = resolveSourceFromVue((element as any)[resolvedKey]);
+    } else {
+      source = resolveSourceFromReact((element as any)[resolvedKey]);
+    }
   }
 
   return {
     element: element.localName,
-    ...source,
+    component: source.file ? source.component ?? 'Anonymous' : 'NotFound',
+    file: source.file ? ensureFileName(source.file) : undefined,
   };
 }
 
@@ -39,7 +30,13 @@ function resolveKey(element: HTMLElement) {
   if ('__vueParentComponent' in element) {
     return '__vueParentComponent';
   } else {
-    return Object.keys(element).find((key) => key.startsWith('__reactFiber$'));
+    return Object.keys(element).find(
+      (key) =>
+        // React17+
+        key.startsWith('__reactFiber') ||
+        // React15+
+        key.startsWith('__reactInternalInstance'),
+    );
   }
 }
 
@@ -47,11 +44,10 @@ function resolveSourceFromVue(instance: ComponentInternalInstance | null) {
   while (instance && !instance.type?.__file) {
     instance = instance.parent;
   }
-  if (!instance) return;
 
   return {
-    component: instance.type.__name!,
-    file: ensureFileName(instance.type.__file!),
+    component: instance?.type?.__name,
+    file: instance?.type?.__file,
   };
 }
 
@@ -59,11 +55,10 @@ function resolveSourceFromReact(fiber: Fiber | null | undefined) {
   while (fiber && !fiber._debugSource) {
     fiber = fiber._debugOwner;
   }
-  if (!fiber) return;
 
   return {
-    component: fiber._debugOwner!.type.name!,
-    file: ensureFileName(fiber._debugSource!.fileName!),
+    component: fiber?._debugOwner?.type.name,
+    file: fiber?._debugSource?.fileName,
   };
 }
 

@@ -1,17 +1,27 @@
 import type webpack from 'webpack';
-import type { SetupClientOptions } from '@open-editor/client';
-import type { SetupServerOptions } from '@open-editor/server';
 import qs from 'querystring';
 import { getServerAddress } from './getServerAddress';
 
-export type OpenEditorPluginOptions = Partial<
-  SetupClientOptions & SetupServerOptions
->;
+export interface OpenEditorWebpackPluginOptions {
+  /**
+   * render the pointer into the browser
+   *
+   * @default false
+   */
+  enablePointer?: boolean;
 
-export class OpenEditorPlugin {
-  opts: OpenEditorPluginOptions;
+  /**
+   * source rootDir path
+   *
+   * @default process.cwd()
+   */
+  rootDir?: string;
+}
 
-  constructor(options: OpenEditorPluginOptions = {}) {
+export class OpenEditorWebpackPlugin {
+  opts: OpenEditorWebpackPluginOptions;
+
+  constructor(options: OpenEditorWebpackPluginOptions = {}) {
     this.opts = options;
   }
 
@@ -49,7 +59,7 @@ export class OpenEditorPlugin {
 async function resolveClientRuntime<
   Callback extends (clientRuntimeEntry: string) => any,
 >(
-  options: OpenEditorPluginOptions,
+  options: OpenEditorWebpackPluginOptions,
   callback: Callback,
 ): Promise<ReturnType<Callback>> {
   const { enablePointer } = options;

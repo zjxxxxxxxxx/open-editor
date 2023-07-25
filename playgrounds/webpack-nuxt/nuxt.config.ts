@@ -1,4 +1,4 @@
-import { OpenEditorPlugin } from '@open-editor/webpack';
+import { OpenEditorWebpackPlugin } from '@open-editor/webpack';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   webpack: {
     plugins: [
-      new OpenEditorPlugin({
+      new OpenEditorWebpackPlugin({
         enablePointer: true,
       }),
     ],

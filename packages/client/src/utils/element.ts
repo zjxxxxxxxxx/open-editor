@@ -31,3 +31,18 @@ export function getWindowSize() {
       document.body.clientHeight,
   };
 }
+
+export const cssUtils = {
+  /**
+   * 10 -> '10px'
+   */
+  px(value: string | number) {
+    return `${value}px`;
+  },
+  /**
+   * '10px' -> 10
+   */
+  pv(value: string) {
+    return parseInt(value, 10);
+  },
+};

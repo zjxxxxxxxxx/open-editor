@@ -1,12 +1,14 @@
 import { ServerApis } from '@open-editor/shared';
-import { InternalElements } from '../constants';
-import { HTMLOverlayElement } from './defineOverlayElement';
-import { HTMLPointerElement } from './definePointerElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
 import { applyAttribute } from '../utils/element';
+import { InternalElements } from '../constants';
+import { HTMLOverlayElement } from './defineOverlayElement';
+import { HTMLPointerElement } from './definePointerElement';
+import { isValidElement } from '../utils/isValidElement';
+ 
 
-export interface HTMLRootElementOptions {
+export interface HTMLInspectElementOptions {
   /**
    * render the pointer into the browser
    */
@@ -17,13 +19,13 @@ export interface HTMLRootElementOptions {
   serverAddress: string;
 }
 
-export interface HTMLRootElement extends HTMLElement {
-  setOptions(options: HTMLRootElementOptions): void;
+export interface HTMLInspectElement extends HTMLElement {
+  setOptions(options: HTMLInspectElementOptions): void;
 }
 
 export function defineRootElement() {
-  class RootElement extends HTMLElement implements HTMLRootElement {
-    #options!: HTMLRootElementOptions;
+  class InspectElement extends HTMLElement implements HTMLInspectElement {
+    #options!: HTMLInspectElementOptions;
     #overlay: HTMLOverlayElement;
     #pointer: HTMLPointerElement;
 
@@ -57,7 +59,7 @@ export function defineRootElement() {
       shadow.appendChild(this.#pointer);
     }
 
-    public setOptions(options: HTMLRootElementOptions) {
+    public setOptions(options: HTMLInspectElementOptions) {
       this.#options = options;
 
       if (options.enablePointer) {
@@ -122,7 +124,7 @@ export function defineRootElement() {
 
       const { x, y } = this.#mousePoint;
       const initElement = document.elementFromPoint(x, y) as HTMLElement;
-      if (initElement) {
+      if (isValidElement(initElement)) {
         this.#overlay.update(initElement);
       }
     }
@@ -139,16 +141,14 @@ export function defineRootElement() {
 
     #openEditor(element: HTMLElement) {
       const { serverAddress } = this.#options;
-      const source = resolveSource(element);
-      if (source) {
-        fetch(`${serverAddress}${ServerApis.OPEN_EDITOR}${source.file}`).then(
-          () => {
-            this.#cleanupHandlers();
-          },
-        );
+      const { file } = resolveSource(element);
+      if (file) {
+        fetch(`${serverAddress}${ServerApis.OPEN_EDITOR}${file}`).then(() => {
+          this.#cleanupHandlers();
+        });
       }
     }
   }
 
-  customElements.define(InternalElements.HTML_ROOT_ELEMENT, RootElement);
+  customElements.define(InternalElements.HTML_INSPECT_ELEMENT, InspectElement);
 }

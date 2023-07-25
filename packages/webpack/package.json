@@ -1,7 +1,7 @@
 {
   "name": "@open-editor/webpack",
   "version": "0.0.0",
-  "description": "internal utils webpack across @open-editor packages",
+  "description": "enable you to open the editor by inspect the UI.",
   "main": "dist/webpack.cjs.js",
   "module": "dist/webpack.esm.js",
   "types": "dist/webpack.d.ts",
@@ -21,7 +21,8 @@
     "directory": "packages/webpack"
   },
   "keywords": [
-    "open-editor"
+    "open-editor",
+    "webpack-plugin"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",

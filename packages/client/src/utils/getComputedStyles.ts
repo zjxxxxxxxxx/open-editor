@@ -1,3 +1,5 @@
+import { cssUtils } from './element';
+
 export interface ComputedStyle {
   width: number;
   height: number;
@@ -30,59 +32,47 @@ export function getComputedStyles(
   const styleDeclaration = window.getComputedStyle(element, null);
   const domRect = element.getBoundingClientRect();
 
-  const marginTop = parseInt(
+  const marginTop = cssUtils.pv(
     styleDeclaration.getPropertyValue('margin-top'),
-    10,
   );
-  const marginRight = parseInt(
+  const marginRight = cssUtils.pv(
     styleDeclaration.getPropertyValue('margin-right'),
-    10,
   );
-  const marginBottom = parseInt(
+  const marginBottom = cssUtils.pv(
     styleDeclaration.getPropertyValue('margin-bottom'),
-    10,
   );
-  const marginLeft = parseInt(
+  const marginLeft = cssUtils.pv(
     styleDeclaration.getPropertyValue('margin-left'),
-    10,
   );
   const marginWidth = domRect.width;
   const marginHeight = domRect.height;
 
-  const borderTop = parseInt(
+  const borderTop = cssUtils.pv(
     styleDeclaration.getPropertyValue('border-top'),
-    10,
   );
-  const borderRight = parseInt(
+  const borderRight = cssUtils.pv(
     styleDeclaration.getPropertyValue('border-right'),
-    10,
   );
-  const borderBottom = parseInt(
+  const borderBottom = cssUtils.pv(
     styleDeclaration.getPropertyValue('border-bottom'),
-    10,
   );
-  const borderLeft = parseInt(
+  const borderLeft = cssUtils.pv(
     styleDeclaration.getPropertyValue('border-left'),
-    10,
   );
   const borderWidth = marginWidth - borderRight - borderLeft;
   const borderHeight = marginHeight - borderTop - borderBottom;
 
-  const paddingTop = parseInt(
+  const paddingTop = cssUtils.pv(
     styleDeclaration.getPropertyValue('padding-top'),
-    10,
   );
-  const paddingRight = parseInt(
+  const paddingRight = cssUtils.pv(
     styleDeclaration.getPropertyValue('padding-right'),
-    10,
   );
-  const paddingBottom = parseInt(
+  const paddingBottom = cssUtils.pv(
     styleDeclaration.getPropertyValue('padding-bottom'),
-    10,
   );
-  const paddingLeft = parseInt(
+  const paddingLeft = cssUtils.pv(
     styleDeclaration.getPropertyValue('padding-left'),
-    10,
   );
   const paddingWidth = borderWidth - paddingRight - paddingLeft;
   const paddingHeight = borderHeight - paddingTop - paddingBottom;
