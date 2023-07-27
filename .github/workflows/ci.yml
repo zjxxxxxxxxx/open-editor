@@ -29,7 +29,7 @@ jobs:
         run: pnpm build
 
       - name: Lint
-        run: pnpm lint --ignore-pattern='/playgrounds/*'
+        run: pnpm lint:ci
 
       - name: Typecheck
         run: pnpm typecheck
