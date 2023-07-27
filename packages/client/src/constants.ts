@@ -6,18 +6,18 @@ export const InternalElements = {
 };
 
 export const Colors = {
-  SUCCESS: '#00DC82',
+  SUCCESS: '#00dc82',
   ERROR: '#ff5555',
 
-  OVERLAY_MARGIN_RECT: 'rgba(255, 155, 0)',
-  OVERLAY_BORDER_RECT: 'rgba(255, 200, 50)',
-  OVERLAY_PADDING_RECT: 'rgb(200, 255, 185)',
-  OVERLAY_CONTENT_RECT: 'rgb(120, 170, 210)',
+  OVERLAY_MARGIN_RECT: '#ff9b00',
+  OVERLAY_BORDER_RECT: '#ffc832',
+  OVERLAY_PADDING_RECT: '#c8ffb9',
+  OVERLAY_CONTENT_RECT: '#78aad2',
 
   POINTER_COLOR: '#2dd9da',
   POINTER_ACTIVE_COLOR: '#04ff98',
 
   TOOLTIP_BG: '#181818',
-  TOOLTIP_ELEMENT_COLOR: '#ABB2BF',
+  TOOLTIP_ELEMENT_COLOR: '#abb2bf',
   TOOLTIP_FILE_COLOR: '#2dd9da',
 };

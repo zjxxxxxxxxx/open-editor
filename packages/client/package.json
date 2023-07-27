@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/client#readme",
   "dependencies": {
-    "@open-editor/shared": "workspace:^0.0.1"
+    "@open-editor/shared": "workspace:*"
   },
   "devDependencies": {
     "@types/react-reconciler": "^0.28.2",
