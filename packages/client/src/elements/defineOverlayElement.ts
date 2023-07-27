@@ -104,12 +104,11 @@ export function defineOverlayElement() {
       const styles = this.#activeElement
         ? getComputedStyles(this.#activeElement)
         : emptyComputedStyles;
+      this.#tooltip.update(this.#activeElement, styles.posttion);
       this.#updateStyles(styles);
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
-      this.#tooltip.update(this.#activeElement, styles.posttion);
-
       applyStyle(this.#posttionRect, {
         width: `${styles.posttion.width}px`,
         height: `${styles.posttion.height}px`,

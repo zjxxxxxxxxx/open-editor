@@ -20,8 +20,8 @@ export function openEditorMiddleware({
     }
 
     let filename = decodeURIComponent(pathname);
-    if (!path.isAbsolute(rootDir)) {
-      filename = path.resolve(rootDir, filename.replace(/^\//, ''));
+    if (!filename.startsWith(rootDir)) {
+      filename = path.join(rootDir, filename.replace(/^\//, ''));
     }
 
     try {

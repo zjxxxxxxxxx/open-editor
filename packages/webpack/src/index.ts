@@ -19,10 +19,13 @@ export interface OpenEditorWebpackPluginOptions {
 }
 
 export class OpenEditorWebpackPlugin {
-  opts: OpenEditorWebpackPluginOptions;
+  options: Required<OpenEditorWebpackPluginOptions>;
 
   constructor(options: OpenEditorWebpackPluginOptions = {}) {
-    this.opts = options;
+    this.options = {
+      enablePointer: options.enablePointer ?? false,
+      rootDir: options.rootDir ?? process.cwd(),
+    };
   }
 
   apply(compiler: webpack.Compiler) {
@@ -36,7 +39,7 @@ export class OpenEditorWebpackPlugin {
     const { EntryPlugin } = compiler.webpack ?? {};
 
     if (EntryPlugin) {
-      resolveClientRuntime(this.opts, (clientRuntimeEntry) => {
+      this.resolveClientRuntime((clientRuntimeEntry) => {
         new EntryPlugin(compiler.context, clientRuntimeEntry, {
           name: undefined,
         }).apply(compiler);
@@ -45,8 +48,8 @@ export class OpenEditorWebpackPlugin {
       const originalEntry = compiler.options.entry;
 
       compiler.options.entry = () =>
-        resolveClientRuntime(this.opts, (clientRuntimeEntry) => {
-          return injectClientRuntime(originalEntry, clientRuntimeEntry);
+        this.resolveClientRuntime((clientRuntimeEntry) => {
+          return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
         });
       compiler.hooks.entryOption.call(
         compiler.options.context!,
@@ -54,49 +57,44 @@ export class OpenEditorWebpackPlugin {
       );
     }
   }
-}
 
-async function resolveClientRuntime<
-  Callback extends (clientRuntimeEntry: string) => any,
->(
-  options: OpenEditorWebpackPluginOptions,
-  callback: Callback,
-): Promise<ReturnType<Callback>> {
-  const { enablePointer } = options;
-
-  const entry = require.resolve('../client-runtime');
-  const serverAddress = await getServerAddress(options);
-  const query = qs.stringify({
-    enablePointer,
-    serverAddress,
-  });
-
-  return callback(`${entry}?${query}`);
-}
-
-function injectClientRuntime(
-  originalEntry: webpack.EntryNormalized,
-  clientRuntimeEntry: string,
-): any {
-  if (typeof originalEntry === 'function') {
-    return Promise.resolve(originalEntry()).then((originalEntry) => {
-      return injectClientRuntime(originalEntry, clientRuntimeEntry);
+  async resolveClientRuntime<
+    Callback extends (clientRuntimeEntry: string) => any,
+  >(callback: Callback): Promise<ReturnType<Callback>> {
+    const entry = require.resolve('../client-runtime');
+    const serverAddress = await getServerAddress(this.options);
+    const query = qs.stringify({
+      serverAddress,
+      ...this.options,
     });
+
+    return callback(`${entry}?${query}`);
   }
 
-  if (!originalEntry || typeof originalEntry !== 'object') {
-    // @ts-ignore
-    originalEntry = [].concat(originalEntry);
-  }
+  injectClientRuntime(
+    originalEntry: webpack.EntryNormalized,
+    clientRuntimeEntry: string,
+  ): any {
+    if (typeof originalEntry === 'function') {
+      return Promise.resolve(originalEntry()).then((originalEntry) => {
+        return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
+      });
+    }
 
-  if (Array.isArray(originalEntry)) {
-    return [...originalEntry, clientRuntimeEntry];
-  }
+    if (!originalEntry || typeof originalEntry !== 'object') {
+      // @ts-ignore
+      originalEntry = [].concat(originalEntry);
+    }
 
-  return Object.fromEntries(
-    Object.entries(originalEntry).map(([key, entry]) => [
-      key,
-      injectClientRuntime(entry, clientRuntimeEntry),
-    ]),
-  );
+    if (Array.isArray(originalEntry)) {
+      return [...originalEntry, clientRuntimeEntry];
+    }
+
+    return Object.fromEntries(
+      Object.entries(originalEntry).map(([key, entry]) => [
+        key,
+        this.injectClientRuntime(entry, clientRuntimeEntry),
+      ]),
+    );
+  }
 }

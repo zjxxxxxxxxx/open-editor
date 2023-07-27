@@ -2,29 +2,16 @@ import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
 import { applyAttribute } from '../utils/element';
+import { isValidElement } from '../utils/isValidElement';
 import { InternalElements } from '../constants';
+import { getOptions } from '../options';
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLPointerElement } from './definePointerElement';
-import { isValidElement } from '../utils/isValidElement';
 
-export interface HTMLInspectElementOptions {
-  /**
-   * render the pointer into the browser
-   */
-  enablePointer?: boolean;
-  /**
-   * internal server address
-   */
-  serverAddress: string;
-}
-
-export interface HTMLInspectElement extends HTMLElement {
-  setOptions(options: HTMLInspectElementOptions): void;
-}
+export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineRootElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    #options!: HTMLInspectElementOptions;
     #overlay: HTMLOverlayElement;
     #pointer: HTMLPointerElement;
 
@@ -54,37 +41,34 @@ export function defineRootElement() {
         InternalElements.HTML_POINTER_ELEMENT,
       ) as HTMLPointerElement;
 
-      shadow.appendChild(this.#overlay);
-      shadow.appendChild(this.#pointer);
-    }
-
-    public setOptions(options: HTMLInspectElementOptions) {
-      this.#options = options;
-
+      const options = getOptions();
       if (options.enablePointer) {
         applyAttribute(this.#pointer, {
           enable: true,
         });
       }
+
+      shadow.appendChild(this.#overlay);
+      shadow.appendChild(this.#pointer);
     }
 
     connectedCallback() {
       window.addEventListener('keydown', this.#onKeydown);
-      window.addEventListener('mousemove', this.#onMousePointChange);
+      window.addEventListener('mousemove', this.#changeMousePoint);
 
       this.#pointer.addEventListener('toggle', this.#toggleActive);
     }
 
     disconnectedCallback() {
       window.removeEventListener('keydown', this.#onKeydown);
-      window.removeEventListener('mousemove', this.#onMousePointChange);
+      window.removeEventListener('mousemove', this.#changeMousePoint);
 
       this.#pointer.removeEventListener('toggle', this.#toggleActive);
 
       this.#cleanupHandlers();
     }
 
-    #onMousePointChange = (event: MouseEvent) => {
+    #changeMousePoint = (event: MouseEvent) => {
       this.#mousePoint = event;
     };
 
@@ -139,7 +123,7 @@ export function defineRootElement() {
     }
 
     #openEditor(element: HTMLElement) {
-      const { serverAddress } = this.#options;
+      const { serverAddress } = getOptions();
       const { file } = resolveSource(element);
       if (file) {
         fetch(`${serverAddress}${ServerApis.OPEN_EDITOR}${file}`).then(() => {

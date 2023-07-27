@@ -1,4 +1,5 @@
-import { setupClient, SetupClientOptions } from './setupClient';
+import { SetupClientOptions } from './options';
+import { setupClient } from './setupClient';
 
 export type { SetupClientOptions };
 export { setupClient };
