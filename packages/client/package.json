@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/client",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "internal utils shared across @open-editor packages",
   "main": "dist/client.cjs.js",
   "module": "dist/client.esm.js",
@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/client#readme",
   "dependencies": {
-    "@open-editor/shared": "workspace:^0.0.0"
+    "@open-editor/shared": "workspace:^0.0.1"
   },
   "devDependencies": {
     "@types/react-reconciler": "^0.28.2",

@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/shared",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "internal utils shared across @open-editor packages",
   "main": "dist/shared.cjs.js",
   "module": "dist/shared.esm.js",

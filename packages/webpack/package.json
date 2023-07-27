@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/webpack",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "enable you to open the editor by inspect the UI.",
   "main": "dist/webpack.cjs.js",
   "module": "dist/webpack.esm.js",
@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack#readme",
   "dependencies": {
-    "@open-editor/client": "workspace:^0.0.0",
-    "@open-editor/server": "workspace:^0.0.0",
-    "@open-editor/shared": "workspace:^0.0.0",
+    "@open-editor/client": "workspace:^0.0.1",
+    "@open-editor/server": "workspace:^0.0.1",
+    "@open-editor/shared": "workspace:^0.0.1",
     "querystring": "^0.2.1"
   },
   "devDependencies": {

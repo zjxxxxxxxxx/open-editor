@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "internal utils shared across @open-editor packages",
   "main": "dist/server.cjs.js",
   "module": "dist/server.esm.js",
@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/server#readme",
   "dependencies": {
-    "@open-editor/shared": "workspace:^0.0.0",
+    "@open-editor/shared": "workspace:^0.0.1",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
     "launch-editor": "^2.6.0"
