@@ -38,21 +38,18 @@ export function defineTooltipElement() {
         visibility: 'hidden',
         background: Colors.TOOLTIP_BG,
         borderRadius: '4px',
-        border: '2px solid',
-        borderColor: Colors.SUCCESS,
+        border: '2px solid transparent',
       });
       applyStyle(this.#element, {
         color: Colors.TOOLTIP_ELEMENT_COLOR,
         fontSize: '14px',
       });
       applyStyle(this.#component, {
-        color: Colors.SUCCESS,
         fontSize: '16px',
       });
       applyStyle(this.#file, {
-        paddingTop: '5px',
-        color: Colors.TOOLTIP_FILE_COLOR,
         fontSize: '14px',
+        fontWeight: '200',
         textDecoration: 'underline',
       });
 
@@ -66,6 +63,7 @@ export function defineTooltipElement() {
     open() {
       applyStyle(this.#container, {
         display: 'inline-block',
+        visibility: 'hidden',
       });
     }
 
@@ -75,29 +73,34 @@ export function defineTooltipElement() {
       });
     }
 
+    #waitUpdateTimer?: number;
+
     update(activeElement?: HTMLElement, style?: ComputedStyle) {
       // before hidden
       applyStyle(this.#container, {
         visibility: 'hidden',
       });
 
-      if (activeElement && style) {
-        this.#updateText(activeElement);
-        this.#updatePosition(style);
+      window.clearTimeout(this.#waitUpdateTimer);
+      this.#waitUpdateTimer = window.setTimeout(() => {
+        if (activeElement && style) {
+          this.#updateText(activeElement);
+          this.#updatePosition(style);
 
-        // after visible
-        applyStyle(this.#container, {
-          visibility: 'visible',
-        });
-      }
+          // after visible
+          applyStyle(this.#container, {
+            visibility: 'visible',
+          });
+        }
+      }, 300);
     }
 
     #updateText(activeElement: HTMLElement) {
       const source = resolveSource(activeElement);
 
       this.#element.innerText = `${source.element} in `;
-      this.#component.innerText = `<${source.component || 'Anonymous'}>`;
-      this.#file.innerText = source.file ?? '';
+      this.#component.innerText = `<${source.component ?? 'Unknown'}>`;
+      this.#file.innerText = source.file ?? 'filename not found 😭.';
 
       if (source.file) {
         applyStyle(this.#container, {
@@ -106,6 +109,9 @@ export function defineTooltipElement() {
         applyStyle(this.#component, {
           color: Colors.SUCCESS,
         });
+        applyStyle(this.#file, {
+          color: Colors.TOOLTIP_FILE_COLOR,
+        });
       } else {
         applyStyle(this.#container, {
           borderColor: Colors.ERROR,
@@ -113,11 +119,15 @@ export function defineTooltipElement() {
         applyStyle(this.#component, {
           color: Colors.ERROR,
         });
+        applyStyle(this.#file, {
+          color: Colors.ERROR,
+        });
       }
     }
 
     #updatePosition(style: ComputedStyle) {
-      const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+      const { clientWidth: windowWidth, clientHeight: windowHeight } =
+        document.documentElement;
       const { clientWidth: containerWidth, clientHeight: containerHeight } =
         this.#container;
 

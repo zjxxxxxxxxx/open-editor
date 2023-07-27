@@ -12,8 +12,7 @@
   "scripts": {
     "build": "esno ../../scripts/build.ts",
     "dev": "pnpm build -d",
-    "dev:watch": "pnpm dev -w",
-    "test": "node console.log('@open-editor/webpack test')"
+    "dev:watch": "pnpm dev -w"
   },
   "repository": {
     "type": "git",

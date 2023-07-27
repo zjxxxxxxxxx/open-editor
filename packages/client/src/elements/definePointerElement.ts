@@ -16,6 +16,7 @@ export function definePointerElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
       this.#button = document.createElement('div');
+
       applyStyle(this.#button, {
         position: 'fixed',
         top: '0px',

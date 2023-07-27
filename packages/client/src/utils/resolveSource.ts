@@ -1,9 +1,10 @@
 import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
+import { getOptions } from '../options';
 
 export interface ElementSource {
   element: string;
-  component: string;
+  component?: string;
   file?: string;
 }
 
@@ -21,7 +22,7 @@ export function resolveSource(element: HTMLElement): ElementSource {
 
   return {
     element: element.localName,
-    component: source.file ? source.component ?? 'Anonymous' : 'NotFound',
+    component: source.file ? source.component ?? 'Anonymous' : undefined,
     file: source.file ? ensureFileName(source.file) : undefined,
   };
 }
@@ -63,5 +64,10 @@ function resolveSourceFromReact(fiber: Fiber | null | undefined) {
 }
 
 function ensureFileName(fileName: string) {
+  const { rootDir } = getOptions();
+  if (fileName.startsWith(rootDir)) {
+    return fileName.replace(rootDir, '');
+  }
+
   return `/${fileName.replace(/^\//, '')}`;
 }

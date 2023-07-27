@@ -18,7 +18,6 @@
     "install:hook": "simple-git-hooks",
     "postinstall": "pnpm install:hook",
     "release": "pnpm build && changeset publish",
-    "test": "turbo run test",
     "typecheck": "tsc --noEmit",
     "update": "changeset version && pnpm format"
   },

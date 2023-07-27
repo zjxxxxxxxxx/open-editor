@@ -6,5 +6,6 @@ if (typeof window !== 'undefined') {
   setupClient({
     enablePointer: query.enablePointer === 'true',
     serverAddress: query.serverAddress,
+    rootDir: query.rootDir,
   });
 }
