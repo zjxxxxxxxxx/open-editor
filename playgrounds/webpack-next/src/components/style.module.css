@@ -1,0 +1,22 @@
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 50px;
+  padding: 30px;
+  max-width: 100%;
+  border: 10px solid #000;
+}
+
+.parent {
+  height: 100%;
+}
+
+.parent div {
+  flex: 1;
+  height: 100%;
+}
+
+.child {
+  height: 100%;
+}

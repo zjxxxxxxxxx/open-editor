@@ -1,0 +1,34 @@
+{
+  "name": "@open-editor/client",
+  "version": "0.0.0",
+  "description": "internal utils shared across @open-editor packages",
+  "main": "dist/client.cjs.js",
+  "module": "dist/client.esm.js",
+  "types": "dist/client.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "esno ../../scripts/build.ts",
+    "dev": "pnpm build -d",
+    "dev:watch": "pnpm dev -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/client"
+  },
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/client#readme",
+  "dependencies": {
+    "@open-editor/shared": "workspace:^0.0.0"
+  },
+  "devDependencies": {
+    "@types/react-reconciler": "^0.28.2",
+    "@vue/runtime-core": "^3.3.4"
+  }
+}

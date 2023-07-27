@@ -1,0 +1,41 @@
+{
+  "name": "@open-editor/webpack",
+  "version": "0.0.0",
+  "description": "enable you to open the editor by inspect the UI.",
+  "main": "dist/webpack.cjs.js",
+  "module": "dist/webpack.esm.js",
+  "types": "dist/webpack.d.ts",
+  "files": [
+    "dist",
+    "client-runtime.js"
+  ],
+  "scripts": {
+    "build": "esno ../../scripts/build.ts",
+    "dev": "pnpm build -d",
+    "dev:watch": "pnpm dev -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/webpack"
+  },
+  "keywords": [
+    "open-editor",
+    "webpack-plugin"
+  ],
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack#readme",
+  "dependencies": {
+    "@open-editor/client": "workspace:^0.0.0",
+    "@open-editor/server": "workspace:^0.0.0",
+    "@open-editor/shared": "workspace:^0.0.0",
+    "querystring": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/webpack": "^5.28.1"
+  }
+}

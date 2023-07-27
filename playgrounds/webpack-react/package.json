@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "name": "@playground/webpack-react",
+  "scripts": {
+    "dev": "react-app-rewired start",
+    "build": "react-app-rewired build"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@open-editor/webpack": "workspace:*",
+    "@types/react": "^18.2.16",
+    "@types/react-dom": "^18.2.7",
+    "babel-plugin-clsx": "^0.3.4",
+    "clsx": "^2.0.0",
+    "react-app-rewired": "^2.2.1",
+    "react-scripts": "5.0.1"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ],
+    "plugins": [
+      "clsx"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

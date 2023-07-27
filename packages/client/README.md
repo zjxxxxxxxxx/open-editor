@@ -1,0 +1,3 @@
+# @open-editor/client
+
+Internal
