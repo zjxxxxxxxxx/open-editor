@@ -13,6 +13,7 @@
     "dev:watch": "turbo run dev:watch --filter @open-editor/* --log-order stream",
     "play": "esno scripts/play.ts",
     "lint": "pnpm eslint . --ext .ts,.tsx",
+    "lint:ci": "pnpm lint --ignore-pattern='/playgrounds/*'",
     "format": "prettier --write '**/*.{ts,tsx,md}'",
     "install:ci": "pnpm --filter @open-editor/* install",
     "install:hook": "simple-git-hooks",
@@ -41,6 +42,7 @@
     "eslint": "^8.45.0",
     "esno": "^0.17.0",
     "fast-glob": "^3.3.1",
+    "lint-staged": "^13.2.3",
     "minimist": "^1.2.8",
     "prettier": "^3.0.0",
     "rimraf": "^5.0.1",
@@ -53,6 +55,16 @@
     "typescript": "^5.1.6"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint && pnpm format && pnpm typecheck && pnpm build"
+    "lint-staged": {
+      "*": [
+        "pnpm format"
+      ],
+      "packages/*/src/**/*.ts": [
+        "eslint --cache --fix"
+      ],
+      "packages/**/*.d.ts": [
+        "eslint --cache --fix"
+      ]
+    }
   }
 }
