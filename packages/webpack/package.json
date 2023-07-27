@@ -30,9 +30,9 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack#readme",
   "dependencies": {
-    "@open-editor/client": "workspace:^0.0.1",
-    "@open-editor/server": "workspace:^0.0.1",
-    "@open-editor/shared": "workspace:^0.0.1",
+    "@open-editor/client": "workspace:*",
+    "@open-editor/server": "workspace:*",
+    "@open-editor/shared": "workspace:*",
     "querystring": "^0.2.1"
   },
   "devDependencies": {
