@@ -1,0 +1,22 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "zjxxxxxxxxx/open-editor"
+    }
+  ],
+  "fixed": [
+    [
+      "@open-editor/client",
+      "@open-editor/server",
+      "@open-editor/shared",
+      "@open-editor/webpack"
+    ]
+  ],
+  "linked": [],
+  "access": "public",
+  "baseBranch": "main",
+  "updateInternalDependencies": "patch",
+  "ignore": []
+}
