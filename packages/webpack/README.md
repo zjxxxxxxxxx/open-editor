@@ -27,7 +27,7 @@ pnpm add --save-dev @open-editor/webpack
 first add the `OpenEditorWebpackPlugin` to `webpack.config.js`.
 
 ```js
-const { OpenEditorWebpackPlugin } = require('@open-editor/webpack');
+const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 
 module.exports = {
   entry: 'index.js',
