@@ -1,5 +1,14 @@
 # @open-editor/webpack
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/client@0.0.3
+  - @open-editor/server@0.0.3
+  - @open-editor/shared@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes
