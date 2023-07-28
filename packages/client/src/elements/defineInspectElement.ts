@@ -105,10 +105,12 @@ export function defineRootElement() {
         },
       });
 
-      const { x, y } = this.#mousePoint;
-      const initElement = document.elementFromPoint(x, y) as HTMLElement;
-      if (isValidElement(initElement)) {
-        this.#overlay.update(initElement);
+      if (this.#mousePoint) {
+        const { x, y } = this.#mousePoint;
+        const initElement = document.elementFromPoint(x, y) as HTMLElement;
+        if (isValidElement(initElement)) {
+          this.#overlay.update(initElement);
+        }
       }
     }
 
@@ -122,13 +124,18 @@ export function defineRootElement() {
       this.#cleanupListenersOnWindow?.();
     }
 
-    #openEditor(element: HTMLElement) {
-      const { serverAddress } = getOptions();
+    async #openEditor(element: HTMLElement) {
       const { file } = resolveSource(element);
       if (file) {
-        fetch(`${serverAddress}${ServerApis.OPEN_EDITOR}${file}`).then(() => {
-          this.#cleanupHandlers();
-        });
+        let openURL = `${ServerApis.OPEN_EDITOR}${file}`;
+
+        const { serverAddress } = getOptions();
+        if (serverAddress) {
+          openURL = `${serverAddress}${openURL}`;
+        }
+
+        await fetch(openURL);
+        this.#cleanupHandlers();
       }
     }
   }

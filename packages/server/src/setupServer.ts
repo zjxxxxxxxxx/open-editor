@@ -11,7 +11,7 @@ export interface SetupServerOptions {
 }
 
 export function setupServer(options: SetupServerOptions = {}) {
-  const { rootDir = process.cwd() } = options;
+  const { rootDir } = options;
 
   const middlewares = createMiddlewares({
     rootDir,

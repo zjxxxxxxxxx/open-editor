@@ -82,8 +82,9 @@ export function defineTooltipElement() {
       });
 
       window.clearTimeout(this.#waitUpdateTimer);
-      this.#waitUpdateTimer = window.setTimeout(() => {
-        if (activeElement && style) {
+
+      if (activeElement && style) {
+        this.#waitUpdateTimer = window.setTimeout(() => {
           this.#updateText(activeElement);
           this.#updatePosition(style);
 
@@ -91,8 +92,8 @@ export function defineTooltipElement() {
           applyStyle(this.#container, {
             visibility: 'visible',
           });
-        }
-      }, 300);
+        }, 300);
+      }
     }
 
     #updateText(activeElement: HTMLElement) {

@@ -5,12 +5,19 @@ import connect from 'connect';
 import openEditor from 'launch-editor';
 
 export interface OpenEditorMiddlewareOptions {
-  rootDir: string;
+  /**
+   * source rootDir path
+   *
+   * @default process.cwd()
+   */
+  rootDir?: string;
 }
 
-export function openEditorMiddleware({
-  rootDir,
-}: OpenEditorMiddlewareOptions): connect.NextHandleFunction {
+export function openEditorMiddleware(
+  options: OpenEditorMiddlewareOptions,
+): connect.NextHandleFunction {
+  const { rootDir = process.cwd() } = options;
+
   return (req, res) => {
     const { pathname } = url.parse(req.url ?? '/', true);
     if (!pathname) {

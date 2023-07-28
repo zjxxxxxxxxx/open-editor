@@ -1,4 +1,4 @@
-const { OpenEditorWebpackPlugin } = require('@open-editor/webpack');
+const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
