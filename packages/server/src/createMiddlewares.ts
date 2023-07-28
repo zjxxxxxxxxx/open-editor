@@ -9,7 +9,7 @@ export interface CreateMiddlewaresOptions {
    *
    * @default process.cwd()
    */
-  rootDir: string;
+  rootDir?: string;
 }
 
 export function createMiddlewares(options: CreateMiddlewaresOptions) {

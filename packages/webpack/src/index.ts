@@ -2,7 +2,7 @@ import type webpack from 'webpack';
 import qs from 'querystring';
 import { getServerAddress } from './getServerAddress';
 
-export interface OpenEditorWebpackPluginOptions {
+export interface Options {
   /**
    * render the pointer into the browser
    *
@@ -18,10 +18,10 @@ export interface OpenEditorWebpackPluginOptions {
   rootDir?: string;
 }
 
-export class OpenEditorWebpackPlugin {
-  options: Required<OpenEditorWebpackPluginOptions>;
+export default class OpenEditorPlugin {
+  options: Required<Options>;
 
-  constructor(options: OpenEditorWebpackPluginOptions = {}) {
+  constructor(options: Options = {}) {
     this.options = {
       enablePointer: options.enablePointer ?? false,
       rootDir: options.rootDir ?? process.cwd(),

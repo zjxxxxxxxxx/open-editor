@@ -1,4 +1,4 @@
-const { OpenEditorWebpackPlugin } = require('@open-editor/webpack');
+const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 
 module.exports = function override(config, env) {
   if (env === 'development') {
