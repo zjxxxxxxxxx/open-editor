@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/webpack",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "enable you to open the editor by inspect the UI.",
   "main": "dist/webpack.cjs.js",
   "module": "dist/webpack.esm.js",
