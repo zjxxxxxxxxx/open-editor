@@ -1,5 +1,16 @@
 # @open-editor/vite
 
+## 0.0.3
+
+### Patch Changes
+
+- [#16](https://github.com/zjxxxxxxxxx/open-editor/pull/16) [`c2cd951`](https://github.com/zjxxxxxxxxx/open-editor/commit/c2cd951a53c8c41e0f9cb09d246a87f72579afda) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix '@open-editor/client' does not exist
+
+- Updated dependencies []:
+  - @open-editor/client@0.0.3
+  - @open-editor/server@0.0.3
+  - @open-editor/shared@0.0.3
+
 ## 0.0.2
 
 ### Patch Changes

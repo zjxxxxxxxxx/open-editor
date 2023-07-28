@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/vite",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "enable you to open the editor by inspect the UI.",
   "main": "dist/vite.cjs.js",
   "module": "dist/vite.esm.js",
