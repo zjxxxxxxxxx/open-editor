@@ -6,7 +6,8 @@
   "module": "dist/vite.esm.js",
   "types": "dist/vite.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "client.js"
   ],
   "scripts": {
     "build": "esno ../../scripts/build.ts",
@@ -31,8 +32,7 @@
   "dependencies": {
     "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",
-    "@open-editor/shared": "workspace:*",
-    "vite-react": "link:/Users/zjxxxxxxxxx/Demo/vite-react"
+    "@open-editor/shared": "workspace:*"
   },
   "devDependencies": {
     "add": "^2.0.6",
