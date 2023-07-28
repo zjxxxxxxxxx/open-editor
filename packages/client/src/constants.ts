@@ -3,7 +3,7 @@ export const InternalElements = {
   HTML_OVERLAY_ELEMENT: 'open-editor-overlay',
   HTML_TOOLTIP_ELEMENT: 'open-editor-tooltip',
   HTML_POINTER_ELEMENT: 'open-editor-pointer',
-};
+} as const;
 
 export const Colors = {
   SUCCESS: '#00dc82',
@@ -20,4 +20,4 @@ export const Colors = {
   TOOLTIP_BG: '#181818',
   TOOLTIP_ELEMENT_COLOR: '#abb2bf',
   TOOLTIP_FILE_COLOR: '#2dd9da',
-};
+} as const;
