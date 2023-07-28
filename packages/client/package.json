@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/client",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "internal utils shared across @open-editor packages",
   "main": "dist/client.cjs.js",
   "module": "dist/client.esm.js",
