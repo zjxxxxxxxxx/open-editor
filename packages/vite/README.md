@@ -1,42 +1,38 @@
-# @open-editor/webpack
+# @open-editor/vite
 
-a webpack plugin that opens the code editor by clicking on the browser UI.
+a vite plugin that opens the code editor by clicking on the browser UI.
 
 ## Install
 
 npm
 
 ```bash
-npm i --save-dev @open-editor/webpack
+npm i --save-dev @open-editor/vite
 ```
 
 yarn
 
 ```bash
-yarn add --save-dev @open-editor/webpack
+yarn add --save-dev @open-editor/vite
 ```
 
 pnpm
 
 ```bash
-pnpm add --save-dev @open-editor/webpack
+pnpm add --save-dev @open-editor/vite
 ```
 
 ## Usage
 
-first add the `OpenEditorWebpackPlugin` to `webpack.config.js`.
+first add the `openEditor` to `vite.config.js`.
 
 ```js
-const OpenEditorWebpackPlugin = require('@open-editor/webpack');
+import { defineConfig } from 'vite';
+import openEditor from '@open-editor/vite';
 
-module.exports = {
-  entry: 'index.js',
-  output: {
-    path: __dirname + '/dist',
-    filename: 'index_bundle.js',
-  },
-  plugins: [new OpenEditorWebpackPlugin()],
-};
+export default defineConfig({
+  plugins: [openEditor()],
+});
 ```
 
 press hotkey <kbd>Option ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
