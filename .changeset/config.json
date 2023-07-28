@@ -11,7 +11,8 @@
       "@open-editor/client",
       "@open-editor/server",
       "@open-editor/shared",
-      "@open-editor/webpack"
+      "@open-editor/webpack",
+      "@open-editor/vite"
     ]
   ],
   "linked": [],

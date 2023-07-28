@@ -1,0 +1,41 @@
+{
+  "name": "@open-editor/vite",
+  "version": "0.0.0",
+  "description": "enable you to open the editor by inspect the UI.",
+  "main": "dist/vite.cjs.js",
+  "module": "dist/vite.esm.js",
+  "types": "dist/vite.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "esno ../../scripts/build.ts",
+    "dev": "pnpm build -d",
+    "dev:watch": "pnpm dev -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/vite"
+  },
+  "keywords": [
+    "open-editor",
+    "vite-plugin"
+  ],
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite#readme",
+  "dependencies": {
+    "@open-editor/client": "workspace:*",
+    "@open-editor/server": "workspace:*",
+    "@open-editor/shared": "workspace:*",
+    "vite-react": "link:/Users/zjxxxxxxxxx/Demo/vite-react"
+  },
+  "devDependencies": {
+    "add": "^2.0.6",
+    "vite": "^4.4.7"
+  }
+}
