@@ -18,10 +18,10 @@ export interface Options {
   rootDir?: string;
 }
 
-const rootId = 'node_modules/@open-editor/vite';
-const clientRuntimeId = `${rootId}/client-runtime`;
-const clientId = 'node_modules/@open-editor/client';
-const clientRuntimeCode = `import('__BASE__${rootId}/${clientId}').then(({ setupClient }) => {
+const pluginId = '@open-editor/vite';
+const clientId = '@open-editor/vite/client';
+const clientRuntimeId = `${pluginId}/client-runtime`;
+const clientRuntimeCode = `import('${clientId}').then(({ setupClient }) => {
   setupClient(__OPTIONS__);
 })`;
 
@@ -49,7 +49,7 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
 
     load(id) {
       if (id === `${base}${clientRuntimeId}`) {
-        return clientRuntimeCode.replace('__BASE__', base).replace(
+        return clientRuntimeCode.replace(
           '__OPTIONS__',
           JSON.stringify({
             enablePointer,
