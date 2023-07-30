@@ -1,7 +1,7 @@
 import http from 'http';
-import { createMiddlewares } from './createMiddlewares';
+import { createApp } from './createApp';
 
-export interface SetupServerOptions {
+export interface Options {
   /**
    * source rootDir path
    *
@@ -10,14 +10,13 @@ export interface SetupServerOptions {
   rootDir?: string;
 }
 
-export function setupServer(options: SetupServerOptions = {}) {
+export function setupServer(options: Options = {}) {
   const { rootDir } = options;
 
-  const middlewares = createMiddlewares({
+  const app = createApp({
     rootDir,
   });
-  const httpServer = http.createServer(middlewares);
-  process.on('exit', httpServer.close);
+  const httpServer = http.createServer(app);
 
   return startServer(httpServer);
 }

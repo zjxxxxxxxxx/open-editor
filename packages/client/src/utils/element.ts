@@ -5,14 +5,14 @@ export function applyStyle(
   Object.assign(element.style, style);
 }
 
-export function applyAttribute(
+export function applyAttrs(
   element: HTMLElement,
-  attribute: Record<string, unknown>,
+  attrs: Record<string, unknown>,
 ) {
-  for (const property of Object.keys(attribute)) {
-    const value = attribute[property];
-    if (value != null) {
-      element.setAttribute(property, String(value));
+  for (const property of Object.keys(attrs)) {
+    const attr = attrs[property];
+    if (attr != null) {
+      element.setAttribute(property, String(attr));
     } else {
       element.removeAttribute(property);
     }

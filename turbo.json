@@ -6,6 +6,7 @@
       "outputs": ["dist/**"]
     },
     "dev:watch": {
+      "dependsOn": ["^dev"],
       "outputs": ["dist/**"],
       "persistent": true
     },

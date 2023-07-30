@@ -96,14 +96,12 @@ importers:
       '@open-editor/client': workspace:*
       '@open-editor/server': workspace:*
       '@open-editor/shared': workspace:*
-      add: ^2.0.6
       vite: ^4.4.7
     dependencies:
       '@open-editor/client': link:../client
       '@open-editor/server': link:../server
       '@open-editor/shared': link:../shared
     devDependencies:
-      add: 2.0.6
       vite: 4.4.7
 
   packages/webpack:
@@ -5430,10 +5428,6 @@ packages:
     resolution: {integrity: sha512-F0SAmZ8iUtS//m8DmCTA0jlh6TDKkHQyK6xc6V4KDTyZKA9dnvX9/3sRTVQrWm79glUAZbnmmNcdYwUIHWVybw==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
-
-  /add/2.0.6:
-    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
     dev: true
 
   /address/1.2.2:
