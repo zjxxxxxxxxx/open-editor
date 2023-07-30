@@ -37,6 +37,5 @@ async function main() {
 
   consola.info(`Run ${playground}:${script}`);
 
-  exec(`pnpm dev`);
-  exec(`pnpm dev:watch & pnpm --filter @playground/${playground} ${script}`);
+  exec(`pnpm --filter @playground/${playground} ${script}`);
 }

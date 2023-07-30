@@ -1,4 +1,4 @@
-export interface SetupClientOptions {
+export interface Options {
   /**
    * render the pointer into the browser
    */
@@ -17,9 +17,9 @@ export interface SetupClientOptions {
   rootDir: string;
 }
 
-let options: SetupClientOptions;
+let options: Options;
 
-export function setOptions(opts: SetupClientOptions) {
+export function setOptions(opts: Options) {
   options = opts;
 }
 

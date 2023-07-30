@@ -1,17 +1,12 @@
 import { InternalElements } from './constants';
 import { defineElements } from './elements/defineElements';
-import { HTMLInspectElement } from './elements/defineInspectElement';
-import { SetupClientOptions, setOptions } from './options';
+import { Options, setOptions } from './options';
 
-export function setupClient(options: SetupClientOptions) {
+export function setupClient(options: Options) {
   if (typeof window === 'undefined') return;
-  defineElements();
   setOptions(options);
+  defineElements();
 
-  window.addEventListener('DOMContentLoaded', () => {
-    const root = document.createElement(
-      InternalElements.HTML_INSPECT_ELEMENT,
-    ) as HTMLInspectElement;
-    document.body.appendChild(root);
-  });
+  const inspect = document.createElement(InternalElements.HTML_INSPECT_ELEMENT);
+  document.body.appendChild(inspect);
 }

@@ -110,14 +110,14 @@ export function defineOverlayElement() {
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttionRect, {
-        width: `${styles.posttion.width}px`,
-        height: `${styles.posttion.height}px`,
-        top: `${styles.posttion.top}px`,
-        left: `${styles.posttion.left}px`,
+        width: cssUtils.px(styles.posttion.width),
+        height: cssUtils.px(styles.posttion.height),
+        top: cssUtils.px(styles.posttion.top),
+        left: cssUtils.px(styles.posttion.left),
       });
       applyStyle(this.#contentRect, {
-        width: `${styles.content.width}px`,
-        height: `${styles.content.height}px`,
+        width: cssUtils.px(styles.content.width),
+        height: cssUtils.px(styles.content.height),
       });
       applyRectStyle(this.#marginRect, styles.margin);
       applyRectStyle(this.#borderRect, styles.border);
@@ -129,9 +129,10 @@ export function defineOverlayElement() {
     applyStyle(rect, {
       width: cssUtils.px(style.width),
       height: cssUtils.px(style.height),
-      borderWidth: `${cssUtils.px(style.top)} ${cssUtils.px(
-        style.right,
-      )} ${cssUtils.px(style.bottom)} ${cssUtils.px(style.left)}`,
+      borderTopWidth: cssUtils.px(style.top),
+      borderRightWidth: cssUtils.px(style.right),
+      borderBottomWidth: cssUtils.px(style.bottom),
+      borderLeftWidth: cssUtils.px(style.left),
       borderStyle: 'solid',
     });
   }
