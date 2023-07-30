@@ -1,7 +1,7 @@
 import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
-import { applyAttribute } from '../utils/element';
+import { applyAttrs } from '../utils/element';
 import { isValidElement } from '../utils/isValidElement';
 import { InternalElements } from '../constants';
 import { getOptions } from '../options';
@@ -15,15 +15,15 @@ export function defineRootElement() {
     #overlay: HTMLOverlayElement;
     #pointer: HTMLPointerElement;
 
-    #_active!: boolean;
+    #__active__!: boolean;
 
     get #active() {
-      return this.#_active;
+      return this.#__active__;
     }
 
     set #active(value) {
-      this.#_active = value;
-      applyAttribute(this.#pointer, {
+      this.#__active__ = value;
+      applyAttrs(this.#pointer, {
         active: value,
       });
     }
@@ -43,7 +43,7 @@ export function defineRootElement() {
 
       const options = getOptions();
       if (options.enablePointer) {
-        applyAttribute(this.#pointer, {
+        applyAttrs(this.#pointer, {
           enable: true,
         });
       }
