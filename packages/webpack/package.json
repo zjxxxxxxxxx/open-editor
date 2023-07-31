@@ -12,7 +12,8 @@
   "scripts": {
     "build": "esno ../../scripts/build.ts",
     "dev": "pnpm build -d",
-    "dev:watch": "pnpm dev -w"
+    "dev:watch": "pnpm dev -w",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

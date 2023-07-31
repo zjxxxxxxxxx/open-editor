@@ -132,4 +132,14 @@ dist
 
 .turbo
 .DS_Store
-.playground
+.examples
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

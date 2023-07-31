@@ -32,7 +32,7 @@ jobs:
         id: changesets
         uses: changesets/action@v1
         with:
-          version: pnpm change-version
+          version: pnpm update-versions
           publish: pnpm release
         env:
           NODE_OPTIONS: '--max-old-space-size=4096'
