@@ -13,6 +13,6 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "exclude": ["node_modules", "playgrounds", "dist"],
-  "include": ["rollup.config.ts", "scripts", "packages"]
+  "exclude": ["node_modules", "playground"],
+  "include": ["rollup.config.ts", "scripts"]
 }

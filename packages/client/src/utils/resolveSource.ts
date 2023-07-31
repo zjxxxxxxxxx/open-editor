@@ -15,6 +15,8 @@ export function resolveSource(element: HTMLElement): ElementSource {
   if (resolvedKey) {
     if (resolvedKey === '__vueParentComponent') {
       source = resolveSourceFromVue((element as any)[resolvedKey]);
+    } else if (resolvedKey === '__svelte_meta') {
+      source = resolveSourceFromSvelte((element as any)[resolvedKey]);
     } else {
       source = resolveSourceFromReact((element as any)[resolvedKey]);
     }
@@ -28,17 +30,22 @@ export function resolveSource(element: HTMLElement): ElementSource {
 }
 
 function resolveKey(element: HTMLElement) {
-  if ('__vueParentComponent' in element) {
-    return '__vueParentComponent';
-  } else {
-    return Object.keys(element).find(
-      (key) =>
-        // React17+
-        key.startsWith('__reactFiber') ||
-        // React15+
-        key.startsWith('__reactInternalInstance'),
-    );
+  let key = Object.keys(element).find(
+    (key) =>
+      // React17+
+      key.startsWith('__reactFiber') ||
+      // React15+
+      key.startsWith('__reactInternalInstance') ||
+      key === '__svelte_meta',
+  );
+
+  if (!key) {
+    if ('__vueParentComponent' in element) {
+      key = '__vueParentComponent';
+    }
   }
+
+  return key;
 }
 
 function resolveSourceFromVue(instance: ComponentInternalInstance | null) {
@@ -49,6 +56,13 @@ function resolveSourceFromVue(instance: ComponentInternalInstance | null) {
   return {
     component: instance?.type?.__name,
     file: instance?.type?.__file,
+  };
+}
+
+function resolveSourceFromSvelte(meta: any) {
+  return {
+    component: meta?.loc.file?.match(/([^/.]+).svelte$/)![1],
+    file: meta?.loc.file,
   };
 }
 

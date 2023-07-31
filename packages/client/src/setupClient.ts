@@ -4,6 +4,10 @@ import { Options, setOptions } from './options';
 
 export function setupClient(options: Options) {
   if (typeof window === 'undefined') return;
+  if (typeof customElements === 'undefined') {
+    throw Error('@open-editor/client: customElements missing.');
+  }
+
   setOptions(options);
   defineElements();
 

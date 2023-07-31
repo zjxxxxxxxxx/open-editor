@@ -1,4 +1,4 @@
-import { Plugin } from 'vite';
+import type { Plugin } from 'vite';
 import { openEditorMiddleware } from '@open-editor/server';
 import { ServerApis } from '@open-editor/shared';
 
@@ -20,10 +20,10 @@ export interface Options {
 
 const pluginId = '@open-editor/vite';
 const clientId = `${pluginId}/client` as const;
-const clientRuntimeId = `${pluginId}/client-runtime` as const;
+const clientRuntimeId = `${pluginId}/client-runtime`;
 const clientRuntimeCode = `import('${clientId}').then(({ setupClient }) => {
   setupClient(__OPTIONS__);
-})` as const;
+})`;
 
 export default function openEditorPlugin(options: Options = {}): Plugin {
   const { enablePointer = false, rootDir = process.cwd() } = options;

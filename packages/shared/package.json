@@ -2,16 +2,21 @@
   "name": "@open-editor/shared",
   "version": "0.0.3",
   "description": "internal utils shared across @open-editor packages",
-  "main": "dist/shared.cjs.js",
-  "module": "dist/shared.esm.js",
-  "types": "dist/shared.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "esno ../../scripts/build.ts",
-    "dev": "pnpm build -d",
-    "dev:watch": "pnpm dev -w"
+    "build": "pnpm unbuild",
+    "dev": "cross-env __DEV__=true pnpm build",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
