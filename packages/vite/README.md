@@ -35,9 +35,9 @@ export default defineConfig({
 });
 ```
 
-press hotkey <kbd>Option ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
+press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
 
-press hotkey <kbd>Option ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd> or <kbd>Esc</kbd> again to exit inspect.
+press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd> or <kbd>esc</kbd> again to exit inspect.
 
 ## Options
 

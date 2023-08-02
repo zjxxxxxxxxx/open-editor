@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "target": "es2015",
+    "target": "es2020",
     "module": "ESNext",
     "strict": true,
     "noEmit": true,
     "stripInternal": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "isolatedModules": true,
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
