@@ -2,14 +2,27 @@
   "name": "@open-editor/shared",
   "version": "0.0.3",
   "description": "internal utils shared across @open-editor packages",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "require": "./dist/client.cjs",
+      "import": "./dist/client.mjs",
+      "types": "./dist/client.d.ts"
+    },
+    "./node": {
+      "require": "./dist/node.cjs",
+      "import": "./dist/node.mjs",
+      "types": "./dist/node.d.ts"
     }
   },
-  "main": "./dist/index.cjs",
-  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],

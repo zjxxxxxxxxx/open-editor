@@ -2,17 +2,23 @@
   "name": "@open-editor/vite",
   "version": "0.0.3",
   "description": "enable you to open the editor by inspect the UI.",
-  "main": "dist/vite.cjs.js",
-  "module": "dist/vite.esm.js",
-  "types": "dist/vite.d.ts",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
-    "dist",
-    "client.js"
+    "dist"
   ],
   "scripts": {
-    "build": "esno ../../scripts/build.ts",
-    "dev": "pnpm build -d",
-    "dev:watch": "pnpm dev -w",
+    "build": "pnpm unbuild",
+    "dev": "cross-env __DEV__=true pnpm build",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

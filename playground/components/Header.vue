@@ -1,3 +1,7 @@
 <script lang="ts" setup></script>
 
-<template></template>
+<template>
+  <header></header>
+</template>
+
+<style lang="scss"></style>

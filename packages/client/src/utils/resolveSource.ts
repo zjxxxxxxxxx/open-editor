@@ -67,13 +67,20 @@ function resolveSourceFromSvelte(meta: any) {
 }
 
 function resolveSourceFromReact(fiber: Fiber | null | undefined) {
-  while (fiber && !fiber._debugSource) {
-    fiber = fiber._debugOwner;
-  }
+  if (!fiber) return {};
 
+  const file = fiber._debugSource?.fileName;
+
+  let owner = fiber._debugOwner;
+  while (owner && typeof fiber.type !== 'function' && owner._debugSource) {
+    owner = owner._debugOwner;
+  }
+  if (!owner) return { file };
+
+  const component = owner.type.name ?? owner.type.displayName;
   return {
-    component: fiber?._debugOwner?.type.name,
-    file: fiber?._debugSource?.fileName,
+    component,
+    file,
   };
 }
 

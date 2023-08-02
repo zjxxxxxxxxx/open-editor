@@ -1,6 +1,11 @@
-import type { Plugin } from 'vite';
+import type { Plugin, ResolvedConfig } from 'vite';
+import { join } from 'node:path';
 import { openEditorMiddleware } from '@open-editor/server';
 import { ServerApis } from '@open-editor/shared';
+import {
+  clientRuntimeFilename,
+  generateClientRuntime,
+} from './generateClientRuntime';
 
 export interface Options {
   /**
@@ -18,24 +23,26 @@ export interface Options {
   rootDir?: string;
 }
 
-const pluginId = '@open-editor/vite';
-const clientId = `${pluginId}/client` as const;
-const clientRuntimeId = `${pluginId}/client-runtime`;
-const clientRuntimeCode = `import('${clientId}').then(({ setupClient }) => {
-  setupClient(__OPTIONS__);
-})`;
-
 export default function openEditorPlugin(options: Options = {}): Plugin {
   const { enablePointer = false, rootDir = process.cwd() } = options;
 
-  let base = '/';
+  const clientId = 'virtual:@open-editor/vite/client';
+
+  let resolvedConfig: ResolvedConfig;
 
   return {
     name: 'vite:open-editor',
     apply: 'serve',
 
+    buildStart() {
+      generateClientRuntime({
+        enablePointer,
+        rootDir,
+      });
+    },
+
     configResolved(config) {
-      base = config.base;
+      resolvedConfig = config;
     },
 
     configureServer(server) {
@@ -48,15 +55,17 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
     },
 
     load(id) {
-      if (id === `${base}${clientRuntimeId}`) {
-        return clientRuntimeCode.replace(
-          '__OPTIONS__',
-          JSON.stringify({
-            enablePointer,
-            rootDir,
-          }),
-        );
+      if (id === join(resolvedConfig.base, clientId)) {
+        return clientRuntimeFilename;
       }
+    },
+
+    transform(code, id) {
+      if (id.includes('/entry')) {
+        return `import '${clientRuntimeFilename}';\n${code}`;
+      }
+
+      return code;
     },
 
     transformIndexHtml(html) {
@@ -66,9 +75,10 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
           {
             tag: 'script',
             attrs: {
+              type: 'module',
               async: 'true',
-              src: `${base}${clientRuntimeId}`,
               fetchpriority: 'low',
+              src: join(resolvedConfig.base, clientId),
             },
             injectTo: 'head',
           },

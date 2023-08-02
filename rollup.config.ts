@@ -45,7 +45,7 @@ function buildBundles(): RollupOptions {
     plugins: [
       esbuildPlugin({
         tsconfig: tsconfigFile,
-        target: 'es6',
+        target: 'es2020',
         minify: !__DEV__,
       }),
       nodeResolve(),
