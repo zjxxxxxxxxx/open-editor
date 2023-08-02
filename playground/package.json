@@ -9,7 +9,9 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "latest",
+    "@nuxt/webpack-builder": "latest",
+    "@open-editor/vite": "workspace:*",
+    "@open-editor/webpack": "workspace:*",
     "nuxt": "^3.6.5"
   }
 }

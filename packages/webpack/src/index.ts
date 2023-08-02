@@ -1,6 +1,9 @@
 import type webpack from 'webpack';
-import qs from 'querystring';
 import { getServerAddress } from './getServerAddress';
+import {
+  clientRuntimeFilename,
+  generateClientRuntime,
+} from './generateClientRuntime';
 
 export interface Options {
   /**
@@ -20,6 +23,7 @@ export interface Options {
 
 export default class OpenEditorPlugin {
   options: Required<Options>;
+  compiler!: webpack.Compiler;
 
   constructor(options: Options = {}) {
     this.options = {
@@ -29,6 +33,8 @@ export default class OpenEditorPlugin {
   }
 
   apply(compiler: webpack.Compiler) {
+    this.compiler = compiler;
+
     if (
       compiler.options.mode !== 'development' ||
       (process.env.NODE_ENV && process.env.NODE_ENV !== 'development')
@@ -61,14 +67,13 @@ export default class OpenEditorPlugin {
   async resolveClientRuntime<
     Callback extends (clientRuntimeEntry: string) => any,
   >(callback: Callback): Promise<ReturnType<Callback>> {
-    const entry = require.resolve('../client-runtime');
     const serverAddress = await getServerAddress(this.options);
-    const query = qs.stringify({
+    generateClientRuntime({
       serverAddress,
       ...this.options,
     });
 
-    return callback(`${entry}?${query}`);
+    return callback(clientRuntimeFilename);
   }
 
   injectClientRuntime(
