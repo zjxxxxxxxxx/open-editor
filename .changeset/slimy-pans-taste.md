@@ -4,4 +4,4 @@
 '@open-editor/shared': patch
 ---
 
-build: use unbuild
+use unbuild

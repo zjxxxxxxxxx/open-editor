@@ -67,6 +67,9 @@ function resolveSourceFromSvelte(meta: any) {
 }
 
 function resolveSourceFromReact(fiber: Fiber | null | undefined) {
+  while (fiber && !fiber._debugSource) {
+    fiber = fiber._debugOwner;
+  }
   if (!fiber) return {};
 
   const file = fiber._debugSource?.fileName;
