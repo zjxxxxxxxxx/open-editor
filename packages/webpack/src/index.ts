@@ -1,9 +1,6 @@
 import type webpack from 'webpack';
+import { createRuntime } from '@open-editor/shared/node';
 import { getServerAddress } from './getServerAddress';
-import {
-  clientRuntimeFilename,
-  generateClientRuntime,
-} from './generateClientRuntime';
 
 export interface Options {
   /**
@@ -68,12 +65,12 @@ export default class OpenEditorPlugin {
     Callback extends (clientRuntimeEntry: string) => any,
   >(callback: Callback): Promise<ReturnType<Callback>> {
     const serverAddress = await getServerAddress(this.options);
-    generateClientRuntime({
+    const runtime = createRuntime(import.meta.url);
+    runtime.generate({
       serverAddress,
       ...this.options,
     });
-
-    return callback(clientRuntimeFilename);
+    return callback(runtime.filename);
   }
 
   injectClientRuntime(
