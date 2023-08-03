@@ -1,7 +1,13 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const count = ref(0);
+</script>
 
 <template>
-  <header></header>
+  <header>
+    <button @click="count--">-</button>
+    <span> {{ count }} </span>
+    <button @click="count++">+</button>
+  </header>
 </template>
 
 <style lang="scss"></style>

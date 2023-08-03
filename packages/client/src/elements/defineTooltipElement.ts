@@ -36,7 +36,7 @@ export function defineTooltipElement() {
         display: 'none',
         maxWidth: `calc(100% - 44px - ${cssUtils.px(this.#offset * 2)})`,
         visibility: 'hidden',
-        background: Colors.TOOLTIP_BG,
+        background: Colors.TOOLTIP_BG_COLOR,
         borderRadius: '4px',
         border: '2px solid transparent',
       });
@@ -105,10 +105,10 @@ export function defineTooltipElement() {
 
       if (source.file) {
         applyStyle(this.#container, {
-          borderColor: Colors.SUCCESS,
+          borderColor: Colors.TOOLTIP_BORDER_COLOR,
         });
         applyStyle(this.#component, {
-          color: Colors.SUCCESS,
+          color: Colors.TOOLTIP_COMPONENT_COLOR,
         });
         applyStyle(this.#file, {
           color: Colors.TOOLTIP_FILE_COLOR,

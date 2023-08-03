@@ -10,8 +10,39 @@ import { HTMLPointerElement } from './definePointerElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
+const theme = `<style>
+:host {
+  --black: #181818;
+  --white: #ffffff;
+  --grey: #abb2bf;
+  --red: #ff5555;
+  --green: #00dc82;
+  --cyan: #1DE0B1;
+
+  --element: var(--black);
+  --pointer: var(--black);
+  --bg-color: var(--white);
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --black: #181818;
+    --white: #ffffff;
+    --grey: #abb2bf;
+    --red: #ff5555;
+    --green: #00dc82;
+    --cyan: #2dd9da;
+  
+    --element: var(--grey);
+    --pointer: var(--grey);
+    --bg-color: var(--black);
+  }
+}
+</style>`;
+
 export function defineRootElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
+    #mouseStyle!: HTMLElement;
     #overlay: HTMLOverlayElement;
     #pointer: HTMLPointerElement;
 
@@ -34,6 +65,8 @@ export function defineRootElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+      shadow.innerHTML = theme;
+
       this.#overlay = document.createElement(
         InternalElements.HTML_OVERLAY_ELEMENT,
       ) as HTMLOverlayElement;
@@ -95,6 +128,7 @@ export function defineRootElement() {
       if (this.#active) return;
       this.#active = true;
 
+      this.#lockMouseStyle();
       this.#overlay.open();
       this.#cleanupListenersOnWindow = setupListenersOnWindow({
         onChangeElement: (element) => {
@@ -114,12 +148,28 @@ export function defineRootElement() {
       }
     }
 
+    #lockMouseStyle() {
+      if (!this.#mouseStyle) {
+        const style = document.createElement('style');
+        style.innerHTML = `*:hover {
+          cursor: default;
+        }`;
+        this.#mouseStyle = style;
+      }
+      document.head.appendChild(this.#mouseStyle);
+    }
+
+    #unlockMouseStyle() {
+      this.#mouseStyle.remove();
+    }
+
     #cleanupListenersOnWindow?: () => void;
 
     #cleanupHandlers() {
       if (!this.#active) return;
       this.#active = false;
 
+      this.#unlockMouseStyle();
       this.#overlay.close();
       this.#cleanupListenersOnWindow?.();
     }
