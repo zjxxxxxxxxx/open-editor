@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/shared",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "internal utils shared across @open-editor packages",
   "type": "module",
   "main": "./dist/index.cjs",
