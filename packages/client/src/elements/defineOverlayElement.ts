@@ -29,6 +29,7 @@ export function defineOverlayElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+
       this.#tooltip = document.createElement(
         InternalElements.HTML_TOOLTIP_ELEMENT,
       ) as HTMLTooltipElement;

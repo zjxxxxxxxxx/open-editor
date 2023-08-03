@@ -6,18 +6,21 @@ export const InternalElements = {
 } as const;
 
 export const Colors = {
-  SUCCESS: '#00dc82',
-  ERROR: '#ff5555',
+  SUCCESS: 'var(--green)',
+  ERROR: 'var(--red)',
 
   OVERLAY_MARGIN_RECT: '#ff9b00',
   OVERLAY_BORDER_RECT: '#ffc832',
   OVERLAY_PADDING_RECT: '#c8ffb9',
   OVERLAY_CONTENT_RECT: '#78aad2',
 
-  POINTER_COLOR: '#2dd9da',
-  POINTER_ACTIVE_COLOR: '#04ff98',
+  POINTER_COLOR: 'var(--pointer)',
+  POINTER_ACTIVE_COLOR: 'var(--green)',
+  POINTER_BG_COLOR: 'var(--bg-color)',
 
-  TOOLTIP_BG: '#181818',
-  TOOLTIP_ELEMENT_COLOR: '#abb2bf',
-  TOOLTIP_FILE_COLOR: '#2dd9da',
+  TOOLTIP_BG_COLOR: 'var(--bg-color)',
+  TOOLTIP_BORDER_COLOR: 'var(--green)',
+  TOOLTIP_COMPONENT_COLOR: 'var(--green)',
+  TOOLTIP_ELEMENT_COLOR: 'var(--element)',
+  TOOLTIP_FILE_COLOR: 'var(--cyan)',
 } as const;
