@@ -1,5 +1,9 @@
+<script lang="ts" setup>
+import './components/Header.vue';
+</script>
 <template>
   <div>
-    <NuxtWelcome />s
+    <Header />
+    <NuxtWelcome />
   </div>
 </template>

@@ -9,49 +9,56 @@ export function definePointerElement() {
       return ['enable', 'active'];
     }
 
+    #container: HTMLElement;
     #button: HTMLElement;
 
     constructor() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      this.#button = document.createElement('div');
 
-      applyStyle(this.#button, {
+      this.#container = document.createElement('div');
+      applyStyle(this.#container, {
         position: 'fixed',
         top: '0px',
         right: '0px',
         zIndex: '10001',
         transform: 'translateZ(10001px)',
         display: 'none',
-        padding: '8px',
-        width: '24px',
-        height: '24px',
-        cursor: 'pointer',
+        padding: '6px',
       });
+
+      this.#button = document.createElement('div');
       applyStyle(this.#button, {
+        padding: '2px',
+        width: '22px',
+        height: '22px',
+        cursor: 'pointer',
+        borderRadius: '50%',
         color: Colors.POINTER_COLOR,
+        backgroundColor: Colors.POINTER_BG_COLOR,
       });
 
       this.#button.title = 'open-editor-inspect';
       this.#button.innerHTML = `
-        <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-          <path d="M512 337.45454563c-96 0-174.54545437 78.54545438-174.54545437 174.54545437s78.54545438 174.54545437 174.54545437 174.54545437 174.54545437-78.54545438 174.54545437-174.54545437-78.54545438-174.54545437-174.54545437-174.54545437zM900.36363594 468.36363594C878.54545437 285.09090874 734.54545438 141.09090877 555.63636406 123.63636406V32h-87.27272812v91.63636406C285.09090874 141.09090877 141.09090877 285.09090874 123.63636406 468.36363594H32v87.27272812h91.63636406C145.45454563 738.90909126 289.45454562 882.90909123 468.36363594 900.36363594V992h87.27272812v-91.63636406C738.90909126 878.54545437 882.90909123 734.54545438 900.36363594 555.63636406H992v-87.27272812h-91.63636406zM512 817.45454562C341.81818156 817.45454562 206.54545438 682.18181844 206.54545438 512S341.81818156 206.54545438 512 206.54545438 817.45454562 341.81818156 817.45454562 512 682.18181844 817.45454562 512 817.45454562z" fill="currentColor"></path>
-        </svg>
-      `;
+      <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor">
+        <path d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"></path>
+        <path d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"></path>
+      </svg>`;
 
-      shadow.appendChild(this.#button);
+      shadow.appendChild(this.#container);
+      this.#container.appendChild(this.#button);
     }
 
     attributeChangedCallback(name: string, _: never, newValue: string) {
       switch (name) {
         case 'enable':
           if (newValue === 'true') {
-            applyStyle(this.#button, {
+            applyStyle(this.#container, {
               display: 'block',
             });
           } else {
-            applyStyle(this.#button, {
+            applyStyle(this.#container, {
               display: 'none',
             });
           }
@@ -61,10 +68,12 @@ export function definePointerElement() {
           if (newValue === 'true') {
             applyStyle(this.#button, {
               color: Colors.POINTER_ACTIVE_COLOR,
+              boxShadow: `0px 0px 10px ${Colors.POINTER_ACTIVE_COLOR}`,
             });
           } else {
             applyStyle(this.#button, {
               color: Colors.POINTER_COLOR,
+              boxShadow: 'none',
             });
           }
           break;
