@@ -19,7 +19,7 @@ export function openEditorMiddleware(
   const { rootDir = process.cwd() } = options;
 
   return (req, res) => {
-    const { pathname } = url.parse(req.url ?? '/', true);
+    const { pathname, query } = url.parse(req.url ?? '/', true);
     if (!pathname) {
       res.statusCode = 404;
       res.end(sendMessage('Invalid'));
@@ -33,7 +33,9 @@ export function openEditorMiddleware(
 
     try {
       const file = fs.readFileSync(filename, 'utf-8');
-      openEditor(filename + ':1:1');
+      const { line = 0, column = 0 } = query;
+
+      openEditor(`${filename}:${line}:${column}`);
       res.setHeader('Content-Type', 'text/javascript');
       res.end(file);
     } catch {
