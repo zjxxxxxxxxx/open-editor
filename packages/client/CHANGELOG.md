@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.0.5
+
+### Patch Changes
+
+- [#25](https://github.com/zjxxxxxxxxx/open-editor/pull/25) [`cd257d4`](https://github.com/zjxxxxxxxxx/open-editor/commit/cd257d4f9376082e2e6f83be0504234c7bf67030) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - react support line and column
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.5
+
 ## 0.0.4
 
 ### Patch Changes
