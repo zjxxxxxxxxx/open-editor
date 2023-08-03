@@ -1,5 +1,16 @@
 # @open-editor/server
 
+## 0.0.4
+
+### Patch Changes
+
+- [#18](https://github.com/zjxxxxxxxxx/open-editor/pull/18) [`279e674`](https://github.com/zjxxxxxxxxx/open-editor/commit/279e674acb321e5fb25bdce61b106acfb08f4e59) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - auto server exit
+
+- [#21](https://github.com/zjxxxxxxxxx/open-editor/pull/21) [`4344569`](https://github.com/zjxxxxxxxxx/open-editor/commit/43445694a3c0b286be62e9caa06e340a0dba72c1) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - use unbuild
+
+- Updated dependencies [[`4344569`](https://github.com/zjxxxxxxxxx/open-editor/commit/43445694a3c0b286be62e9caa06e340a0dba72c1), [`e820932`](https://github.com/zjxxxxxxxxx/open-editor/commit/e8209328f2c698807dbd5030b3ae011cd3ca6d67)]:
+  - @open-editor/shared@0.0.4
+
 ## 0.0.3
 
 ### Patch Changes
