@@ -3,4 +3,4 @@
 '@open-editor/vite': patch
 ---
 
-build: use unbuild
+use unbuild

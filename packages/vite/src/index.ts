@@ -2,10 +2,7 @@ import type { Plugin, ResolvedConfig } from 'vite';
 import { join } from 'node:path';
 import { openEditorMiddleware } from '@open-editor/server';
 import { ServerApis } from '@open-editor/shared';
-import {
-  clientRuntimeFilename,
-  generateClientRuntime,
-} from './generateClientRuntime';
+import { createRuntime } from '@open-editor/shared/node';
 
 export interface Options {
   /**
@@ -27,6 +24,7 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
   const { enablePointer = false, rootDir = process.cwd() } = options;
 
   const clientId = 'virtual:@open-editor/vite/client';
+  const runtime = createRuntime(import.meta.url);
 
   let resolvedConfig: ResolvedConfig;
 
@@ -35,7 +33,7 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
     apply: 'serve',
 
     buildStart() {
-      generateClientRuntime({
+      runtime.generate({
         enablePointer,
         rootDir,
       });
@@ -56,13 +54,13 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
 
     load(id) {
       if (id === join(resolvedConfig.base, clientId)) {
-        return clientRuntimeFilename;
+        return `import('${runtime.filename}');`;
       }
     },
 
     transform(code, id) {
       if (id.includes('/entry')) {
-        return `import '${clientRuntimeFilename}';\n${code}`;
+        return `import('${runtime.filename}');\n${code}`;
       }
 
       return code;

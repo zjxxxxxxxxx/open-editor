@@ -13,7 +13,7 @@ export function resolveFilename(path: string, url: string) {
 export function resolveNodeModuleFilename(mod: string, url: string) {
   let referencePath = dirname(fileURLToPath(url));
 
-  while (referencePath.length > 1) {
+  while (referencePath) {
     const modsPath = join(referencePath, '/node_modules');
 
     if (existsSync(modsPath)) {

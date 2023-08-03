@@ -1,23 +1,10 @@
-import openEditor from '@open-editor/vite';
+// import openEditor from '@open-editor/vite';
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
-  vite: {
-    plugins: [
-      openEditor({
-        enablePointer: true,
-      }),
-    ],
-  },
-});
-
-// import OpenEditorWebpackPlugin from '@open-editor/webpack';
-
+// // https://nuxt.com/docs/api/configuration/nuxt-config
 // export default defineNuxtConfig({
-//   builder: 'webpack',
-//   webpack: {
+//   vite: {
 //     plugins: [
-//       new OpenEditorWebpackPlugin({
+//       openEditor({
 //         enablePointer: true,
 //       }),
 //     ],
