@@ -175,9 +175,9 @@ export function defineRootElement() {
     }
 
     async #openEditor(element: HTMLElement) {
-      const { file } = resolveSource(element);
+      const { file, line = 0, column = 0 } = resolveSource(element);
       if (file) {
-        let openURL = `${ServerApis.OPEN_EDITOR}${file}`;
+        let openURL = `${ServerApis.OPEN_EDITOR}${file}?line=${line}&column=${column}`;
 
         const { serverAddress } = getOptions();
         if (serverAddress) {

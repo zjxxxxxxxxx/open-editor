@@ -6,6 +6,8 @@ export interface ElementSource {
   element: string;
   component?: string;
   file?: string;
+  line?: number;
+  column?: number;
 }
 
 export function resolveSource(element: HTMLElement): ElementSource {
@@ -23,6 +25,7 @@ export function resolveSource(element: HTMLElement): ElementSource {
   }
 
   return {
+    ...source,
     element: element.localName,
     component: source.file ? source.component ?? 'Anonymous' : undefined,
     file: source.file ? ensureFileName(source.file) : undefined,
@@ -72,18 +75,18 @@ function resolveSourceFromReact(fiber: Fiber | null | undefined) {
   }
   if (!fiber) return {};
 
-  const file = fiber._debugSource?.fileName;
+  const source = fiber._debugSource;
 
   let owner = fiber._debugOwner;
-  while (owner && typeof fiber.type !== 'function' && owner._debugSource) {
+  while (owner && (typeof owner.type !== 'function' || !owner._debugSource)) {
     owner = owner._debugOwner;
   }
-  if (!owner) return { file };
-
-  const component = owner.type.name ?? owner.type.displayName;
+  console.log(source, owner);
   return {
-    component,
-    file,
+    component: owner?.type.name ?? owner?.type.displayName,
+    file: source?.fileName,
+    line: source?.lineNumber,
+    column: (source as any)?.columnNumber,
   };
 }
 
