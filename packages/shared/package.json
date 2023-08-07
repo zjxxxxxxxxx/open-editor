@@ -12,11 +12,6 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./client": {
-      "require": "./dist/client.cjs",
-      "import": "./dist/client.mjs",
-      "types": "./dist/client.d.ts"
-    },
     "./node": {
       "require": "./dist/node.cjs",
       "import": "./dist/node.mjs",
@@ -28,7 +23,8 @@
   ],
   "scripts": {
     "build": "pnpm unbuild",
-    "dev": "cross-env __DEV__=true pnpm build",
+    "dev": "pnpm rollup -c",
+    "dev:watch": "pnpm dev -w",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 import { createApp } from './createApp';
 
 export interface Options {

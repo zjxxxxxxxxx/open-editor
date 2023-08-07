@@ -28,7 +28,8 @@
   },
   "keywords": [
     "open-editor",
-    "vite-plugin"
+    "vite-plugin",
+    "devtools"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",
