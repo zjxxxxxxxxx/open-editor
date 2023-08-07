@@ -1,11 +1,11 @@
-export const InternalElements = {
+export const InternalElements = <const>{
   HTML_INSPECT_ELEMENT: 'open-editor-inspect',
   HTML_OVERLAY_ELEMENT: 'open-editor-overlay',
   HTML_TOOLTIP_ELEMENT: 'open-editor-tooltip',
   HTML_POINTER_ELEMENT: 'open-editor-pointer',
-} as const;
+};
 
-export const Colors = {
+export const Colors = <const>{
   SUCCESS: 'var(--green)',
   ERROR: 'var(--red)',
 
@@ -16,11 +16,11 @@ export const Colors = {
 
   POINTER_COLOR: 'var(--pointer)',
   POINTER_ACTIVE_COLOR: 'var(--green)',
-  POINTER_BG_COLOR: 'var(--bg-color)',
+  POINTER_BG_COLOR: 'var(--pointer-bg)',
 
   TOOLTIP_BG_COLOR: 'var(--bg-color)',
   TOOLTIP_BORDER_COLOR: 'var(--green)',
   TOOLTIP_COMPONENT_COLOR: 'var(--green)',
   TOOLTIP_ELEMENT_COLOR: 'var(--element)',
   TOOLTIP_FILE_COLOR: 'var(--cyan)',
-} as const;
+};

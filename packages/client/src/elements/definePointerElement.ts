@@ -30,11 +30,12 @@ export function definePointerElement() {
 
       this.#button = document.createElement('div');
       applyStyle(this.#button, {
-        padding: '2px',
+        padding: '3px',
         width: '22px',
         height: '22px',
         cursor: 'pointer',
         borderRadius: '50%',
+        backdropFilter: 'blur(2px)',
         color: Colors.POINTER_COLOR,
         backgroundColor: Colors.POINTER_BG_COLOR,
       });
@@ -46,8 +47,8 @@ export function definePointerElement() {
         <path d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"></path>
       </svg>`;
 
-      shadow.appendChild(this.#container);
       this.#container.appendChild(this.#button);
+      shadow.appendChild(this.#container);
     }
 
     attributeChangedCallback(name: string, _: never, newValue: string) {

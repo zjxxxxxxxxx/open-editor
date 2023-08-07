@@ -70,7 +70,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   function onClick(event: Event) {
     onSilence(event);
 
-    const element = event.target as HTMLElement;
+    const element = <HTMLElement>event.target;
     if (isValidElement(element)) {
       onOpenEditor(element);
     }
@@ -79,7 +79,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   function onPointerOver(event: Event) {
     onSilence(event);
 
-    const element = event.target as HTMLElement;
+    const element = <HTMLElement>event.target;
     const validElement = isValidElement(element) ? element : undefined;
     onChangeElement(validElement);
   }
@@ -87,13 +87,15 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   function onPointerLeave(event: Event) {
     onSilence(event);
 
-    if (!isValidElement(event.target as HTMLElement)) {
+    const element = <HTMLElement>event.target;
+    if (!isValidElement(element)) {
       onChangeElement();
     }
   }
 
   function onSilence(event: Event) {
-    if (!isInternalElement(event.target as HTMLElement)) {
+    const element = <HTMLElement>event.target;
+    if (!isInternalElement(element)) {
       event.preventDefault?.();
       event.stopPropagation?.();
       event.stopImmediatePropagation?.();

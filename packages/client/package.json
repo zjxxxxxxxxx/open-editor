@@ -11,14 +11,16 @@
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
-    }
+    },
+    "./runtime": "./dist/runtime.js"
   },
   "files": [
     "dist"
   ],
   "scripts": {
     "build": "pnpm unbuild",
-    "dev": "cross-env __DEV__=true pnpm build",
+    "dev": "pnpm rollup -c",
+    "dev:watch": "pnpm dev -w",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

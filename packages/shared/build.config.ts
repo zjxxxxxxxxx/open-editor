@@ -1,11 +1,6 @@
 import { defineBuildConfig } from 'unbuild';
-import buildConfig from '../../build.config';
 
 export default defineBuildConfig({
-  ...buildConfig,
-  entries: [
-    { input: 'src/index' },
-    { input: 'src/client' },
-    { input: 'src/node' },
-  ],
+  preset: '../../build.preset',
+  entries: ['src/index', 'src/node'],
 });
