@@ -24,3 +24,5 @@ export const Colors = <const>{
   TOOLTIP_ELEMENT_COLOR: 'var(--element)',
   TOOLTIP_FILE_COLOR: 'var(--cyan)',
 };
+
+export const CLIENT = typeof window !== 'undefined';
