@@ -17,30 +17,25 @@ const theme = `<style>
   --grey: #abb2bf;
   --red: #ff5555;
   --green: #00dc82;
-  --cyan: #1DE0B1;
+  --cyan: #2dd9da;
 
   --element: var(--black);
   --pointer: var(--black);
+  --pointer-bg: #ffffffcc;
   --bg-color: var(--white);
 }
 
 @media (prefers-color-scheme: dark) {
-  :host {
-    --black: #181818;
-    --white: #ffffff;
-    --grey: #abb2bf;
-    --red: #ff5555;
-    --green: #00dc82;
-    --cyan: #2dd9da;
-  
+  :host {  
     --element: var(--grey);
-    --pointer: var(--grey);
+    --pointer: var(--white);
+    --pointer-bg: #181818cc;
     --bg-color: var(--black);
   }
 }
 </style>`;
 
-export function defineRootElement() {
+export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #mouseStyle!: HTMLElement;
     #overlay: HTMLOverlayElement;
@@ -67,12 +62,12 @@ export function defineRootElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = theme;
 
-      this.#overlay = document.createElement(
-        InternalElements.HTML_OVERLAY_ELEMENT,
-      ) as HTMLOverlayElement;
-      this.#pointer = document.createElement(
-        InternalElements.HTML_POINTER_ELEMENT,
-      ) as HTMLPointerElement;
+      this.#overlay = <HTMLOverlayElement>(
+        document.createElement(InternalElements.HTML_OVERLAY_ELEMENT)
+      );
+      this.#pointer = <HTMLPointerElement>(
+        document.createElement(InternalElements.HTML_POINTER_ELEMENT)
+      );
 
       const options = getOptions();
       if (options.enablePointer) {
@@ -128,8 +123,8 @@ export function defineRootElement() {
       if (this.#active) return;
       this.#active = true;
 
-      this.#lockMouseStyle();
       this.#overlay.open();
+      this.#lockMouseStyle();
       this.#cleanupListenersOnWindow = setupListenersOnWindow({
         onChangeElement: (element) => {
           this.#overlay.update(element);
@@ -141,11 +136,22 @@ export function defineRootElement() {
 
       if (this.#mousePoint) {
         const { x, y } = this.#mousePoint;
-        const initElement = document.elementFromPoint(x, y) as HTMLElement;
+        const initElement = <HTMLElement>document.elementFromPoint(x, y);
         if (isValidElement(initElement)) {
           this.#overlay.update(initElement);
         }
       }
+    }
+
+    #cleanupListenersOnWindow?: () => void;
+
+    #cleanupHandlers() {
+      if (!this.#active) return;
+      this.#active = false;
+
+      this.#overlay.close();
+      this.#unlockMouseStyle();
+      this.#cleanupListenersOnWindow?.();
     }
 
     #lockMouseStyle() {
@@ -156,22 +162,11 @@ export function defineRootElement() {
         }`;
         this.#mouseStyle = style;
       }
-      document.head.appendChild(this.#mouseStyle);
+      requestAnimationFrame(() => document.head.appendChild(this.#mouseStyle));
     }
 
     #unlockMouseStyle() {
       this.#mouseStyle.remove();
-    }
-
-    #cleanupListenersOnWindow?: () => void;
-
-    #cleanupHandlers() {
-      if (!this.#active) return;
-      this.#active = false;
-
-      this.#unlockMouseStyle();
-      this.#overlay.close();
-      this.#cleanupListenersOnWindow?.();
     }
 
     async #openEditor(element: HTMLElement) {

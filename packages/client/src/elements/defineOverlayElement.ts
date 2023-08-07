@@ -30,9 +30,9 @@ export function defineOverlayElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
 
-      this.#tooltip = document.createElement(
-        InternalElements.HTML_TOOLTIP_ELEMENT,
-      ) as HTMLTooltipElement;
+      this.#tooltip = <HTMLTooltipElement>(
+        document.createElement(InternalElements.HTML_TOOLTIP_ELEMENT)
+      );
       this.#posttionRect = document.createElement('div');
       this.#marginRect = document.createElement('div');
       this.#borderRect = document.createElement('div');

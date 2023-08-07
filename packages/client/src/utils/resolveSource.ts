@@ -16,11 +16,11 @@ export function resolveSource(element: HTMLElement): ElementSource {
   const resolvedKey = resolveKey(element);
   if (resolvedKey) {
     if (resolvedKey === '__vueParentComponent') {
-      source = resolveSourceFromVue((element as any)[resolvedKey]);
+      source = resolveSourceFromVue((<any>element)[resolvedKey]);
     } else if (resolvedKey === '__svelte_meta') {
-      source = resolveSourceFromSvelte((element as any)[resolvedKey]);
+      source = resolveSourceFromSvelte((<any>element)[resolvedKey]);
     } else {
-      source = resolveSourceFromReact((element as any)[resolvedKey]);
+      source = resolveSourceFromReact((<any>element)[resolvedKey]);
     }
   }
 
@@ -51,7 +51,7 @@ function resolveKey(element: HTMLElement) {
   return key;
 }
 
-function resolveSourceFromVue(instance: ComponentInternalInstance | null) {
+function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
   while (instance && !instance.type?.__file) {
     instance = instance.parent;
   }
@@ -69,7 +69,7 @@ function resolveSourceFromSvelte(meta: any) {
   };
 }
 
-function resolveSourceFromReact(fiber: Fiber | null | undefined) {
+function resolveSourceFromReact(fiber?: Fiber | null) {
   while (fiber && !fiber._debugSource) {
     fiber = fiber._debugOwner;
   }
@@ -81,12 +81,12 @@ function resolveSourceFromReact(fiber: Fiber | null | undefined) {
   while (owner && (typeof owner.type !== 'function' || !owner._debugSource)) {
     owner = owner._debugOwner;
   }
-  console.log(source, owner);
+
   return {
     component: owner?.type.name ?? owner?.type.displayName,
     file: source?.fileName,
     line: source?.lineNumber,
-    column: (source as any)?.columnNumber,
+    column: (<any>source)?.columnNumber,
   };
 }
 

@@ -12,22 +12,5 @@
     "@typescript-eslint/no-non-null-assertion": 0,
     "@typescript-eslint/ban-ts-comment": 0,
     "no-mixed-spaces-and-tabs": 0
-  },
-  "overrides": [
-    {
-      "files": ["packages/client/**"],
-      "globals": {
-        "__OPTIONS__": true
-      }
-    },
-    {
-      "files": ["packages/webpack/**"],
-      "globals": {
-        "__resourceQuery": true
-      },
-      "rules": {
-        "@typescript-eslint/no-var-requires": 0
-      }
-    }
-  ]
+  }
 }

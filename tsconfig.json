@@ -1,18 +1,5 @@
 {
-  "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "target": "es2020",
-    "module": "ESNext",
-    "strict": true,
-    "noEmit": true,
-    "stripInternal": true,
-    "moduleResolution": "bundler",
-    "isolatedModules": true,
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
-  },
+  "extends": "./tsconfig.base.json",
   "exclude": ["node_modules", "playground"],
-  "include": ["rollup.config.ts", "scripts"]
+  "include": ["scripts", "build.preset.ts"]
 }

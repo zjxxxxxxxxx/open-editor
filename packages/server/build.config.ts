@@ -1,1 +1,5 @@
-export * from '../../build.config';
+import { defineBuildConfig } from 'unbuild';
+
+export default defineBuildConfig({
+  preset: '../../build.preset',
+});
