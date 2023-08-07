@@ -1,5 +1,5 @@
-import { applyStyle, cssUtils } from '../utils/element';
 import type { ComputedStyle } from '../utils/getComputedStyles';
+import { applyStyle, cssUtils, createElement, appendChild } from '../utils/dom';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
 
@@ -23,10 +23,10 @@ export function defineTooltipElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
 
-      this.#container = document.createElement('div');
-      this.#element = document.createElement('span');
-      this.#component = document.createElement('span');
-      this.#file = document.createElement('div');
+      this.#container = createElement('div');
+      this.#element = createElement('span');
+      this.#component = createElement('span');
+      this.#file = createElement('div');
 
       applyStyle(this.#container, {
         position: 'fixed',
@@ -53,11 +53,10 @@ export function defineTooltipElement() {
         textDecoration: 'underline',
       });
 
-      this.#container.appendChild(this.#element);
-      this.#container.appendChild(this.#component);
-      this.#container.appendChild(this.#file);
-
-      shadow.appendChild(this.#container);
+      appendChild(this.#container, this.#element);
+      appendChild(this.#container, this.#component);
+      appendChild(this.#container, this.#file);
+      appendChild(shadow, this.#container);
     }
 
     open() {

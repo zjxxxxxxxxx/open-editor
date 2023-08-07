@@ -3,7 +3,14 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { applyStyle, cssUtils } from '../utils/element';
+import {
+  applyStyle,
+  cssUtils,
+  createElement,
+  addEventListener,
+  removeEventListener,
+  appendChild,
+} from '../utils/dom';
 import { Colors, InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -31,13 +38,13 @@ export function defineOverlayElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
 
       this.#tooltip = <HTMLTooltipElement>(
-        document.createElement(InternalElements.HTML_TOOLTIP_ELEMENT)
+        createElement(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
-      this.#posttionRect = document.createElement('div');
-      this.#marginRect = document.createElement('div');
-      this.#borderRect = document.createElement('div');
-      this.#paddingRect = document.createElement('div');
-      this.#contentRect = document.createElement('div');
+      this.#posttionRect = createElement('div');
+      this.#marginRect = createElement('div');
+      this.#borderRect = createElement('div');
+      this.#paddingRect = createElement('div');
+      this.#contentRect = createElement('div');
 
       applyStyle(this.#posttionRect, {
         position: 'fixed',
@@ -60,22 +67,22 @@ export function defineOverlayElement() {
         background: Colors.OVERLAY_CONTENT_RECT,
       });
 
-      shadow.appendChild(this.#tooltip);
-      shadow.appendChild(this.#posttionRect);
-      this.#posttionRect.appendChild(this.#marginRect);
-      this.#marginRect.appendChild(this.#borderRect);
-      this.#borderRect.appendChild(this.#paddingRect);
-      this.#paddingRect.appendChild(this.#contentRect);
+      appendChild(this.#paddingRect, this.#contentRect);
+      appendChild(this.#borderRect, this.#paddingRect);
+      appendChild(this.#marginRect, this.#borderRect);
+      appendChild(this.#posttionRect, this.#marginRect);
+      appendChild(shadow, this.#posttionRect);
+      appendChild(shadow, this.#tooltip);
     }
 
     connectedCallback() {
-      window.addEventListener('resize', this.#reUpdate);
-      window.addEventListener('scroll', this.#reUpdate);
+      addEventListener('resize', this.#reUpdate);
+      addEventListener('scroll', this.#reUpdate);
     }
 
     disconnectedCallback() {
-      window.removeEventListener('resize', this.#reUpdate);
-      window.removeEventListener('scroll', this.#reUpdate);
+      removeEventListener('resize', this.#reUpdate);
+      removeEventListener('scroll', this.#reUpdate);
     }
 
     public open() {

@@ -1,7 +1,13 @@
 import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
-import { applyAttrs } from '../utils/element';
+import {
+  applyAttrs,
+  createElement,
+  addEventListener,
+  removeEventListener,
+  appendChild,
+} from '../utils/dom';
 import { isValidElement } from '../utils/isValidElement';
 import { InternalElements } from '../constants';
 import { getOptions } from '../options';
@@ -63,10 +69,10 @@ export function defineInspectElement() {
       shadow.innerHTML = theme;
 
       this.#overlay = <HTMLOverlayElement>(
-        document.createElement(InternalElements.HTML_OVERLAY_ELEMENT)
+        createElement(InternalElements.HTML_OVERLAY_ELEMENT)
       );
       this.#pointer = <HTMLPointerElement>(
-        document.createElement(InternalElements.HTML_POINTER_ELEMENT)
+        createElement(InternalElements.HTML_POINTER_ELEMENT)
       );
 
       const options = getOptions();
@@ -76,22 +82,22 @@ export function defineInspectElement() {
         });
       }
 
-      shadow.appendChild(this.#overlay);
-      shadow.appendChild(this.#pointer);
+      appendChild(shadow, this.#overlay);
+      appendChild(shadow, this.#pointer);
     }
 
     connectedCallback() {
-      window.addEventListener('keydown', this.#onKeydown);
-      window.addEventListener('mousemove', this.#changeMousePoint);
+      addEventListener('keydown', this.#onKeydown);
+      addEventListener('mousemove', this.#changeMousePoint);
 
-      this.#pointer.addEventListener('toggle', this.#toggleActive);
+      addEventListener.call(this.#pointer, 'toggle', this.#toggleActive);
     }
 
     disconnectedCallback() {
-      window.removeEventListener('keydown', this.#onKeydown);
-      window.removeEventListener('mousemove', this.#changeMousePoint);
+      removeEventListener('keydown', this.#onKeydown);
+      removeEventListener('mousemove', this.#changeMousePoint);
 
-      this.#pointer.removeEventListener('toggle', this.#toggleActive);
+      removeEventListener.call(this.#pointer, 'toggle', this.#toggleActive);
 
       this.#cleanupHandlers();
     }
@@ -156,13 +162,13 @@ export function defineInspectElement() {
 
     #lockMouseStyle() {
       if (!this.#mouseStyle) {
-        const style = document.createElement('style');
+        const style = createElement('style');
         style.innerHTML = `*:hover {
           cursor: default;
         }`;
         this.#mouseStyle = style;
       }
-      requestAnimationFrame(() => document.head.appendChild(this.#mouseStyle));
+      requestAnimationFrame(() => appendChild(document.head, this.#mouseStyle));
     }
 
     #unlockMouseStyle() {
