@@ -1,5 +1,11 @@
+import {
+  addEventListener,
+  appendChild,
+  applyStyle,
+  createElement,
+  removeEventListener,
+} from '../utils/dom';
 import { Colors, InternalElements } from '../constants';
-import { applyStyle } from '../utils/element';
 
 export interface HTMLPointerElement extends HTMLElement {}
 
@@ -17,7 +23,7 @@ export function definePointerElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
 
-      this.#container = document.createElement('div');
+      this.#container = createElement('div');
       applyStyle(this.#container, {
         position: 'fixed',
         top: '0px',
@@ -28,7 +34,7 @@ export function definePointerElement() {
         padding: '6px',
       });
 
-      this.#button = document.createElement('div');
+      this.#button = createElement('div');
       applyStyle(this.#button, {
         padding: '3px',
         width: '22px',
@@ -47,8 +53,8 @@ export function definePointerElement() {
         <path d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"></path>
       </svg>`;
 
-      this.#container.appendChild(this.#button);
-      shadow.appendChild(this.#container);
+      appendChild(this.#container, this.#button);
+      appendChild(shadow, this.#container);
     }
 
     attributeChangedCallback(name: string, _: never, newValue: string) {
@@ -82,11 +88,11 @@ export function definePointerElement() {
     }
 
     connectedCallback() {
-      this.#button.addEventListener('click', this.#dispatchToggle);
+      addEventListener.call(this.#button, 'click', this.#dispatchToggle);
     }
 
     disconnectedCallback() {
-      this.#button.removeEventListener('click', this.#dispatchToggle);
+      removeEventListener.call(this.#button, 'click', this.#dispatchToggle);
     }
 
     #dispatchToggle = () => {
