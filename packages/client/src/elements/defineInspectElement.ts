@@ -17,6 +17,10 @@ import { HTMLPointerElement } from './definePointerElement';
 export interface HTMLInspectElement extends HTMLElement {}
 
 const theme = `<style>
+* {
+  box-sizing: content-box;
+}
+
 :host {
   --black: #181818;
   --white: #ffffff;
