@@ -29,61 +29,47 @@ export const emptyComputedStyles = {
 export function getComputedStyles(
   element: Element,
 ): Record<string, ComputedStyle> {
-  const styleDeclaration = window.getComputedStyle(element, null);
-  const domRect = element.getBoundingClientRect();
+  const {
+    // border + padding + content
+    width,
+    // border + padding + content
+    height,
+    top,
+    right,
+    bottom,
+    left,
+  } = element.getBoundingClientRect();
+  const style = window.getComputedStyle(element, null);
+  const getValue = style.getPropertyValue.bind(style);
 
-  const marginTop = cssUtils.pv(
-    styleDeclaration.getPropertyValue('margin-top'),
-  );
-  const marginRight = cssUtils.pv(
-    styleDeclaration.getPropertyValue('margin-right'),
-  );
-  const marginBottom = cssUtils.pv(
-    styleDeclaration.getPropertyValue('margin-bottom'),
-  );
-  const marginLeft = cssUtils.pv(
-    styleDeclaration.getPropertyValue('margin-left'),
-  );
-  const marginWidth = domRect.width;
-  const marginHeight = domRect.height;
+  const marginTop = Math.max(cssUtils.pv(getValue('margin-top')), 0);
+  const marginRight = Math.max(cssUtils.pv(getValue('margin-right')), 0);
+  const marginBottom = Math.max(cssUtils.pv(getValue('margin-bottom')), 0);
+  const marginLeft = Math.max(cssUtils.pv(getValue('margin-left')), 0);
+  const marginWidth = width;
+  const marginHeight = height;
 
-  const borderTop = cssUtils.pv(
-    styleDeclaration.getPropertyValue('border-top'),
-  );
-  const borderRight = cssUtils.pv(
-    styleDeclaration.getPropertyValue('border-right'),
-  );
-  const borderBottom = cssUtils.pv(
-    styleDeclaration.getPropertyValue('border-bottom'),
-  );
-  const borderLeft = cssUtils.pv(
-    styleDeclaration.getPropertyValue('border-left'),
-  );
+  const borderTop = cssUtils.pv(getValue('border-top'));
+  const borderRight = cssUtils.pv(getValue('border-right'));
+  const borderBottom = cssUtils.pv(getValue('border-bottom'));
+  const borderLeft = cssUtils.pv(getValue('border-left'));
   const borderWidth = marginWidth - borderRight - borderLeft;
   const borderHeight = marginHeight - borderTop - borderBottom;
 
-  const paddingTop = cssUtils.pv(
-    styleDeclaration.getPropertyValue('padding-top'),
-  );
-  const paddingRight = cssUtils.pv(
-    styleDeclaration.getPropertyValue('padding-right'),
-  );
-  const paddingBottom = cssUtils.pv(
-    styleDeclaration.getPropertyValue('padding-bottom'),
-  );
-  const paddingLeft = cssUtils.pv(
-    styleDeclaration.getPropertyValue('padding-left'),
-  );
+  const paddingTop = cssUtils.pv(getValue('padding-top'));
+  const paddingRight = cssUtils.pv(getValue('padding-right'));
+  const paddingBottom = cssUtils.pv(getValue('padding-bottom'));
+  const paddingLeft = cssUtils.pv(getValue('padding-left'));
   const paddingWidth = borderWidth - paddingRight - paddingLeft;
   const paddingHeight = borderHeight - paddingTop - paddingBottom;
 
   const contentWidth = paddingWidth;
   const contentHeight = paddingHeight;
 
-  const posttionTop = domRect.top - marginTop;
-  const posttionRight = domRect.right + marginRight;
-  const posttionBottom = domRect.bottom + marginBottom;
-  const posttionLeft = domRect.left - marginLeft;
+  const posttionTop = top - marginTop;
+  const posttionRight = right + marginRight;
+  const posttionBottom = bottom + marginBottom;
+  const posttionLeft = left - marginLeft;
   const posttionWidth = marginWidth + marginLeft + marginRight;
   const posttionHeight = marginHeight + marginTop + marginBottom;
 
