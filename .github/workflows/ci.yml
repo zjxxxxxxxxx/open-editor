@@ -23,7 +23,7 @@ jobs:
           cache: pnpm
 
       - name: Install
-        run: pnpm install:ci
+        run: pnpm i
 
       - name: Build
         run: pnpm build
