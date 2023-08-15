@@ -15,7 +15,6 @@
     "lint": "pnpm eslint . --ext .ts,.tsx",
     "lint:ci": "pnpm lint --ignore-pattern='/playground/*'",
     "format": "prettier --write '**/*.{ts,tsx,md}'",
-    "install:ci": "pnpm --no-frozen-lockfile --filter @open-editor/* install",
     "postinstall": "simple-git-hooks",
     "release": "pnpm build && changeset publish",
     "typecheck": "tsc --noEmit && turbo run typecheck",
