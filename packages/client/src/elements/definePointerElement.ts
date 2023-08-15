@@ -36,9 +36,9 @@ export function definePointerElement() {
 
       this.#button = createElement('div');
       applyStyle(this.#button, {
-        padding: '3px',
-        width: '22px',
-        height: '22px',
+        padding: '2px',
+        width: '18px',
+        height: '18px',
         cursor: 'pointer',
         borderRadius: '50%',
         backdropFilter: 'blur(2px)',
@@ -75,7 +75,7 @@ export function definePointerElement() {
           if (newValue === 'true') {
             applyStyle(this.#button, {
               color: Colors.POINTER_ACTIVE_COLOR,
-              boxShadow: `0px 0px 10px ${Colors.POINTER_ACTIVE_COLOR}`,
+              boxShadow: `0px 0px 12px ${Colors.POINTER_ACTIVE_COLOR}`,
             });
           } else {
             applyStyle(this.#button, {
@@ -88,11 +88,15 @@ export function definePointerElement() {
     }
 
     connectedCallback() {
-      addEventListener.call(this.#button, 'click', this.#dispatchToggle);
+      addEventListener('click', this.#dispatchToggle, {
+        target: this.#button,
+      });
     }
 
     disconnectedCallback() {
-      removeEventListener.call(this.#button, 'click', this.#dispatchToggle);
+      removeEventListener('click', this.#dispatchToggle, {
+        target: this.#button,
+      });
     }
 
     #dispatchToggle = () => {

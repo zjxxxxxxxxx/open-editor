@@ -40,26 +40,29 @@ export function getComputedStyles(
     left,
   } = element.getBoundingClientRect();
   const style = window.getComputedStyle(element, null);
-  const getValue = style.getPropertyValue.bind(style);
+  const getStyle = style.getPropertyValue.bind(style);
+  const getValue = (property: string) => {
+    return Math.max(cssUtils.pv(getStyle(property)), 0);
+  };
 
-  const marginTop = Math.max(cssUtils.pv(getValue('margin-top')), 0);
-  const marginRight = Math.max(cssUtils.pv(getValue('margin-right')), 0);
-  const marginBottom = Math.max(cssUtils.pv(getValue('margin-bottom')), 0);
-  const marginLeft = Math.max(cssUtils.pv(getValue('margin-left')), 0);
+  const marginTop = getValue('margin-top');
+  const marginRight = getValue('margin-right');
+  const marginBottom = getValue('margin-bottom');
+  const marginLeft = getValue('margin-left');
   const marginWidth = width;
   const marginHeight = height;
 
-  const borderTop = cssUtils.pv(getValue('border-top'));
-  const borderRight = cssUtils.pv(getValue('border-right'));
-  const borderBottom = cssUtils.pv(getValue('border-bottom'));
-  const borderLeft = cssUtils.pv(getValue('border-left'));
+  const borderTop = getValue('border-top');
+  const borderRight = getValue('border-right');
+  const borderBottom = getValue('border-bottom');
+  const borderLeft = getValue('border-left');
   const borderWidth = marginWidth - borderRight - borderLeft;
   const borderHeight = marginHeight - borderTop - borderBottom;
 
-  const paddingTop = cssUtils.pv(getValue('padding-top'));
-  const paddingRight = cssUtils.pv(getValue('padding-right'));
-  const paddingBottom = cssUtils.pv(getValue('padding-bottom'));
-  const paddingLeft = cssUtils.pv(getValue('padding-left'));
+  const paddingTop = getValue('padding-top');
+  const paddingRight = getValue('padding-right');
+  const paddingBottom = getValue('padding-bottom');
+  const paddingLeft = getValue('padding-left');
   const paddingWidth = borderWidth - paddingRight - paddingLeft;
   const paddingHeight = borderHeight - paddingTop - paddingBottom;
 

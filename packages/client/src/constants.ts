@@ -9,10 +9,10 @@ export const Colors = <const>{
   SUCCESS: 'var(--green)',
   ERROR: 'var(--red)',
 
-  OVERLAY_MARGIN_RECT: '#ff9b00',
-  OVERLAY_BORDER_RECT: '#ffc832',
-  OVERLAY_PADDING_RECT: '#c8ffb9',
-  OVERLAY_CONTENT_RECT: '#78aad2',
+  OVERLAY_MARGIN_RECT: 'var(--overlay-margin)',
+  OVERLAY_BORDER_RECT: 'var(--overlay-border)',
+  OVERLAY_PADDING_RECT: 'var(--overlay-padding)',
+  OVERLAY_CONTENT_RECT: 'var(--overlay-content)',
 
   POINTER_COLOR: 'var(--pointer)',
   POINTER_ACTIVE_COLOR: 'var(--green)',
