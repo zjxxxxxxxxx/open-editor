@@ -28,6 +28,10 @@ const theme = `<style>
   --red: #ff5555;
   --green: #00dc82;
   --cyan: #2dd9da;
+  --overlay-margin: #ff9b00;
+  --overlay-border: #ffc832;
+  --overlay-padding: #c8ffb9;
+  --overlay-content: #78aad2;
 
   --element: var(--black);
   --pointer: var(--black);
@@ -93,15 +97,17 @@ export function defineInspectElement() {
     connectedCallback() {
       addEventListener('keydown', this.#onKeydown);
       addEventListener('mousemove', this.#changeMousePoint);
-
-      addEventListener.call(this.#pointer, 'toggle', this.#toggleActive);
+      addEventListener('toggle', this.#toggleActiveEffect, {
+        target: this.#pointer,
+      });
     }
 
     disconnectedCallback() {
       removeEventListener('keydown', this.#onKeydown);
       removeEventListener('mousemove', this.#changeMousePoint);
-
-      removeEventListener.call(this.#pointer, 'toggle', this.#toggleActive);
+      removeEventListener('toggle', this.#toggleActiveEffect, {
+        target: this.#pointer,
+      });
 
       this.#cleanupHandlers();
     }
@@ -113,7 +119,7 @@ export function defineInspectElement() {
     #onKeydown = (event: KeyboardEvent) => {
       // toggle
       if (event.altKey && event.metaKey && event.keyCode === 79) {
-        this.#toggleActive();
+        this.#toggleActiveEffect();
       }
       // stop
       else if (event.keyCode === 27) {
@@ -121,7 +127,7 @@ export function defineInspectElement() {
       }
     };
 
-    #toggleActive = () => {
+    #toggleActiveEffect = () => {
       if (!this.#active) {
         this.#setupHandlers();
       } else {

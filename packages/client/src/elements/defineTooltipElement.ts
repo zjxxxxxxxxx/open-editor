@@ -39,6 +39,7 @@ export function defineTooltipElement() {
         background: Colors.TOOLTIP_BG_COLOR,
         borderRadius: '4px',
         border: '2px solid transparent',
+        pointerEvents: 'none',
       });
       applyStyle(this.#element, {
         color: Colors.TOOLTIP_ELEMENT_COLOR,
@@ -46,6 +47,7 @@ export function defineTooltipElement() {
       });
       applyStyle(this.#component, {
         fontSize: '16px',
+        fontWeight: '500',
       });
       applyStyle(this.#file, {
         fontSize: '14px',
