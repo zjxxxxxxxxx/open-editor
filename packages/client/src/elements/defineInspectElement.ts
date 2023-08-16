@@ -9,51 +9,18 @@ import {
   appendChild,
 } from '../utils/dom';
 import { isValidElement } from '../utils/isValidElement';
-import { InternalElements } from '../constants';
+import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
 import { HTMLOverlayElement } from './defineOverlayElement';
-import { HTMLPointerElement } from './definePointerElement';
+import { HTMLToggleElement } from './defineToggleElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
-
-const theme = `<style>
-* {
-  box-sizing: content-box;
-}
-
-:host {
-  --black: #181818;
-  --white: #ffffff;
-  --grey: #abb2bf;
-  --red: #ff5555;
-  --green: #00dc82;
-  --cyan: #2dd9da;
-  --overlay-margin: #ff9b00;
-  --overlay-border: #ffc832;
-  --overlay-padding: #c8ffb9;
-  --overlay-content: #78aad2;
-
-  --element: var(--black);
-  --pointer: var(--black);
-  --pointer-bg: #ffffffcc;
-  --bg-color: var(--white);
-}
-
-@media (prefers-color-scheme: dark) {
-  :host {  
-    --element: var(--grey);
-    --pointer: var(--white);
-    --pointer-bg: #181818cc;
-    --bg-color: var(--black);
-  }
-}
-</style>`;
 
 export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #mouseStyle!: HTMLElement;
     #overlay: HTMLOverlayElement;
-    #pointer: HTMLPointerElement;
+    #toggle: HTMLToggleElement;
 
     #__active__!: boolean;
 
@@ -63,7 +30,7 @@ export function defineInspectElement() {
 
     set #active(value) {
       this.#__active__ = value;
-      applyAttrs(this.#pointer, {
+      applyAttrs(this.#toggle, {
         active: value,
       });
     }
@@ -74,31 +41,31 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = theme;
+      shadow.innerHTML = `<style>${Theme}</style>`;
 
       this.#overlay = <HTMLOverlayElement>(
         createElement(InternalElements.HTML_OVERLAY_ELEMENT)
       );
-      this.#pointer = <HTMLPointerElement>(
-        createElement(InternalElements.HTML_POINTER_ELEMENT)
+      this.#toggle = <HTMLToggleElement>(
+        createElement(InternalElements.HTML_TOGGLE_ELEMENT)
       );
 
       const options = getOptions();
-      if (options.enablePointer) {
-        applyAttrs(this.#pointer, {
+      if (options.displayToggle) {
+        applyAttrs(this.#toggle, {
           enable: true,
         });
       }
 
       appendChild(shadow, this.#overlay);
-      appendChild(shadow, this.#pointer);
+      appendChild(shadow, this.#toggle);
     }
 
     connectedCallback() {
       addEventListener('keydown', this.#onKeydown);
       addEventListener('mousemove', this.#changeMousePoint);
       addEventListener('toggle', this.#toggleActiveEffect, {
-        target: this.#pointer,
+        target: this.#toggle,
       });
     }
 
@@ -106,7 +73,7 @@ export function defineInspectElement() {
       removeEventListener('keydown', this.#onKeydown);
       removeEventListener('mousemove', this.#changeMousePoint);
       removeEventListener('toggle', this.#toggleActiveEffect, {
-        target: this.#pointer,
+        target: this.#toggle,
       });
 
       this.#cleanupHandlers();
@@ -186,8 +153,9 @@ export function defineInspectElement() {
     }
 
     async #openEditor(element: HTMLElement) {
-      const { file, line = 0, column = 0 } = resolveSource(element);
-      if (file) {
+      const source = resolveSource(element);
+      if (source.file) {
+        const { file, line = 1, column = 1 } = source;
         let openURL = `${ServerApis.OPEN_EDITOR}${file}?line=${line}&column=${column}`;
 
         const { serverAddress } = getOptions();
@@ -197,6 +165,13 @@ export function defineInspectElement() {
 
         await fetch(openURL);
         this.#cleanupHandlers();
+
+        // dispatch open-editor event
+        this.dispatchEvent(
+          new CustomEvent('open-editor', {
+            detail: source,
+          }),
+        );
       }
     }
   }
