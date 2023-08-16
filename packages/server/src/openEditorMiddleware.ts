@@ -11,12 +11,17 @@ export interface OpenEditorMiddlewareOptions {
    * @default process.cwd()
    */
   rootDir?: string;
+
+  /**
+   * custom openEditor handler
+   */
+  onOpenEditor?(file: string): void;
 }
 
 export function openEditorMiddleware(
   options: OpenEditorMiddlewareOptions,
 ): connect.NextHandleFunction {
-  const { rootDir = process.cwd() } = options;
+  const { rootDir = process.cwd(), onOpenEditor = openEditor } = options;
 
   return (req, res) => {
     const { pathname, query } = url.parse(req.url ?? '/', true);
@@ -33,9 +38,9 @@ export function openEditorMiddleware(
 
     try {
       const file = fs.readFileSync(filename, 'utf-8');
-      const { line = 0, column = 0 } = query;
+      const { line = 1, column = 1 } = query;
 
-      openEditor(`${filename}:${line}:${column}`);
+      onOpenEditor(`${filename}:${line}:${column}`);
       res.setHeader('Content-Type', 'text/javascript');
       res.end(file);
     } catch {

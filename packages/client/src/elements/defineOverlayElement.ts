@@ -49,7 +49,7 @@ export function defineOverlayElement() {
       applyStyle(this.#posttionRect, {
         position: 'fixed',
         zIndex: '10000',
-        opacity: '0.5',
+        opacity: '0.6',
         transform: 'translateZ(10000px)',
         display: 'none',
         pointerEvents: 'none',

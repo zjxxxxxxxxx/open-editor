@@ -6,22 +6,31 @@ import { createRuntime } from '@open-editor/shared/node';
 
 export interface Options {
   /**
-   * render the pointer into the browser
-   *
-   * @default false
-   */
-  enablePointer?: boolean;
-
-  /**
    * source rootDir path
    *
    * @default process.cwd()
    */
   rootDir?: string;
+
+  /**
+   * render the toggle into the browser
+   *
+   * @default false
+   */
+  displayToggle?: boolean;
+
+  /**
+   * custom openEditor handler
+   */
+  onOpenEditor?(file: string): void;
 }
 
 export default function openEditorPlugin(options: Options = {}): Plugin {
-  const { enablePointer = false, rootDir = process.cwd() } = options;
+  const {
+    rootDir = process.cwd(),
+    displayToggle = false,
+    onOpenEditor,
+  } = options;
 
   const clientId = 'virtual:@open-editor/vite/client';
   const runtime = createRuntime(import.meta.url);
@@ -34,8 +43,8 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
 
     buildStart() {
       runtime.generate({
-        enablePointer,
         rootDir,
+        displayToggle,
       });
     },
 
@@ -48,6 +57,7 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
         ServerApis.OPEN_EDITOR,
         openEditorMiddleware({
           rootDir,
+          onOpenEditor,
         }),
       );
     },
