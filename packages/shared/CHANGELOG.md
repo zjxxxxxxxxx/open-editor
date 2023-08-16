@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.0.6
+
+### Patch Changes
+
+- [#27](https://github.com/zjxxxxxxxxx/open-editor/pull/27) [`57ece95`](https://github.com/zjxxxxxxxxx/open-editor/commit/57ece9573c8005f630311be7b6113cc3470dca27) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - rewrite resolvePath
+
 ## 0.0.5
 
 ## 0.0.4
