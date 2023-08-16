@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.0.6
+
+### Patch Changes
+
+- [#30](https://github.com/zjxxxxxxxxx/open-editor/pull/30) [`23da738`](https://github.com/zjxxxxxxxxx/open-editor/commit/23da738c3a64c62ad01ab68efd0cfa6b0ecc6f6e) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix: margin less than 0 makes the overlay position wrong
+
+- [#33](https://github.com/zjxxxxxxxxx/open-editor/pull/33) [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: add custom open-editor event
+
+- [#33](https://github.com/zjxxxxxxxxx/open-editor/pull/33) [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: add custom onOpenEditor option
+
+- Updated dependencies [[`57ece95`](https://github.com/zjxxxxxxxxx/open-editor/commit/57ece9573c8005f630311be7b6113cc3470dca27)]:
+  - @open-editor/shared@0.0.6
+
 ## 0.0.5
 
 ### Patch Changes
