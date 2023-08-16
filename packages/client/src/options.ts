@@ -1,8 +1,8 @@
 export interface Options {
   /**
-   * render the pointer into the browser
+   * render the toggle into the browser
    */
-  enablePointer: boolean;
+  displayToggle: boolean;
 
   /**
    * internal server address

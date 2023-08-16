@@ -8,6 +8,11 @@ export interface Options {
    * @default process.cwd()
    */
   rootDir?: string;
+
+  /**
+   * custom openEditor handler
+   */
+  onOpenEditor?(file: string): void;
 }
 
 export function setupServer(options: Options = {}) {

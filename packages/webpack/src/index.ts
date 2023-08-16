@@ -4,28 +4,34 @@ import { getServerAddress } from './getServerAddress';
 
 export interface Options {
   /**
-   * render the pointer into the browser
-   *
-   * @default false
-   */
-  enablePointer?: boolean;
-
-  /**
    * source rootDir path
    *
    * @default process.cwd()
    */
   rootDir?: string;
+
+  /**
+   * render the toggle into the browser
+   *
+   * @default false
+   */
+  displayToggle?: boolean;
+
+  /**
+   * custom openEditor handler
+   */
+  onOpenEditor?(file: string): void;
 }
 
 export default class OpenEditorPlugin {
-  options: Required<Options>;
+  options: Required<Pick<Options, 'displayToggle' | 'rootDir'>> & Options;
   compiler!: webpack.Compiler;
 
   constructor(options: Options = {}) {
     this.options = {
-      enablePointer: options.enablePointer ?? false,
       rootDir: options.rootDir ?? process.cwd(),
+      displayToggle: options.displayToggle ?? false,
+      onOpenEditor: options.onOpenEditor,
     };
   }
 
@@ -68,7 +74,8 @@ export default class OpenEditorPlugin {
     const runtime = createRuntime(import.meta.url);
     runtime.generate({
       serverAddress,
-      ...this.options,
+      rootDir: this.options.rootDir,
+      displayToggle: this.options.displayToggle,
     });
     return callback(runtime.filename);
   }

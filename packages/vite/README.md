@@ -52,10 +52,10 @@ press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd> or <k
   </thead>
   <tbody>
     <tr>
-     <td>enablePointer</td>
+     <td>displayToggle</td>
      <td>boolean</td>
      <td>false</td>
-     <td>render the pointer into the browser</td>
+     <td>render the toggle into the browser</td>
     </tr>
     <tr>
      <td>rootDir</td>

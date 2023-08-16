@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       openEditor({
-        enablePointer: true,
+        displayToggle: true,
       }),
     ],
   },

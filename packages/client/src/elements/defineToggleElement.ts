@@ -7,10 +7,10 @@ import {
 } from '../utils/dom';
 import { Colors, InternalElements } from '../constants';
 
-export interface HTMLPointerElement extends HTMLElement {}
+export interface HTMLToggleElement extends HTMLElement {}
 
-export function definePointerElement() {
-  class PointerElement extends HTMLElement implements HTMLPointerElement {
+export function defineToggleElement() {
+  class ToggleElement extends HTMLElement implements HTMLToggleElement {
     static get observedAttributes() {
       return ['enable', 'active'];
     }
@@ -39,14 +39,14 @@ export function definePointerElement() {
         padding: '2px',
         width: '18px',
         height: '18px',
-        cursor: 'pointer',
+        cursor: 'toggle',
         borderRadius: '50%',
         backdropFilter: 'blur(2px)',
         color: Colors.POINTER_COLOR,
         backgroundColor: Colors.POINTER_BG_COLOR,
       });
 
-      this.#button.title = 'open-editor-inspect';
+      this.#button.title = 'open-editor-toggle';
       this.#button.innerHTML = `
       <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor">
         <path d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"></path>
@@ -104,5 +104,5 @@ export function definePointerElement() {
     };
   }
 
-  customElements.define(InternalElements.HTML_POINTER_ELEMENT, PointerElement);
+  customElements.define(InternalElements.HTML_TOGGLE_ELEMENT, ToggleElement);
 }
