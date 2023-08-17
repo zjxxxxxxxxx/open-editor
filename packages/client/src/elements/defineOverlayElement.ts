@@ -3,14 +3,7 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import {
-  applyStyle,
-  cssUtils,
-  createElement,
-  addEventListener,
-  removeEventListener,
-  appendChild,
-} from '../utils/dom';
+import { applyStyle, cssUtils, create, on, off, append } from '../utils/dom';
 import { Colors, InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -38,13 +31,13 @@ export function defineOverlayElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
 
       this.#tooltip = <HTMLTooltipElement>(
-        createElement(InternalElements.HTML_TOOLTIP_ELEMENT)
+        create(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
-      this.#posttionRect = createElement('div');
-      this.#marginRect = createElement('div');
-      this.#borderRect = createElement('div');
-      this.#paddingRect = createElement('div');
-      this.#contentRect = createElement('div');
+      this.#posttionRect = create('div');
+      this.#marginRect = create('div');
+      this.#borderRect = create('div');
+      this.#paddingRect = create('div');
+      this.#contentRect = create('div');
 
       applyStyle(this.#posttionRect, {
         position: 'fixed',
@@ -67,22 +60,22 @@ export function defineOverlayElement() {
         background: Colors.OVERLAY_CONTENT_RECT,
       });
 
-      appendChild(this.#paddingRect, this.#contentRect);
-      appendChild(this.#borderRect, this.#paddingRect);
-      appendChild(this.#marginRect, this.#borderRect);
-      appendChild(this.#posttionRect, this.#marginRect);
-      appendChild(shadow, this.#posttionRect);
-      appendChild(shadow, this.#tooltip);
+      append(this.#paddingRect, this.#contentRect);
+      append(this.#borderRect, this.#paddingRect);
+      append(this.#marginRect, this.#borderRect);
+      append(this.#posttionRect, this.#marginRect);
+      append(shadow, this.#posttionRect);
+      append(shadow, this.#tooltip);
     }
 
     connectedCallback() {
-      addEventListener('resize', this.#reUpdate);
-      addEventListener('scroll', this.#reUpdate);
+      on('resize', this.#reUpdate);
+      on('scroll', this.#reUpdate);
     }
 
     disconnectedCallback() {
-      removeEventListener('resize', this.#reUpdate);
-      removeEventListener('scroll', this.#reUpdate);
+      off('resize', this.#reUpdate);
+      off('scroll', this.#reUpdate);
     }
 
     public open() {

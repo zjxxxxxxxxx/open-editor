@@ -1,13 +1,7 @@
 import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
-import {
-  applyAttrs,
-  createElement,
-  addEventListener,
-  removeEventListener,
-  appendChild,
-} from '../utils/dom';
+import { applyAttrs, create, on, off, append } from '../utils/dom';
 import { isValidElement } from '../utils/isValidElement';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
@@ -44,10 +38,10 @@ export function defineInspectElement() {
       shadow.innerHTML = `<style>${Theme}</style>`;
 
       this.#overlay = <HTMLOverlayElement>(
-        createElement(InternalElements.HTML_OVERLAY_ELEMENT)
+        create(InternalElements.HTML_OVERLAY_ELEMENT)
       );
       this.#toggle = <HTMLToggleElement>(
-        createElement(InternalElements.HTML_TOGGLE_ELEMENT)
+        create(InternalElements.HTML_TOGGLE_ELEMENT)
       );
 
       const options = getOptions();
@@ -57,22 +51,22 @@ export function defineInspectElement() {
         });
       }
 
-      appendChild(shadow, this.#overlay);
-      appendChild(shadow, this.#toggle);
+      append(shadow, this.#overlay);
+      append(shadow, this.#toggle);
     }
 
     connectedCallback() {
-      addEventListener('keydown', this.#onKeydown);
-      addEventListener('mousemove', this.#changeMousePoint);
-      addEventListener('toggle', this.#toggleActiveEffect, {
+      on('keydown', this.#onKeydown);
+      on('mousemove', this.#changeMousePoint);
+      on('toggle', this.#toggleActiveEffect, {
         target: this.#toggle,
       });
     }
 
     disconnectedCallback() {
-      removeEventListener('keydown', this.#onKeydown);
-      removeEventListener('mousemove', this.#changeMousePoint);
-      removeEventListener('toggle', this.#toggleActiveEffect, {
+      off('keydown', this.#onKeydown);
+      off('mousemove', this.#changeMousePoint);
+      off('toggle', this.#toggleActiveEffect, {
         target: this.#toggle,
       });
 
@@ -139,13 +133,13 @@ export function defineInspectElement() {
 
     #lockMouseStyle() {
       if (!this.#mouseStyle) {
-        const style = createElement('style');
+        const style = create('style');
         style.innerHTML = `*:hover {
           cursor: default;
         }`;
         this.#mouseStyle = style;
       }
-      requestAnimationFrame(() => appendChild(document.head, this.#mouseStyle));
+      requestAnimationFrame(() => append(document.head, this.#mouseStyle));
     }
 
     #unlockMouseStyle() {
