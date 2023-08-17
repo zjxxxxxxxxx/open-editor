@@ -1,10 +1,4 @@
-import {
-  addEventListener,
-  appendChild,
-  applyStyle,
-  createElement,
-  removeEventListener,
-} from '../utils/dom';
+import { on, off, applyStyle, create, append } from '../utils/dom';
 import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -23,7 +17,7 @@ export function defineToggleElement() {
 
       const shadow = this.attachShadow({ mode: 'closed' });
 
-      this.#container = createElement('div');
+      this.#container = create('div');
       applyStyle(this.#container, {
         position: 'fixed',
         top: '0px',
@@ -34,12 +28,11 @@ export function defineToggleElement() {
         padding: '6px',
       });
 
-      this.#button = createElement('div');
+      this.#button = create('div');
       applyStyle(this.#button, {
         padding: '2px',
         width: '18px',
         height: '18px',
-        cursor: 'toggle',
         borderRadius: '50%',
         backdropFilter: 'blur(2px)',
         color: Colors.POINTER_COLOR,
@@ -53,8 +46,8 @@ export function defineToggleElement() {
         <path d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"></path>
       </svg>`;
 
-      appendChild(this.#container, this.#button);
-      appendChild(shadow, this.#container);
+      append(this.#container, this.#button);
+      append(shadow, this.#container);
     }
 
     attributeChangedCallback(name: string, _: never, newValue: string) {
@@ -88,13 +81,13 @@ export function defineToggleElement() {
     }
 
     connectedCallback() {
-      addEventListener('click', this.#dispatchToggle, {
+      on('click', this.#dispatchToggle, {
         target: this.#button,
       });
     }
 
     disconnectedCallback() {
-      removeEventListener('click', this.#dispatchToggle, {
+      off('click', this.#dispatchToggle, {
         target: this.#button,
       });
     }

@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [#33](https://github.com/zjxxxxxxxxx/open-editor/pull/33) [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: add custom onOpenEditor option
+- [#33](https://github.com/zjxxxxxxxxx/open-editor/pull/33) [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add custom onOpenEditor option
 
 - Updated dependencies [[`23da738`](https://github.com/zjxxxxxxxxx/open-editor/commit/23da738c3a64c62ad01ab68efd0cfa6b0ecc6f6e), [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045), [`ff92c0a`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff92c0a04ee61656d62ab2340aeadb57eb77d045), [`57ece95`](https://github.com/zjxxxxxxxxx/open-editor/commit/57ece9573c8005f630311be7b6113cc3470dca27)]:
   - @open-editor/client@0.0.6

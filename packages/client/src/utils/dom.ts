@@ -37,23 +37,22 @@ export const cssUtils = {
   },
 };
 
-export function addEventListener<K extends keyof HTMLElementEventMap>(
+export function on<K extends keyof HTMLElementEventMap>(
   type: K,
   listener: (ev: HTMLElementEventMap[K]) => void,
   options?: AddEventListenerOptions & { target?: HTMLElement },
 ): void;
-export function addEventListener<K extends keyof WindowEventMap>(
+export function on<K extends keyof WindowEventMap>(
   type: K,
   listener: (ev: WindowEventMap[K]) => void,
   options?: AddEventListenerOptions & { target?: Window },
 ): void;
-export function addEventListener(
+export function on(
   type: string,
   listener: (ev: any) => void,
   options?: AddEventListenerOptions & { target?: any },
 ): void;
-
-export function addEventListener(
+export function on(
   type: string,
   listener: (ev: any) => void,
   options: AddEventListenerOptions & { target?: any } = {},
@@ -63,27 +62,26 @@ export function addEventListener(
       options.target = window;
     }
 
-    options.target.addEventListener(type, listener, options);
+    options.target.on(type, listener, options);
   }
 }
 
-export function removeEventListener<K extends keyof HTMLElementEventMap>(
+export function off<K extends keyof HTMLElementEventMap>(
   type: K,
   listener: (ev: HTMLElementEventMap[K]) => void,
   options?: EventListenerOptions & { target?: HTMLElement },
 ): void;
-export function removeEventListener<K extends keyof WindowEventMap>(
+export function off<K extends keyof WindowEventMap>(
   type: K,
   listener: (ev: WindowEventMap[K]) => void,
   options?: EventListenerOptions & { target?: Window },
 ): void;
-export function removeEventListener(
+export function off(
   type: string,
   listener: (ev: any) => void,
   options?: EventListenerOptions & { target?: any },
 ): void;
-
-export function removeEventListener(
+export function off(
   type: string,
   listener: (ev: any) => void,
   options: EventListenerOptions & { target?: any } = {},
@@ -93,23 +91,19 @@ export function removeEventListener(
       options.target = window;
     }
 
-    options.target.removeEventListener(type, listener, options);
+    options.target.off(type, listener, options);
   }
 }
 
-export function createElement<K extends keyof HTMLElementTagNameMap>(
+export function create<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   options?: ElementCreationOptions,
 ): HTMLElementTagNameMap[K];
-export function createElement(
+export function create(
   tagName: string,
   options?: ElementCreationOptions,
 ): HTMLElement;
-
-export function createElement(
-  tagName: string,
-  options?: ElementCreationOptions,
-) {
+export function create(tagName: string, options?: ElementCreationOptions) {
   if (!CLIENT) {
     throw new Error(
       '@open-editor/client: server side not support createElement.',
@@ -119,7 +113,7 @@ export function createElement(
   return document.createElement(tagName, options);
 }
 
-export function appendChild(target: Node, node: HTMLElement) {
+export function append(target: Node, node: HTMLElement) {
   if (!CLIENT) {
     throw new Error(
       '@open-editor/client: server side not support appendChild.',

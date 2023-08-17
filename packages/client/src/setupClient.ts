@@ -1,4 +1,4 @@
-import { appendChild, createElement } from './utils/dom';
+import { append, create } from './utils/dom';
 import { defineElements } from './elements/defineElements';
 
 import { CLIENT, InternalElements } from './constants';
@@ -16,7 +16,7 @@ export function setupClient(options: Options) {
 
     defineElements();
 
-    const inspect = createElement(InternalElements.HTML_INSPECT_ELEMENT);
-    appendChild(document.body, inspect);
+    const inspect = create(InternalElements.HTML_INSPECT_ELEMENT);
+    append(document.body, inspect);
   }
 }

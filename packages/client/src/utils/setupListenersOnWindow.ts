@@ -1,4 +1,4 @@
-import { addEventListener, removeEventListener } from '../utils/dom';
+import { on, off } from '../utils/dom';
 import { isInternalElement } from './isInternalElement';
 import { isValidElement } from './isValidElement';
 
@@ -11,64 +11,64 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   const { onChangeElement, onOpenEditor } = options;
 
   function registerListenersOnWindow() {
-    addEventListener('click', onClick, { capture: true });
-    addEventListener('dblclick', onClick, { capture: true });
+    on('click', onClick, { capture: true });
+    on('dblclick', onClick, { capture: true });
 
-    addEventListener('mousedown', onSilence, { capture: true });
-    addEventListener('mouseenter', onSilence, { capture: true });
-    addEventListener('mouseleave', onSilence, { capture: true });
-    addEventListener('mousemove', onSilence, { capture: true });
-    addEventListener('mouseout', onSilence, { capture: true });
-    addEventListener('mouseover', onSilence, { capture: true });
-    addEventListener('mouseup', onSilence, { capture: true });
+    on('mousedown', onSilence, { capture: true });
+    on('mouseenter', onSilence, { capture: true });
+    on('mouseleave', onSilence, { capture: true });
+    on('mousemove', onSilence, { capture: true });
+    on('mouseout', onSilence, { capture: true });
+    on('mouseover', onSilence, { capture: true });
+    on('mouseup', onSilence, { capture: true });
 
-    addEventListener('pointercancel', onSilence, { capture: true });
-    addEventListener('pointerdown', onSilence, { capture: true });
-    addEventListener('pointerenter', onSilence, { capture: true });
-    //addEventListener('pointerleave', onSilence, { capture: true });
-    addEventListener('pointermove', onSilence, { capture: true });
-    addEventListener('pointerout', onSilence, { capture: true });
-    addEventListener('pointerover', onPointerOver, { capture: true });
-    addEventListener('pointerup', onSilence, { capture: true });
+    on('pointercancel', onSilence, { capture: true });
+    on('pointerdown', onSilence, { capture: true });
+    on('pointerenter', onSilence, { capture: true });
+    //on('pointerleave', onSilence, { capture: true });
+    on('pointermove', onSilence, { capture: true });
+    on('pointerout', onSilence, { capture: true });
+    on('pointerover', onPointerOver, { capture: true });
+    on('pointerup', onSilence, { capture: true });
 
-    addEventListener('touchstart', onSilence, { capture: true });
-    addEventListener('touchend', onSilence, { capture: true });
-    addEventListener('touchcancel', onSilence, { capture: true });
-    addEventListener('touchmove', onSilence, { capture: true });
+    on('touchstart', onSilence, { capture: true });
+    on('touchend', onSilence, { capture: true });
+    on('touchcancel', onSilence, { capture: true });
+    on('touchmove', onSilence, { capture: true });
 
-    addEventListener('pointerleave', onPointerLeave, {
+    on('pointerleave', onPointerLeave, {
       capture: true,
       target: document.body,
     });
   }
 
   function removeEventListenersOnWindow() {
-    removeEventListener('click', onClick, { capture: true });
-    removeEventListener('dblclick', onClick, { capture: true });
+    off('click', onClick, { capture: true });
+    off('dblclick', onClick, { capture: true });
 
-    removeEventListener('mousedown', onSilence, { capture: true });
-    removeEventListener('mouseenter', onSilence, { capture: true });
-    removeEventListener('mouseleave', onSilence, { capture: true });
-    removeEventListener('mousemove', onSilence, { capture: true });
-    removeEventListener('mouseout', onSilence, { capture: true });
-    removeEventListener('mouseover', onSilence, { capture: true });
-    removeEventListener('mouseup', onSilence, { capture: true });
+    off('mousedown', onSilence, { capture: true });
+    off('mouseenter', onSilence, { capture: true });
+    off('mouseleave', onSilence, { capture: true });
+    off('mousemove', onSilence, { capture: true });
+    off('mouseout', onSilence, { capture: true });
+    off('mouseover', onSilence, { capture: true });
+    off('mouseup', onSilence, { capture: true });
 
-    removeEventListener('pointercancel', onSilence, { capture: true });
-    removeEventListener('pointerdown', onSilence, { capture: true });
-    removeEventListener('pointerenter', onSilence, { capture: true });
-    //removeEventListener('pointerleave', onSilence, { capture: true });
-    removeEventListener('pointermove', onSilence, { capture: true });
-    removeEventListener('pointerout', onSilence, { capture: true });
-    removeEventListener('pointerover', onPointerOver, { capture: true });
-    removeEventListener('pointerup', onSilence, { capture: true });
+    off('pointercancel', onSilence, { capture: true });
+    off('pointerdown', onSilence, { capture: true });
+    off('pointerenter', onSilence, { capture: true });
+    //off('pointerleave', onSilence, { capture: true });
+    off('pointermove', onSilence, { capture: true });
+    off('pointerout', onSilence, { capture: true });
+    off('pointerover', onPointerOver, { capture: true });
+    off('pointerup', onSilence, { capture: true });
 
-    removeEventListener('touchstart', onSilence, { capture: true });
-    removeEventListener('touchend', onSilence, { capture: true });
-    removeEventListener('touchcancel', onSilence, { capture: true });
-    removeEventListener('touchmove', onSilence, { capture: true });
+    off('touchstart', onSilence, { capture: true });
+    off('touchend', onSilence, { capture: true });
+    off('touchcancel', onSilence, { capture: true });
+    off('touchmove', onSilence, { capture: true });
 
-    removeEventListener('pointerleave', onPointerLeave, {
+    off('pointerleave', onPointerLeave, {
       capture: true,
       target: document.body,
     });
