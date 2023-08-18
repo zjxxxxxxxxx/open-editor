@@ -52,17 +52,12 @@ export function on(
   listener: (ev: any) => void,
   options?: AddEventListenerOptions & { target?: any },
 ): void;
-export function on(
-  type: string,
-  listener: (ev: any) => void,
-  options: AddEventListenerOptions & { target?: any } = {},
-) {
+export function on(type: any, listener: any, options: any = {}) {
   if (CLIENT) {
     if (!options.target) {
       options.target = window;
     }
-
-    options.target.on(type, listener, options);
+    options.target.addEventListener(type, listener, options);
   }
 }
 
@@ -81,17 +76,12 @@ export function off(
   listener: (ev: any) => void,
   options?: EventListenerOptions & { target?: any },
 ): void;
-export function off(
-  type: string,
-  listener: (ev: any) => void,
-  options: EventListenerOptions & { target?: any } = {},
-) {
+export function off(type: any, listener: any, options: any = {}) {
   if (CLIENT) {
     if (!options.target) {
       options.target = window;
     }
-
-    options.target.off(type, listener, options);
+    options.target.removeEventListener(type, listener, options);
   }
 }
 

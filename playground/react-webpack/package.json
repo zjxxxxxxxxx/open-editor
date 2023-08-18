@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "@playground/react-webpack",
+  "type": "module",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "umi": "^4.0.76"
+  },
+  "devDependencies": {
+    "@open-editor/webpack": "latest",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "typescript": "^5.1.6"
+  }
+}
