@@ -1,7 +1,6 @@
 {
   "private": true,
   "name": "@open-editor/monorepo",
-  "version": "0.0.0",
   "workspaces": [
     "packages/*"
   ],
@@ -11,9 +10,9 @@
     "clean": "rimraf -g '{packages/**/.turbo,node_modules/.cache}'",
     "dev": "turbo run dev --filter @open-editor/* --log-order grouped",
     "dev:watch": "turbo run dev:watch --filter @open-editor/* --log-order stream",
-    "play": "pnpm --filter playground dev",
-    "lint": "pnpm eslint . --ext .ts,.tsx",
-    "lint:ci": "pnpm lint --ignore-pattern='/playground/*'",
+    "play": "esno scripts/play.ts",
+    "lint": "pnpm lint:ci && pnpm --filter @playground/* lint",
+    "lint:ci": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
     "format": "prettier --write '**/*.{ts,tsx,md}'",
     "postinstall": "simple-git-hooks",
     "release": "pnpm build && changeset publish",
@@ -27,6 +26,9 @@
   "keywords": [
     "open-editor",
     "devtools",
+    "vue",
+    "react",
+    "svelte",
     "vite-plugin",
     "webpack-plugin"
   ],

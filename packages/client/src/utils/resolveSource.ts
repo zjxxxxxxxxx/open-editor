@@ -1,6 +1,7 @@
 import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
 import { getOptions } from '../options';
+import { resolveKey } from './resolveKey';
 
 export interface ElementSource {
   element: string;
@@ -15,12 +16,12 @@ export function resolveSource(element: HTMLElement): ElementSource {
 
   const resolvedKey = resolveKey(element);
   if (resolvedKey) {
-    if (resolvedKey === '__vueParentComponent') {
-      source = resolveSourceFromVue((<any>element)[resolvedKey]);
-    } else if (resolvedKey === '__svelte_meta') {
-      source = resolveSourceFromSvelte((<any>element)[resolvedKey]);
-    } else {
+    if (resolvedKey.startsWith('__react')) {
       source = resolveSourceFromReact((<any>element)[resolvedKey]);
+    } else if (resolvedKey.startsWith('__vue')) {
+      source = resolveSourceFromVue((<any>element)[resolvedKey]);
+    } else if (resolvedKey.startsWith('__svelte')) {
+      source = resolveSourceFromSvelte((<any>element)[resolvedKey]);
     }
   }
 
@@ -29,43 +30,6 @@ export function resolveSource(element: HTMLElement): ElementSource {
     element: element.localName,
     component: source.file ? source.component ?? 'Anonymous' : undefined,
     file: source.file ? ensureFileName(source.file) : undefined,
-  };
-}
-
-function resolveKey(element: HTMLElement) {
-  let key = Object.keys(element).find(
-    (key) =>
-      // React17+
-      key.startsWith('__reactFiber') ||
-      // React15+
-      key.startsWith('__reactInternalInstance') ||
-      key === '__svelte_meta',
-  );
-
-  if (!key) {
-    if ('__vueParentComponent' in element) {
-      key = '__vueParentComponent';
-    }
-  }
-
-  return key;
-}
-
-function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
-  while (instance && !instance.type?.__file) {
-    instance = instance.parent;
-  }
-
-  return {
-    component: instance?.type?.__name,
-    file: instance?.type?.__file,
-  };
-}
-
-function resolveSourceFromSvelte(meta: any) {
-  return {
-    component: meta?.loc.file?.match(/([^/.]+).svelte$/)![1],
-    file: meta?.loc.file,
   };
 }
 
@@ -87,6 +51,26 @@ function resolveSourceFromReact(fiber?: Fiber | null) {
     file: source?.fileName,
     line: source?.lineNumber,
     column: (<any>source)?.columnNumber,
+  };
+}
+
+function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
+  while (instance && !instance.type?.__file) {
+    instance = instance.parent;
+  }
+
+  return {
+    component:
+      instance?.type?.__name ??
+      instance?.type?.__file?.match(/([^/.]+).vue$/)![1],
+    file: instance?.type?.__file,
+  };
+}
+
+function resolveSourceFromSvelte(meta: any) {
+  return {
+    component: meta?.loc.file?.match(/([^/.]+).svelte$/)![1],
+    file: meta?.loc.file,
   };
 }
 
