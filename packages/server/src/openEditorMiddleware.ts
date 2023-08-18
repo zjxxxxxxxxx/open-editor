@@ -27,7 +27,7 @@ export function openEditorMiddleware(
     const { pathname, query } = url.parse(req.url ?? '/', true);
     if (!pathname) {
       res.statusCode = 404;
-      res.end(sendMessage('Invalid'));
+      res.end(sendMessage('Not found'));
       return;
     }
 
@@ -45,7 +45,7 @@ export function openEditorMiddleware(
       res.end(file);
     } catch {
       res.statusCode = 500;
-      res.end(sendMessage('Not found'));
+      res.end(sendMessage('Invalid'));
     }
   };
 }
