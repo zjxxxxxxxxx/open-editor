@@ -1,6 +1,13 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches-ignore:
+      - main
+      - test/*
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 

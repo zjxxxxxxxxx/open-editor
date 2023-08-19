@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import enquirer from 'enquirer';
 import consola from 'consola';
 import { exec } from './utils';
+import minimist from 'minimist';
 
 main();
 
@@ -20,21 +21,24 @@ async function main() {
       choices: playgrounds,
     });
 
-    const { scripts } = await import(
-      resolve('playground', playground, 'package.json')
-    );
-    const { script } = await enquirer.prompt<{
-      script: string;
-    }>({
-      type: 'select',
-      name: 'script',
-      message: 'Please select script',
-      choices: Object.entries(scripts).map(([name, content]) => ({
-        name: name,
-        value: name,
-        message: `${(name + ':').padEnd(9)}${content}`,
-      })),
-    });
+    let { script } = minimist(process.argv.slice(1));
+    if (!script) {
+      const { scripts } = await import(
+        resolve('playground', playground, 'package.json')
+      );
+      ({ script } = await enquirer.prompt<{
+        script: string;
+      }>({
+        type: 'select',
+        name: 'script',
+        message: 'Please select script',
+        choices: Object.entries(scripts).map(([name, content]) => ({
+          name: name,
+          value: name,
+          message: `${(name + ':').padEnd(9)}${content}`,
+        })),
+      }));
+    }
 
     consola.info(`Run ${playground}:${script}`);
     exec(`pnpm --filter @playground/${playground} ${script}`);

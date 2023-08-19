@@ -1,5 +1,5 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import { applyStyle, cssUtils, create, append } from '../utils/dom';
+import { applyStyle, cssUtils, create, append } from '../utils/document';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
 

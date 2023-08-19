@@ -49,6 +49,7 @@ export const Colors = <const>{
 
   POINTER_COLOR: 'var(--toggle)',
   POINTER_ACTIVE_COLOR: 'var(--green)',
+  POINTER_ACTIVE_SHADOW: 'var(--cyan)',
   POINTER_BG_COLOR: 'var(--toggle-bg)',
 
   TOOLTIP_BG_COLOR: 'var(--bg-color)',

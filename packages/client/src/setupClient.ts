@@ -1,4 +1,4 @@
-import { append, create } from './utils/dom';
+import { append, create } from './utils/document';
 import { defineElements } from './elements/defineElements';
 
 import { CLIENT, InternalElements } from './constants';

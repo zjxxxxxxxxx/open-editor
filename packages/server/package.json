@@ -36,10 +36,12 @@
     "@open-editor/shared": "workspace:*",
     "connect": "^3.7.0",
     "cors": "^2.8.5",
+    "ip": "^1.1.8",
     "launch-editor": "^2.6.0"
   },
   "devDependencies": {
     "@types/connect": "^3.4.35",
-    "@types/cors": "^2.8.13"
+    "@types/cors": "^2.8.13",
+    "@types/ip": "^1.1.0"
   }
 }

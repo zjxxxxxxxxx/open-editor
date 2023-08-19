@@ -1,6 +1,5 @@
-import { on, off } from '../utils/dom';
-import { isInternalElement } from './isInternalElement';
-import { isValidElement } from './isValidElement';
+import { on, off } from './document';
+import { isInternalElement, isValidElement } from './element';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
@@ -31,7 +30,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('pointerover', onPointerOver, { capture: true });
     on('pointerup', onSilence, { capture: true });
 
-    on('touchstart', onSilence, { capture: true });
+    on('touchstart', onPointerOver, { capture: true });
     on('touchend', onSilence, { capture: true });
     on('touchcancel', onSilence, { capture: true });
     on('touchmove', onSilence, { capture: true });
@@ -63,7 +62,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('pointerover', onPointerOver, { capture: true });
     off('pointerup', onSilence, { capture: true });
 
-    off('touchstart', onSilence, { capture: true });
+    off('touchstart', onPointerOver, { capture: true });
     off('touchend', onSilence, { capture: true });
     off('touchcancel', onSilence, { capture: true });
     off('touchmove', onSilence, { capture: true });
@@ -103,9 +102,14 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   function onSilence(event: Event) {
     const element = <HTMLElement>event.target;
     if (!isInternalElement(element)) {
-      event.preventDefault?.();
       event.stopPropagation?.();
       event.stopImmediatePropagation?.();
+
+      // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
+      // See https://www.chromestatus.com/feature/5093566007214080.
+      if (!(<any>event).type.startsWith('touch')) {
+        event.preventDefault?.();
+      }
     }
   }
 
