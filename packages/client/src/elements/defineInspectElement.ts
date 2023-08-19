@@ -1,8 +1,8 @@
 import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { resolveSource } from '../utils/resolveSource';
-import { applyAttrs, create, on, off, append } from '../utils/dom';
-import { isValidElement } from '../utils/isValidElement';
+import { applyAttrs, create, on, off, append } from '../utils/document';
+import { isValidElement } from '../utils/element';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
 import { HTMLOverlayElement } from './defineOverlayElement';
@@ -157,7 +157,9 @@ export function defineInspectElement() {
           openURL = `${serverAddress}${openURL}`;
         }
 
-        await fetch(openURL);
+        await fetch(openURL).catch(() => {
+          console.error(new Error('@open-editor/client: open fail.'));
+        });
         this.#cleanupHandlers();
 
         // dispatch open-editor event

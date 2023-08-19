@@ -1,4 +1,4 @@
-import { cssUtils } from './dom';
+import { cssUtils } from './document';
 
 export interface ComputedStyle {
   width: number;

@@ -3,7 +3,14 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { applyStyle, cssUtils, create, on, off, append } from '../utils/dom';
+import {
+  applyStyle,
+  cssUtils,
+  create,
+  on,
+  off,
+  append,
+} from '../utils/document';
 import { Colors, InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
