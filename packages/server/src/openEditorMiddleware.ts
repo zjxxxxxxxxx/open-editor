@@ -1,6 +1,6 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import url from 'node:url';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { parse } from 'node:url';
 import connect from 'connect';
 import openEditor from 'launch-editor';
 
@@ -24,7 +24,7 @@ export function openEditorMiddleware(
   const { rootDir = process.cwd(), onOpenEditor = openEditor } = options;
 
   return (req, res) => {
-    const { pathname, query } = url.parse(req.url ?? '/', true);
+    const { pathname, query } = parse(req.url ?? '/', true);
     if (!pathname) {
       res.statusCode = 404;
       res.end(sendMessage('Not found'));
@@ -32,21 +32,19 @@ export function openEditorMiddleware(
     }
 
     let filename = decodeURIComponent(pathname);
-    if (!filename.startsWith(rootDir)) {
-      filename = path.join(rootDir, filename);
+    if (!existsSync(filename)) {
+      filename = join(rootDir, filename);
     }
-
-    try {
-      const file = fs.readFileSync(filename, 'utf-8');
-      const { line = 1, column = 1 } = query;
-
-      onOpenEditor(`${filename}:${line}:${column}`);
-      res.setHeader('Content-Type', 'text/javascript');
-      res.end(file);
-    } catch {
+    if (!existsSync(filename)) {
       res.statusCode = 500;
       res.end(sendMessage('Invalid'));
+      return;
     }
+    res.setHeader('Content-Type', 'text/javascript');
+    res.end(readFileSync(filename, 'utf-8'));
+
+    const { line = 1, column = 1 } = query;
+    onOpenEditor(`${filename}:${line}:${column}`);
   };
 }
 

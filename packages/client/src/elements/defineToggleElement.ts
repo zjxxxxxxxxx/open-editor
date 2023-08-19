@@ -1,4 +1,4 @@
-import { on, off, applyStyle, create, append } from '../utils/dom';
+import { on, off, applyStyle, create, append } from '../utils/document';
 import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -34,7 +34,6 @@ export function defineToggleElement() {
         width: '18px',
         height: '18px',
         borderRadius: '50%',
-        backdropFilter: 'blur(2px)',
         color: Colors.POINTER_COLOR,
         backgroundColor: Colors.POINTER_BG_COLOR,
       });
@@ -68,12 +67,12 @@ export function defineToggleElement() {
           if (newValue === 'true') {
             applyStyle(this.#button, {
               color: Colors.POINTER_ACTIVE_COLOR,
-              boxShadow: `0px 0px 12px ${Colors.POINTER_ACTIVE_COLOR}`,
+              filter: `drop-shadow(0 0 8px ${Colors.POINTER_ACTIVE_SHADOW})`,
             });
           } else {
             applyStyle(this.#button, {
               color: Colors.POINTER_COLOR,
-              boxShadow: 'none',
+              filter: 'none',
             });
           }
           break;
