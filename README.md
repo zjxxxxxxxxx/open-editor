@@ -6,25 +6,25 @@ inspect the element in the browser and click to open the editor.
 
 <h2 align="center">Framework</h2>
 
-<div style="display: flex; justify-content: center">
-    <a style="margin: 0 20px" target="_blank" src="https://react.dev">
+<div align="center">
+    <a target="_blank" src="https://react.dev">
         <img width="80" height="80" src="./public/react.svg" />
     </a>
-    <a style="margin: 0 20px" target="_blank" src="https://vuejs.org">
+    <a target="_blank" src="https://vuejs.org">
         <img width="80" height="80" src="./public/vue.svg" />
     </a>
-    <a style="margin: 0 20px" target="_blank" src="https://svelte.dev">
+    <a target="_blank" src="https://svelte.dev">
         <img width="80" height="80" src="./public/svelte.svg" />
     </a>
 </div>
 
 <h2 align="center">Builder</h2>
 
-<div style="display: flex; justify-content: center">
-    <a style="margin: 0 20px" target="_blank" src="https://webpack.js.org">
+<div align="center">
+    <a target="_blank" src="https://webpack.js.org">
         <img width="80" height="80" src="https://webpack.js.org/assets/icon-square-big.svg" />
     </a>
-    <a style="margin: 0 20px" target="_blank" src="https://vitejs.dev">
+    <a target="_blank" src="https://vitejs.dev">
         <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
     </a>
 </div>
@@ -42,14 +42,14 @@ inspect the element in the browser and click to open the editor.
       <th>react + vite</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
         >
           StackBlitz
         </a>
@@ -59,14 +59,14 @@ inspect the element in the browser and click to open the editor.
       <th>react + webpack</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
         >
           StackBlitz
         </a>
@@ -76,14 +76,14 @@ inspect the element in the browser and click to open the editor.
       <th>vue + vite</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
         >
           StackBlitz
         </a>
@@ -93,14 +93,14 @@ inspect the element in the browser and click to open the editor.
       <th>vue + webpack</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
         >
           StackBlitz
         </a>
@@ -110,14 +110,14 @@ inspect the element in the browser and click to open the editor.
       <th>svelte + vite</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
         >
           StackBlitz
         </a>
@@ -127,14 +127,14 @@ inspect the element in the browser and click to open the editor.
       <th>next + webpack</th>
       <th>
         <a
-          src="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          src="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
         >
           StackBlitz
         </a>
