@@ -1,5 +1,16 @@
 # @open-editor/server
 
+## 0.0.7
+
+### Patch Changes
+
+- [#37](https://github.com/zjxxxxxxxxx/open-editor/pull/37) [`570c6a6`](https://github.com/zjxxxxxxxxx/open-editor/commit/570c6a6a5cd65caf05075113ad29f9a29804f1c7) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - use a native IP
+
+- [#34](https://github.com/zjxxxxxxxxx/open-editor/pull/34) [`9e70740`](https://github.com/zjxxxxxxxxx/open-editor/commit/9e707404bf99a1cb6038cfeb0b55afa05df9db7a) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix createApp omission onOpenEditor
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
