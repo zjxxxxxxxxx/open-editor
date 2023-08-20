@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.0.7
+
+### Patch Changes
+
+- [#36](https://github.com/zjxxxxxxxxx/open-editor/pull/36) [`81559dc`](https://github.com/zjxxxxxxxxx/open-editor/commit/81559dc7ef465fb8286c2ba71136c758bbd4bf0d) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - filter iframe
+
+- [#37](https://github.com/zjxxxxxxxxx/open-editor/pull/37) [`570c6a6`](https://github.com/zjxxxxxxxxx/open-editor/commit/570c6a6a5cd65caf05075113ad29f9a29804f1c7) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - mobile support
+
+- [#39](https://github.com/zjxxxxxxxxx/open-editor/pull/39) [`c116f64`](https://github.com/zjxxxxxxxxx/open-editor/commit/c116f64075c024557228e90063a625fe59f9c87f) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - prevent mobile pointerleave
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
