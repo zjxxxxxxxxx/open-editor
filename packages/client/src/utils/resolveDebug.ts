@@ -11,10 +11,13 @@ let reactKey: string | undefined;
 let react15Key: string | undefined;
 
 // support parsing single project multiple frameworks
-export function resolveDebugKey(element: HTMLElement) {
+export function resolveDebug(element: HTMLElement) {
   while (isValidElement(element)) {
     const key = findKey(element);
-    if (key) return key;
+    if (key) {
+      const value = (<any>element)[key];
+      if (value) return { key, value };
+    }
     element = element.parentElement!;
   }
 }

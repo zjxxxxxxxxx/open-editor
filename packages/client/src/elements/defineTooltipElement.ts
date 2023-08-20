@@ -30,8 +30,7 @@ export function defineTooltipElement() {
 
       applyStyle(this.#container, {
         position: 'fixed',
-        zIndex: '10002',
-        transform: 'translateZ(10002px)',
+        zIndex: '1000002',
         padding: '10px 20px',
         display: 'none',
         maxWidth: `calc(100% - 44px - ${cssUtils.px(this.#offset * 2)})`,

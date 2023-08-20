@@ -30,7 +30,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('pointerover', onPointerOver, { capture: true });
     on('pointerup', onSilence, { capture: true });
 
-    on('touchstart', onPointerOver, { capture: true });
+    on('touchstart', onSilence, { capture: true });
     on('touchend', onSilence, { capture: true });
     on('touchcancel', onSilence, { capture: true });
     on('touchmove', onSilence, { capture: true });
@@ -62,7 +62,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('pointerover', onPointerOver, { capture: true });
     off('pointerup', onSilence, { capture: true });
 
-    off('touchstart', onPointerOver, { capture: true });
+    off('touchstart', onSilence, { capture: true });
     off('touchend', onSilence, { capture: true });
     off('touchcancel', onSilence, { capture: true });
     off('touchmove', onSilence, { capture: true });
@@ -93,23 +93,25 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   function onPointerLeave(event: Event) {
     onSilence(event);
 
-    const element = <HTMLElement>event.target;
-    if (!isValidElement(element)) {
-      onChangeElement();
+    if ((<any>event).pointerType === 'mouse') {
+      const element = <HTMLElement>event.target;
+      if (!isValidElement(element)) {
+        onChangeElement();
+      }
     }
   }
 
   function onSilence(event: Event) {
     const element = <HTMLElement>event.target;
     if (!isInternalElement(element)) {
-      event.stopPropagation?.();
-      event.stopImmediatePropagation?.();
-
       // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
       // See https://www.chromestatus.com/feature/5093566007214080.
       if (!(<any>event).type.startsWith('touch')) {
         event.preventDefault?.();
       }
+
+      event.stopPropagation?.();
+      event.stopImmediatePropagation?.();
     }
   }
 
