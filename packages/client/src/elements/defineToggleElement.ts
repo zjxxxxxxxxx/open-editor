@@ -22,8 +22,7 @@ export function defineToggleElement() {
         position: 'fixed',
         top: '0px',
         right: '0px',
-        zIndex: '10001',
-        transform: 'translateZ(10001px)',
+        zIndex: '1000001',
         display: 'none',
         padding: '6px',
       });

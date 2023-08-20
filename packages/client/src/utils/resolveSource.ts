@@ -1,8 +1,7 @@
 import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
 import { getOptions } from '../options';
-import { resolveDebugKey } from './resolveDebugKey';
-import { isValidElement } from './element';
+import { resolveDebug } from './resolveDebug';
 
 export interface ElementSource {
   element: string;
@@ -13,35 +12,38 @@ export interface ElementSource {
 }
 
 export function resolveSource(element: HTMLElement): ElementSource {
-  let source: Partial<ElementSource> | undefined;
+  const source: ElementSource = {
+    element: element.localName,
+  };
 
-  const debugKey = resolveDebugKey(element);
-  if (debugKey) {
-    if (debugKey.startsWith('__react')) {
-      source = resolveSourceFromReact(element, debugKey);
-    } else if (debugKey.startsWith('__vue')) {
-      source = resolveSourceFromVue(element, debugKey);
-    } else if (debugKey.startsWith('__svelte')) {
-      source = resolveSourceFromSvelte(element, debugKey);
-    }
+  const debug = resolveDebug(element);
+  if (!debug) {
+    return source;
   }
 
-  if (!source) {
-    return {
-      element: element.localName,
-    };
+  let debugSource: Omit<ElementSource, 'element'> | undefined;
+  if (debug.key.startsWith('__react')) {
+    debugSource = resolveSourceFromReact(debug.value);
+  } else if (debug.key.startsWith('__vue')) {
+    debugSource = resolveSourceFromVue(debug.value);
+  } else if (debug.key.startsWith('__svelte')) {
+    debugSource = resolveSourceFromSvelte(debug.value);
+  }
+  if (!debugSource) {
+    return source;
   }
 
   return {
     ...source,
-    element: element.localName,
-    component: source.file ? source.component ?? 'Anonymous' : undefined,
-    file: source.file ? ensureFileName(source.file) : undefined,
+    ...debugSource,
+    component: debugSource.file
+      ? debugSource.component ?? 'Anonymous'
+      : undefined,
+    file: debugSource.file ? ensureFileName(debugSource.file) : undefined,
   };
 }
 
-function resolveSourceFromReact(element: HTMLElement, debugKey: string) {
-  let fiber = findDebugValue<Fiber>(element, debugKey);
+function resolveSourceFromReact(fiber?: Fiber | null) {
   while (fiber && !fiber._debugSource) {
     fiber = fiber._debugOwner;
   }
@@ -61,8 +63,7 @@ function resolveSourceFromReact(element: HTMLElement, debugKey: string) {
   };
 }
 
-function resolveSourceFromVue(element: HTMLElement, debugKey: string) {
-  let instance = findDebugValue<ComponentInternalInstance>(element, debugKey);
+function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
   while (instance && !instance.type.__file) {
     instance = instance.parent;
   }
@@ -75,25 +76,13 @@ function resolveSourceFromVue(element: HTMLElement, debugKey: string) {
   };
 }
 
-function resolveSourceFromSvelte(element: HTMLElement, debugKey: string) {
-  const meta = findDebugValue<{ loc: { file?: string } }>(element, debugKey);
+function resolveSourceFromSvelte(meta?: { loc: { file?: string } } | null) {
   if (!meta) return;
 
   return {
     component: matchComponent(meta.loc.file, 'svelte'),
     file: meta.loc.file,
   };
-}
-
-function findDebugValue<T>(element: HTMLElement, debugKey: string) {
-  let debugValue: T | null | undefined;
-  while (!debugValue && isValidElement(element)) {
-    debugValue = (<any>element)[debugKey];
-    if (!debugValue) {
-      element = element.parentElement!;
-    }
-  }
-  return debugValue;
 }
 
 function matchComponent(file = '', suffix = '') {
