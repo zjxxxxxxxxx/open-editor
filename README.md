@@ -1,19 +1,17 @@
-# open-editor
+<h1 align="center">open-editor</h1>
 
-a devtools that supports multi-medium web frameworks.
-
-inspect the element in the browser and click to open the editor.
+a devtools that supports multi-medium web frameworks, inspect the element in the browser and click to open the code editor.
 
 <h2 align="center">Framework</h2>
 
 <div align="center">
-    <a target="_blank" src="https://react.dev">
+    <a target="_blank" href="https://react.dev">
         <img width="80" height="80" src="./public/react.svg" />
     </a>
-    <a target="_blank" src="https://vuejs.org">
+    <a target="_blank" href="https://vuejs.org">
         <img width="80" height="80" src="./public/vue.svg" />
     </a>
-    <a target="_blank" src="https://svelte.dev">
+    <a target="_blank" href="https://svelte.dev">
         <img width="80" height="80" src="./public/svelte.svg" />
     </a>
 </div>
@@ -21,20 +19,20 @@ inspect the element in the browser and click to open the editor.
 <h2 align="center">Builder</h2>
 
 <div align="center">
-    <a target="_blank" src="https://webpack.js.org">
+    <a target="_blank" href="https://webpack.js.org">
         <img width="80" height="80" src="https://webpack.js.org/assets/icon-square-big.svg" />
     </a>
-    <a target="_blank" src="https://vitejs.dev">
+    <a target="_blank" href="https://vitejs.dev">
         <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
     </a>
 </div>
 
-<h2 align="center">Plugin</h2>
+## Plugin
 
 - [webpack-plugin](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack)
 - [vite-plugin](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)
 
-<h2 align="center">Playground</h2>
+## Playground
 
 <table>
   <tbody>

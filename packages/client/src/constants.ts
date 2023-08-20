@@ -7,7 +7,12 @@ export const InternalElements = <const>{
 
 export const Theme = `
 * {
-  box-sizing: content-box;
+  all: initial;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+}
+
+style {
+  display: none;
 }
 
 :host {
@@ -17,10 +22,10 @@ export const Theme = `
   --red: #ff5555;
   --green: #00dc82;
   --cyan: #2dd9da;
-  --overlay-margin: #ff9b00;
-  --overlay-border: #ffc832;
-  --overlay-padding: #c8ffb9;
-  --overlay-content: #78aad2;
+  --overlay-margin: rgba(246, 178, 107, 0.66);
+  --overlay-border: rgba(255, 229, 153, 0.66);
+  --overlay-padding: rgba(147, 196, 125, 0.55);
+  --overlay-content: rgba(111, 168, 220, 0.66);
 
   --element: var(--black);
   --toggle: var(--black);
