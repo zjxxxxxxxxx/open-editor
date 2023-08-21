@@ -22,10 +22,10 @@ style {
   --red: #ff5555;
   --green: #00dc82;
   --cyan: #2dd9da;
-  --overlay-margin: rgba(246, 178, 107, 0.66);
-  --overlay-border: rgba(255, 229, 153, 0.66);
-  --overlay-padding: rgba(147, 196, 125, 0.55);
-  --overlay-content: rgba(111, 168, 220, 0.66);
+  --overlay-margin: #f6b26ba8;
+  --overlay-border: #ffe599a8;
+  --overlay-padding: #93c47d8c;
+  --overlay-content: #6fa7dca8;
 
   --element: var(--black);
   --toggle: var(--black);
