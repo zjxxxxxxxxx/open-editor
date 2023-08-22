@@ -11,15 +11,11 @@ export const Theme = `
   font-family: Avenir, Helvetica, Arial, sans-serif;
 }
 
-style {
-  display: none;
-}
-
 :host {
   --black: #181818;
   --white: #ffffff;
   --grey: #abb2bf;
-  --red: #ff5555;
+  --red: #ff335c;
   --green: #00dc82;
   --cyan: #2dd9da;
   --overlay-margin: #f6b26ba8;

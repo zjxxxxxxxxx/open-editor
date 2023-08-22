@@ -1,8 +1,8 @@
 import type { Plugin, ResolvedConfig } from 'vite';
 import { join } from 'node:path';
-import { openEditorMiddleware } from '@open-editor/server';
 import { ServerApis } from '@open-editor/shared';
 import { createRuntime } from '@open-editor/shared/node';
+import { openEditorMiddleware } from '@open-editor/server';
 
 export interface Options {
   /**
@@ -66,14 +66,6 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
       if (id === join(resolvedConfig.base, clientId)) {
         return `import('${runtime.filename}');`;
       }
-    },
-
-    transform(code, id) {
-      if (id.includes('/entry')) {
-        return `import('${runtime.filename}');\n${code}`;
-      }
-
-      return code;
     },
 
     transformIndexHtml(html) {

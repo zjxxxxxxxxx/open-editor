@@ -15,6 +15,6 @@
     "checkJs": true,
     "isolatedModules": true
   },
-  "include": ["./", "./**/*.svelte", "../../../vite-env.d.ts"],
-  "references": [{ "path": "../../../tsconfig.json" }]
+  "include": ["./", "./**/*.svelte", "../../vite-env.d.ts"],
+  "references": [{ "path": "../../tsconfig.json" }]
 }

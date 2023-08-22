@@ -35,7 +35,7 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${Theme}</style>`;
+      shadow.innerHTML = `<style style="display: none;">${Theme}</style>`;
 
       this.#overlay = <HTMLOverlayElement>(
         create(InternalElements.HTML_OVERLAY_ELEMENT)
@@ -136,6 +136,8 @@ export function defineInspectElement() {
         const style = create('style');
         style.innerHTML = `*:hover {
           cursor: default;
+          user-select: none;
+          touch-action: none;
         }`;
         this.#mouseStyle = style;
       }
@@ -146,28 +148,36 @@ export function defineInspectElement() {
       this.#mouseStyle.remove();
     }
 
-    async #openEditor(element: HTMLElement) {
+    #openEditor(element: HTMLElement) {
       const source = resolveSource(element);
       if (source.file) {
+        const { protocol, hostname, port } = window.location;
         const { file, line = 1, column = 1 } = source;
-        let openURL = `${ServerApis.OPEN_EDITOR}${file}?line=${line}&column=${column}`;
+        const { port: customPort } = getOptions();
 
-        const { serverAddress } = getOptions();
-        if (serverAddress) {
-          openURL = `${serverAddress}${openURL}`;
+        const openURL = new URL(`${protocol}//${hostname}`);
+        openURL.pathname = `${ServerApis.OPEN_EDITOR}${file}`;
+        openURL.searchParams.set('line', String(line));
+        openURL.searchParams.set('column', String(column));
+        openURL.port = customPort || port;
+
+        // open-editor event
+        const event = new CustomEvent('openeditor', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+          detail: openURL,
+        });
+
+        // Dispatches a synthetic event event to target and returns true if either event's cancelable
+        // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
+        if (this.dispatchEvent(event)) {
+          fetch(openURL).catch(() => {
+            console.error(new Error('@open-editor/client: openeditor fail.'));
+          });
         }
 
-        await fetch(openURL).catch(() => {
-          console.error(new Error('@open-editor/client: open fail.'));
-        });
         this.#cleanupHandlers();
-
-        // dispatch open-editor event
-        this.dispatchEvent(
-          new CustomEvent('open-editor', {
-            detail: source,
-          }),
-        );
       }
     }
   }

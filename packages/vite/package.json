@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "build": "pnpm unbuild",
-    "dev": "cross-env __DEV__=true pnpm build",
+    "dev": "pnpm rollup -c",
+    "dev:watch": "pnpm dev -w",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
