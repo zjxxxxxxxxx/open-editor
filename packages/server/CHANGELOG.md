@@ -1,5 +1,14 @@
 # @open-editor/server
 
+## 0.0.8
+
+### Patch Changes
+
+- [#41](https://github.com/zjxxxxxxxxx/open-editor/pull/41) [`6ceee81`](https://github.com/zjxxxxxxxxx/open-editor/commit/6ceee816b7af015a5dac3397b50adcb498335da7) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - internal server return only port
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.8
+
 ## 0.0.7
 
 ### Patch Changes
