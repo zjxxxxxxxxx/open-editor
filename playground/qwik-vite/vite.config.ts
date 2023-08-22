@@ -1,11 +1,13 @@
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+import { qwikVite } from '@builder.io/qwik/optimizer';
 import OpenEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    qwikVite({
+      csr: true,
+    }),
     OpenEditor({
       displayToggle: true,
     }),

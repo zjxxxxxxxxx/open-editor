@@ -76,7 +76,7 @@ function buildBundles(
     },
     plugins: [
       esbuildPlugin({
-        target: 'es6',
+        target: 'es2020',
       }),
       nodeResolve(),
       commonjs(),

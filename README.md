@@ -8,11 +8,20 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
     <a target="_blank" href="https://react.dev">
         <img width="80" height="80" src="./public/react.svg" />
     </a>
+     <a target="_blank" href="https://nextjs.org">
+      <picture>
+        <source width="80" height="80" media="(prefers-color-scheme: dark)" srcset="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png">
+        <img width="80" height="80" src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" height="128">
+      </picture>
+    </a>
     <a target="_blank" href="https://vuejs.org">
         <img width="80" height="80" src="./public/vue.svg" />
     </a>
     <a target="_blank" href="https://svelte.dev">
         <img width="80" height="80" src="./public/svelte.svg" />
+    </a>
+     <a target="_blank" href="https://qwik.builder.io">
+        <img width="80" height="80" src="./public/qwik.svg" />
     </a>
 </div>
 
