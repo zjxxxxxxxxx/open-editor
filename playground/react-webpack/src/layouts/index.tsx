@@ -1,4 +1,5 @@
 import { Link, Outlet } from 'umi';
+import '../open-editor';
 import styles from './index.less';
 
 export default function Layout() {

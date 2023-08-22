@@ -123,9 +123,6 @@ importers:
       cors:
         specifier: ^2.8.5
         version: 2.8.5
-      ip:
-        specifier: ^1.1.8
-        version: 1.1.8
       launch-editor:
         specifier: ^2.6.0
         version: 2.6.0
@@ -136,9 +133,6 @@ importers:
       '@types/cors':
         specifier: ^2.8.13
         version: 2.8.13
-      '@types/ip':
-        specifier: ^1.1.0
-        version: 1.1.0
 
   packages/shared: {}
 
@@ -215,6 +209,22 @@ importers:
       typescript:
         specifier: 5.1.6
         version: 5.1.6
+
+  playground/qwik-vite:
+    dependencies:
+      '@builder.io/qwik':
+        specifier: ^1.2.6
+        version: 1.2.6(undici@5.23.0)
+    devDependencies:
+      '@open-editor/vite':
+        specifier: latest
+        version: link:../../packages/vite
+      typescript:
+        specifier: ^5.0.2
+        version: 5.1.6
+      vite:
+        specifier: ^4.4.5
+        version: 4.4.7(@types/node@20.5.0)
 
   playground/react-vite:
     dependencies:
@@ -307,6 +317,9 @@ importers:
 
   playground/uni-web-vite:
     dependencies:
+      '@builder.io/qwik':
+        specifier: ^1.2.6
+        version: 1.2.6(undici@5.23.0)
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -2963,6 +2976,17 @@ packages:
     resolution: {integrity: sha512-h0OYmPR3A5Dfbetra/GzxBAzQk8sH7LhRkRUTdagX6nrtlUgJGYCTv4bBK33jsTQw9HDd8PE2x1Ma+iRKEDUsw==}
     dev: false
 
+  /@builder.io/qwik@1.2.6(undici@5.23.0):
+    resolution: {integrity: sha512-Cm1sLAimML55I5T1RI80R1lLgI4cnSeQt5obQtcMKa8wMmf2/luEyQaEkeN2fV3sp/gaVXCfAuKaddXK6ONdww==}
+    engines: {node: '>=16.8.0 <18.0.0 || >=18.11'}
+    hasBin: true
+    peerDependencies:
+      undici: ^5.14.0
+    dependencies:
+      csstype: 3.1.2
+      undici: 5.23.0
+    dev: false
+
   /@changesets/apply-release-plan@6.1.4:
     resolution: {integrity: sha512-FMpKF1fRlJyCZVYHr3CbinpZZ+6MwvOtWUuO8uo+svcATEoc1zRDcj23pAurJ2TZ/uVz1wFHH6K3NlACy0PLew==}
     dependencies:
@@ -4848,12 +4872,6 @@ packages:
 
   /@types/http-proxy@1.17.11:
     resolution: {integrity: sha512-HC8G7c1WmaF2ekqpnFq626xd3Zz0uvaqFmBJNRZCGEZCXkvSdJoNFn/8Ygbd9fKNQj8UzLdCETaI0UWPAjK7IA==}
-    dependencies:
-      '@types/node': 20.5.0
-    dev: true
-
-  /@types/ip@1.1.0:
-    resolution: {integrity: sha512-dwNe8gOoF70VdL6WJBwVHtQmAX4RMd62M+mAB9HQFjG1/qiCLM/meRy95Pd14FYBbEDwCq7jgJs89cHpLBu4HQ==}
     dependencies:
       '@types/node': 20.5.0
     dev: true
@@ -10546,10 +10564,6 @@ packages:
       loose-envify: 1.4.0
     dev: false
 
-  /ip@1.1.8:
-    resolution: {integrity: sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==}
-    dev: false
-
   /ipaddr.js@1.9.1:
     resolution: {integrity: sha512-0KI/607xoxSToH7GjN1FfSbLoU0+btTicjsQSWQlh/hZykN8KpmMf7uYwPW3R+akZ6R/w18ZlXSHBYXiYUPO3g==}
     engines: {node: '>= 0.10'}
@@ -15430,6 +15444,13 @@ packages:
       - sass
       - supports-color
     dev: true
+
+  /undici@5.23.0:
+    resolution: {integrity: sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==}
+    engines: {node: '>=14.0'}
+    dependencies:
+      busboy: 1.6.0
+    dev: false
 
   /unfetch@5.0.0:
     resolution: {integrity: sha512-3xM2c89siXg0nHvlmYsQ2zkLASvVMBisZm5lF3gFDqfF2xonNStDJyMpvaOBe0a1Edxmqrf2E0HBdmy9QyZaeg==}

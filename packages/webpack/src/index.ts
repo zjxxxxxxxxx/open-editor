@@ -45,20 +45,17 @@ export default class OpenEditorPlugin {
       return;
     }
 
-    const { EntryPlugin } = compiler.webpack ?? {};
-
-    if (EntryPlugin) {
+    if (compiler.webpack?.version.startsWith('5')) {
       this.resolveClientRuntime((clientRuntimeEntry) => {
-        new EntryPlugin(compiler.context, clientRuntimeEntry, {
+        new compiler.webpack.EntryPlugin(compiler.context, clientRuntimeEntry, {
           name: undefined,
         }).apply(compiler);
       });
     } else {
-      const originalEntry = compiler.options.entry;
-
+      const entry = compiler.options.entry;
       compiler.options.entry = () =>
         this.resolveClientRuntime((clientRuntimeEntry) => {
-          return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
+          return this.injectClientRuntime(entry, clientRuntimeEntry);
         });
       compiler.hooks.entryOption.call(
         compiler.options.context!,
@@ -70,10 +67,9 @@ export default class OpenEditorPlugin {
   async resolveClientRuntime<
     Callback extends (clientRuntimeEntry: string) => any,
   >(callback: Callback): Promise<ReturnType<Callback>> {
-    const serverAddress = await getServerAddress(this.options);
     const runtime = createRuntime(import.meta.url);
     runtime.generate({
-      serverAddress,
+      port: await getServerAddress(this.options),
       rootDir: this.options.rootDir,
       displayToggle: this.options.displayToggle,
     });
@@ -81,26 +77,26 @@ export default class OpenEditorPlugin {
   }
 
   injectClientRuntime(
-    originalEntry: webpack.EntryNormalized,
+    entry: webpack.EntryNormalized,
     clientRuntimeEntry: string,
   ): any {
-    if (typeof originalEntry === 'function') {
-      return Promise.resolve(originalEntry()).then((originalEntry) => {
+    if (typeof entry === 'function') {
+      return Promise.resolve(entry()).then((originalEntry) => {
         return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
       });
     }
 
-    if (!originalEntry || typeof originalEntry !== 'object') {
+    if (!entry || typeof entry !== 'object') {
       // @ts-ignore
-      originalEntry = [].concat(originalEntry);
+      entry = [].concat(entry);
     }
 
-    if (Array.isArray(originalEntry)) {
-      return [...originalEntry, clientRuntimeEntry];
+    if (Array.isArray(entry)) {
+      return [...entry, clientRuntimeEntry];
     }
 
     return Object.fromEntries(
-      Object.entries(originalEntry).map(([key, entry]) => [
+      Object.entries(entry).map(([key, entry]) => [
         key,
         this.injectClientRuntime(entry, clientRuntimeEntry),
       ]),

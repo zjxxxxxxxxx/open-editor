@@ -1,5 +1,4 @@
 import http from 'node:http';
-import ip from 'ip';
 import { createApp } from './createApp';
 
 export interface Options {
@@ -27,27 +26,25 @@ export function setupServer(options: Options = {}) {
 }
 
 function startServer(server: http.Server) {
-  return new Promise<string>((resolve, reject) => {
+  return new Promise<number>((resolve, reject) => {
     server.on('error', reject);
 
     server.listen(
       // auto port
       undefined,
       () => {
-        const serverAddress = server.address();
-        if (!serverAddress) {
+        const address = server.address();
+        if (!address) {
           server.close();
           reject(new Error('@open-editor/server: start fail.'));
           return;
         }
 
-        if (typeof serverAddress === 'string') {
-          const port = serverAddress.match(/:(\d+)$/)![1];
-          resolve(`http://${ip.address()}:${port}`);
-        } else {
-          const { port } = serverAddress;
-          resolve(`http://${ip.address()}:${port}`);
-        }
+        const port =
+          typeof address === 'string'
+            ? +address.match(/:(\d+)$/)![1]
+            : address.port;
+        resolve(port);
       },
     );
   });

@@ -1,14 +1,15 @@
 import { isValidElement } from './element';
 
-const vueKey = '__vueParentComponent';
-const svelteKey = '__svelte_meta';
 const reactKeyStarts = '__reactFiber$';
 const react15KeyStarts = '__reactInternalInstance$';
-
 // __reactFiber$xxx...
 let reactKey: string | undefined;
 // __reactInternalInstance$xxx...
 let react15Key: string | undefined;
+
+const vueKey = '__vueParentComponent';
+const svelteKey = '__svelte_meta';
+const qwikKey = '_qc_';
 
 // support parsing single project multiple frameworks
 export function resolveDebug(element: HTMLElement) {
@@ -30,6 +31,10 @@ function findKey(element: HTMLElement) {
   // svelte?+
   else if (svelteKey in element) {
     return svelteKey;
+  }
+  // qwik?+
+  else if (qwikKey in element) {
+    return qwikKey;
   }
 
   // react17+

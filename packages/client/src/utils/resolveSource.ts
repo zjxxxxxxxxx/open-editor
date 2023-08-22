@@ -28,6 +28,8 @@ export function resolveSource(element: HTMLElement): ElementSource {
     debugSource = resolveSourceFromVue(debug.value);
   } else if (debug.key.startsWith('__svelte')) {
     debugSource = resolveSourceFromSvelte(debug.value);
+  } else if (debug.key.startsWith('_qc')) {
+    debugSource = resolveSourceFromQwik(debug.value);
   }
   if (!debugSource) {
     return source;
@@ -82,6 +84,22 @@ function resolveSourceFromSvelte(meta?: { loc: { file?: string } } | null) {
   return {
     component: matchComponent(meta.loc.file, 'svelte'),
     file: meta.loc.file,
+  };
+}
+
+const qwikPosRE = /:(\d+):(\d+)$/;
+function resolveSourceFromQwik(meta?: any | null) {
+  if (!meta) return;
+
+  const { displayName, file } = meta.$parent$.$componentQrl$.dev;
+  const [, line, column] =
+    meta.$element$.getAttribute('data-qwik-inspector').match(qwikPosRE) ?? [];
+
+  return {
+    component: displayName,
+    file,
+    line,
+    column,
   };
 }
 

@@ -5,11 +5,11 @@ export interface Options {
   displayToggle: boolean;
 
   /**
-   * internal server address
+   * internal server port
    *
    * relative address is used when this parameter is empty
    */
-  serverAddress?: string;
+  port?: string;
 
   /**
    * source rootDir path
