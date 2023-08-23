@@ -130,6 +130,23 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
         </a>
       </th>
     </tr>
+     <tr>
+      <th>qwik + vite</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/qwik-vite"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/qwik-vite"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
     <tr>
       <th>next + webpack</th>
       <th>

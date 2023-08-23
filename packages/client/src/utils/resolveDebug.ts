@@ -8,6 +8,7 @@ let reactKey: string | undefined;
 let react15Key: string | undefined;
 
 const vueKey = '__vueParentComponent';
+const vue2Key = '__vue__';
 const svelteKey = '__svelte_meta';
 const qwikKey = '_qc_';
 
@@ -27,6 +28,10 @@ function findKey(element: HTMLElement) {
   // vue3+
   if (vueKey in element) {
     return vueKey;
+  }
+  // vue+
+  else if (vue2Key in element) {
+    return vue2Key;
   }
   // svelte?+
   else if (svelteKey in element) {

@@ -12,7 +12,7 @@ export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    #mouseStyle!: HTMLElement;
+    #screenStyle!: HTMLElement;
     #overlay: HTMLOverlayElement;
     #toggle: HTMLToggleElement;
 
@@ -82,10 +82,6 @@ export function defineInspectElement() {
       if (event.altKey && event.metaKey && event.keyCode === 79) {
         this.#toggleActiveEffect();
       }
-      // stop
-      else if (event.keyCode === 27) {
-        this.#cleanupHandlers();
-      }
     };
 
     #toggleActiveEffect = () => {
@@ -97,55 +93,52 @@ export function defineInspectElement() {
     };
 
     #setupHandlers() {
-      if (this.#active) return;
-      this.#active = true;
+      if (!this.#active) {
+        this.#active = true;
+        this.#overlay.open();
+        this.#lockScreen();
+        this.#cleanupListenersOnWindow = setupListenersOnWindow({
+          onChangeElement: (element) => {
+            this.#overlay.update(element);
+          },
+          onOpenEditor: (element) => {
+            this.#openEditor(element);
+          },
+          onExitInspect: this.#cleanupHandlers,
+        });
 
-      this.#overlay.open();
-      this.#lockMouseStyle();
-      this.#cleanupListenersOnWindow = setupListenersOnWindow({
-        onChangeElement: (element) => {
-          this.#overlay.update(element);
-        },
-        onOpenEditor: (element) => {
-          this.#openEditor(element);
-        },
-      });
-
-      if (this.#mousePoint) {
-        const { x, y } = this.#mousePoint;
-        const initElement = <HTMLElement>document.elementFromPoint(x, y);
-        if (isValidElement(initElement)) {
-          this.#overlay.update(initElement);
+        if (this.#mousePoint) {
+          const { x, y } = this.#mousePoint;
+          const initElement = <HTMLElement>document.elementFromPoint(x, y);
+          if (isValidElement(initElement)) {
+            this.#overlay.update(initElement);
+          }
         }
       }
     }
 
     #cleanupListenersOnWindow?: () => void;
 
-    #cleanupHandlers() {
-      if (!this.#active) return;
-      this.#active = false;
-
-      this.#overlay.close();
-      this.#unlockMouseStyle();
-      this.#cleanupListenersOnWindow?.();
-    }
-
-    #lockMouseStyle() {
-      if (!this.#mouseStyle) {
-        const style = create('style');
-        style.innerHTML = `*:hover {
-          cursor: default;
-          user-select: none;
-          touch-action: none;
-        }`;
-        this.#mouseStyle = style;
+    #cleanupHandlers = () => {
+      if (this.#active) {
+        this.#active = false;
+        this.#overlay.close();
+        this.#unlockScreen();
+        this.#cleanupListenersOnWindow?.();
       }
-      requestAnimationFrame(() => append(document.head, this.#mouseStyle));
+    };
+
+    #lockScreen() {
+      if (!this.#screenStyle) {
+        const style = create('style');
+        style.innerHTML = `*:hover{cursor:default;user-select:none;touch-action:none;}`;
+        this.#screenStyle = style;
+      }
+      requestAnimationFrame(() => append(document.head, this.#screenStyle));
     }
 
-    #unlockMouseStyle() {
-      this.#mouseStyle.remove();
+    #unlockScreen() {
+      this.#screenStyle.remove();
     }
 
     #openEditor(element: HTMLElement) {

@@ -4,10 +4,11 @@ import { isInternalElement, isValidElement } from './element';
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
   onOpenEditor(element: HTMLElement): void;
+  onExitInspect(): void;
 }
 
 export function setupListenersOnWindow(options: SetupHandlersOptions) {
-  const { onChangeElement, onOpenEditor } = options;
+  const { onChangeElement, onOpenEditor, onExitInspect } = options;
 
   function registerListenersOnWindow() {
     on('click', onClick, { capture: true });
@@ -34,6 +35,9 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('touchend', onSilence, { capture: true });
     on('touchcancel', onSilence, { capture: true });
     on('touchmove', onSilence, { capture: true });
+
+    on('keydown', onKeyDown, { capture: true });
+    on('contextmenu', onContextMenu, { capture: true });
 
     on('pointerleave', onPointerLeave, {
       capture: true,
@@ -67,6 +71,9 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('touchcancel', onSilence, { capture: true });
     off('touchmove', onSilence, { capture: true });
 
+    off('keydown', onKeyDown, { capture: true });
+    off('contextmenu', onContextMenu, { capture: true });
+
     off('pointerleave', onPointerLeave, {
       capture: true,
       target: document.body,
@@ -99,6 +106,22 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
         onChangeElement();
       }
     }
+  }
+
+  function onKeyDown(event: KeyboardEvent) {
+    onSilence(event);
+
+    // esc exit.
+    if (event.keyCode === 27) {
+      onExitInspect();
+    }
+  }
+
+  function onContextMenu(event: Event) {
+    onSilence(event);
+
+    // right-click exit.
+    onExitInspect();
   }
 
   function onSilence(event: Event) {
