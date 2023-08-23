@@ -24,8 +24,10 @@ export function resolveSource(element: HTMLElement): ElementSource {
   let debugSource: Omit<ElementSource, 'element'> | undefined;
   if (debug.key.startsWith('__react')) {
     debugSource = resolveSourceFromReact(debug.value);
-  } else if (debug.key.startsWith('__vue')) {
+  } else if (debug.key.startsWith('__vueParent')) {
     debugSource = resolveSourceFromVue(debug.value);
+  } else if (debug.key.startsWith('__vue')) {
+    debugSource = resolveSourceFromVue2(debug.value);
   } else if (debug.key.startsWith('__svelte')) {
     debugSource = resolveSourceFromSvelte(debug.value);
   } else if (debug.key.startsWith('_qc')) {
@@ -53,7 +55,7 @@ function resolveSourceFromReact(fiber?: Fiber | null) {
 
   const source = fiber._debugSource!;
   let owner = fiber._debugOwner;
-  while (owner && (typeof owner.type !== 'function' || !owner._debugSource)) {
+  while (owner && typeof owner.type !== 'function') {
     owner = owner._debugOwner;
   }
 
@@ -66,15 +68,36 @@ function resolveSourceFromReact(fiber?: Fiber | null) {
 }
 
 function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
-  while (instance && !instance.type.__file) {
+  while (instance && !isValidFileName(instance.type.__file)) {
     instance = instance.parent;
   }
   if (!instance) return;
 
   return {
     component:
-      instance.type.__name ?? matchComponent(instance.type.__file, 'vue'),
+      instance.type.name ??
+      instance.type.__name ??
+      matchComponent(instance.type.__file, 'vue'),
     file: instance.type.__file,
+  };
+}
+
+function resolveSourceFromVue2(instance?: any | null) {
+  if (!instance.$vnode) {
+    instance = instance._vnode.componentInstance;
+  }
+  while (
+    instance &&
+    !isValidFileName(instance.$vnode.componentOptions.Ctor.options.__file)
+  ) {
+    instance = instance.$parent;
+  }
+  if (!instance) return;
+
+  const { options } = instance.$vnode.componentOptions.Ctor;
+  return {
+    component: options.name ?? matchComponent(options.__file, 'vue'),
+    file: options.__file,
   };
 }
 
@@ -108,6 +131,13 @@ function matchComponent(file = '', suffix = '') {
     const matchRE = new RegExp(`([^/.]+).${suffix}$`);
     return file.match(matchRE)?.[1];
   }
+}
+
+function isValidFileName(fileName?: string) {
+  if (fileName) {
+    return !fileName.startsWith('/home/runner/');
+  }
+  return false;
 }
 
 function ensureFileName(fileName: string) {
