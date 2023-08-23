@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import './open-editor';
+import './open';
 
 export default function Home() {
   return (

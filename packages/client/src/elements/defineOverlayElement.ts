@@ -3,14 +3,7 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import {
-  applyStyle,
-  cssUtils,
-  create,
-  on,
-  off,
-  append,
-} from '../utils/document';
+import { applyStyle, cssUtil, create, append } from '../utils/document';
 import { Colors, InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -29,8 +22,6 @@ export function defineOverlayElement() {
     #borderRect: HTMLElement;
     #paddingRect: HTMLElement;
     #contentRect: HTMLElement;
-
-    #activeElement?: HTMLElement;
 
     constructor() {
       super();
@@ -73,16 +64,6 @@ export function defineOverlayElement() {
       append(shadow, this.#tooltip);
     }
 
-    connectedCallback() {
-      on('resize', this.#reUpdate);
-      on('scroll', this.#reUpdate);
-    }
-
-    disconnectedCallback() {
-      off('resize', this.#reUpdate);
-      off('scroll', this.#reUpdate);
-    }
-
     public open() {
       this.#tooltip.open();
 
@@ -95,35 +76,27 @@ export function defineOverlayElement() {
     public close() {
       this.#tooltip.close();
 
-      this.#activeElement = undefined;
       applyStyle(this.#posttionRect, {
         display: 'none',
       });
     }
 
     public update(element: HTMLElement) {
-      this.#activeElement = element;
-      this.#reUpdate();
-    }
-
-    #reUpdate = () => {
-      const styles = this.#activeElement
-        ? getComputedStyles(this.#activeElement)
-        : emptyComputedStyles;
-      this.#tooltip.update(this.#activeElement, styles.posttion);
+      const styles = element ? getComputedStyles(element) : emptyComputedStyles;
+      this.#tooltip.update(element, styles.posttion);
       this.#updateStyles(styles);
-    };
+    }
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttionRect, {
-        width: cssUtils.px(styles.posttion.width),
-        height: cssUtils.px(styles.posttion.height),
-        top: cssUtils.px(styles.posttion.top),
-        left: cssUtils.px(styles.posttion.left),
+        width: cssUtil.px(styles.posttion.width),
+        height: cssUtil.px(styles.posttion.height),
+        top: cssUtil.px(styles.posttion.top),
+        left: cssUtil.px(styles.posttion.left),
       });
       applyStyle(this.#contentRect, {
-        width: cssUtils.px(styles.content.width),
-        height: cssUtils.px(styles.content.height),
+        width: cssUtil.px(styles.content.width),
+        height: cssUtil.px(styles.content.height),
       });
       applyRectStyle(this.#marginRect, styles.margin);
       applyRectStyle(this.#borderRect, styles.border);
@@ -133,12 +106,12 @@ export function defineOverlayElement() {
 
   function applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
     applyStyle(rect, {
-      width: cssUtils.px(style.width),
-      height: cssUtils.px(style.height),
-      borderTopWidth: cssUtils.px(style.top),
-      borderRightWidth: cssUtils.px(style.right),
-      borderBottomWidth: cssUtils.px(style.bottom),
-      borderLeftWidth: cssUtils.px(style.left),
+      width: cssUtil.px(style.width),
+      height: cssUtil.px(style.height),
+      borderTopWidth: cssUtil.px(style.top),
+      borderRightWidth: cssUtil.px(style.right),
+      borderBottomWidth: cssUtil.px(style.bottom),
+      borderLeftWidth: cssUtil.px(style.left),
       borderStyle: 'solid',
     });
   }

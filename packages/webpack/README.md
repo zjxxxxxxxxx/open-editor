@@ -39,9 +39,9 @@ module.exports = {
 };
 ```
 
-press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
+press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
 
-press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd> or <kbd>esc</kbd> again to exit inspect.
+press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 ## Options
 
@@ -56,16 +56,74 @@ press hotkey <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd> or <k
   </thead>
   <tbody>
     <tr>
+     <td>rootDir</td>
+     <td>string</td>
+     <td>process.cwd()</td>
+     <td>source rootDir path</td>
+    </tr>
+    <tr>
      <td>displayToggle</td>
      <td>boolean</td>
      <td>false</td>
      <td>render the toggle into the browser</td>
     </tr>
+  </tbody>
+</table>
+
+## Playground
+
+<table>
+  <tbody>
     <tr>
-     <td>rootDir</td>
-     <td>string</td>
-     <td>process.cwd()</td>
-     <td>source rootDir path</td>
+      <th>react + webpack</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th>vue + webpack</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th>next + webpack</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
+        >
+          StackBlitz
+        </a>
+      </th>
     </tr>
   </tbody>
 </table>

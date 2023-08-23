@@ -22,7 +22,7 @@ export function applyAttrs(
   }
 }
 
-export const cssUtils = {
+export const cssUtil = {
   /**
    * 10 -> '10px'
    */

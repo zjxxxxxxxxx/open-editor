@@ -1,4 +1,4 @@
-import { cssUtils } from './document';
+import { cssUtil } from './document';
 
 export interface ComputedStyle {
   width: number;
@@ -42,7 +42,7 @@ export function getComputedStyles(
   const style = window.getComputedStyle(element, null);
   const getStyle = style.getPropertyValue.bind(style);
   const getValue = (property: string) => {
-    return Math.max(cssUtils.pv(getStyle(property)), 0);
+    return Math.max(cssUtil.pv(getStyle(property)), 0);
   };
 
   const marginTop = getValue('margin-top');

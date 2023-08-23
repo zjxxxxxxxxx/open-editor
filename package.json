@@ -14,7 +14,7 @@
     "play": "pnpm start --script=dev",
     "lint": "pnpm lint:ci && pnpm --filter @playground/* lint",
     "lint:ci": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
-    "format": "prettier --write '**/*.{ts,tsx,md}'",
+    "format": "prettier --write '**/*.{vue,ts,tsx,md}'",
     "postinstall": "simple-git-hooks",
     "release": "pnpm build && changeset publish",
     "typecheck": "tsc --noEmit && turbo run typecheck",

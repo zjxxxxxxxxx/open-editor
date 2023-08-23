@@ -1,5 +1,5 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import { applyStyle, cssUtils, create, append } from '../utils/document';
+import { applyStyle, cssUtil, create, append } from '../utils/document';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
 
@@ -33,7 +33,7 @@ export function defineTooltipElement() {
         zIndex: '1000002',
         padding: '10px 20px',
         display: 'none',
-        maxWidth: `calc(100% - 44px - ${cssUtils.px(this.#offset * 2)})`,
+        maxWidth: `calc(100% - 44px - ${cssUtil.px(this.#offset * 2)})`,
         visibility: 'hidden',
         background: Colors.TOOLTIP_BG_COLOR,
         borderRadius: '4px',
@@ -135,21 +135,21 @@ export function defineTooltipElement() {
       // on top
       if (style.top > containerHeight + this.#offset) {
         applyStyle(this.#container, {
-          top: cssUtils.px(style.top - containerHeight - this.#offset),
+          top: cssUtil.px(style.top - containerHeight - this.#offset),
         });
       }
       // on bottom
       else {
         const maxTop = windowHeight - containerHeight - this.#offset;
         applyStyle(this.#container, {
-          top: cssUtils.px(Math.min(style.bottom + this.#offset, maxTop)),
+          top: cssUtil.px(Math.min(style.bottom + this.#offset, maxTop)),
         });
       }
 
       const minLeft = this.#offset;
       const maxLeft = windowWidth - containerWidth - this.#offset;
       applyStyle(this.#container, {
-        left: cssUtils.px(Math.max(Math.min(style.left, maxLeft), minLeft)),
+        left: cssUtil.px(Math.max(Math.min(style.left, maxLeft), minLeft)),
       });
     }
   }
