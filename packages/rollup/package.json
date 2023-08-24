@@ -1,0 +1,49 @@
+{
+  "name": "@open-editor/rollup",
+  "version": "0.0.8",
+  "description": "enable you to open the editor by inspect the UI.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm unbuild",
+    "dev": "pnpm rollup -c",
+    "dev:watch": "pnpm dev -w",
+    "typecheck": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/rollup"
+  },
+  "keywords": [
+    "open-editor",
+    "rollup-plugin",
+    "devtools"
+  ],
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup#readme",
+  "dependencies": {
+    "@open-editor/client": "workspace:*",
+    "@open-editor/server": "workspace:*",
+    "@open-editor/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "rollup": "^3.28.1"
+  }
+}

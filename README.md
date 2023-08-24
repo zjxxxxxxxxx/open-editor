@@ -34,6 +34,9 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
     <a target="_blank" href="https://vitejs.dev">
         <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
     </a>
+     <a target="_blank" href="https://rollupjs.org">
+        <img width="80" height="80" src="https://rollupjs.org/rollup-logo.svg" />
+    </a>
 </div>
 
 ## Plugin

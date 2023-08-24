@@ -76,7 +76,7 @@ function buildBundles(
     },
     plugins: [
       esbuildPlugin({
-        target: ['vite', 'webpack'].includes(basename(resolve()))
+        target: ['vite', 'rollup', 'webpack'].includes(basename(resolve()))
           ? 'es2020'
           : 'es6',
       }),

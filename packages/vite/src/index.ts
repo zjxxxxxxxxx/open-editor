@@ -24,7 +24,16 @@ export interface Options {
   onOpenEditor?(file: string): void;
 }
 
-export default function openEditorPlugin(options: Options = {}): Plugin {
+/**
+ * development only
+ */
+export default function openEditorPlugin(
+  options: Options = {},
+): Plugin | undefined {
+  if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
+    return;
+  }
+
   const {
     rootDir = process.cwd(),
     displayToggle = false,
@@ -43,6 +52,14 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
     name: 'vite:open-editor',
     apply: 'serve',
 
+    config: () => ({
+      optimizeDeps: {
+        exclude: [runtime.filename],
+      },
+      resolve: {
+        dedupe: [runtime.filename],
+      },
+    }),
     configureServer(server) {
       server.middlewares.use(
         ServerApis.OPEN_EDITOR,
