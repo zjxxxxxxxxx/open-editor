@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-types */
-import { CLIENT } from '../constants';
-
 export function applyStyle(
   element: HTMLElement,
   ...styles: Partial<CSSStyleDeclaration>[]
@@ -22,7 +19,7 @@ export function applyAttrs(
   }
 }
 
-export const cssUtil = {
+export const CSS_util = {
   /**
    * 10 -> '10px'
    */
@@ -42,23 +39,16 @@ export function on<K extends keyof HTMLElementEventMap>(
   listener: (ev: HTMLElementEventMap[K]) => void,
   options?: AddEventListenerOptions & { target?: HTMLElement },
 ): void;
-export function on<K extends keyof WindowEventMap>(
-  type: K,
-  listener: (ev: WindowEventMap[K]) => void,
-  options?: AddEventListenerOptions & { target?: Window },
-): void;
 export function on(
   type: string,
   listener: (ev: any) => void,
   options?: AddEventListenerOptions & { target?: any },
 ): void;
 export function on(type: any, listener: any, options: any = {}) {
-  if (CLIENT) {
-    if (!options.target) {
-      options.target = window;
-    }
-    options.target.addEventListener(type, listener, options);
+  if (!options.target) {
+    options.target = document;
   }
+  options.target.addEventListener(type, listener, options);
 }
 
 export function off<K extends keyof HTMLElementEventMap>(
@@ -66,23 +56,16 @@ export function off<K extends keyof HTMLElementEventMap>(
   listener: (ev: HTMLElementEventMap[K]) => void,
   options?: EventListenerOptions & { target?: HTMLElement },
 ): void;
-export function off<K extends keyof WindowEventMap>(
-  type: K,
-  listener: (ev: WindowEventMap[K]) => void,
-  options?: EventListenerOptions & { target?: Window },
-): void;
 export function off(
   type: string,
   listener: (ev: any) => void,
   options?: EventListenerOptions & { target?: any },
 ): void;
 export function off(type: any, listener: any, options: any = {}) {
-  if (CLIENT) {
-    if (!options.target) {
-      options.target = window;
-    }
-    options.target.removeEventListener(type, listener, options);
+  if (!options.target) {
+    options.target = document;
   }
+  options.target.removeEventListener(type, listener, options);
 }
 
 export function create<K extends keyof HTMLElementTagNameMap>(
@@ -94,21 +77,9 @@ export function create(
   options?: ElementCreationOptions,
 ): HTMLElement;
 export function create(tagName: string, options?: ElementCreationOptions) {
-  if (!CLIENT) {
-    throw new Error(
-      '@open-editor/client: server side not support createElement.',
-    );
-  }
-
   return document.createElement(tagName, options);
 }
 
-export function append(target: Node, node: HTMLElement) {
-  if (!CLIENT) {
-    throw new Error(
-      '@open-editor/client: server side not support appendChild.',
-    );
-  }
-
-  return target.appendChild(node);
+export function append(parent: HTMLElement | ShadowRoot, child: HTMLElement) {
+  return parent.appendChild(child);
 }

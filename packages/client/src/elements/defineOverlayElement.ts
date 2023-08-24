@@ -3,7 +3,7 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { applyStyle, cssUtil, create, append } from '../utils/document';
+import { applyStyle, CSS_util, create, append } from '../utils/document';
 import { Colors, InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -14,6 +14,10 @@ export interface HTMLOverlayElement extends HTMLElement {
 }
 
 export function defineOverlayElement() {
+  if (customElements.get(InternalElements.HTML_OVERLAY_ELEMENT)) {
+    return;
+  }
+
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     #tooltip: HTMLTooltipElement;
 
@@ -89,14 +93,14 @@ export function defineOverlayElement() {
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttionRect, {
-        width: cssUtil.px(styles.posttion.width),
-        height: cssUtil.px(styles.posttion.height),
-        top: cssUtil.px(styles.posttion.top),
-        left: cssUtil.px(styles.posttion.left),
+        width: CSS_util.px(styles.posttion.width),
+        height: CSS_util.px(styles.posttion.height),
+        top: CSS_util.px(styles.posttion.top),
+        left: CSS_util.px(styles.posttion.left),
       });
       applyStyle(this.#contentRect, {
-        width: cssUtil.px(styles.content.width),
-        height: cssUtil.px(styles.content.height),
+        width: CSS_util.px(styles.content.width),
+        height: CSS_util.px(styles.content.height),
       });
       applyRectStyle(this.#marginRect, styles.margin);
       applyRectStyle(this.#borderRect, styles.border);
@@ -106,12 +110,12 @@ export function defineOverlayElement() {
 
   function applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
     applyStyle(rect, {
-      width: cssUtil.px(style.width),
-      height: cssUtil.px(style.height),
-      borderTopWidth: cssUtil.px(style.top),
-      borderRightWidth: cssUtil.px(style.right),
-      borderBottomWidth: cssUtil.px(style.bottom),
-      borderLeftWidth: cssUtil.px(style.left),
+      width: CSS_util.px(style.width),
+      height: CSS_util.px(style.height),
+      borderTopWidth: CSS_util.px(style.top),
+      borderRightWidth: CSS_util.px(style.right),
+      borderBottomWidth: CSS_util.px(style.bottom),
+      borderLeftWidth: CSS_util.px(style.left),
       borderStyle: 'solid',
     });
   }
