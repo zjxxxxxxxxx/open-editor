@@ -4,6 +4,10 @@ import { Colors, InternalElements } from '../constants';
 export interface HTMLToggleElement extends HTMLElement {}
 
 export function defineToggleElement() {
+  if (customElements.get(InternalElements.HTML_TOGGLE_ELEMENT)) {
+    return;
+  }
+
   class ToggleElement extends HTMLElement implements HTMLToggleElement {
     static get observedAttributes() {
       return ['enable', 'active'];

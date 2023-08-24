@@ -11,8 +11,12 @@ import { HTMLToggleElement } from './defineToggleElement';
 export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineInspectElement() {
+  if (customElements.get(InternalElements.HTML_INSPECT_ELEMENT)) {
+    return;
+  }
+
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    #screenStyle!: HTMLElement;
+    #resetStyle!: HTMLStyleElement;
     #overlay: HTMLOverlayElement;
     #toggle: HTMLToggleElement;
 
@@ -29,7 +33,7 @@ export function defineInspectElement() {
       });
     }
 
-    #mousePoint!: MouseEvent;
+    #pointer!: PointerEvent;
 
     constructor() {
       super();
@@ -56,16 +60,16 @@ export function defineInspectElement() {
     }
 
     connectedCallback() {
-      on('keydown', this.#onKeydown);
-      on('mousemove', this.#changeMousePoint);
+      on('keydown', this.#onKeydown, { capture: true });
+      on('pointermove', this.#changePointer, { capture: true });
       on('toggle', this.#toggleActiveEffect, {
         target: this.#toggle,
       });
     }
 
     disconnectedCallback() {
-      off('keydown', this.#onKeydown);
-      off('mousemove', this.#changeMousePoint);
+      off('keydown', this.#onKeydown, { capture: true });
+      off('pointermove', this.#changePointer, { capture: true });
       off('toggle', this.#toggleActiveEffect, {
         target: this.#toggle,
       });
@@ -73,8 +77,8 @@ export function defineInspectElement() {
       this.#cleanupHandlers();
     }
 
-    #changeMousePoint = (event: MouseEvent) => {
-      this.#mousePoint = event;
+    #changePointer = (event: PointerEvent) => {
+      this.#pointer = event;
     };
 
     #onKeydown = (event: KeyboardEvent) => {
@@ -96,7 +100,7 @@ export function defineInspectElement() {
       if (!this.#active) {
         this.#active = true;
         this.#overlay.open();
-        this.#lockScreen();
+        this.#appendResetStyle();
         this.#cleanupListenersOnWindow = setupListenersOnWindow({
           onChangeElement: (element) => {
             this.#overlay.update(element);
@@ -107,8 +111,8 @@ export function defineInspectElement() {
           onExitInspect: this.#cleanupHandlers,
         });
 
-        if (this.#mousePoint) {
-          const { x, y } = this.#mousePoint;
+        if (this.#pointer) {
+          const { x, y } = this.#pointer;
           const initElement = <HTMLElement>document.elementFromPoint(x, y);
           if (isValidElement(initElement)) {
             this.#overlay.update(initElement);
@@ -123,22 +127,28 @@ export function defineInspectElement() {
       if (this.#active) {
         this.#active = false;
         this.#overlay.close();
-        this.#unlockScreen();
+        this.#removeResetStyle();
         this.#cleanupListenersOnWindow?.();
       }
     };
 
-    #lockScreen() {
-      if (!this.#screenStyle) {
-        const style = create('style');
-        style.innerHTML = `*:hover{cursor:default;user-select:none;touch-action:none;}`;
-        this.#screenStyle = style;
-      }
-      requestAnimationFrame(() => append(document.head, this.#screenStyle));
+    #appendResetStyle() {
+      requestAnimationFrame(() => {
+        if (!this.#resetStyle) {
+          this.#resetStyle = create('style');
+          this.#resetStyle.type = 'text/css';
+          this.#resetStyle.innerText =
+            '*:hover{cursor:default;user-select:none;touch-action:none;}';
+        }
+
+        append(document.body, this.#resetStyle);
+      });
     }
 
-    #unlockScreen() {
-      this.#screenStyle.remove();
+    #removeResetStyle() {
+      requestAnimationFrame(() => {
+        this.#resetStyle.remove();
+      });
     }
 
     #openEditor(element: HTMLElement) {

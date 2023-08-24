@@ -1,5 +1,4 @@
-import type { Plugin, ResolvedConfig } from 'vite';
-import { join } from 'node:path';
+import type { Plugin } from 'vite';
 import { ServerApis } from '@open-editor/shared';
 import { createRuntime } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
@@ -32,25 +31,17 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
     onOpenEditor,
   } = options;
 
-  const clientId = 'virtual:@open-editor/vite/client';
-  const runtime = createRuntime(import.meta.url);
+  const RUNTIME_PUBLIC_PATH = '/@open-editor/client';
 
-  let resolvedConfig: ResolvedConfig;
+  const runtime = createRuntime(import.meta.url);
+  runtime.generate({
+    rootDir,
+    displayToggle,
+  });
 
   return {
     name: 'vite:open-editor',
     apply: 'serve',
-
-    buildStart() {
-      runtime.generate({
-        rootDir,
-        displayToggle,
-      });
-    },
-
-    configResolved(config) {
-      resolvedConfig = config;
-    },
 
     configureServer(server) {
       server.middlewares.use(
@@ -61,13 +52,11 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
         }),
       );
     },
-
-    load(id) {
-      if (id === join(resolvedConfig.base, clientId)) {
-        return `import('${runtime.filename}');`;
+    resolveId(id) {
+      if (id === RUNTIME_PUBLIC_PATH) {
+        return runtime.filename;
       }
     },
-
     transformIndexHtml(html) {
       return {
         html,
@@ -76,9 +65,7 @@ export default function openEditorPlugin(options: Options = {}): Plugin {
             tag: 'script',
             attrs: {
               type: 'module',
-              async: 'true',
-              fetchpriority: 'low',
-              src: join(resolvedConfig.base, clientId),
+              src: RUNTIME_PUBLIC_PATH,
             },
             injectTo: 'head',
           },
