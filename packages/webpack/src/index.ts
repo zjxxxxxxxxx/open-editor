@@ -1,6 +1,6 @@
 import type webpack from 'webpack';
 import { createRuntime } from '@open-editor/shared/node';
-import { getServerAddress } from './getServerAddress';
+import { setupServer } from '@open-editor/server';
 
 export interface Options {
   /**
@@ -23,6 +23,9 @@ export interface Options {
   onOpenEditor?(file: string): void;
 }
 
+/**
+ * development only
+ */
 export default class OpenEditorPlugin {
   options: Required<Pick<Options, 'displayToggle' | 'rootDir'>> & Options;
   compiler!: webpack.Compiler;
@@ -36,14 +39,14 @@ export default class OpenEditorPlugin {
   }
 
   apply(compiler: webpack.Compiler) {
-    this.compiler = compiler;
-
     if (
       compiler.options.mode !== 'development' ||
       (process.env.NODE_ENV && process.env.NODE_ENV !== 'development')
     ) {
       return;
     }
+
+    this.compiler = compiler;
 
     if (compiler.webpack?.version.startsWith('5')) {
       this.resolveClientRuntime((clientRuntimeEntry) => {
@@ -69,7 +72,7 @@ export default class OpenEditorPlugin {
   >(callback: Callback): Promise<ReturnType<Callback>> {
     const runtime = createRuntime(import.meta.url);
     runtime.generate({
-      port: await getServerAddress(this.options),
+      port: await getServerPort(this.options),
       rootDir: this.options.rootDir,
       displayToggle: this.options.displayToggle,
     });
@@ -102,4 +105,17 @@ export default class OpenEditorPlugin {
       ]),
     );
   }
+}
+
+// because many scaffolding tools rewrite the devServer part, it is impossible to add
+// middleware, so it has to start another server to handle the client side request.
+let port: Promise<number>;
+export function getServerPort(options: {
+  rootDir?: string;
+  onOpenEditor?(file: string): void;
+}) {
+  if (!port) {
+    port = setupServer(options);
+  }
+  return port;
 }

@@ -1,5 +1,5 @@
 import { ServerApis } from '@open-editor/shared';
-import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
+import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
 import { resolveSource } from '../utils/resolveSource';
 import { applyAttrs, create, on, off, append } from '../utils/document';
 import { isValidElement } from '../utils/element';
@@ -101,7 +101,7 @@ export function defineInspectElement() {
         this.#active = true;
         this.#overlay.open();
         this.#appendResetStyle();
-        this.#cleanupListenersOnWindow = setupListenersOnWindow({
+        this.#cleanupListenersOnDocument = setupListenersOnDocument({
           onChangeElement: (element) => {
             this.#overlay.update(element);
           },
@@ -121,14 +121,14 @@ export function defineInspectElement() {
       }
     }
 
-    #cleanupListenersOnWindow?: () => void;
+    #cleanupListenersOnDocument?: () => void;
 
     #cleanupHandlers = () => {
       if (this.#active) {
         this.#active = false;
         this.#overlay.close();
         this.#removeResetStyle();
-        this.#cleanupListenersOnWindow?.();
+        this.#cleanupListenersOnDocument?.();
       }
     };
 
