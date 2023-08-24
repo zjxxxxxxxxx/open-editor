@@ -7,10 +7,10 @@ export interface SetupHandlersOptions {
   onExitInspect(): void;
 }
 
-export function setupListenersOnWindow(options: SetupHandlersOptions) {
+export function setupListenersOnDocument(options: SetupHandlersOptions) {
   const { onChangeElement, onOpenEditor, onExitInspect } = options;
 
-  function registerListenersOnWindow() {
+  function registerListenersOnDocument() {
     on('click', onClick, { capture: true });
     on('dblclick', onClick, { capture: true });
 
@@ -25,7 +25,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('pointercancel', onSilence, { capture: true });
     on('pointerdown', onSilence, { capture: true });
     on('pointerenter', onSilence, { capture: true });
-    //on('pointerleave', onSilence, { capture: true });
+    on('pointerleave', onPointerLeave, { capture: true });
     on('pointermove', onSilence, { capture: true });
     on('pointerout', onSilence, { capture: true });
     on('pointerover', onPointerOver, { capture: true });
@@ -38,14 +38,9 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
     on('keydown', onKeyDown, { capture: true });
     on('contextmenu', onContextMenu, { capture: true });
-
-    on('pointerleave', onPointerLeave, {
-      capture: true,
-      target: document.body,
-    });
   }
 
-  function removeEventListenersOnWindow() {
+  function removeEventListenersOnDocument() {
     off('click', onClick, { capture: true });
     off('dblclick', onClick, { capture: true });
 
@@ -60,7 +55,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('pointercancel', onSilence, { capture: true });
     off('pointerdown', onSilence, { capture: true });
     off('pointerenter', onSilence, { capture: true });
-    //off('pointerleave', onSilence, { capture: true });
+    off('pointerleave', onPointerLeave, { capture: true });
     off('pointermove', onSilence, { capture: true });
     off('pointerout', onSilence, { capture: true });
     off('pointerover', onPointerOver, { capture: true });
@@ -73,11 +68,6 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
     off('keydown', onKeyDown, { capture: true });
     off('contextmenu', onContextMenu, { capture: true });
-
-    off('pointerleave', onPointerLeave, {
-      capture: true,
-      target: document.body,
-    });
   }
 
   function onClick(event: Event) {
@@ -138,6 +128,6 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     }
   }
 
-  registerListenersOnWindow();
-  return removeEventListenersOnWindow;
+  registerListenersOnDocument();
+  return removeEventListenersOnDocument;
 }

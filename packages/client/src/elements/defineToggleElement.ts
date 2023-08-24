@@ -39,7 +39,7 @@ export function defineToggleElement() {
         borderRadius: '50%',
         color: Colors.POINTER_COLOR,
         backgroundColor: Colors.POINTER_BG_COLOR,
-        transition: 'all 0.3s ease',
+        transition: 'all 0.3s ease-out',
       });
 
       this.#button.title = 'open-editor-toggle';
