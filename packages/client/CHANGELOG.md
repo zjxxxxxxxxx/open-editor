@@ -1,5 +1,22 @@
 # @open-editor/client
 
+## 0.0.9
+
+### Patch Changes
+
+- [#43](https://github.com/zjxxxxxxxxx/open-editor/pull/43) [`cdd5b66`](https://github.com/zjxxxxxxxxx/open-editor/commit/cdd5b66f9aba3f61a4b975fb393e1728fc254c96) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add vue2 framework
+
+- [#48](https://github.com/zjxxxxxxxxx/open-editor/pull/48) [`b040072`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0400723c557cf7dff208390e96842a479af646b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix missing component name return by React.forwardRef
+
+- [#43](https://github.com/zjxxxxxxxxx/open-editor/pull/43) [`cdd5b66`](https://github.com/zjxxxxxxxxx/open-editor/commit/cdd5b66f9aba3f61a4b975fb393e1728fc254c96) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add right-click exit
+
+- [#45](https://github.com/zjxxxxxxxxx/open-editor/pull/45) [`efd3dbc`](https://github.com/zjxxxxxxxxx/open-editor/commit/efd3dbc137bc3285eeda0237fab8cbf24b876bfa) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix hotkey toggle failure
+
+- [#45](https://github.com/zjxxxxxxxxx/open-editor/pull/45) [`efd3dbc`](https://github.com/zjxxxxxxxxx/open-editor/commit/efd3dbc137bc3285eeda0237fab8cbf24b876bfa) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix lost pointer position
+
+- Updated dependencies [[`b040072`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0400723c557cf7dff208390e96842a479af646b)]:
+  - @open-editor/shared@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes
