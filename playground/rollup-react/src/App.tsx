@@ -19,7 +19,9 @@ export default function App() {
         <Notes />
       </div>
       <p className="read-the-docs">
-        Click on the Rollup and React logos to learn more
+        <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+          Click to Github
+        </a>
       </p>
     </>
   );
