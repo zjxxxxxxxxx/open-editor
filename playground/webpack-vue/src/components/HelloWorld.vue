@@ -4,8 +4,8 @@ import Notes from './Notes.vue';
 
 export default defineComponent({
   name: 'HelloWorld',
-  components:{
-    Notes
+  components: {
+    Notes,
   },
   props: {
     msg: String,
@@ -18,7 +18,11 @@ export default defineComponent({
   <div class="card">
     <Notes />
   </div>
-  <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>
+  <p class="read-the-docs">
+    <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+      Click to Github
+    </a>
+  </p>
 </template>
 
 <style scoped>
