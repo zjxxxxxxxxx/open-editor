@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.0.9
+
+### Patch Changes
+
+- [#43](https://github.com/zjxxxxxxxxx/open-editor/pull/43) [`cdd5b66`](https://github.com/zjxxxxxxxxx/open-editor/commit/cdd5b66f9aba3f61a4b975fb393e1728fc254c96) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add right-click exit
+
+- Updated dependencies [[`b040072`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0400723c557cf7dff208390e96842a479af646b), [`cdd5b66`](https://github.com/zjxxxxxxxxx/open-editor/commit/cdd5b66f9aba3f61a4b975fb393e1728fc254c96), [`b040072`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0400723c557cf7dff208390e96842a479af646b), [`cdd5b66`](https://github.com/zjxxxxxxxxx/open-editor/commit/cdd5b66f9aba3f61a4b975fb393e1728fc254c96), [`efd3dbc`](https://github.com/zjxxxxxxxxx/open-editor/commit/efd3dbc137bc3285eeda0237fab8cbf24b876bfa), [`efd3dbc`](https://github.com/zjxxxxxxxxx/open-editor/commit/efd3dbc137bc3285eeda0237fab8cbf24b876bfa)]:
+  - @open-editor/shared@0.0.9
+  - @open-editor/client@0.0.9
+  - @open-editor/server@0.0.9
+
 ## 0.0.8
 
 ### Patch Changes
