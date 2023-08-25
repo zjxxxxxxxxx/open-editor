@@ -1,0 +1,30 @@
+{
+  "private": true,
+  "name": "@playground/rollup-react",
+  "type": "module",
+  "scripts": {
+    "dev": "rollup -c -w --environment NODE_ENV:development"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.10",
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.11",
+    "@open-editor/rollup": "latest",
+    "@rollup/plugin-babel": "^6.0.3",
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-replace": "^5.0.2",
+    "@types/react": "^18.2.21",
+    "@types/react-dom": "^18.2.7",
+    "rollup": "^3.28.1",
+    "rollup-plugin-live-server": "^2.0.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "rollup-plugin-svg": "^2.0.0",
+    "typescript": "^5.1.6"
+  }
+}

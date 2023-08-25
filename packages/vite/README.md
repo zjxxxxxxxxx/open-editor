@@ -7,19 +7,19 @@ a vite plugin that opens the code editor by clicking on the browser UI.
 npm
 
 ```bash
-npm i --save-dev @open-editor/vite
+npm -D i @open-editor/vite
 ```
 
 yarn
 
 ```bash
-yarn add --save-dev @open-editor/vite
+yarn -D add @open-editor/vite
 ```
 
 pnpm
 
 ```bash
-pnpm add --save-dev @open-editor/vite
+pnpm -D add @open-editor/vite
 ```
 
 ## Usage
@@ -71,68 +71,68 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 <table>
   <tbody>
     <tr>
-      <th>react + vite</th>
+      <th>react</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
-      <th>vue + vite</th>
+      <th>vue</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
-      <th>svelte + vite</th>
+      <th>svelte</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/svelte-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
         >
           StackBlitz
         </a>
       </th>
     </tr>
      <tr>
-      <th>qwik + vite</th>
+      <th>qwik</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/qwik-vite"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/qwik-vite"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
         >
           StackBlitz
         </a>

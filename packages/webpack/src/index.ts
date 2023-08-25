@@ -110,7 +110,7 @@ export default class OpenEditorPlugin {
 // because many scaffolding tools rewrite the devServer part, it is impossible to add
 // middleware, so it has to start another server to handle the client side request.
 let port: Promise<number>;
-export function getServerPort(options: {
+function getServerPort(options: {
   rootDir?: string;
   onOpenEditor?(file: string): void;
 }) {
