@@ -1,41 +1,43 @@
-# @open-editor/webpack
+# @open-editor/rollup
 
-a webpack plugin that opens the code editor by clicking on the browser UI.
+a rollup plugin that opens the code editor by clicking on the browser UI.
 
 ## Install
 
 npm
 
 ```bash
-npm i --save-dev @open-editor/webpack
+npm -D i @open-editor/rollup
 ```
 
 yarn
 
 ```bash
-yarn add --save-dev @open-editor/webpack
+yarn -D add @open-editor/rollup
 ```
 
 pnpm
 
 ```bash
-pnpm add --save-dev @open-editor/webpack
+pnpm -D add @open-editor/rollup
 ```
 
 ## Usage
 
-add `OpenEditorWebpackPlugin` to `webpack.config.js`.
+add `openEditor` to `rollup.config.js`.
 
 ```js
-const OpenEditorWebpackPlugin = require('@open-editor/webpack');
+const openEditor = require('@open-editor/rollup');
 
 module.exports = {
-  entry: 'index.js',
-  output: {
-    path: __dirname + '/dist',
-    filename: 'index_bundle.js',
-  },
-  plugins: [new OpenEditorWebpackPlugin()],
+  entry: 'src/index.js',
+  output: [
+    {
+      file: 'dist/index.js',
+      format: 'esm',
+    },
+  ],
+  plugins: [openEditor()],
 };
 ```
 
@@ -74,56 +76,23 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 <table>
   <tbody>
-    <tr>
-      <th>react + webpack</th>
+     <tr>
+      <th>react</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
-      <th>vue + webpack</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-    <tr>
-      <th>next + webpack</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
   </tbody>
 </table>

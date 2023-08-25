@@ -1,1 +1,0 @@
-# playground/svelte-vite
