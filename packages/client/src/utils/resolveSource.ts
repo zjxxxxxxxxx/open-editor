@@ -1,5 +1,6 @@
 import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
+import { isFunc } from '@open-editor/shared';
 import { getOptions } from '../options';
 import { resolveDebug } from './resolveDebug';
 
@@ -55,12 +56,21 @@ function resolveSourceFromReact(fiber?: Fiber | null) {
 
   const source = fiber._debugSource!;
   let owner = fiber._debugOwner;
-  while (owner && typeof owner.type !== 'function') {
+  while (
+    owner &&
+    (!owner._debugSource || (!isFunc(owner.type) && !isFunc(owner.type.render)))
+  ) {
     owner = owner._debugOwner;
   }
 
+  const Component = owner
+    ? isFunc(owner.type)
+      ? owner.type
+      : owner.type.render
+    : null;
+
   return {
-    component: owner?.type.name ?? owner?.type.displayName,
+    component: Component?.name || Component?.displayName,
     file: source.fileName,
     line: source.lineNumber,
     column: (<any>source).columnNumber,

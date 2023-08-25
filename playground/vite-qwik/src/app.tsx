@@ -20,7 +20,9 @@ export const App = component$(() => {
         <Notes />
       </div>
       <p class="read-the-docs">
-        Click on the Vite and Qwik logos to learn more
+        <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+          Click to Github
+        </a>
       </p>
     </>
   );

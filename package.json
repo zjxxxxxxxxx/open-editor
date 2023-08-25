@@ -74,9 +74,6 @@
     ],
     "packages/*/src/**/*.ts": [
       "eslint --cache --fix"
-    ],
-    "packages/**/*.d.ts": [
-      "eslint --cache --fix"
     ]
   }
 }
