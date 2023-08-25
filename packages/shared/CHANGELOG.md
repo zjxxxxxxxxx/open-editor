@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.0.9
+
+### Patch Changes
+
+- [#48](https://github.com/zjxxxxxxxxx/open-editor/pull/48) [`b040072`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0400723c557cf7dff208390e96842a479af646b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add type util
+
 ## 0.0.8
 
 ## 0.0.7
