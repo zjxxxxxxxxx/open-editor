@@ -1,7 +1,7 @@
 import type { Plugin } from 'rollup';
+import { resolve } from 'node:path';
 import { createRuntime } from '@open-editor/shared/node';
 import { setupServer } from '@open-editor/server';
-import { resolve } from 'node:path';
 
 export interface Options {
   /**
@@ -47,10 +47,10 @@ export default function openEditorPlugin(
     name: 'open-editor',
 
     options(options) {
-      let input = options.input || 'src/index';
-      if (typeof input === 'string') {
-        input = [input];
-      }
+      // 'a' => ['a']
+      // ['a', 'b'] => ['a', 'b']
+      // { app: 'a', bpp: 'b' } => ['a', 'b']
+      const input = <string[]>[].concat(<never>(options.input || 'index.js'));
       for (const path of Object.values(input)) {
         include.push(resolve(path));
       }
@@ -59,7 +59,7 @@ export default function openEditorPlugin(
       options.inlineDynamicImports = true;
     },
     async buildStart() {
-      const port = await getServerAddress({
+      const port = await getServerPort({
         rootDir,
         onOpenEditor,
       });
@@ -79,7 +79,7 @@ export default function openEditorPlugin(
 }
 
 let port: Promise<number>;
-export function getServerAddress(options: {
+function getServerPort(options: {
   rootDir?: string;
   onOpenEditor?(file: string): void;
 }) {

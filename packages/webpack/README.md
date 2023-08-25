@@ -7,19 +7,19 @@ a webpack plugin that opens the code editor by clicking on the browser UI.
 npm
 
 ```bash
-npm i --save-dev @open-editor/webpack
+npm -D i @open-editor/webpack
 ```
 
 yarn
 
 ```bash
-yarn add --save-dev @open-editor/webpack
+yarn -D add @open-editor/webpack
 ```
 
 pnpm
 
 ```bash
-pnpm add --save-dev @open-editor/webpack
+pnpm -D add @open-editor/webpack
 ```
 
 ## Usage
@@ -75,51 +75,34 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 <table>
   <tbody>
     <tr>
-      <th>react + webpack</th>
+      <th>vue</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/react-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
-      <th>vue + webpack</th>
+      <th>next</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vue-webpack"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-    <tr>
-      <th>next + webpack</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/next-webpack"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
         >
           StackBlitz
         </a>
