@@ -1,9 +1,10 @@
-import { readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import enquirer from 'enquirer';
+import { readdirSync } from 'node:fs';
 import consola from 'consola';
-import { exec } from './utils';
+import enquirer from 'enquirer';
 import minimist from 'minimist';
+
+import { exec } from './utils';
 
 main();
 
