@@ -11,10 +11,6 @@ import { HTMLToggleElement } from './defineToggleElement';
 export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineInspectElement() {
-  if (customElements.get(InternalElements.HTML_INSPECT_ELEMENT)) {
-    return;
-  }
-
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #resetStyle!: HTMLStyleElement;
     #overlay: HTMLOverlayElement;

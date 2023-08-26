@@ -10,10 +10,6 @@ export interface HTMLTooltipElement extends HTMLElement {
 }
 
 export function defineTooltipElement() {
-  if (customElements.get(InternalElements.HTML_TOOLTIP_ELEMENT)) {
-    return;
-  }
-
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
     #container: HTMLElement;
     #element: HTMLElement;

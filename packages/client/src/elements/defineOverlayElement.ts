@@ -14,10 +14,6 @@ export interface HTMLOverlayElement extends HTMLElement {
 }
 
 export function defineOverlayElement() {
-  if (customElements.get(InternalElements.HTML_OVERLAY_ELEMENT)) {
-    return;
-  }
-
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     #tooltip: HTMLTooltipElement;
 

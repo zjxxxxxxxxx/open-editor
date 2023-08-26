@@ -1,1 +1,1 @@
-# playground/vite-svelte
+# @playground/vite-svelte

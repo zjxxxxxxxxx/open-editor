@@ -1,6 +1,6 @@
 # @open-editor/vite
 
-a vite plugin that opens the code editor by clicking on the browser UI.
+A vite plugin for fast find source code.
 
 ## Install
 

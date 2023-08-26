@@ -13,7 +13,8 @@ const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
 export default {
   input: 'src/index.tsx',
   output: {
-    file: 'dist/index.js',
+    dir: 'dist',
+    entryFileNames: '[name].js',
     format: 'esm',
   },
   plugins: [

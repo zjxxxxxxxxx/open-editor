@@ -1,1 +1,1 @@
-# playground/webpack-next
+# @playground/webpack-next

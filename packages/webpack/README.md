@@ -1,6 +1,6 @@
 # @open-editor/webpack
 
-a webpack plugin that opens the code editor by clicking on the browser UI.
+A webpack plugin for fast find source code.
 
 ## Install
 

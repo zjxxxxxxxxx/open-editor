@@ -1,7 +1,7 @@
 {
   "name": "@open-editor/vite",
   "version": "0.0.9",
-  "description": "enable you to open the editor by inspect the UI.",
+  "description": "A vite plugin for fast find source code.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -28,9 +28,11 @@
     "directory": "packages/vite"
   },
   "keywords": [
-    "open-editor",
+    "vue-devtools",
+    "react-devtools",
     "vite-plugin",
-    "devtools"
+    "svelte-devtools",
+    "qwik-devtools"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",
