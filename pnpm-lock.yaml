@@ -332,7 +332,7 @@ importers:
   playground/webpack-next:
     dependencies:
       '@open-editor/webpack':
-        specifier: workspace:^
+        specifier: latest
         version: link:../../packages/webpack
       '@types/node':
         specifier: 20.5.6

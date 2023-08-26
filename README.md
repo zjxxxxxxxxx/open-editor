@@ -50,41 +50,41 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
 <table>
   <tbody>
     <tr>
-      <th>webpack + vue</th>
-      <th>
+      <th align="left">rollup + react</th>
+      <th  >
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
         >
           StackBlitz
         </a>
       </th>
     </tr>
-    <tr>
-      <th>webpack + next</th>
+      <tr  >
+      <th align="left">vite + qwik</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
         >
           StackBlitz
         </a>
       </th>
     </tr>
-    <tr>
-      <th>vite + react</th>
+      <tr  >
+      <th align="left">vite + react</th>
       <th>
         <a
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react"
@@ -100,8 +100,25 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
         </a>
       </th>
     </tr>
+    <tr >
+      <th align="left">vite + svelte</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
     <tr>
-      <th>vite + vue</th>
+      <th align="left">vite + vue</th>
       <th>
         <a
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue"
@@ -118,56 +135,39 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
       </th>
     </tr>
     <tr>
-      <th>vite + svelte</th>
+        <tr>
+      <th align="left">webpack + next</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-     <tr>
-      <th>vite + qwik</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-     <tr>
-      <th>rollup + react</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
+      <th align="left">webpack + vue</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
   </tbody>
 </table>

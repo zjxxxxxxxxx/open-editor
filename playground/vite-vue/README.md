@@ -1,1 +1,1 @@
-# playground/vite-vue
+# @playground/vite-vue

@@ -1,1 +1,1 @@
-# playground/vite-react
+# @playground/vite-react

@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "type": "module",
+  "description": "A web devtools for fast find source code.",
   "scripts": {
     "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
     "clean": "rimraf -g '{packages/**/.turbo,node_modules/.cache}'",
@@ -25,13 +26,14 @@
   },
   "packageManager": "pnpm@8.6.11",
   "keywords": [
-    "open-editor",
-    "devtools",
-    "vue",
-    "react",
-    "svelte",
+    "webpack-plugin",
+    "rollup-plugin",
+    "vue-devtools",
+    "react-devtools",
     "vite-plugin",
-    "webpack-plugin"
+    "svelte-devtools",
+    "qwik-devtools",
+    "next-devtools"
   ],
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
