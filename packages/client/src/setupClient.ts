@@ -5,18 +5,15 @@ import { CLIENT, InternalElements } from './constants';
 import { Options, setOptions } from './options';
 
 export function setupClient(options: Options) {
-  if (CLIENT) {
+  if (CLIENT && !isMounted()) {
     setOptions(options);
-
-    if (typeof customElements === 'undefined') {
-      throw Error(
-        '@open-editor/client: current browser not support customElements.',
-      );
-    }
-
     defineElements();
 
     const inspect = create(InternalElements.HTML_INSPECT_ELEMENT);
     append(document.body, inspect);
   }
+}
+
+function isMounted() {
+  return !!document.body.querySelector(InternalElements.HTML_INSPECT_ELEMENT);
 }

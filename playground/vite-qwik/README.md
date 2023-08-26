@@ -1,1 +1,1 @@
-# playground/vite-qwik
+# @playground/vite-qwik

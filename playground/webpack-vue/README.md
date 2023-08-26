@@ -1,1 +1,1 @@
-# playground/webpack-vue
+# @playground/webpack-vue

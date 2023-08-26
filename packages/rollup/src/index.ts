@@ -1,6 +1,7 @@
 import type { Plugin } from 'rollup';
 import { resolve } from 'node:path';
 import { createRuntime } from '@open-editor/shared/node';
+import { isObj, isStr } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -41,22 +42,30 @@ export default function openEditorPlugin(
   } = options;
 
   const runtime = createRuntime(import.meta.url);
-  const include: string[] = [];
+  const include = new Set<string>();
 
   return {
     name: 'open-editor',
 
-    options(options) {
-      // 'a' => ['a']
-      // ['a', 'b'] => ['a', 'b']
-      // { app: 'a', bpp: 'b' } => ['a', 'b']
-      const input = <string[]>[].concat(<never>(options.input || 'index.js'));
-      for (const path of Object.values(input)) {
-        include.push(resolve(path));
+    options({ input }) {
+      if (input) {
+        // 'a' => ['a']
+        // ['a', 'b'] => ['a', 'b']
+        // { app: 'a', bpp: 'b' } => ['a', 'b']
+        const entrys = isStr(input)
+          ? [input]
+          : isObj(input)
+          ? Object.values(input)
+          : input;
+        for (const entry of entrys) {
+          include.add(resolve(entry));
+        }
       }
     },
     outputOptions(options) {
-      options.inlineDynamicImports = true;
+      if (options.file) {
+        options.inlineDynamicImports = true;
+      }
     },
     async buildStart() {
       const port = await getServerPort({
@@ -70,7 +79,7 @@ export default function openEditorPlugin(
       });
     },
     transform(code, id) {
-      if (include.includes(id)) {
+      if (include.has(id)) {
         return `import('${runtime.filename}');\n${code}`;
       }
       return code;

@@ -1,7 +1,7 @@
 {
   "name": "@open-editor/webpack",
   "version": "0.0.9",
-  "description": "enable you to open the editor by inspect the UI.",
+  "description": "A webpack plugin for fast find source code.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -28,9 +28,12 @@
     "directory": "packages/webpack"
   },
   "keywords": [
-    "open-editor",
     "webpack-plugin",
-    "devtools"
+    "vue-devtools",
+    "react-devtools",
+    "svelte-devtools",
+    "qwik-devtools",
+    "next-devtools"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",

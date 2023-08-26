@@ -1,6 +1,6 @@
 # @open-editor/rollup
 
-a rollup plugin that opens the code editor by clicking on the browser UI.
+A rollup plugin for fast find source code.
 
 ## Install
 
