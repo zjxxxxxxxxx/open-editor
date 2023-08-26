@@ -22,8 +22,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm unbuild",
-    "dev": "pnpm rollup -c",
+    "build": "pnpm rollup -c",
+    "dev": "pnpm build --environment __DEV__",
     "dev:watch": "pnpm dev -w",
     "typecheck": "tsc --noEmit"
   },

@@ -7,6 +7,9 @@ import dtsPlugin from 'rollup-plugin-dts';
 
 import { readjson } from './utils';
 
+const __DEV__ = '__DEV__' in process.env;
+const __TARGET__ = process.env.__TARGET__ ?? 'ES6';
+
 export type BuildOutput =
   | string
   | {
@@ -16,15 +19,15 @@ export type BuildOutput =
     };
 
 export default function buildConfigs() {
-  const exports = readjson(resolve('./package.json')).exports;
-  const outputs = <[string, BuildOutput][]>(
+  const { exports } = readjson(resolve('./package.json'));
+  const builds = <[string, BuildOutput][]>(
     Object.entries(exports).map(([input, output]) => [
       normalizeInput(input),
       output,
     ])
   );
 
-  return outputs.flatMap(([input, output]) => buildConfig(input, output));
+  return builds.flatMap(([input, output]) => buildConfig(input, output));
 }
 
 function buildConfig(input: string, output: BuildOutput) {
@@ -70,15 +73,14 @@ function buildBundles(
       if (source.startsWith('@')) {
         return true;
       }
-      //     module           === module
-      //     module           !== /src/module
+      // module === 'package'       true
+      // module === './src/package' false
       return basename(source) === source;
     },
     plugins: [
       esbuildPlugin({
-        target: ['vite', 'rollup', 'webpack'].includes(basename(resolve()))
-          ? 'es2020'
-          : 'es6',
+        target: __TARGET__,
+        minify: !__DEV__,
       }),
       nodeResolve(),
       commonjs(),

@@ -1,2 +1,2 @@
 require('esbuild-register');
-module.exports = require('../../scripts/undev.ts');
+module.exports = require('../../scripts/unbuild.ts');
