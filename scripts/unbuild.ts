@@ -1,14 +1,14 @@
 import { basename, resolve } from 'node:path';
 import { OutputOptions, RollupOptions } from 'rollup';
-import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import esbuildPlugin from 'rollup-plugin-esbuild';
-import dtsPlugin from 'rollup-plugin-dts';
+import commonjs from '@rollup/plugin-commonjs';
+import esbuild from 'rollup-plugin-esbuild';
+import dts from 'rollup-plugin-dts';
 
 import { readjson } from './utils';
 
 const __DEV__ = '__DEV__' in process.env;
-const __TARGET__ = process.env.__TARGET__ ?? 'ES6';
+const __TARGET__ = process.env.__TARGET__ || 'es6';
 
 export type BuildOutput =
   | string
@@ -70,20 +70,15 @@ function buildBundles(
     input,
     output: bundles,
     external(source) {
-      if (source.startsWith('@')) {
-        return true;
-      }
-      // module === 'package'       true
-      // module === './src/package' false
-      return basename(source) === source;
+      return source.startsWith('@') || basename(source) === source;
     },
     plugins: [
-      esbuildPlugin({
+      nodeResolve(),
+      commonjs(),
+      esbuild({
         target: __TARGET__,
         minify: !__DEV__,
       }),
-      nodeResolve(),
-      commonjs(),
     ],
   };
 }
@@ -98,7 +93,7 @@ function buildDTS(input: string, output: BuildOutput): RollupOptions | void {
       format: 'esm',
       sourcemap: false,
     },
-    plugins: [dtsPlugin()],
+    plugins: [dts()],
   };
 }
 

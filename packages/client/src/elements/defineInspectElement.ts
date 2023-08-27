@@ -14,7 +14,7 @@ export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #resetStyle!: HTMLStyleElement;
     #overlay: HTMLOverlayElement;
-    #toggle: HTMLToggleElement;
+    #toggle?: HTMLToggleElement;
 
     #__active__!: boolean;
 
@@ -24,9 +24,12 @@ export function defineInspectElement() {
 
     set #active(value) {
       this.#__active__ = value;
-      applyAttrs(this.#toggle, {
-        active: value,
-      });
+
+      if (this.#toggle) {
+        applyAttrs(this.#toggle, {
+          active: value,
+        });
+      }
     }
 
     #pointer!: PointerEvent;
@@ -40,35 +43,43 @@ export function defineInspectElement() {
       this.#overlay = <HTMLOverlayElement>(
         create(InternalElements.HTML_OVERLAY_ELEMENT)
       );
-      this.#toggle = <HTMLToggleElement>(
-        create(InternalElements.HTML_TOGGLE_ELEMENT)
-      );
+
+      append(shadow, this.#overlay);
 
       const options = getOptions();
       if (options.displayToggle) {
+        this.#toggle = <HTMLToggleElement>(
+          create(InternalElements.HTML_TOGGLE_ELEMENT)
+        );
+
         applyAttrs(this.#toggle, {
           enable: true,
         });
-      }
 
-      append(shadow, this.#overlay);
-      append(shadow, this.#toggle);
+        append(shadow, this.#toggle);
+      }
     }
 
     connectedCallback() {
       on('keydown', this.#onKeydown, { capture: true });
       on('pointermove', this.#changePointer, { capture: true });
-      on('toggle', this.#toggleActiveEffect, {
-        target: this.#toggle,
-      });
+
+      if (this.#toggle) {
+        on('toggle', this.#toggleActiveEffect, {
+          target: this.#toggle,
+        });
+      }
     }
 
     disconnectedCallback() {
       off('keydown', this.#onKeydown, { capture: true });
       off('pointermove', this.#changePointer, { capture: true });
-      off('toggle', this.#toggleActiveEffect, {
-        target: this.#toggle,
-      });
+
+      if (this.#toggle) {
+        off('toggle', this.#toggleActiveEffect, {
+          target: this.#toggle,
+        });
+      }
 
       this.#cleanupHandlers();
     }

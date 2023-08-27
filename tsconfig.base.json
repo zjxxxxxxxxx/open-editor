@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "target": "ESNext",
-    "module": "ESNext",
+    "lib": ["esnext"],
+    "target": "esnext",
+    "module": "esnext",
     "strict": true,
     "noEmit": true,
     "stripInternal": true,

@@ -8,7 +8,9 @@ export const InternalElements = <const>{
 export const Theme = `
 * {
   all: initial;
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
 }
 
 :host {

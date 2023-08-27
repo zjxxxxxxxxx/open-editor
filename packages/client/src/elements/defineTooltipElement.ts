@@ -73,26 +73,22 @@ export function defineTooltipElement() {
       });
     }
 
-    #waitUpdateTimer?: number;
-
     update(activeElement?: HTMLElement, style?: ComputedStyle) {
       // before hidden
       applyStyle(this.#container, {
         visibility: 'hidden',
       });
 
-      window.clearTimeout(this.#waitUpdateTimer);
-
       if (activeElement && style) {
-        this.#waitUpdateTimer = window.setTimeout(() => {
-          this.#updateText(activeElement);
-          this.#updatePosition(style);
+        this.#updateText(activeElement);
+        this.#updatePosition(style);
 
+        requestAnimationFrame(() => {
           // after visible
           applyStyle(this.#container, {
             visibility: 'visible',
           });
-        }, 300);
+        });
       }
     }
 
