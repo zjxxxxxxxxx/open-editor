@@ -17,7 +17,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm rollup -c --environment __TARGET__:'ES2020'",
+    "build": "pnpm rollup -c --environment __TARGET__:es2020",
     "dev": "pnpm build --environment __DEV__",
     "dev:watch": "pnpm dev -w",
     "typecheck": "tsc --noEmit"
