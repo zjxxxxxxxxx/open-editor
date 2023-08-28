@@ -26,6 +26,8 @@ pnpm -D add @open-editor/vite
 
 add `OpenEditor` to `vite.config.ts`.
 
+it only works for `process.env.NODE_ENV === 'development'`.
+
 ```js
 import { defineConfig } from 'vite';
 import OpenEditor from '@open-editor/vite';

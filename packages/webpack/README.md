@@ -26,6 +26,8 @@ pnpm -D add @open-editor/webpack
 
 add `OpenEditorWebpackPlugin` to `webpack.config.js`.
 
+it only works for `process.env.NODE_ENV === 'development'`.
+
 ```js
 const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 

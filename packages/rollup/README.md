@@ -26,6 +26,8 @@ pnpm -D add @open-editor/rollup
 
 add `openEditor` to `rollup.config.js`.
 
+it only works for `process.env.NODE_ENV === 'development'`.
+
 ```js
 const openEditor = require('@open-editor/rollup');
 

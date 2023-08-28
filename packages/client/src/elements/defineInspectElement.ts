@@ -1,7 +1,7 @@
 import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
 import { resolveSource } from '../utils/resolveSource';
-import { applyAttrs, create, on, off, append } from '../utils/document';
+import { applyAttrs, create, on, off, append, raf } from '../utils/document';
 import { isValidElement } from '../utils/element';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
@@ -121,7 +121,7 @@ export function defineInspectElement() {
         if (this.#pointer) {
           const { x, y } = this.#pointer;
           const initElement = <HTMLElement>document.elementFromPoint(x, y);
-          if (isValidElement(initElement)) {
+          if (initElement && isValidElement(initElement)) {
             this.#overlay.update(initElement);
           }
         }
@@ -140,7 +140,7 @@ export function defineInspectElement() {
     };
 
     #appendResetStyle() {
-      requestAnimationFrame(() => {
+      raf(() => {
         if (!this.#resetStyle) {
           this.#resetStyle = create('style');
           this.#resetStyle.type = 'text/css';
@@ -153,7 +153,7 @@ export function defineInspectElement() {
     }
 
     #removeResetStyle() {
-      requestAnimationFrame(() => {
+      raf(() => {
         this.#resetStyle.remove();
       });
     }

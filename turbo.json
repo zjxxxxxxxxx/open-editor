@@ -1,20 +1,20 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "pipeline": {
-    "dev": {
-      "dependsOn": ["^dev"],
-      "outputs": ["dist/**"]
-    },
-    "dev:watch": {
-      "dependsOn": ["^dev"],
-      "outputs": ["dist/**"],
-      "persistent": true
-    },
     "build": {
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "test": {},
-    "typecheck": {}
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "check": {
+      "dependsOn": ["^build"]
+    }
   }
 }

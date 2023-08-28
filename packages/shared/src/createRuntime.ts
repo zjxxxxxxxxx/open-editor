@@ -2,10 +2,9 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolvePath } from './resolve';
 
 const runtimeId = '@open-editor/client/runtime';
-const template = <const>`if (typeof window !== 'undefined') {
-  import('./index').then(({ setupClient }) => {
-    setupClient(__OPTIONS__);
-  })
+const template = <const>`import { setupClient } from './index';
+if (typeof window !== 'undefined') {
+  setupClient(__OPTIONS__)
 }`;
 
 export function createRuntime(url: string) {

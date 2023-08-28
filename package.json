@@ -8,19 +8,19 @@
   "description": "A web devtools for fast find source code.",
   "scripts": {
     "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
-    "clean": "rimraf -g '{packages/**/.turbo,node_modules/.cache}'",
-    "dev": "turbo run dev --filter @open-editor/* --log-order grouped",
-    "dev:watch": "turbo run dev:watch --filter @open-editor/* --log-order stream",
+    "clean": "rimraf -g {packages/**/.turbo,node_modules/.cache}",
+    "dev": "turbo run dev --filter @open-editor/* --log-order stream",
     "start": "esno scripts/start.ts",
     "play": "pnpm start --script=dev",
-    "lint": "pnpm lint:ci && pnpm --filter @playground/* lint",
-    "lint:ci": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
-    "format": "prettier --write '**/*.{vue,ts,tsx,md}'",
+    "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
+    "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",
-    "release": "pnpm build && changeset publish",
+    "release": "run-s build changeset-p",
     "test": "turbo run test",
-    "typecheck": "tsc --noEmit && turbo run typecheck --filter @open-editor/* --log-order grouped",
-    "update-versions": "changeset version && pnpm format"
+    "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
+    "versions": "run-s changeset-v format",
+    "changeset-v": "changeset version",
+    "changeset-p": "changeset publish"
   },
   "engines": {
     "node": ">=16.19.1"
@@ -40,6 +40,8 @@
     "@changesets/changelog-github": "^0.4.8",
     "@changesets/cli": "^2.26.2",
     "@open-editor/client": "workspace:*",
+    "@open-editor/server": "workspace:*",
+    "@open-editor/shared": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/minimist": "^1.2.2",
@@ -56,6 +58,7 @@
     "fast-glob": "^3.3.1",
     "lint-staged": "^13.3.0",
     "minimist": "^1.2.8",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.0.1",
     "rimraf": "^5.0.1",
     "rollup": "^3.28.1",
@@ -67,13 +70,13 @@
     "vitest": "^0.34.3"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm exec lint-staged --concurrent false"
+    "pre-commit": "pnpm exec lint-staged --concurrent false && pnpm test"
   },
   "lint-staged": {
-    "*.{js,ts,json,md}": [
-      "pnpm format"
+    "*": [
+      "prettier --write --cache --ignore-unknown"
     ],
-    "packages/*/src/**/*.ts": [
+    "packages/*/src/**/*.{ts,tsx}": [
       "eslint --cache --fix"
     ]
   }
