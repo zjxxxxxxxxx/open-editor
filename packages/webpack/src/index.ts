@@ -40,10 +40,7 @@ export default class OpenEditorPlugin {
   }
 
   apply(compiler: webpack.Compiler) {
-    if (
-      compiler.options.mode !== 'development' ||
-      (process.env.NODE_ENV && process.env.NODE_ENV !== 'development')
-    ) {
+    if (process.env.NODE_ENV !== 'development') {
       return;
     }
 
@@ -72,11 +69,15 @@ export default class OpenEditorPlugin {
     Callback extends (clientRuntimeEntry: string) => any,
   >(callback: Callback): Promise<ReturnType<Callback>> {
     const runtime = createRuntime(import.meta.url);
-    runtime.generate({
-      port: await getServerPort(this.options),
-      rootDir: this.options.rootDir,
-      displayToggle: this.options.displayToggle,
+
+    getServerPort(this.options).then((port) => {
+      runtime.generate({
+        port,
+        rootDir: this.options.rootDir,
+        displayToggle: this.options.displayToggle,
+      });
     });
+
     return callback(runtime.filename);
   }
 

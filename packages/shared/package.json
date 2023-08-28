@@ -23,9 +23,8 @@
   ],
   "scripts": {
     "build": "pnpm rollup -c",
-    "dev": "pnpm build --environment __DEV__",
-    "dev:watch": "pnpm dev -w",
-    "typecheck": "tsc --noEmit"
+    "dev": "pnpm build -w --environment __DEV__",
+    "check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
