@@ -18,9 +18,9 @@
   ],
   "scripts": {
     "build": "pnpm rollup -c --environment __TARGET__:es2020",
-    "dev": "pnpm build --environment __DEV__",
-    "dev:watch": "pnpm dev -w",
-    "typecheck": "tsc --noEmit"
+    "dev": "pnpm build -w --environment __DEV__",
+    "check": "tsc --noEmit",
+    "test": "vitest run"
   },
   "repository": {
     "type": "git",

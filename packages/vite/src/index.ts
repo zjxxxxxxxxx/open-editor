@@ -30,7 +30,7 @@ export interface Options {
 export default function openEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
-  if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development') {
     return;
   }
 

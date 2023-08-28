@@ -1,5 +1,12 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import { applyStyle, CSS_util, create, append } from '../utils/document';
+import {
+  applyStyle,
+  CSS_util,
+  create,
+  append,
+  raf,
+  caf,
+} from '../utils/document';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
 
@@ -73,7 +80,11 @@ export function defineTooltipElement() {
       });
     }
 
+    #rafId!: number;
+
     update(activeElement?: HTMLElement, style?: ComputedStyle) {
+      caf(this.#rafId);
+
       // before hidden
       applyStyle(this.#container, {
         visibility: 'hidden',
@@ -83,7 +94,7 @@ export function defineTooltipElement() {
         this.#updateText(activeElement);
         this.#updatePosition(style);
 
-        requestAnimationFrame(() => {
+        this.#rafId = raf(() => {
           // after visible
           applyStyle(this.#container, {
             visibility: 'visible',

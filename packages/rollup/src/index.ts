@@ -31,7 +31,7 @@ export interface Options {
 export default function openEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
-  if (process.env.NODE_ENV && process.env.NODE_ENV !== 'development') {
+  if (process.env.NODE_ENV !== 'development') {
     return;
   }
 
@@ -62,11 +62,6 @@ export default function openEditorPlugin(
         }
       }
     },
-    outputOptions(options) {
-      if (options.file) {
-        options.inlineDynamicImports = true;
-      }
-    },
     async buildStart() {
       const port = await getServerPort({
         rootDir,
@@ -80,7 +75,7 @@ export default function openEditorPlugin(
     },
     transform(code, id) {
       if (include.has(id)) {
-        return `import('${runtime.filename}');\n${code}`;
+        return `import '${runtime.filename}';\n${code}`;
       }
       return code;
     },
