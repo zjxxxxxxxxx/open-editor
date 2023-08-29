@@ -92,3 +92,7 @@ export const raf = <(callback: FrameRequestCallback) => number>(
 export const caf = <(handle: number) => void>(
   (CLIENT ? cancelAnimationFrame : () => {})
 );
+
+export function getDOMRect(target: Element) {
+  return target.getBoundingClientRect();
+}

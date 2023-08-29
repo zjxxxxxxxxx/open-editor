@@ -1,4 +1,4 @@
-import { CSS_util } from './document';
+import { CSS_util, getDOMRect } from './document';
 
 export interface ComputedStyle {
   width: number;
@@ -38,7 +38,7 @@ export function getComputedStyles(
     right,
     bottom,
     left,
-  } = element.getBoundingClientRect();
+  } = getDOMRect(element);
   const style = window.getComputedStyle(element, null);
   const getStyle = style.getPropertyValue.bind(style);
   const getValue = (property: string) => {
