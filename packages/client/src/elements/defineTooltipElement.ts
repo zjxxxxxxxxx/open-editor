@@ -6,6 +6,7 @@ import {
   append,
   raf,
   caf,
+  getDOMRect,
 } from '../utils/document';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
@@ -23,7 +24,7 @@ export function defineTooltipElement() {
     #component: HTMLElement;
     #file: HTMLElement;
 
-    #offset = 8;
+    #offset = 6;
 
     constructor() {
       super();
@@ -59,6 +60,7 @@ export function defineTooltipElement() {
         fontSize: '14px',
         fontWeight: '200',
         textDecoration: 'underline',
+        wordWrap: 'break-word',
       });
 
       append(this.#container, this.#element);
@@ -134,10 +136,15 @@ export function defineTooltipElement() {
     }
 
     #updatePosition(style: ComputedStyle) {
-      const { clientWidth: windowWidth, clientHeight: windowHeight } =
-        document.documentElement;
-      const { clientWidth: containerWidth, clientHeight: containerHeight } =
-        this.#container;
+      const {
+        // window width excluding the scrollbar width
+        clientWidth: windowWidth,
+        // window height excluding the scrollbar height
+        clientHeight: windowHeight,
+      } = document.documentElement;
+      const { width: containerWidth, height: containerHeight } = getDOMRect(
+        this.#container,
+      );
 
       // on top
       if (style.top > containerHeight + this.#offset) {

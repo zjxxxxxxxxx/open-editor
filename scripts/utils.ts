@@ -1,18 +1,19 @@
 import { isPromise } from 'node:util/types';
 import { ExecSyncOptions, execSync } from 'node:child_process';
 import { PathOrFileDescriptor, readFileSync, writeFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
-import { join, resolve } from 'node:path';
+import { fileURLToPath, URL } from 'node:url';
+import { resolve } from 'node:path';
 
 // Project root
-export const root = fileURLToPath(new URL('../', import.meta.url));
+export const projectRoot = joinURLToPath(import.meta.url, '../');
 // Package client root
-export const clientRoot = resolve(root, 'packages/client');
+export const clientRoot = resolve(projectRoot, 'packages/client');
 // Package shared root
-export const sharedRoot = resolve(root, 'packages/shared');
+export const sharedRoot = resolve(projectRoot, 'packages/shared');
 
-export const joinURLToPath = (url: string, relative: string) =>
-  fileURLToPath(join(url, relative));
+export function joinURLToPath(url: string, relative: string) {
+  return fileURLToPath(new URL(relative, url));
+}
 
 export function readjson(path: PathOrFileDescriptor) {
   return JSON.parse(readFileSync(path, 'utf-8'));
