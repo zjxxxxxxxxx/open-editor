@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/vite",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "A vite plugin for fast find source code.",
   "type": "module",
   "main": "./dist/index.cjs",
