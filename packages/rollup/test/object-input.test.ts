@@ -10,8 +10,8 @@ describe('string-input', async () => {
   test('should inject client code', async () => {
     const bundle = await rollup({
       input: {
-        app: joinURLToPath(import.meta.url, '../app.js'),
-        app2: joinURLToPath(import.meta.url, '../app2.js'),
+        app: joinURLToPath(import.meta.url, 'app.js'),
+        app2: joinURLToPath(import.meta.url, 'app2.js'),
       },
       plugins: [nodeResolve(), openEditor()],
     });
@@ -21,11 +21,11 @@ describe('string-input', async () => {
     });
 
     expect(output[0].moduleIds).toEqual([
-      joinURLToPath(import.meta.url, '../app.js'),
+      joinURLToPath(import.meta.url, 'app.js'),
     ]);
 
     expect((<OutputChunk>output[1]).moduleIds).toEqual([
-      joinURLToPath(import.meta.url, '../app2.js'),
+      joinURLToPath(import.meta.url, 'app2.js'),
     ]);
 
     expect((<OutputChunk>output[2]).moduleIds).toEqual([
