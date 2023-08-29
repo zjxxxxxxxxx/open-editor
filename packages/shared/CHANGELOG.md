@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.0.10
+
+### Patch Changes
+
+- [#53](https://github.com/zjxxxxxxxxx/open-editor/pull/53) [`149cae9`](https://github.com/zjxxxxxxxxx/open-editor/commit/149cae917f49dc64606bb36925c2f4623cbd1113) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - remove all dynamicImport
+
 ## 0.0.9
 
 ### Patch Changes

@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.0.10
+
+### Patch Changes
+
+- [#53](https://github.com/zjxxxxxxxxx/open-editor/pull/53) [`149cae9`](https://github.com/zjxxxxxxxxx/open-editor/commit/149cae917f49dc64606bb36925c2f4623cbd1113) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - remove all dynamicImport
+
+- [#52](https://github.com/zjxxxxxxxxx/open-editor/pull/52) [`f140205`](https://github.com/zjxxxxxxxxx/open-editor/commit/f1402053c6a2d387fad3d95e2a3906b09c97b02c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - speed up tooltip presentation
+
+- [#49](https://github.com/zjxxxxxxxxx/open-editor/pull/49) [`8dd3190`](https://github.com/zjxxxxxxxxx/open-editor/commit/8dd3190fca82964af53cc3d876ebbe047874a4b5) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - prevent repetition of mount
+
+- Updated dependencies [[`149cae9`](https://github.com/zjxxxxxxxxx/open-editor/commit/149cae917f49dc64606bb36925c2f4623cbd1113)]:
+  - @open-editor/shared@0.0.10
+
 ## 0.0.9
 
 ### Patch Changes
