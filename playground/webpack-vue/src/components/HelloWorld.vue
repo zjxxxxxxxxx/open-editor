@@ -4,7 +4,7 @@ import Notes from './Notes.vue';
 
 export default defineComponent({
   name: 'HelloWorld',
-  components: {
+  tree: {
     Notes,
   },
   props: {

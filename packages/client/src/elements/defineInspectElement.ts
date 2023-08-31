@@ -1,19 +1,23 @@
-import { ServerApis } from '@open-editor/shared';
 import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
-import { resolveSource } from '../utils/resolveSource';
+import { ElementSourceMeta, resolveSource } from '../utils/resolveSource';
 import { applyAttrs, create, on, off, append, raf } from '../utils/document';
 import { isValidElement } from '../utils/element';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLToggleElement } from './defineToggleElement';
+import { openEditor } from '../utils/openEditor';
+import { HTMLTreeElement } from './defineTreeElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #resetStyle!: HTMLStyleElement;
+
     #overlay: HTMLOverlayElement;
+    #tree: HTMLTreeElement;
+
     #toggle?: HTMLToggleElement;
 
     #__active__!: boolean;
@@ -40,16 +44,18 @@ export function defineInspectElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style style="display: none;">${Theme}</style>`;
 
-      this.#overlay = <HTMLOverlayElement>(
-        create(InternalElements.HTML_OVERLAY_ELEMENT)
+      this.#overlay = create<HTMLOverlayElement>(
+        InternalElements.HTML_OVERLAY_ELEMENT,
       );
+      this.#tree = create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT);
 
       append(shadow, this.#overlay);
+      append(shadow, this.#tree);
 
       const options = getOptions();
       if (options.displayToggle) {
-        this.#toggle = <HTMLToggleElement>(
-          create(InternalElements.HTML_TOGGLE_ELEMENT)
+        this.#toggle = create<HTMLToggleElement>(
+          InternalElements.HTML_TOGGLE_ELEMENT,
         );
 
         applyAttrs(this.#toggle, {
@@ -63,6 +69,9 @@ export function defineInspectElement() {
     connectedCallback() {
       on('keydown', this.#onKeydown, { capture: true });
       on('pointermove', this.#changePointer, { capture: true });
+      on('confirm', this.#openEditorOnTree, {
+        target: this.#tree,
+      });
 
       if (this.#toggle) {
         on('toggle', this.#toggleActiveEffect, {
@@ -74,6 +83,9 @@ export function defineInspectElement() {
     disconnectedCallback() {
       off('keydown', this.#onKeydown, { capture: true });
       off('pointermove', this.#changePointer, { capture: true });
+      off('confirm', this.#openEditorOnTree, {
+        target: this.#tree,
+      });
 
       if (this.#toggle) {
         off('toggle', this.#toggleActiveEffect, {
@@ -109,12 +121,9 @@ export function defineInspectElement() {
         this.#overlay.open();
         this.#appendResetStyle();
         this.#cleanupListenersOnDocument = setupListenersOnDocument({
-          onChangeElement: (element) => {
-            this.#overlay.update(element);
-          },
-          onOpenEditor: (element) => {
-            this.#openEditor(element);
-          },
+          onChangeElement: this.#overlay.update,
+          onOpenTree: this.#tree.open,
+          onOpenEditor: this.#openEditor,
           onExitInspect: this.#cleanupHandlers,
         });
 
@@ -134,6 +143,7 @@ export function defineInspectElement() {
       if (this.#active) {
         this.#active = false;
         this.#overlay.close();
+        this.#tree.close();
         this.#removeResetStyle();
         this.#cleanupListenersOnDocument?.();
       }
@@ -145,7 +155,7 @@ export function defineInspectElement() {
           this.#resetStyle = create('style');
           this.#resetStyle.type = 'text/css';
           this.#resetStyle.innerText =
-            '*:hover{cursor:default;user-select:none;touch-action:none;}';
+            '*:hover{cursor:default!important;user-select:none!important;touch-action:none!important;}';
         }
 
         append(document.body, this.#resetStyle);
@@ -158,38 +168,17 @@ export function defineInspectElement() {
       });
     }
 
-    #openEditor(element: HTMLElement) {
-      const source = resolveSource(element);
-      if (source.file) {
-        const { protocol, hostname, port } = window.location;
-        const { file, line = 1, column = 1 } = source;
-        const { port: customPort } = getOptions();
-
-        const openURL = new URL(`${protocol}//${hostname}`);
-        openURL.pathname = `${ServerApis.OPEN_EDITOR}${file}`;
-        openURL.searchParams.set('line', String(line));
-        openURL.searchParams.set('column', String(column));
-        openURL.port = customPort || port;
-
-        // open-editor event
-        const event = new CustomEvent('openeditor', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-          detail: openURL,
-        });
-
-        // Dispatches a synthetic event event to target and returns true if either event's cancelable
-        // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
-        if (this.dispatchEvent(event)) {
-          fetch(openURL).catch(() => {
-            console.error(new Error('@open-editor/client: openeditor fail.'));
-          });
-        }
-
-        this.#cleanupHandlers();
+    #openEditor = (element: HTMLElement) => {
+      const { meta } = resolveSource(element);
+      if (meta) {
+        openEditor(meta, this.dispatchEvent.bind(this));
       }
-    }
+    };
+
+    #openEditorOnTree = (e: CustomEvent<ElementSourceMeta>) => {
+      openEditor(e.detail, this.dispatchEvent.bind(this));
+      this.#cleanupHandlers();
+    };
   }
 
   customElements.define(InternalElements.HTML_INSPECT_ELEMENT, InspectElement);

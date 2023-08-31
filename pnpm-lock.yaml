@@ -383,6 +383,12 @@ importers:
         specifier: ~4.5.5
         version: 4.5.5
 
+  vue-element-plus-admin:
+    dependencies:
+      '@open-editor/vite':
+        specifier: ^0.0.10
+        version: link:../packages/vite
+
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
     resolution:
