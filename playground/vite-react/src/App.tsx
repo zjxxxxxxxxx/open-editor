@@ -1,6 +1,7 @@
 import viteLogo from '/vite.svg';
 import reactLogo from '/react.svg';
 import Notes from './Notes';
+import Tree from './tree';
 import './App.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
       <div className="card">
         <Notes />
       </div>
+      <Tree />
       <p className="read-the-docs">
         <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
           Click to Github

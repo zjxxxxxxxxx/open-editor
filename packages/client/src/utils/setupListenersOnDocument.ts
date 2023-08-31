@@ -4,15 +4,15 @@ import { isInternalElement, isValidElement } from './element';
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
   onOpenEditor(element: HTMLElement): void;
+  onOpenTree(element: HTMLElement): void;
   onExitInspect(): void;
 }
 
 export function setupListenersOnDocument(options: SetupHandlersOptions) {
-  const { onChangeElement, onOpenEditor, onExitInspect } = options;
+  const { onChangeElement, onOpenEditor, onOpenTree, onExitInspect } = options;
 
   function registerListenersOnDocument() {
     on('click', onClick, { capture: true });
-    on('dblclick', onClick, { capture: true });
 
     on('mousedown', onSilence, { capture: true });
     on('mouseenter', onSilence, { capture: true });
@@ -42,7 +42,6 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
 
   function removeEventListenersOnDocument() {
     off('click', onClick, { capture: true });
-    off('dblclick', onClick, { capture: true });
 
     off('mousedown', onSilence, { capture: true });
     off('mouseenter', onSilence, { capture: true });
@@ -70,16 +69,24 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
     off('contextmenu', onContextMenu, { capture: true });
   }
 
-  function onClick(event: Event) {
+  function onClick(event: PointerEvent) {
     onSilence(event);
 
     const element = <HTMLElement>event.target;
     if (isValidElement(element)) {
+      if (event.metaKey) {
+        onOpenTree(element);
+        return;
+      }
+
       onOpenEditor(element);
+      if (!isInternalElement(element)) {
+        onExitInspect();
+      }
     }
   }
 
-  function onPointerOver(event: Event) {
+  function onPointerOver(event: PointerEvent) {
     onSilence(event);
 
     const element = <HTMLElement>event.target;
@@ -87,10 +94,10 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
     onChangeElement(validElement);
   }
 
-  function onPointerLeave(event: Event) {
+  function onPointerLeave(event: PointerEvent) {
     onSilence(event);
 
-    if ((<any>event).pointerType === 'mouse') {
+    if (event.pointerType === 'mouse') {
       const element = <HTMLElement>event.target;
       if (!isValidElement(element)) {
         onChangeElement();

@@ -6,7 +6,7 @@ import {
   append,
   raf,
   caf,
-  getDOMRect,
+  getRect,
 } from '../utils/document';
 import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
@@ -69,22 +69,22 @@ export function defineTooltipElement() {
       append(shadow, this.#container);
     }
 
-    open() {
+    public open = () => {
       applyStyle(this.#container, {
         display: 'inline-block',
         visibility: 'hidden',
       });
-    }
+    };
 
-    close() {
+    public close = () => {
       applyStyle(this.#container, {
         display: 'none',
       });
-    }
+    };
 
     #rafId!: number;
 
-    update(activeElement?: HTMLElement, style?: ComputedStyle) {
+    public update = (activeElement?: HTMLElement, style?: ComputedStyle) => {
       caf(this.#rafId);
 
       // before hidden
@@ -103,16 +103,16 @@ export function defineTooltipElement() {
           });
         });
       }
-    }
+    };
 
     #updateText(activeElement: HTMLElement) {
-      const source = resolveSource(activeElement);
+      const { element, meta } = resolveSource(activeElement);
 
-      this.#element.innerText = `${source.element} in `;
-      this.#component.innerText = `<${source.component ?? 'Unknown'}>`;
-      this.#file.innerText = source.file ?? 'filename not found 😭.';
+      this.#element.innerText = `${element} in `;
+      this.#component.innerText = `<${meta?.name ?? 'Unknown'}>`;
+      this.#file.innerText = meta?.file ?? 'filename not found 😭.';
 
-      if (source.file) {
+      if (meta) {
         applyStyle(this.#container, {
           borderColor: Colors.TOOLTIP_BORDER_COLOR,
         });
@@ -142,7 +142,7 @@ export function defineTooltipElement() {
         // window height excluding the scrollbar height
         clientHeight: windowHeight,
       } = document.documentElement;
-      const { width: containerWidth, height: containerHeight } = getDOMRect(
+      const { width: containerWidth, height: containerHeight } = getRect(
         this.#container,
       );
 

@@ -4,17 +4,25 @@ import { isFunc } from '@open-editor/shared';
 import { getOptions } from '../options';
 import { resolveDebug } from './resolveDebug';
 
+export interface ElementSourceMeta {
+  name: string;
+  file: string;
+  line: number;
+  column: number;
+}
 export interface ElementSource {
   element: string;
-  component?: string;
-  file?: string;
-  line?: number;
-  column?: number;
+  meta?: ElementSourceMeta;
+  tree: ElementSourceMeta[];
 }
 
-export function resolveSource(element: HTMLElement): ElementSource {
+export function resolveSource(
+  element: HTMLElement,
+  deep?: boolean,
+): ElementSource {
   const source: ElementSource = {
     element: element.localName,
+    tree: [],
   };
 
   const debug = resolveDebug(element);
@@ -22,118 +30,151 @@ export function resolveSource(element: HTMLElement): ElementSource {
     return source;
   }
 
-  let debugSource: Omit<ElementSource, 'element'> | undefined;
+  let tree: Partial<ElementSourceMeta>[] = [];
   if (debug.key.startsWith('__react')) {
-    debugSource = resolveSourceFromReact(debug.value);
+    tree = resolveSourceFromReact(debug.value, deep);
   } else if (debug.key.startsWith('__vueParent')) {
-    debugSource = resolveSourceFromVue(debug.value);
+    tree = resolveSourceFromVue(debug.value, deep);
   } else if (debug.key.startsWith('__vue')) {
-    debugSource = resolveSourceFromVue2(debug.value);
+    tree = resolveSourceFromVue2(debug.value);
   } else if (debug.key.startsWith('__svelte')) {
-    debugSource = resolveSourceFromSvelte(debug.value);
+    tree = resolveSourceFromSvelte(debug.value);
   } else if (debug.key.startsWith('_qc')) {
-    debugSource = resolveSourceFromQwik(debug.value);
-  }
-  if (!debugSource) {
-    return source;
+    tree = resolveSourceFromQwik(debug.value);
   }
 
-  return {
-    ...source,
-    ...debugSource,
-    component: debugSource.file
-      ? debugSource.component ?? 'Anonymous'
-      : undefined,
-    file: debugSource.file ? ensureFileName(debugSource.file) : undefined,
-  };
+  source.tree = tree.map(normalizeComponent);
+  source.meta = source.tree[0];
+
+  return source;
 }
 
-function resolveSourceFromReact(fiber?: Fiber | null) {
-  while (fiber && !fiber._debugSource) {
-    fiber = fiber._debugOwner;
+function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
+  const tree: Partial<ElementSourceMeta>[] = [];
+
+  while (fiber) {
+    let owner = fiber._debugOwner;
+
+    const source = fiber._debugSource;
+    if (source) {
+      while (!isReactComponent(owner)) {
+        if (!owner) {
+          return tree;
+        }
+        owner = owner._debugOwner;
+      }
+
+      tree.push({
+        name: getReactComponentName(owner as Fiber),
+        file: source.fileName,
+        line: source.lineNumber,
+        column: (<any>source).columnNumber,
+      });
+
+      if (!deep) {
+        return tree;
+      }
+    }
+
+    fiber = owner;
   }
-  if (!fiber) return;
 
-  const source = fiber._debugSource!;
-  let owner = fiber._debugOwner;
-  while (
-    owner &&
-    (!owner._debugSource || (!isFunc(owner.type) && !isFunc(owner.type.render)))
-  ) {
-    owner = owner._debugOwner;
-  }
-
-  const Component = owner
-    ? isFunc(owner.type)
-      ? owner.type
-      : owner.type.render
-    : null;
-
-  return {
-    component: Component?.name || Component?.displayName,
-    file: source.fileName,
-    line: source.lineNumber,
-    column: (<any>source).columnNumber,
-  };
+  return tree;
 }
 
-function resolveSourceFromVue(instance?: ComponentInternalInstance | null) {
-  while (instance && !isValidFileName(instance.type.__file)) {
+function resolveSourceFromVue(
+  instance?: ComponentInternalInstance | null,
+  deep?: boolean,
+) {
+  const tree: Partial<ElementSourceMeta>[] = [];
+
+  while (instance) {
+    if (isValidFileName(instance.type.__file)) {
+      tree.push({
+        name:
+          instance.type.name ??
+          instance.type.__name ??
+          matchComponent(instance.type.__file, 'vue'),
+        file: instance.type.__file,
+      });
+
+      if (!deep) {
+        return tree;
+      }
+    }
+
     instance = instance.parent;
   }
-  if (!instance) return;
 
-  return {
-    component:
-      instance.type.name ??
-      instance.type.__name ??
-      matchComponent(instance.type.__file, 'vue'),
-    file: instance.type.__file,
-  };
+  return tree;
 }
 
 function resolveSourceFromVue2(instance?: any | null) {
+  const tree: Partial<ElementSourceMeta>[] = [];
+
   if (!instance.$vnode) {
     instance = instance._vnode.componentInstance;
   }
-  while (
-    instance &&
-    !isValidFileName(instance.$vnode.componentOptions.Ctor.options.__file)
-  ) {
+
+  while (instance) {
+    const { options } = instance.$vnode.componentOptions.Ctor;
+    if (isValidFileName(options.__file)) {
+      tree.push({
+        name: options.name ?? matchComponent(options.__file, 'vue'),
+        file: options.__file,
+      });
+    }
+
     instance = instance.$parent;
   }
-  if (!instance) return;
 
-  const { options } = instance.$vnode.componentOptions.Ctor;
-  return {
-    component: options.name ?? matchComponent(options.__file, 'vue'),
-    file: options.__file,
-  };
+  return tree;
 }
 
 function resolveSourceFromSvelte(meta?: { loc: { file?: string } } | null) {
-  if (!meta) return;
+  if (!meta) return [];
 
-  return {
-    component: matchComponent(meta.loc.file, 'svelte'),
-    file: meta.loc.file,
-  };
+  return [
+    {
+      name: matchComponent(meta.loc.file, 'svelte'),
+      file: meta.loc.file,
+    },
+  ];
 }
 
 const qwikPosRE = /:(\d+):(\d+)$/;
 function resolveSourceFromQwik(meta?: any | null) {
-  if (!meta) return;
+  if (!meta) return [];
 
   const { displayName, file } = meta.$parent$.$componentQrl$.dev;
   const [, line, column] =
     meta.$element$.getAttribute('data-qwik-inspector').match(qwikPosRE) ?? [];
 
+  return [
+    {
+      name: displayName,
+      file,
+      line,
+      column,
+    },
+  ];
+}
+
+function normalizeComponent(component: Partial<ElementSourceMeta>) {
   return {
-    component: displayName,
-    file,
-    line,
-    column,
+    name: component.name || 'Anonymous',
+    file: ensureFileName(component.file!),
+    line: component.line || 1,
+    column: component.column || 1,
   };
+}
+
+function ensureFileName(fileName: string) {
+  const { rootDir } = getOptions();
+  if (fileName.startsWith(rootDir)) {
+    fileName = fileName.replace(rootDir, '');
+  }
+  return `/${fileName.replace(/^\//, '')}`;
 }
 
 function matchComponent(file = '', suffix = '') {
@@ -150,10 +191,18 @@ function isValidFileName(fileName?: string) {
   return false;
 }
 
-function ensureFileName(fileName: string) {
-  const { rootDir } = getOptions();
-  if (fileName.startsWith(rootDir)) {
-    fileName = fileName.replace(rootDir, '');
+function isReactComponent(owner?: Fiber | null) {
+  if (owner && owner._debugSource) {
+    return isFunc(owner.type) || isFunc(owner.type.render);
   }
-  return `/${fileName.replace(/^\//, '')}`;
+
+  return false;
+}
+
+function getReactComponentName(owner: Fiber) {
+  const component = isFunc(owner.type)
+    ? owner.type
+    : // React.forwardRef(Component)
+      owner.type.render;
+  return component?.name || component?.displayName;
 }

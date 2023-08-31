@@ -64,28 +64,28 @@ export function defineOverlayElement() {
       append(shadow, this.#tooltip);
     }
 
-    public open() {
+    public open = () => {
       this.#tooltip.open();
 
       this.#updateStyles(emptyComputedStyles);
       applyStyle(this.#posttionRect, {
         display: 'block',
       });
-    }
+    };
 
-    public close() {
+    public close = () => {
       this.#tooltip.close();
 
       applyStyle(this.#posttionRect, {
         display: 'none',
       });
-    }
+    };
 
-    public update(element: HTMLElement) {
+    public update = (element: HTMLElement) => {
       const styles = element ? getComputedStyles(element) : emptyComputedStyles;
       this.#tooltip.update(element, styles.posttion);
       this.#updateStyles(styles);
-    }
+    };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttionRect, {
@@ -98,22 +98,22 @@ export function defineOverlayElement() {
         width: CSS_util.px(styles.content.width),
         height: CSS_util.px(styles.content.height),
       });
-      applyRectStyle(this.#marginRect, styles.margin);
-      applyRectStyle(this.#borderRect, styles.border);
-      applyRectStyle(this.#paddingRect, styles.padding);
+      this.#applyRectStyle(this.#marginRect, styles.margin);
+      this.#applyRectStyle(this.#borderRect, styles.border);
+      this.#applyRectStyle(this.#paddingRect, styles.padding);
     }
-  }
 
-  function applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
-    applyStyle(rect, {
-      width: CSS_util.px(style.width),
-      height: CSS_util.px(style.height),
-      borderTopWidth: CSS_util.px(style.top),
-      borderRightWidth: CSS_util.px(style.right),
-      borderBottomWidth: CSS_util.px(style.bottom),
-      borderLeftWidth: CSS_util.px(style.left),
-      borderStyle: 'solid',
-    });
+    #applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
+      applyStyle(rect, {
+        width: CSS_util.px(style.width),
+        height: CSS_util.px(style.height),
+        borderTopWidth: CSS_util.px(style.top),
+        borderRightWidth: CSS_util.px(style.right),
+        borderBottomWidth: CSS_util.px(style.bottom),
+        borderLeftWidth: CSS_util.px(style.left),
+        borderStyle: 'solid',
+      });
+    }
   }
 
   customElements.define(InternalElements.HTML_OVERLAY_ELEMENT, OverlayElement);

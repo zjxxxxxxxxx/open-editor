@@ -74,10 +74,10 @@ export function create<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   options?: ElementCreationOptions,
 ): HTMLElementTagNameMap[K];
-export function create(
+export function create<T extends HTMLElement>(
   tagName: string,
   options?: ElementCreationOptions,
-): HTMLElement;
+): T;
 export function create(tagName: string, options?: ElementCreationOptions) {
   return document.createElement(tagName, options);
 }
@@ -93,6 +93,13 @@ export const caf = <(handle: number) => void>(
   (CLIENT ? cancelAnimationFrame : () => {})
 );
 
-export function getDOMRect(target: Element) {
-  return target.getBoundingClientRect();
+export function getRect(target: Element): Omit<DOMRect, 'toJSON'> {
+  const domRect = target.getBoundingClientRect().toJSON();
+
+  const zoom = Number(target.computedStyleMap().get('zoom'));
+  if (zoom !== 1) {
+    Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
+  }
+
+  return domRect;
 }
