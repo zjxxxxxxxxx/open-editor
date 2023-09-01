@@ -80,9 +80,10 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
       }
 
       onOpenEditor(element);
-      if (!isInternalElement(element)) {
-        onExitInspect();
-      }
+    }
+
+    if (!isInternalElement(element)) {
+      onExitInspect();
     }
   }
 

@@ -1,12 +1,13 @@
 import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
-import { ElementSourceMeta, resolveSource } from '../utils/resolveSource';
+import { resolveSource } from '../utils/resolveSource';
 import { applyAttrs, create, on, off, append, raf } from '../utils/document';
 import { isValidElement } from '../utils/element';
+import { openEditor } from '../utils/openEditor';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
+
 import { HTMLOverlayElement } from './defineOverlayElement';
 import { HTMLToggleElement } from './defineToggleElement';
-import { openEditor } from '../utils/openEditor';
 import { HTMLTreeElement } from './defineTreeElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
@@ -69,7 +70,7 @@ export function defineInspectElement() {
     connectedCallback() {
       on('keydown', this.#onKeydown, { capture: true });
       on('pointermove', this.#changePointer, { capture: true });
-      on('confirm', this.#openEditorOnTree, {
+      on('exit', this.#cleanupHandlers, {
         target: this.#tree,
       });
 
@@ -83,7 +84,7 @@ export function defineInspectElement() {
     disconnectedCallback() {
       off('keydown', this.#onKeydown, { capture: true });
       off('pointermove', this.#changePointer, { capture: true });
-      off('confirm', this.#openEditorOnTree, {
+      off('exit', this.#cleanupHandlers, {
         target: this.#tree,
       });
 
@@ -173,11 +174,6 @@ export function defineInspectElement() {
       if (meta) {
         openEditor(meta, this.dispatchEvent.bind(this));
       }
-    };
-
-    #openEditorOnTree = (e: CustomEvent<ElementSourceMeta>) => {
-      openEditor(e.detail, this.dispatchEvent.bind(this));
-      this.#cleanupHandlers();
     };
   }
 
