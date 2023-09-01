@@ -3,6 +3,26 @@ import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
+const css = `
+.container {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 1000001;
+  padding: 6px;
+}
+
+.button {
+  padding: 2px;
+  width: 18px;
+  height: 18px;
+  color: var(--toggle);
+  background-color: var(--toggle-bg);
+  transition: all 0.3s ease-out;
+  border-radius: 50%;
+}
+`;
+
 const toggleIcon = `
 <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor">
   <path d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"></path>
@@ -23,27 +43,13 @@ export function defineToggleElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+      shadow.innerHTML = `<style style="display: none;">${css}</style>`;
 
       this.#container = create('div');
-      applyStyle(this.#container, {
-        position: 'fixed',
-        top: '0px',
-        right: '0px',
-        zIndex: '1000001',
-        padding: '6px',
-      });
+      this.#container.classList.add('container');
 
       this.#button = create('div');
-      applyStyle(this.#button, {
-        padding: '2px',
-        width: '18px',
-        height: '18px',
-        borderRadius: '50%',
-        color: Colors.TOGGLE_COLOR,
-        backgroundColor: Colors.TOGGLE_BG_COLOR,
-        transition: 'all 0.3s ease-out',
-      });
-
+      this.#button.classList.add('button');
       this.#button.title = 'open-editor-toggle';
       this.#button.innerHTML = toggleIcon;
 

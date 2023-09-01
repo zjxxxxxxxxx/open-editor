@@ -5,7 +5,6 @@ import {
 } from '../utils/getComputedStyles';
 import { applyStyle, CSS_util, create, append } from '../utils/document';
 import { Colors, InternalElements } from '../constants';
-
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
@@ -33,26 +32,29 @@ export function defineOverlayElement() {
         create(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
       this.#posttionRect = create('div');
-      this.#marginRect = create('div');
-      this.#borderRect = create('div');
-      this.#paddingRect = create('div');
-      this.#contentRect = create('div');
-
       applyStyle(this.#posttionRect, {
         position: 'fixed',
         zIndex: '100000',
         display: 'none',
         pointerEvents: 'none',
       });
+
+      this.#marginRect = create('div');
       applyStyle(this.#marginRect, {
         borderColor: Colors.OVERLAY_MARGIN_RECT,
       });
+
+      this.#borderRect = create('div');
       applyStyle(this.#borderRect, {
         borderColor: Colors.OVERLAY_BORDER_RECT,
       });
+
+      this.#paddingRect = create('div');
       applyStyle(this.#paddingRect, {
         borderColor: Colors.OVERLAY_PADDING_RECT,
       });
+
+      this.#contentRect = create('div');
       applyStyle(this.#contentRect, {
         background: Colors.OVERLAY_CONTENT_RECT,
       });

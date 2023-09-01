@@ -1,7 +1,7 @@
 import { component$ } from '@builder.io/qwik';
 
 const SubTree3 = component$(() => {
-  return <div>test tree</div>;
+  return <button>test tree</button>;
 });
 
 export default SubTree3;

@@ -1,24 +1,20 @@
 import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
-import { resolveSource } from '../utils/resolveSource';
-import { applyAttrs, create, on, off, append, raf } from '../utils/document';
+import { applyAttrs, create, on, off, append } from '../utils/document';
 import { isValidElement } from '../utils/element';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
-
+import { resolveSource } from '../resolve';
 import { HTMLOverlayElement } from './defineOverlayElement';
-import { HTMLToggleElement } from './defineToggleElement';
 import { HTMLTreeElement } from './defineTreeElement';
+import { HTMLToggleElement } from './defineToggleElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
 export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    #resetStyle!: HTMLStyleElement;
-
     #overlay: HTMLOverlayElement;
     #tree: HTMLTreeElement;
-
     #toggle?: HTMLToggleElement;
 
     #__active__!: boolean;
@@ -36,8 +32,6 @@ export function defineInspectElement() {
         });
       }
     }
-
-    #pointer!: PointerEvent;
 
     constructor() {
       super();
@@ -97,6 +91,8 @@ export function defineInspectElement() {
       this.#cleanupHandlers();
     }
 
+    #pointer!: PointerEvent;
+
     #changePointer = (event: PointerEvent) => {
       this.#pointer = event;
     };
@@ -120,7 +116,6 @@ export function defineInspectElement() {
       if (!this.#active) {
         this.#active = true;
         this.#overlay.open();
-        this.#appendResetStyle();
         this.#cleanupListenersOnDocument = setupListenersOnDocument({
           onChangeElement: this.#overlay.update,
           onOpenTree: this.#tree.open,
@@ -135,6 +130,8 @@ export function defineInspectElement() {
             this.#overlay.update(initElement);
           }
         }
+
+        this.#appendResetStyle();
       }
     }
 
@@ -145,28 +142,25 @@ export function defineInspectElement() {
         this.#active = false;
         this.#overlay.close();
         this.#tree.close();
-        this.#removeResetStyle();
         this.#cleanupListenersOnDocument?.();
+        this.#removeResetStyle();
       }
     };
 
-    #appendResetStyle() {
-      raf(() => {
-        if (!this.#resetStyle) {
-          this.#resetStyle = create('style');
-          this.#resetStyle.type = 'text/css';
-          this.#resetStyle.innerText =
-            '*:hover{cursor:default!important;user-select:none!important;touch-action:none!important;}';
-        }
+    #resetStyle!: HTMLStyleElement;
 
-        append(document.body, this.#resetStyle);
-      });
+    #appendResetStyle() {
+      if (!this.#resetStyle) {
+        this.#resetStyle = create('style');
+        this.#resetStyle.innerText =
+          '*:hover{cursor:default!important;user-select:none!important;touch-action:none!important;}';
+      }
+
+      append(document.body, this.#resetStyle);
     }
 
     #removeResetStyle() {
-      raf(() => {
-        this.#resetStyle.remove();
-      });
+      this.#resetStyle.remove();
     }
 
     #openEditor = (element: HTMLElement) => {
