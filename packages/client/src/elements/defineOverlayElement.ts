@@ -5,6 +5,7 @@ import {
 } from '../utils/getComputedStyles';
 import { applyStyle, CSS_util, create, append } from '../utils/document';
 import { Colors, InternalElements } from '../constants';
+
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
