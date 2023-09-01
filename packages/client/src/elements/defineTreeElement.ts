@@ -1,5 +1,6 @@
 import { ElementSourceMeta, resolveSource } from '../utils/resolveSource';
 import { append, applyStyle, create, off, on } from '../utils/document';
+import { openEditor } from '../utils/openEditor';
 import { InternalElements } from '../constants';
 
 export interface HTMLTreeElement extends HTMLElement {
@@ -236,11 +237,12 @@ export function defineTreeElement() {
         return;
       }
 
-      this.dispatchEvent(
-        new CustomEvent('confirm', {
-          detail: <ElementSourceMeta>(<unknown>element.dataset),
-        }),
+      openEditor(
+        <ElementSourceMeta>(<unknown>element.dataset),
+        this.dispatchEvent.bind(this),
       );
+
+      this.dispatchEvent(new CustomEvent('exit'));
     };
   }
 

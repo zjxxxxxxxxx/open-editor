@@ -1,7 +1,9 @@
 import type { Fiber } from 'react-reconciler';
 import type { ComponentInternalInstance } from '@vue/runtime-core';
 import { isFunc } from '@open-editor/shared';
+
 import { getOptions } from '../options';
+
 import { resolveDebug } from './resolveDebug';
 
 export interface ElementSourceMeta {
@@ -36,14 +38,14 @@ export function resolveSource(
   } else if (debug.key.startsWith('__vueParent')) {
     tree = resolveSourceFromVue(debug.value, deep);
   } else if (debug.key.startsWith('__vue')) {
-    tree = resolveSourceFromVue2(debug.value);
+    tree = resolveSourceFromVue2(debug.value, deep);
   } else if (debug.key.startsWith('__svelte')) {
     tree = resolveSourceFromSvelte(debug.value);
   } else if (debug.key.startsWith('_qc')) {
-    tree = resolveSourceFromQwik(debug.value);
+    tree = resolveSourceFromQwik(debug.value, deep);
   }
 
-  source.tree = tree.map(normalizeComponent);
+  source.tree = tree.map(normalizeMeta);
   source.meta = source.tree[0];
 
   return source;
@@ -94,7 +96,7 @@ function resolveSourceFromVue(
         name:
           instance.type.name ??
           instance.type.__name ??
-          matchComponent(instance.type.__file, 'vue'),
+          getComponentNameByFile(instance.type.__file, 'vue'),
         file: instance.type.__file,
       });
 
@@ -109,7 +111,7 @@ function resolveSourceFromVue(
   return tree;
 }
 
-function resolveSourceFromVue2(instance?: any | null) {
+function resolveSourceFromVue2(instance?: any | null, deep?: boolean) {
   const tree: Partial<ElementSourceMeta>[] = [];
 
   if (!instance.$vnode) {
@@ -120,9 +122,13 @@ function resolveSourceFromVue2(instance?: any | null) {
     const { options } = instance.$vnode.componentOptions.Ctor;
     if (isValidFileName(options.__file)) {
       tree.push({
-        name: options.name ?? matchComponent(options.__file, 'vue'),
+        name: options.name ?? getComponentNameByFile(options.__file, 'vue'),
         file: options.__file,
       });
+
+      if (!deep) {
+        return tree;
+      }
     }
 
     instance = instance.$parent;
@@ -136,36 +142,48 @@ function resolveSourceFromSvelte(meta?: { loc: { file?: string } } | null) {
 
   return [
     {
-      name: matchComponent(meta.loc.file, 'svelte'),
+      name: getComponentNameByFile(meta.loc.file, 'svelte'),
       file: meta.loc.file,
     },
   ];
 }
 
 const qwikPosRE = /:(\d+):(\d+)$/;
-function resolveSourceFromQwik(meta?: any | null) {
-  if (!meta) return [];
+function resolveSourceFromQwik(debug?: any | null, deep?: boolean) {
+  const tree: Partial<ElementSourceMeta>[] = [];
 
-  const { displayName, file } = meta.$parent$.$componentQrl$.dev;
-  const [, line, column] =
-    meta.$element$.getAttribute('data-qwik-inspector').match(qwikPosRE) ?? [];
+  let { $element$, $parent$ } = debug;
+  while ($parent$) {
+    if ($parent$.$componentQrl$) {
+      const { displayName, file } = $parent$.$componentQrl$.dev;
+      const [, line, column] =
+        $element$?.getAttribute('data-qwik-inspector')?.match(qwikPosRE) ?? [];
 
-  return [
-    {
-      name: displayName,
-      file,
-      line,
-      column,
-    },
-  ];
+      tree.push({
+        name: displayName.replace(/_component$/, ''),
+        file,
+        line,
+        column,
+      });
+
+      if (!deep) {
+        return tree;
+      }
+    }
+
+    $element$ = $parent$.$element$;
+    $parent$ = $parent$.$parent$;
+  }
+
+  return tree;
 }
 
-function normalizeComponent(component: Partial<ElementSourceMeta>) {
+function normalizeMeta(meta: Partial<ElementSourceMeta>) {
   return {
-    name: component.name || 'Anonymous',
-    file: ensureFileName(component.file!),
-    line: component.line || 1,
-    column: component.column || 1,
+    name: meta.name || 'Anonymous',
+    file: ensureFileName(meta.file!),
+    line: meta.line || 1,
+    column: meta.column || 1,
   };
 }
 
@@ -177,7 +195,7 @@ function ensureFileName(fileName: string) {
   return `/${fileName.replace(/^\//, '')}`;
 }
 
-function matchComponent(file = '', suffix = '') {
+function getComponentNameByFile(file = '', suffix = '') {
   if (file.endsWith(`.${suffix}`)) {
     const matchRE = new RegExp(`([^/.]+).${suffix}$`);
     return file.match(matchRE)?.[1];
@@ -195,7 +213,6 @@ function isReactComponent(owner?: Fiber | null) {
   if (owner && owner._debugSource) {
     return isFunc(owner.type) || isFunc(owner.type.render);
   }
-
   return false;
 }
 
