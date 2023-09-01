@@ -1,13 +1,5 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './tree/HelloWorld.vue';
-
-export default defineComponent({
-  name: 'App',
-  tree: {
-    HelloWorld,
-  },
-});
+<script lang="ts" setup>
+import HelloWorld from './components/HelloWorld.vue';
 </script>
 
 <template>

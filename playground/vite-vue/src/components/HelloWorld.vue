@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import Notes from './Notes.vue';
-import Tree from './tree/index.vue';
 defineProps<{ msg: string }>();
 </script>
 
@@ -9,7 +8,6 @@ defineProps<{ msg: string }>();
   <div class="card">
     <Notes />
   </div>
-  <Tree />
   <p class="read-the-docs">
     <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
       Click to Github

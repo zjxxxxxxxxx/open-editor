@@ -3,9 +3,9 @@ import reactLogo from '../public/react.svg';
 import Notes from './Notes';
 import './App.css';
 
-export default function App() {
+export default function App(): React.JSX.Element {
   return (
-    <>
+    <div>
       <div>
         <a href="https://rollupjs.org" target="_blank">
           <img src={rollupLogo} className="logo" alt="Rollup logo" />
@@ -23,6 +23,6 @@ export default function App() {
           Click to Github
         </a>
       </p>
-    </>
+    </div>
   );
 }

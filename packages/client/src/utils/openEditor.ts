@@ -1,8 +1,7 @@
 import { ServerApis } from '@open-editor/shared';
 
 import { getOptions } from '../options';
-
-import { ElementSourceMeta } from './resolveSource';
+import { ElementSourceMeta } from '../resolve';
 
 export function openEditor(
   source: ElementSourceMeta,

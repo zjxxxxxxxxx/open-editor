@@ -4,18 +4,48 @@ import {
   CSS_util,
   create,
   append,
-  raf,
-  caf,
   getRect,
 } from '../utils/document';
-import { resolveSource } from '../utils/resolveSource';
 import { Colors, InternalElements } from '../constants';
+import { resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
   update(activeElement?: HTMLElement, style?: ComputedStyle): void;
 }
+
+const css = `
+.container {
+  position: fixed;
+  z-index: 1000002;
+  padding: 10px 20px;
+  display: none;
+  max-width: calc(100% - 56px);
+  visibility: hidden;
+  background: var(--bg-color);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  pointer-events: none;
+}
+
+.element {
+  color: var(--element);
+  font-size: 14px;
+}
+
+.component {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.file {
+  font-size: 14px;
+  font-weight: 200;
+  text-decoration: underline;
+  word-wrap: break-word;
+}
+`;
 
 export function defineTooltipElement() {
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
@@ -30,38 +60,19 @@ export function defineTooltipElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+      shadow.innerHTML = `<style style="display: none;">${css}</style>`;
 
       this.#container = create('div');
-      this.#element = create('span');
-      this.#component = create('span');
-      this.#file = create('div');
+      this.#container.classList.add('container');
 
-      applyStyle(this.#container, {
-        position: 'fixed',
-        zIndex: '1000002',
-        padding: '10px 20px',
-        display: 'none',
-        maxWidth: `calc(100% - 44px - ${CSS_util.px(this.#offset * 2)})`,
-        visibility: 'hidden',
-        background: Colors.TOOLTIP_BG_COLOR,
-        borderRadius: '4px',
-        border: '2px solid transparent',
-        pointerEvents: 'none',
-      });
-      applyStyle(this.#element, {
-        color: Colors.TOOLTIP_ELEMENT_COLOR,
-        fontSize: '14px',
-      });
-      applyStyle(this.#component, {
-        fontSize: '16px',
-        fontWeight: '500',
-      });
-      applyStyle(this.#file, {
-        fontSize: '14px',
-        fontWeight: '200',
-        textDecoration: 'underline',
-        wordWrap: 'break-word',
-      });
+      this.#element = create('span');
+      this.#element.classList.add('element');
+
+      this.#component = create('span');
+      this.#component.classList.add('component');
+
+      this.#file = create('div');
+      this.#file.classList.add('file');
 
       append(this.#container, this.#element);
       append(this.#container, this.#component);
@@ -82,25 +93,20 @@ export function defineTooltipElement() {
       });
     };
 
-    #rafId!: number;
-
     public update = (activeElement?: HTMLElement, style?: ComputedStyle) => {
-      caf(this.#rafId);
-
       // before hidden
       applyStyle(this.#container, {
         visibility: 'hidden',
+        top: CSS_util.px(this.#offset),
+        left: CSS_util.px(this.#offset),
       });
 
       if (activeElement && style) {
         this.#updateText(activeElement);
         this.#updatePosition(style);
-
-        this.#rafId = raf(() => {
-          // after visible
-          applyStyle(this.#container, {
-            visibility: 'visible',
-          });
+        // after visible
+        applyStyle(this.#container, {
+          visibility: 'visible',
         });
       }
     };

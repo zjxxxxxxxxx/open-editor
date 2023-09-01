@@ -1,16 +1,16 @@
-import { isValidElement } from './element';
+import { isValidElement } from '../utils/element';
 
 const reactKeyStarts = '__reactFiber$';
 const react15KeyStarts = '__reactInternalInstance$';
 // __reactFiber$xxx...
-let reactKey: string | undefined;
+export let reactKey: string | undefined;
 // __reactInternalInstance$xxx...
-let react15Key: string | undefined;
+export let react15Key: string | undefined;
 
-const vueKey = '__vueParentComponent';
-const vue2Key = '__vue__';
-const svelteKey = '__svelte_meta';
-const qwikKey = '_qc_';
+export const vueKey = '__vueParentComponent';
+export const vue2Key = '__vue__';
+export const svelteKey = '__svelte_meta';
+export const qwikKey = '_qc_';
 
 // support parsing single project multiple frameworks
 export function resolveDebug(element: HTMLElement) {

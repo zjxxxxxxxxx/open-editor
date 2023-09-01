@@ -1,3 +1,3 @@
 <template>
-  <div>test tree</div>
+  <button>test tree</button>
 </template>

@@ -2,7 +2,6 @@ import { component$ } from '@builder.io/qwik';
 import viteLogo from '/vite.svg';
 import qwikLogo from '/qwik.svg';
 import Notes from './Notes';
-import Tree from './tree';
 import './app.css';
 
 export const App = component$(() => {
@@ -20,7 +19,6 @@ export const App = component$(() => {
       <div class="card">
         <Notes />
       </div>
-      <Tree />
       <p class="read-the-docs">
         <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
           Click to Github

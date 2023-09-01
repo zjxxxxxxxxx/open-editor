@@ -1,5 +1,3 @@
-import { CLIENT } from '../constants';
-
 export function applyStyle(
   element: HTMLElement,
   ...styles: Partial<CSSStyleDeclaration>[]
@@ -85,13 +83,6 @@ export function create(tagName: string, options?: ElementCreationOptions) {
 export function append(parent: HTMLElement | ShadowRoot, child: HTMLElement) {
   return parent.appendChild(child);
 }
-
-export const raf = <(callback: FrameRequestCallback) => number>(
-  (CLIENT ? requestAnimationFrame : () => {})
-);
-export const caf = <(handle: number) => void>(
-  (CLIENT ? cancelAnimationFrame : () => {})
-);
 
 export function getRect(target: Element): Omit<DOMRect, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
