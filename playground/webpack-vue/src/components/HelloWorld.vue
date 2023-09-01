@@ -1,16 +1,6 @@
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
 import Notes from './Notes.vue';
-
-export default defineComponent({
-  name: 'HelloWorld',
-  tree: {
-    Notes,
-  },
-  props: {
-    msg: String,
-  },
-});
+defineProps<{ msg: string }>();
 </script>
 
 <template>

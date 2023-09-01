@@ -1,6 +1,6 @@
-import { ElementSourceMeta, resolveSource } from '../utils/resolveSource';
 import { append, applyStyle, create, off, on } from '../utils/document';
 import { openEditor } from '../utils/openEditor';
+import { ElementSourceMeta, resolveSource } from '../resolve';
 import { InternalElements } from '../constants';
 
 export interface HTMLTreeElement extends HTMLElement {
@@ -57,7 +57,6 @@ const css = `
   width: 16px;
   height: 16px;
   fill: var(--green);
-  cursor: pointer;
 }
 
 .title {
@@ -80,10 +79,6 @@ const css = `
   font-size: 14px;
   font-weight: 200;
   text-decoration: underline;
-}
-
-.component {
-  cursor: pointer;
 }
 
 .component:hover > *,
@@ -122,9 +117,9 @@ export function defineTreeElement() {
       shadow.innerHTML = `<style style="display: none;">${css}</style>`;
 
       this.#root = create('div');
-      this.#popup = create('div');
-
       this.#root.classList.add('root');
+
+      this.#popup = create('div');
       this.#popup.classList.add('popup');
 
       append(this.#root, this.#popup);
@@ -183,7 +178,6 @@ export function defineTreeElement() {
       applyStyle(this.#root, {
         display: 'block',
       });
-
       on('click', this.close, {
         target: this.#root.querySelector('.close'),
       });
@@ -206,14 +200,12 @@ export function defineTreeElement() {
 
     #createTag(component: ElementSourceMeta, child: string) {
       const dataset = `data-file="${component.file}" data-line="${component.line}" data-column="${component.column}"`;
-
       let tag = `
         <div class="component" ${dataset}>
           <span class="name" ${dataset}>&lt;${component.name}&gt;</span>
           <span class="file" ${dataset}>${component.file}</span>
         </div>
       `;
-
       if (child) {
         tag += `
           <div class="sub-tree">
@@ -224,13 +216,11 @@ export function defineTreeElement() {
           </div>  
         `;
       }
-
       return tag;
     }
 
     #handleEvent = (e: PointerEvent) => {
       const element = <HTMLElement>e.target;
-
       const hasSource = Object.keys(element.dataset).length;
       if (!hasSource) {
         e.stopPropagation();
@@ -241,7 +231,6 @@ export function defineTreeElement() {
         <ElementSourceMeta>(<unknown>element.dataset),
         this.dispatchEvent.bind(this),
       );
-
       this.dispatchEvent(new CustomEvent('exit'));
     };
   }
