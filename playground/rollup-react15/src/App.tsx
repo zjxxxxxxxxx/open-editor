@@ -1,5 +1,3 @@
-import rollupLogo from '../public/rollup.svg';
-import reactLogo from '../public/react.svg';
 import Notes from './Notes';
 import './App.css';
 
@@ -8,13 +6,17 @@ export default function App(): React.JSX.Element {
     <div>
       <div>
         <a href="https://rollupjs.org" target="_blank">
-          <img src={rollupLogo} className="logo" alt="Rollup logo" />
+          <img src="../public/rollup.svg" className="logo" alt="Rollup logo" />
         </a>
         <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
+          <img
+            src="../public/react.svg"
+            className="logo react"
+            alt="React logo"
+          />
         </a>
       </div>
-      <h1>Rollup + React</h1>
+      <h1>Rollup + React15</h1>
       <div className="card">
         <Notes />
       </div>

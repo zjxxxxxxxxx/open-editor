@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es2020",
     "useDefineForClassFields": true,
-    "module": "esnext",
     "lib": ["es2020", "DOM", "DOM.Iterable"],
+    "module": "esnext",
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -18,14 +18,11 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    "composite": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "global.d.ts"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["global.d.ts", "src"],
+  "exclude": ["node_modules"]
 }
