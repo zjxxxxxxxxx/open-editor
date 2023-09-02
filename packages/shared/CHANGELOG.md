@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.0.11
+
+### Patch Changes
+
+- [#56](https://github.com/zjxxxxxxxxx/open-editor/pull/56) [`30d4659`](https://github.com/zjxxxxxxxxx/open-editor/commit/30d46593a91cfeb37d97b53c115e1fe48fd0a24d) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add component tree
+
 ## 0.0.10
 
 ### Patch Changes
