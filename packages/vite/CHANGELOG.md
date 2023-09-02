@@ -1,5 +1,18 @@
 # @open-editor/vite
 
+## 0.0.11
+
+### Patch Changes
+
+- [#56](https://github.com/zjxxxxxxxxx/open-editor/pull/56) [`30d4659`](https://github.com/zjxxxxxxxxx/open-editor/commit/30d46593a91cfeb37d97b53c115e1fe48fd0a24d) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add component tree
+
+- [#60](https://github.com/zjxxxxxxxxx/open-editor/pull/60) [`fffc957`](https://github.com/zjxxxxxxxxx/open-editor/commit/fffc957a55128470fac45741bc97247444bcee67) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix vue2 not find filename
+
+- Updated dependencies [[`30d4659`](https://github.com/zjxxxxxxxxx/open-editor/commit/30d46593a91cfeb37d97b53c115e1fe48fd0a24d), [`fffc957`](https://github.com/zjxxxxxxxxx/open-editor/commit/fffc957a55128470fac45741bc97247444bcee67), [`0b63d3c`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b63d3c461e93b8e26d9e1215a6fa18ea3bca8c3)]:
+  - @open-editor/client@0.0.11
+  - @open-editor/shared@0.0.11
+  - @open-editor/server@0.0.11
+
 ## 0.0.10
 
 ### Patch Changes
