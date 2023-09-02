@@ -14,6 +14,10 @@ export const Theme = `
   font-weight: 400;
 }
 
+style {
+  display: none;
+}
+
 :host {
   --black: #181818;
   --white: #ffffff;
