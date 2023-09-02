@@ -33,16 +33,17 @@ export function resolveSourceFromVue(
 export function resolveSourceFromVue2(instance?: any | null, deep?: boolean) {
   const tree: Partial<ElementSourceMeta>[] = [];
 
-  if (!instance.$vnode) {
+  if (instance._vnode.componentInstance) {
     instance = instance._vnode.componentInstance;
   }
 
-  while (instance) {
-    const { options } = instance.$vnode.componentOptions.Ctor;
-    if (isValidFileName(options.__file)) {
+  while (instance && instance.$vnode) {
+    const { Ctor } = instance.$vnode.componentOptions;
+    const __file = Ctor?.__file ?? Ctor.options?.__file;
+    if (isValidFileName(__file)) {
       tree.push({
-        name: options.name ?? getComponentNameByFile(options.__file, 'vue'),
-        file: options.__file,
+        name: Ctor.options?.name ?? getComponentNameByFile(__file, 'vue'),
+        file: __file,
       });
 
       if (!deep) {

@@ -39,6 +39,8 @@ export default defineConfig({
 
 press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
 
+press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show component tree.
+
 press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 ## Options

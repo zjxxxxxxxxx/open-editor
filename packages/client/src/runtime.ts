@@ -1,2 +1,2 @@
 // compile time generation
-throw new Error('@open-editor/client: runtime not generated.');
+throw new Error('@open-editor/client: require a restart.');

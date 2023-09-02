@@ -50,17 +50,34 @@ a devtools that supports multi-medium web frameworks, inspect the element in the
 <table>
   <tbody>
     <tr>
-      <th align="left">rollup + react</th>
+      <th align="left">rollup + react15</th>
       <th  >
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th align="left">rollup + vue2</th>
+      <th  >
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
         >
           StackBlitz
         </a>

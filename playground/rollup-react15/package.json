@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@playground/rollup-react",
+  "name": "@playground/rollup-react15",
   "type": "module",
   "scripts": {
     "dev": "rollup -c -w --environment NODE_ENV:development"

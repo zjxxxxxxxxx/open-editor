@@ -1,6 +1,6 @@
 import { append, applyStyle, create, off, on } from '../utils/document';
 import { openEditor } from '../utils/openEditor';
-import { ElementSourceMeta, resolveSource } from '../resolve';
+import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
 import { InternalElements } from '../constants';
 
 export interface HTMLTreeElement extends HTMLElement {
@@ -114,7 +114,7 @@ export function defineTreeElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style style="display: none;">${css}</style>`;
+      shadow.innerHTML = `<style>${css}</style>`;
 
       this.#root = create('div');
       this.#root.classList.add('root');
@@ -126,7 +126,7 @@ export function defineTreeElement() {
       append(shadow, this.#root);
     }
 
-    connectedCallback() {
+    public connectedCallback() {
       on('click', this.close, {
         target: this.#root,
       });
@@ -135,7 +135,7 @@ export function defineTreeElement() {
       });
     }
 
-    disconnectedCallback() {
+    public disconnectedCallback() {
       off('click', this.close, {
         target: this.#root,
       });
@@ -149,30 +149,12 @@ export function defineTreeElement() {
 
     public open = (element: HTMLElement) => {
       const source = resolveSource(element, true);
-      const hasTree = !!source.tree.length;
 
+      const hasTree = !!source.tree.length;
       if (hasTree) {
-        this.#popup.classList.remove('empty');
-        this.#popup.innerHTML = `
-          <div class="title">
-            <span class="element">${
-              source.element
-            } in </span> &lt;Component Tree&gt;
-          </div>
-          <span class="close">${closeIcon}</span>
-          <div class="tree">
-            ${this.#buildTree(source.tree)}
-          </div>
-        `;
+        this.#renderTreeView(source);
       } else {
-        this.#popup.classList.add('empty');
-        this.#popup.innerHTML = `
-          <div class="title empty">
-            <span class="element">${source.element} in </span> &lt;Component Tree&gt;
-          </div>
-          <span class="close empty">${closeIcon}</span>
-          <div class="msg empty">empty tree 😭.</div>
-        `;
+        this.#renderEmptyView(source);
       }
 
       applyStyle(this.#root, {
@@ -189,6 +171,32 @@ export function defineTreeElement() {
       });
     };
 
+    #renderTreeView(source: ElementSource) {
+      this.#popup.classList.remove('empty');
+      this.#popup.innerHTML = `
+        <div class="title">
+          <span class="element">${
+            source.element
+          } in </span> &lt;Component Tree&gt;
+        </div>
+        <span class="close">${closeIcon}</span>
+        <div class="tree">
+          ${this.#buildTree(source.tree)}
+        </div>
+      `;
+    }
+
+    #renderEmptyView(source: ElementSource) {
+      this.#popup.classList.add('empty');
+      this.#popup.innerHTML = `
+        <div class="title empty">
+          <span class="element">${source.element} in </span> &lt;Component Tree&gt;
+        </div>
+        <span class="close empty">${closeIcon}</span>
+        <div class="msg empty">empty tree 😭.</div>
+      `;
+    }
+
     #buildTree(tree: ElementSourceMeta[]) {
       let template = '';
       while (tree.length) {
@@ -198,18 +206,22 @@ export function defineTreeElement() {
       return template;
     }
 
-    #createTag(component: ElementSourceMeta, child: string) {
-      const dataset = `data-file="${component.file}" data-line="${component.line}" data-column="${component.column}"`;
+    #createTag(component: ElementSourceMeta, subTree: string) {
+      const dataset = Object.entries(component).reduce(
+        (str, [key, value]) => `${str} data-${key}="${value}"`,
+        '',
+      );
+
       let tag = `
         <div class="component" ${dataset}>
           <span class="name" ${dataset}>&lt;${component.name}&gt;</span>
           <span class="file" ${dataset}>${component.file}</span>
         </div>
       `;
-      if (child) {
+      if (subTree) {
         tag += `
           <div class="sub-tree">
-            ${child}
+            ${subTree}
           </div>  
           <div class="component" ${dataset}>
             <span class="name" ${dataset}>&lt;/${component.name}&gt;</span>

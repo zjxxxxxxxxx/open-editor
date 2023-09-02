@@ -43,7 +43,7 @@ export function defineToggleElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style style="display: none;">${css}</style>`;
+      shadow.innerHTML = `<style>${css}</style>`;
 
       this.#container = create('div');
       this.#container.classList.add('container');
@@ -57,7 +57,7 @@ export function defineToggleElement() {
       append(shadow, this.#container);
     }
 
-    attributeChangedCallback(_: never, __: never, newValue: string) {
+    public attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
         applyStyle(this.#button, {
           color: Colors.TOGGLE_ACTIVE_COLOR,
@@ -71,13 +71,13 @@ export function defineToggleElement() {
       }
     }
 
-    connectedCallback() {
+    public connectedCallback() {
       on('click', this.#dispatchToggle, {
         target: this.#button,
       });
     }
 
-    disconnectedCallback() {
+    public disconnectedCallback() {
       off('click', this.#dispatchToggle, {
         target: this.#button,
       });

@@ -37,7 +37,7 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style style="display: none;">${Theme}</style>`;
+      shadow.innerHTML = `<style>${Theme}</style>`;
 
       this.#overlay = create<HTMLOverlayElement>(
         InternalElements.HTML_OVERLAY_ELEMENT,
@@ -52,7 +52,6 @@ export function defineInspectElement() {
         this.#toggle = create<HTMLToggleElement>(
           InternalElements.HTML_TOGGLE_ELEMENT,
         );
-
         applyAttrs(this.#toggle, {
           enable: true,
         });
@@ -61,7 +60,7 @@ export function defineInspectElement() {
       }
     }
 
-    connectedCallback() {
+    public connectedCallback() {
       on('keydown', this.#onKeydown, { capture: true });
       on('pointermove', this.#changePointer, { capture: true });
       on('exit', this.#cleanupHandlers, {
@@ -75,7 +74,7 @@ export function defineInspectElement() {
       }
     }
 
-    disconnectedCallback() {
+    public disconnectedCallback() {
       off('keydown', this.#onKeydown, { capture: true });
       off('pointermove', this.#changePointer, { capture: true });
       off('exit', this.#cleanupHandlers, {

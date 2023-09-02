@@ -45,6 +45,8 @@ module.exports = {
 
 press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
 
+press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show component tree.
+
 press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 ## Options
@@ -77,24 +79,42 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 ## Playground
 
 <table>
-  <tbody>
+  <tbody> 
+    <tr>
      <tr>
-      <th>react</th>
+      <th>react15</th>
       <th>
         <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
         >
           Source
         </a>
       </th>
       <th>
         <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
         >
           StackBlitz
         </a>
       </th>
     </tr>
     <tr>
+    <tr>
+      <th>vue2</th>
+      <th>
+        <a
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
   </tbody>
 </table>

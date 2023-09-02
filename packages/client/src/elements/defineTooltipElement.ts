@@ -60,7 +60,7 @@ export function defineTooltipElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style style="display: none;">${css}</style>`;
+      shadow.innerHTML = `<style>${css}</style>`;
 
       this.#container = create('div');
       this.#container.classList.add('container');
