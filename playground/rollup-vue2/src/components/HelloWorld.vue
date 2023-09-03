@@ -20,7 +20,7 @@ export default Vue.extend({
     </div>
     <p class="read-the-docs">
       <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-        Click to Github
+        Github
       </a>
     </p>
   </div>

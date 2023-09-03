@@ -107,7 +107,7 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
   }
 
   function onKeyDown(event: KeyboardEvent) {
-    onSilence(event);
+    onSilence(event, true);
 
     // esc exit.
     if (event.keyCode === 27) {
@@ -116,15 +116,15 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
   }
 
   function onContextMenu(event: Event) {
-    onSilence(event);
+    onSilence(event, true);
 
     // right-click exit.
     onExitInspect();
   }
 
-  function onSilence(event: Event) {
+  function onSilence(event: Event, all?: boolean) {
     const element = <HTMLElement>event.target;
-    if (!isInternalElement(element)) {
+    if (all || !isInternalElement(element)) {
       // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
       // See https://www.chromestatus.com/feature/5093566007214080.
       if (!(<any>event).type.startsWith('touch')) {

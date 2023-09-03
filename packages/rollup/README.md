@@ -85,6 +85,7 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
       <th>react15</th>
       <th>
         <a
+          target="_black"
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
         >
           Source
@@ -92,6 +93,7 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
       </th>
       <th>
         <a
+          target="_black"
           href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
         >
           StackBlitz
@@ -103,6 +105,7 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
       <th>vue2</th>
       <th>
         <a
+          target="_black"
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
         >
           Source
@@ -110,6 +113,7 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
       </th>
       <th>
         <a
+          target="_black"
           href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
         >
           StackBlitz
