@@ -1,6 +1,4 @@
 import { component$ } from '@builder.io/qwik';
-import viteLogo from '/vite.svg';
-import qwikLogo from '/qwik.svg';
 import Notes from './Notes';
 import './app.css';
 
@@ -9,10 +7,10 @@ export const App = component$(() => {
     <>
       <div>
         <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} class="logo" alt="Vite logo" />
+          <img src="/vite.svg" class="logo" alt="Vite logo" />
         </a>
         <a href="https://qwik.builder.io" target="_blank">
-          <img src={qwikLogo} class="logo qwik" alt="Qwik logo" />
+          <img src="/qwik.svg" class="logo qwik" alt="Qwik logo" />
         </a>
       </div>
       <h1>Vite + Qwik</h1>
@@ -21,7 +19,7 @@ export const App = component$(() => {
       </div>
       <p class="read-the-docs">
         <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-          Click to Github
+          Github
         </a>
       </p>
     </>

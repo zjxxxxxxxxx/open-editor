@@ -19,7 +19,7 @@ style {
 }
 
 :host {
-  --black: #181818;
+  --black: #15181e;
   --white: #ffffff;
   --grey: #abb2bf;
   --red: #ff335c;
@@ -39,10 +39,10 @@ style {
 
 @media (prefers-color-scheme: dark) {
   :host {  
-    --bg-opt: #18181888;
+    --bg-opt: #15181e88;
     --element: var(--grey);
     --toggle: var(--white);
-    --toggle-bg: #181818cc;
+    --toggle-bg: #15181ecc;
     --bg-color: var(--black);
   }
 }
