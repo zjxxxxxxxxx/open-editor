@@ -10,19 +10,22 @@ main();
 
 async function main() {
   try {
-    const playgrounds = readdirSync(resolve('playground')).filter(
-      (i) => i !== '.DS_Store',
-    );
-    const { playground } = await enquirer.prompt<{
-      playground: string;
-    }>({
-      type: 'select',
-      name: 'playground',
-      message: 'Please select playground',
-      choices: playgrounds,
-    });
+    let { playground, script } = minimist(process.argv.slice(1));
 
-    let { script } = minimist(process.argv.slice(1));
+    if (!playground) {
+      const playgrounds = readdirSync(resolve('playground')).filter(
+        (i) => i !== '.DS_Store',
+      );
+      ({ playground } = await enquirer.prompt<{
+        playground: string;
+      }>({
+        type: 'select',
+        name: 'playground',
+        message: 'Please select playground',
+        choices: playgrounds,
+      }));
+    }
+
     if (!script) {
       const { scripts } = await import(
         resolve('playground', playground, 'package.json')

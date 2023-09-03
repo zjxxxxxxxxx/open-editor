@@ -81,8 +81,10 @@ const css = `
   text-decoration: underline;
 }
 
-.component:hover > *,
-.component:hover ~ .component > * {
+.tag:hover > *,
+.tag:hover + .tag > *,
+.tag:hover ~ .tag > * {
+  opacity: 1;
   text-decoration: underline;
 }
 
@@ -96,6 +98,11 @@ const css = `
   font-size: 12px;
   font-weight: 200;
   color: var(--cyan);
+}
+
+.name,
+.file {
+  opacity: 0.5;
 }
 `;
 
@@ -130,7 +137,7 @@ export function defineTreeElement() {
       on('click', this.close, {
         target: this.#root,
       });
-      on('click', this.#handleEvent, {
+      on('click', this.#handlePopupEvent, {
         target: this.#popup,
       });
     }
@@ -139,7 +146,7 @@ export function defineTreeElement() {
       off('click', this.close, {
         target: this.#root,
       });
-      off('click', this.#handleEvent, {
+      off('click', this.#handlePopupEvent, {
         target: this.#popup,
       });
       off('click', this.close, {
@@ -200,38 +207,39 @@ export function defineTreeElement() {
     #buildTree(tree: ElementSourceMeta[]) {
       let template = '';
       while (tree.length) {
-        const item = tree.shift()!;
-        template = this.#createTag(item, template);
+        const meta = tree.shift()!;
+        template = this.#buildTemplate(meta, template);
       }
       return template;
     }
 
-    #createTag(component: ElementSourceMeta, subTree: string) {
-      const dataset = Object.entries(component).reduce(
-        (str, [key, value]) => `${str} data-${key}="${value}"`,
-        '',
-      );
-
-      let tag = `
-        <div class="component" ${dataset}>
-          <span class="name" ${dataset}>&lt;${component.name}&gt;</span>
-          <span class="file" ${dataset}>${component.file}</span>
-        </div>
-      `;
+    #buildTemplate(meta: ElementSourceMeta, subTree: string) {
+      let tags = this.#createTag(meta, true);
       if (subTree) {
-        tag += `
+        tags += `
           <div class="sub-tree">
             ${subTree}
           </div>  
-          <div class="component" ${dataset}>
-            <span class="name" ${dataset}>&lt;/${component.name}&gt;</span>
-          </div>  
+          ${this.#createTag(meta)} 
         `;
       }
-      return tag;
+      return tags;
     }
 
-    #handleEvent = (e: PointerEvent) => {
+    #createTag(meta: ElementSourceMeta, withFile?: boolean) {
+      const dataset = Object.entries(meta).reduce(
+        (str, [key, value]) => `${str} data-${key}="${value}"`,
+        '',
+      );
+      return `
+        <div class="tag" ${dataset}>
+          <span class="name" ${dataset}>&lt;${meta.name}&gt;</span>
+          ${withFile ? `<span class="file" ${dataset}>${meta.file}</span>` : ''}
+        </div>
+      `;
+    }
+
+    #handlePopupEvent = (e: PointerEvent) => {
       const element = <HTMLElement>e.target;
       const hasSource = Object.keys(element.dataset).length;
       if (!hasSource) {

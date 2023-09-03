@@ -41,7 +41,7 @@ module.exports = {
 };
 ```
 
-press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
+press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then 🖱 click the HTML element you wish to inspect.
 
 press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show component tree.
 
@@ -78,27 +78,11 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 <table>
   <tbody>
-    <tr>
-      <th>vue</th>
-      <th>
-        <a
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-    <tr>
+  <tr>
       <th>next</th>
       <th>
         <a
+          target="_black"
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
         >
           Source
@@ -106,7 +90,27 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
       </th>
       <th>
         <a
+          target="_black"
           href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next"
+        >
+          StackBlitz
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th>vue</th>
+      <th>
+        <a
+          target="_black"
+          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
+        >
+          Source
+        </a>
+      </th>
+      <th>
+        <a
+          target="_black"
+          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue"
         >
           StackBlitz
         </a>

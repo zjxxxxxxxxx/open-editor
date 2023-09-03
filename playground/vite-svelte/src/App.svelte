@@ -1,16 +1,14 @@
 <script lang="ts">
-  import viteLogo from '/vite.svg';
-  import svelteLogo from '/svelte.svg';
   import Notes from './lib/Notes.svelte';
 </script>
 
 <main>
   <div>
     <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
+      <img src="/vite.svg" class="logo" alt="Vite Logo" />
     </a>
     <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
+      <img src="/svelte.svg" class="logo svelte" alt="Svelte Logo" />
     </a>
   </div>
   <h1>Vite + Svelte</h1>
@@ -21,7 +19,7 @@
 
   <p class="read-the-docs">
     <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-      Click to Github
+      Github
     </a>
   </p>
 </main>

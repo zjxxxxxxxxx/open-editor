@@ -1,8 +1,7 @@
 import Head from 'next/head';
-import builderLogo from '../public/webpack.svg';
 import Notes from './Notes';
 
-function App() {
+export default function App() {
   return (
     <>
       <Head>
@@ -10,7 +9,7 @@ function App() {
       </Head>
       <div>
         <a href="https://rollupjs.org" target="_blank">
-          <img src={builderLogo.src} className="logo" alt="Webpack logo" />
+          <img src="/webpack.svg" className="logo" alt="Webpack logo" />
         </a>
         <a href="https://react.dev" target="_blank">
           <picture>
@@ -32,11 +31,9 @@ function App() {
       </div>
       <p className="read-the-docs">
         <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-          Click to Github
+          Github
         </a>
       </p>
     </>
   );
 }
-
-export default App;
