@@ -9,8 +9,6 @@ export let react15Key: string | undefined;
 
 export const vueKey = '__vueParentComponent';
 export const vue2Key = '__vue__';
-export const svelteKey = '__svelte_meta';
-export const qwikKey = '_qc_';
 
 // support parsing single project multiple frameworks
 export function resolveDebug(element: HTMLElement) {
@@ -29,17 +27,9 @@ function findKey(element: HTMLElement) {
   if (vueKey in element) {
     return vueKey;
   }
-  // vue+
+  // vue2+
   else if (vue2Key in element) {
     return vue2Key;
-  }
-  // svelte?+
-  else if (svelteKey in element) {
-    return svelteKey;
-  }
-  // qwik?+
-  else if (qwikKey in element) {
-    return qwikKey;
   }
 
   // react17+

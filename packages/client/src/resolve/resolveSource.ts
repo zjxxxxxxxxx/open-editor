@@ -5,8 +5,6 @@ import {
   resolveSourceFromReact15,
 } from './framework/react';
 import { resolveSourceFromVue, resolveSourceFromVue2 } from './framework/vue';
-import { resolveSourceFromQwik } from './framework/qwik';
-import { resolveSourceFromSvelte } from './framework/svelte';
 
 export interface ElementSourceMeta {
   name: string;
@@ -43,10 +41,6 @@ export function resolveSource(
     tree = resolveSourceFromVue(debug.value, deep);
   } else if (debug.key.startsWith('__vue')) {
     tree = resolveSourceFromVue2(debug.value, deep);
-  } else if (debug.key.startsWith('__svelte')) {
-    tree = resolveSourceFromSvelte(debug.value);
-  } else if (debug.key.startsWith('_qc')) {
-    tree = resolveSourceFromQwik(debug.value, deep);
   }
 
   source.tree = tree.map(normalizeMeta);

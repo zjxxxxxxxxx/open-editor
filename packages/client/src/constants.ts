@@ -8,14 +8,10 @@ export const InternalElements = <const>{
 
 export const Theme = `
 * {
-  all: initial;
+  box-sizing: content-box;
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-}
-
-style {
-  display: none;
 }
 
 :host {
