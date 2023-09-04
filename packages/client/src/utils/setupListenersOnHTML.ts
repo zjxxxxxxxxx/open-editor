@@ -8,10 +8,10 @@ export interface SetupHandlersOptions {
   onExitInspect(): void;
 }
 
-export function setupListenersOnDocument(options: SetupHandlersOptions) {
+export function setupListenersOnHTML(options: SetupHandlersOptions) {
   const { onChangeElement, onOpenEditor, onOpenTree, onExitInspect } = options;
 
-  function registerListenersOnDocument() {
+  function registerListenersOnHTML() {
     on('click', onClick, { capture: true });
 
     on('mousedown', onSilence, { capture: true });
@@ -40,7 +40,7 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
     on('contextmenu', onContextMenu, { capture: true });
   }
 
-  function removeEventListenersOnDocument() {
+  function removeEventListenersOnHTML() {
     off('click', onClick, { capture: true });
 
     off('mousedown', onSilence, { capture: true });
@@ -136,6 +136,6 @@ export function setupListenersOnDocument(options: SetupHandlersOptions) {
     }
   }
 
-  registerListenersOnDocument();
-  return removeEventListenersOnDocument;
+  registerListenersOnHTML();
+  return removeEventListenersOnHTML;
 }

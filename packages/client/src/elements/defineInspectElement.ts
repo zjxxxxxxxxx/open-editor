@@ -1,6 +1,6 @@
-import { setupListenersOnDocument } from '../utils/setupListenersOnDocument';
 import { applyAttrs, create, on, off, append } from '../utils/document';
 import { isValidElement } from '../utils/element';
+import { setupListenersOnHTML } from '../utils/setupListenersOnHTML';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements, Theme } from '../constants';
 import { getOptions } from '../options';
@@ -16,13 +16,13 @@ export function defineInspectElement() {
     #overlay: HTMLOverlayElement;
     #tree: HTMLTreeElement;
     #toggle?: HTMLToggleElement;
+    #pointer!: PointerEvent;
+    #resetStyle!: HTMLStyleElement;
 
     #__active__!: boolean;
-
     get #active() {
       return this.#__active__;
     }
-
     set #active(value) {
       this.#__active__ = value;
 
@@ -90,8 +90,6 @@ export function defineInspectElement() {
       this.#cleanupHandlers();
     }
 
-    #pointer!: PointerEvent;
-
     #changePointer = (event: PointerEvent) => {
       this.#pointer = event;
     };
@@ -115,7 +113,7 @@ export function defineInspectElement() {
       if (!this.#active) {
         this.#active = true;
         this.#overlay.open();
-        this.#cleanupListenersOnDocument = setupListenersOnDocument({
+        this.#cleanupListenersOnHTML = setupListenersOnHTML({
           onChangeElement: this.#overlay.update,
           onOpenTree: this.#tree.open,
           onOpenEditor: this.#openEditor,
@@ -134,25 +132,31 @@ export function defineInspectElement() {
       }
     }
 
-    #cleanupListenersOnDocument?: () => void;
+    #cleanupListenersOnHTML!: () => void;
 
     #cleanupHandlers = () => {
       if (this.#active) {
         this.#active = false;
         this.#overlay.close();
         this.#tree.close();
-        this.#cleanupListenersOnDocument?.();
+        this.#cleanupListenersOnHTML();
         this.#removeResetStyle();
       }
     };
 
-    #resetStyle!: HTMLStyleElement;
-
     #appendResetStyle() {
       if (!this.#resetStyle) {
         this.#resetStyle = create('style');
-        this.#resetStyle.innerText =
-          '*:hover{cursor:default!important;user-select:none!important;touch-action:none!important;}';
+        this.#resetStyle.innerHTML = `
+          * {
+            cursor: default !important;
+            user-select: none !important;
+          }
+
+          *:hover {
+            touch-action: none !important;
+          }
+        `;
       }
 
       append(document.body, this.#resetStyle);

@@ -20,15 +20,9 @@ export function applyAttrs(
 }
 
 export const CSS_util = {
-  /**
-   * 10 -> '10px'
-   */
   px(value: string | number) {
     return `${value}px`;
   },
-  /**
-   * '10px' -> 10
-   */
   pv(value: string) {
     return parseInt(value, 10);
   },
@@ -46,7 +40,7 @@ export function on(
 ): void;
 export function on(type: any, listener: any, options: any = {}) {
   if (!options.target) {
-    options.target = document;
+    options.target = document.documentElement;
   }
   options.target.addEventListener(type, listener, options);
 }
@@ -63,7 +57,7 @@ export function off(
 ): void;
 export function off(type: any, listener: any, options: any = {}) {
   if (!options.target) {
-    options.target = document;
+    options.target = document.documentElement;
   }
   options.target.removeEventListener(type, listener, options);
 }
