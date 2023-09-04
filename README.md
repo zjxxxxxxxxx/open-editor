@@ -43,14 +43,8 @@ A devtools can help you quickly find the source code.
         <img width="80" height="80" src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" height="128">
       </picture>
     </a>
- <a target="_blank" href="https://qwik.builder.io">
-        <img width="80" height="80" src="./public/qwik.svg" />
-    </a>
     <a target="_blank" href="https://react.dev">
         <img width="80" height="80" src="./public/react.svg" />
-    </a>
-        <a target="_blank" href="https://svelte.dev">
-        <img width="80" height="80" src="./public/svelte.svg" />
     </a>
     <a target="_blank" href="https://vuejs.org">
         <img width="80" height="80" src="./public/vue.svg" />
@@ -105,25 +99,6 @@ A devtools can help you quickly find the source code.
       </th>
     </tr>
       <tr  >
-      <th align="left">vite + qwik</th>
-      <th>
-        <a
-          target="_black"
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          target="_black"
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-      <tr  >
       <th align="left">vite + react</th>
       <th>
         <a
@@ -137,25 +112,6 @@ A devtools can help you quickly find the source code.
         <a
           target="_black"
           href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-    <tr >
-      <th align="left">vite + svelte</th>
-      <th>
-        <a
-          target="_black"
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          target="_black"
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
         >
           StackBlitz
         </a>

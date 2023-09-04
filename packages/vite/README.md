@@ -74,25 +74,6 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 
 <table>
   <tbody>
-   <tr>
-      <th>qwik</th>
-      <th>
-        <a
-          target="_black"
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          target="_black"
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-qwik"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
     <tr>
       <th>react</th>
       <th>
@@ -107,25 +88,6 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
         <a
           target="_black"
           href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react"
-        >
-          StackBlitz
-        </a>
-      </th>
-    </tr>
-        <tr>
-      <th>svelte</th>
-      <th>
-        <a
-          target="_black"
-          href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
-        >
-          Source
-        </a>
-      </th>
-      <th>
-        <a
-          target="_black"
-          href="https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-svelte"
         >
           StackBlitz
         </a>

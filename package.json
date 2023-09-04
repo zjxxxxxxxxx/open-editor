@@ -32,8 +32,6 @@
     "vue-devtools",
     "react-devtools",
     "vite-plugin",
-    "svelte-devtools",
-    "qwik-devtools",
     "next-devtools"
   ],
   "devDependencies": {
