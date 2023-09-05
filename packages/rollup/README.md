@@ -62,16 +62,16 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
   </thead>
   <tbody>
     <tr>
-     <td>rootDir</td>
-     <td>string</td>
-     <td>process.cwd()</td>
-     <td>source rootDir path</td>
+      <td>rootDir</td>
+      <td>string</td>
+      <td>process.cwd()</td>
+      <td>source rootDir path</td>
     </tr>
     <tr>
-     <td>displayToggle</td>
-     <td>boolean</td>
-     <td>false</td>
-     <td>render the toggle into the browser</td>
+      <td>displayToggle</td>
+      <td>boolean</td>
+      <td>false</td>
+      <td>render the toggle into the browser</td>
     </tr>
   </tbody>
 </table>
@@ -79,9 +79,9 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 ## Playground
 
 <table>
-  <tbody> 
+  <tbody>
+    <tr></tr>
     <tr>
-     <tr>
       <th>react15</th>
       <th>
         <a
@@ -100,7 +100,6 @@ press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
         </a>
       </th>
     </tr>
-    <tr>
     <tr>
       <th>vue2</th>
       <th>

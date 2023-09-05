@@ -22,8 +22,7 @@ const extensions = [
 export default {
   input: 'src/main.ts',
   output: {
-    dir: 'dist',
-    entryFileNames: '[name].js',
+    file: 'dist/main.js',
     format: 'esm',
   },
   plugins: [

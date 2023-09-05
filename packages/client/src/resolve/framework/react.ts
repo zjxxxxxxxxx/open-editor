@@ -4,6 +4,20 @@ import { isFunc } from '@open-editor/shared';
 import { ElementSourceMeta } from '../resolveSource';
 
 export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
+  return resolveSourceFromFiber(fiber, deep);
+}
+
+export function resolveSourceFromReact15(
+  instance?: any | Fiber | null,
+  deep?: boolean,
+) {
+  if (instance?._debugOwner) {
+    return resolveSourceFromFiber(instance, deep);
+  }
+  return resolveSourceFromInstance(instance, deep);
+}
+
+export function resolveSourceFromFiber(fiber?: Fiber | null, deep?: boolean) {
   const tree: Partial<ElementSourceMeta>[] = [];
 
   while (fiber) {
@@ -11,7 +25,7 @@ export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
 
     const source = fiber._debugSource;
     if (source) {
-      while (!isReactComponent(owner)) {
+      while (!isFiberComponent(owner)) {
         if (!owner) {
           return tree;
         }
@@ -19,7 +33,7 @@ export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
       }
 
       tree.push({
-        name: getReactComponentName(owner as Fiber),
+        name: getFiberComponentName(owner as Fiber),
         file: source.fileName,
         line: source.lineNumber,
         column: (<any>source).columnNumber,
@@ -33,25 +47,25 @@ export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
     fiber = owner;
   }
 
+  function isFiberComponent(owner?: Fiber | null) {
+    if (owner && owner._debugSource) {
+      return isFunc(owner.type) || isFunc(owner.type.render);
+    }
+    return false;
+  }
+
+  function getFiberComponentName(owner: Fiber) {
+    const component = isFunc(owner.type)
+      ? owner.type
+      : // React.forwardRef(Component)
+        owner.type.render;
+    return component?.name || component?.displayName;
+  }
+
   return tree;
 }
 
-function isReactComponent(owner?: Fiber | null) {
-  if (owner && owner._debugSource) {
-    return isFunc(owner.type) || isFunc(owner.type.render);
-  }
-  return false;
-}
-
-function getReactComponentName(owner: Fiber) {
-  const component = isFunc(owner.type)
-    ? owner.type
-    : // React.forwardRef(Component)
-      owner.type.render;
-  return component?.name || component?.displayName;
-}
-
-export function resolveSourceFromReact15(
+export function resolveSourceFromInstance(
   instance?: any | null,
   deep?: boolean,
 ) {
@@ -62,7 +76,7 @@ export function resolveSourceFromReact15(
 
     const source = instance._currentElement._source;
     if (source) {
-      while (!isReact15Component(owner)) {
+      while (!isInstanceComponent(owner)) {
         if (!owner) {
           return tree;
         }
@@ -70,7 +84,7 @@ export function resolveSourceFromReact15(
       }
 
       tree.push({
-        name: getReact15ComponentName(owner),
+        name: getInstanceComponentName(owner),
         file: source.fileName,
         line: source.lineNumber,
         column: (<any>source).columnNumber,
@@ -84,23 +98,23 @@ export function resolveSourceFromReact15(
     instance = owner;
   }
 
-  return tree;
-}
-
-function isReact15Component(owner?: any | null) {
-  if (owner && owner._currentElement) {
-    return (
-      isFunc(owner._currentElement.type) ||
-      isFunc(owner._currentElement.type.render)
-    );
+  function isInstanceComponent(owner?: any | null) {
+    if (owner && owner._currentElement) {
+      return (
+        isFunc(owner._currentElement.type) ||
+        isFunc(owner._currentElement.type.render)
+      );
+    }
+    return false;
   }
-  return false;
-}
 
-function getReact15ComponentName(owner: any) {
-  const component = isFunc(owner._currentElement.type)
-    ? owner._currentElement.type
-    : // React.forwardRef(Component)
-      owner._currentElement.type.render;
-  return component?.name || component?.displayName;
+  function getInstanceComponentName(owner: any) {
+    const component = isFunc(owner._currentElement.type)
+      ? owner._currentElement.type
+      : // React.forwardRef(Component)
+        owner._currentElement.type.render;
+    return component?.name || component?.displayName;
+  }
+
+  return tree;
 }

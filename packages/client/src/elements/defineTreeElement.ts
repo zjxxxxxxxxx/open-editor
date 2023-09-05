@@ -10,13 +10,13 @@ export interface HTMLTreeElement extends HTMLElement {
 
 const css = `
 .root {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  z-index: 1000000 !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000000;
   display: none;
-  width: 100vw !important;
-  height: 100vh !important;
+  width: 100vw;
+  height: 100vh;
   backdrop-filter: blur(8px);
   background-color: var(--bg-opt);
 }
@@ -35,19 +35,20 @@ const css = `
   background-color: var(--bg-color);
 }
 
-.tree {
+.content {
+  padding-left: 0px;
   max-height: calc(100vh - 156px);
   white-space: nowrap;
   overflow: scroll;
   scrollbar-width: none;
 }
 
-.tree::-webkit-scrollbar {
-  display: none;
+.tree {
+  padding-left: 8px;
 }
 
-.sub-tree {
-  padding-left: 8px;
+.view::-webkit-scrollbar {
+  display: none;
 }
 
 .close {
@@ -75,16 +76,15 @@ const css = `
   border-color: var(--red);
 }
 
-.msg {
-  font-size: 14px;
-  font-weight: 200;
+.tag:hover > *,
+.tag:hover ~ .tag > * {
+  opacity: 1;
   text-decoration: underline;
 }
 
-.tag:hover > *,
-.tag:hover + .tag > *,
-.tag:hover ~ .tag > * {
-  opacity: 1;
+.msg {
+  font-size: 14px;
+  font-weight: 200;
   text-decoration: underline;
 }
 
@@ -187,7 +187,7 @@ export function defineTreeElement() {
           } in </span> &lt;Component Tree&gt;
         </div>
         <span class="close">${closeIcon}</span>
-        <div class="tree">
+        <div class="tree content">
           ${this.#buildTree(source.tree)}
         </div>
       `;
@@ -217,7 +217,7 @@ export function defineTreeElement() {
       let tags = this.#createTag(meta, true);
       if (subTree) {
         tags += `
-          <div class="sub-tree">
+          <div class="tree">
             ${subTree}
           </div>  
           ${this.#createTag(meta)} 

@@ -1,60 +1,74 @@
-<h1 align="center">open-editor</h1>
+<h1 align="center">Open Editor</h1>
 
 A devtools can help you quickly find the source code.
 
-1. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then 🖱 click the HTML element you wish to inspect.
-
 ![image](./public//demo1.gif)
 
-2. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then ⌨️ <kbd>command ⌘</kbd> + 🖱 click the HTML element to show tree. then 🖱 click the subtree you wish to inspect.
+## Features
 
-![image](./public//demo2.gif)
+- Support composite key.
+- Support component tree.
+- Support Rollup & Vite & Webpack.
+- Support React & Next & Vue.
+- Support non-inductive inject client runtime.
 
-## Install & Usage
-
-- [webpack-plugin](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack)
-- [vite-plugin](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)
-- [rollup-plugin](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)
-
-<h2 align="center">Builder</h2>
+## Support Builder
 
 <div align="center">
-     <a target="_blank" href="https://rollupjs.org">
-        <img width="80" height="80" src="https://rollupjs.org/rollup-logo.svg" />
-    </a>
-     <a target="_blank" href="https://vitejs.dev">
-        <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
-    </a>
-    <a target="_blank" href="https://webpack.js.org">
-        <img width="80" height="80" src="https://webpack.js.org/assets/icon-square-big.svg" />
-    </a>
+  <a target="_blank" href="https://rollupjs.org">
+    <img width="80" height="80" src="https://rollupjs.org/rollup-logo.svg" />
+  </a>
+  <a target="_blank" href="https://vitejs.dev">
+    <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
+  </a>
+  <a target="_blank" href="https://webpack.js.org">
+    <img
+      width="80"
+      height="80"
+      src="https://webpack.js.org/assets/icon-square-big.svg"
+    />
+  </a>
 </div>
 
-> Version for:
->
-> - Webpack4+
+- Webpack4+
 
-<h2 align="center">Framework</h2>
+## Support Framework
 
 <div align="center">
-     <a target="_blank" href="https://nextjs.org">
-      <picture>
-        <source width="80" height="80" media="(prefers-color-scheme: dark)" srcset="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png">
-        <img width="80" height="80" src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png" height="128">
-      </picture>
-    </a>
-    <a target="_blank" href="https://react.dev">
-        <img width="80" height="80" src="./public/react.svg" />
-    </a>
-    <a target="_blank" href="https://vuejs.org">
-        <img width="80" height="80" src="./public/vue.svg" />
-    </a>
+  <a target="_blank" href="https://nextjs.org">
+    <picture>
+      <source
+        width="80"
+        height="80"
+        media="(prefers-color-scheme: dark)"
+        srcset="
+          https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png
+        "
+      />
+      <img
+        width="80"
+        height="80"
+        src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
+        height="128"
+      />
+    </picture>
+  </a>
+  <a target="_blank" href="https://react.dev">
+    <img width="80" height="80" src="./public/react.svg" />
+  </a>
+  <a target="_blank" href="https://vuejs.org">
+    <img width="80" height="80" src="./public/vue.svg" />
+  </a>
 </div>
 
-> Version for:
->
-> - React15+
-> - Vue2+
+- React15+
+- Vue2+
+
+## Packages
+
+- [@open-editor/rollup](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)
+- [@open-editor/vite](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)
+- [@open-editor/webpack](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack)
 
 ## Playground
 
@@ -62,7 +76,7 @@ A devtools can help you quickly find the source code.
   <tbody>
     <tr>
       <th align="left">rollup + react15</th>
-      <th  >
+      <th>
         <a
           target="_black"
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15"
@@ -81,7 +95,7 @@ A devtools can help you quickly find the source code.
     </tr>
     <tr>
       <th align="left">rollup + vue2</th>
-      <th  >
+      <th>
         <a
           target="_black"
           href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2"
@@ -98,7 +112,7 @@ A devtools can help you quickly find the source code.
         </a>
       </th>
     </tr>
-      <tr  >
+    <tr>
       <th align="left">vite + react</th>
       <th>
         <a
@@ -136,8 +150,8 @@ A devtools can help you quickly find the source code.
         </a>
       </th>
     </tr>
+    <tr></tr>
     <tr>
-        <tr>
       <th align="left">webpack + next</th>
       <th>
         <a
