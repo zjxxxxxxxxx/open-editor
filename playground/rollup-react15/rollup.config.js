@@ -12,9 +12,13 @@ const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
 export default {
   input: 'src/index.tsx',
   output: {
-    dir: 'dist',
-    entryFileNames: '[name].js',
+    file: 'dist/index.js',
     format: 'esm',
+  },
+  moduleContext(id) {
+    if (id.endsWith('.tsx')) {
+      return 'window';
+    }
   },
   plugins: [
     commonjs(),
