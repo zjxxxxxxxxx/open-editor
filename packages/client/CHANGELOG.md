@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.0.12
+
+### Patch Changes
+
+- [#64](https://github.com/zjxxxxxxxxx/open-editor/pull/64) [`bbb08f9`](https://github.com/zjxxxxxxxxx/open-editor/commit/bbb08f9a9e892bbcb52dce14ba651a8bce0a8395) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix react16 resolve fail
+
+- [#63](https://github.com/zjxxxxxxxxx/open-editor/pull/63) [`4c78c59`](https://github.com/zjxxxxxxxxx/open-editor/commit/4c78c59aece25b9ba563530b36a6186a16f576b8) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - remove svelte and qwik
+
+- [#61](https://github.com/zjxxxxxxxxx/open-editor/pull/61) [`c7dc75f`](https://github.com/zjxxxxxxxxx/open-editor/commit/c7dc75fa96c09dbfe480f0abf7446593b22eb2ee) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix event capture
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.12
+
 ## 0.0.11
 
 ### Patch Changes
