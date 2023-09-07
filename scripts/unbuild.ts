@@ -64,37 +64,37 @@ function buildBundles(
     }
   }
 
-  if (!bundles.length) return;
-
-  return {
-    input,
-    output: bundles,
-    external(source) {
-      return source.startsWith('@') || basename(source) === source;
-    },
-    plugins: [
-      nodeResolve(),
-      commonjs(),
-      esbuild({
-        target: __TARGET__,
-        minify: !__DEV__,
-      }),
-    ],
-  };
+  if (bundles.length) {
+    return {
+      input,
+      output: bundles,
+      external(source) {
+        return source.startsWith('@') || basename(source) === source;
+      },
+      plugins: [
+        nodeResolve(),
+        commonjs(),
+        esbuild({
+          target: __TARGET__,
+          minify: !__DEV__,
+        }),
+      ],
+    };
+  }
 }
 
 function buildDTS(input: string, output: BuildOutput): RollupOptions | void {
-  if (typeof output === 'string' || !output.types) return;
-
-  return {
-    input,
-    output: {
-      file: output.types,
-      format: 'esm',
-      sourcemap: false,
-    },
-    plugins: [dts()],
-  };
+  if (typeof output === 'object' && output.types) {
+    return {
+      input,
+      output: {
+        file: output.types,
+        format: 'esm',
+        sourcemap: false,
+      },
+      plugins: [dts()],
+    };
+  }
 }
 
 function normalizeInput(input: string) {
