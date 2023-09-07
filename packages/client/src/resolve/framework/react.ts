@@ -11,7 +11,7 @@ export function resolveSourceFromReact15(
   instance?: any | Fiber | null,
   deep?: boolean,
 ) {
-  if (instance?._debugOwner) {
+  if (instance && '_debugOwner' in instance) {
     return resolveSourceFromFiber(instance, deep);
   }
   return resolveSourceFromInstance(instance, deep);

@@ -1,4 +1,4 @@
-import { on, off } from './document';
+import { on, off, applyAttrs } from './document';
 import { isInternalElement, isValidElement } from './element';
 
 export interface SetupHandlersOptions {
@@ -23,7 +23,7 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     on('mouseup', onSilence, { capture: true });
 
     on('pointercancel', onSilence, { capture: true });
-    on('pointerdown', onSilence, { capture: true });
+    on('pointerdown', onPointerDown, { capture: true });
     on('pointerenter', onSilence, { capture: true });
     on('pointerleave', onPointerLeave, { capture: true });
     on('pointermove', onSilence, { capture: true });
@@ -52,7 +52,7 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     off('mouseup', onSilence, { capture: true });
 
     off('pointercancel', onSilence, { capture: true });
-    off('pointerdown', onSilence, { capture: true });
+    off('pointerdown', onPointerDown, { capture: true });
     off('pointerenter', onSilence, { capture: true });
     off('pointerleave', onPointerLeave, { capture: true });
     off('pointermove', onSilence, { capture: true });
@@ -69,16 +69,20 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     off('contextmenu', onContextMenu, { capture: true });
   }
 
+  function onPointerDown(event: PointerEvent) {
+    onSilence(event);
+    onUnlockDisabled(event);
+  }
+
   function onClick(event: PointerEvent) {
     onSilence(event);
+    onRestoreDisabled(event);
 
     const element = <HTMLElement>event.target;
     if (isValidElement(element)) {
       if (event.metaKey) {
-        onOpenTree(element);
-        return;
+        return onOpenTree(element);
       }
-
       onOpenEditor(element);
     }
 
@@ -97,6 +101,7 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
 
   function onPointerLeave(event: PointerEvent) {
     onSilence(event);
+    onRestoreDisabled(event);
 
     if (event.pointerType === 'mouse') {
       const element = <HTMLElement>event.target;
@@ -108,7 +113,6 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
 
   function onKeyDown(event: KeyboardEvent) {
     onSilence(event, true);
-
     // esc exit.
     if (event.keyCode === 27) {
       onExitInspect();
@@ -117,25 +121,43 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
 
   function onContextMenu(event: Event) {
     onSilence(event, true);
-
     // right-click exit.
     onExitInspect();
   }
 
-  function onSilence(event: Event, all?: boolean) {
-    const element = <HTMLElement>event.target;
-    if (all || !isInternalElement(element)) {
-      // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
-      // See https://www.chromestatus.com/feature/5093566007214080.
-      if (!(<any>event).type.startsWith('touch')) {
-        event.preventDefault?.();
-      }
-
-      event.stopPropagation?.();
-      event.stopImmediatePropagation?.();
-    }
-  }
-
   registerListenersOnHTML();
   return removeEventListenersOnHTML;
+}
+
+function onSilence(event: Event, all?: boolean) {
+  const element = <HTMLElement>event.target;
+  if (all || !isInternalElement(element)) {
+    // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
+    // See https://www.chromestatus.com/feature/5093566007214080.
+    if (!(<any>event).type.startsWith('touch')) {
+      event.preventDefault?.();
+    }
+    event.stopPropagation?.();
+    event.stopImmediatePropagation?.();
+  }
+}
+
+function onUnlockDisabled(event: Event) {
+  const element = <HTMLInputElement>event.target;
+  if (isValidElement(element) && element.disabled) {
+    element.disabled = false;
+    applyAttrs(element, {
+      __disabled__: '',
+    });
+  }
+}
+
+function onRestoreDisabled(event: Event) {
+  const element = <HTMLInputElement>event.target;
+  if (isValidElement(element) && element.getAttribute('__disabled__') != null) {
+    element.disabled = true;
+    applyAttrs(element, {
+      __disabled__: null,
+    });
+  }
 }
