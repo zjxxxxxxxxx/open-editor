@@ -4,7 +4,7 @@ import {
   getComputedStyles,
 } from '../utils/getComputedStyles';
 import { applyStyle, CSS_util, create, append } from '../utils/document';
-import { Colors, InternalElements } from '../constants';
+import { Colors, InternalElements, ZIndex } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
@@ -31,7 +31,7 @@ export function defineOverlayElement() {
       this.#posttionRect = create('div');
       applyStyle(this.#posttionRect, {
         position: 'fixed',
-        zIndex: '100000',
+        zIndex: ZIndex.overlay,
         display: 'none',
         pointerEvents: 'none',
       });

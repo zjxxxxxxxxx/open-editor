@@ -1,5 +1,5 @@
 import { on, off, applyStyle, create, append } from '../utils/document';
-import { Colors, InternalElements } from '../constants';
+import { Colors, InternalElements, ZIndex } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
@@ -8,7 +8,7 @@ const CSS = `
   position: fixed;
   top: 0px;
   right: 0px;
-  z-index: 1000001;
+  z-index: ${ZIndex.toggle};
   padding: 6px;
 }
 

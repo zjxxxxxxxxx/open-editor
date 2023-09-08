@@ -9,7 +9,12 @@ export interface SetupHandlersOptions {
 }
 
 export function setupListenersOnHTML(options: SetupHandlersOptions) {
-  const { onChangeElement, onOpenEditor, onOpenTree, onExitInspect } = options;
+  const onChangeElement = wrapHoldElementRestoreDisabled(
+    options.onChangeElement,
+  );
+  const onOpenEditor = wrapHoldElementRestoreDisabled(options.onOpenEditor);
+  const onOpenTree = wrapHoldElementRestoreDisabled(options.onOpenTree);
+  const onExitInspect = wrapHoldElementRestoreDisabled(options.onExitInspect);
 
   function registerListenersOnHTML() {
     on('click', onClick, { capture: true });
@@ -69,30 +74,22 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     off('contextmenu', onContextMenu, { capture: true });
   }
 
-  let holdElement: HTMLElement;
-
   function onPointerDown(event: PointerEvent) {
     onSilence(event);
-    onUnlockDisabled(event);
-
-    const element = <HTMLElement>event.target;
-    if (isValidElement(element)) {
-      holdElement = element;
-    }
+    onHoldElementUnlockDisabled(event);
   }
 
   function onClick(event: PointerEvent) {
     onSilence(event);
-    onRestoreDisabled(event);
 
     const element = <HTMLElement>event.target;
-    if (isValidElement(element) && element === holdElement) {
+    if (element === holdElement) {
       if (event.metaKey) {
-        return onOpenTree(element);
+        onOpenTree(element);
+      } else {
+        onOpenEditor(element);
+        onExitInspect();
       }
-
-      onOpenEditor(element);
-      onExitInspect();
     }
   }
 
@@ -106,10 +103,9 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
 
   function onPointerLeave(event: PointerEvent) {
     onSilence(event);
-    onRestoreDisabled(event);
 
+    const element = <HTMLElement>event.target;
     if (event.pointerType === 'mouse') {
-      const element = <HTMLElement>event.target;
       if (!isValidElement(element)) {
         onChangeElement();
       }
@@ -120,15 +116,13 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     onSilence(event, true);
     // esc exit.
     if (event.keyCode === 27) {
-      onRestoreDisabled(event);
       onExitInspect();
     }
   }
 
   // right-click exit.
-  function onContextMenu(event: Event) {
+  function onContextMenu(event: MouseEvent) {
     onSilence(event, true);
-    onRestoreDisabled(event);
     onExitInspect();
   }
 
@@ -150,23 +144,38 @@ function onSilence(event: Event, all?: boolean) {
 }
 
 const unlockID = '__unlock_disabled__';
+let holdElement: HTMLInputElement | HTMLButtonElement | null = null;
 
-function onUnlockDisabled(event: Event) {
+function onHoldElementUnlockDisabled(event: Event) {
   const element = <HTMLButtonElement>event.target;
-  if (isValidElement(element) && element.disabled) {
-    element.disabled = false;
-    applyAttrs(element, {
-      [unlockID]: '',
-    });
+  if (isValidElement(element)) {
+    if (element.disabled) {
+      element.disabled = false;
+      applyAttrs(element, {
+        [unlockID]: '',
+      });
+    }
+    holdElement = element;
   }
 }
 
-function onRestoreDisabled(event: Event) {
-  const element = <HTMLButtonElement>event.target;
-  if (isValidElement(element) && element.getAttribute(unlockID) != null) {
-    element.disabled = true;
-    applyAttrs(element, {
-      [unlockID]: null,
-    });
+function onHoldElementRestoreDisabled() {
+  if (holdElement) {
+    if (holdElement.getAttribute(unlockID) != null) {
+      holdElement.disabled = true;
+      applyAttrs(holdElement, {
+        [unlockID]: null,
+      });
+    }
+    holdElement = null;
   }
+}
+
+function wrapHoldElementRestoreDisabled<T extends (...args: any[]) => any>(
+  fn: T,
+) {
+  return (...args: Parameters<T>) => {
+    onHoldElementRestoreDisabled();
+    return fn(...args);
+  };
 }
