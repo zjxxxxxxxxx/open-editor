@@ -11,6 +11,15 @@ import { HTMLToggleElement } from './defineToggleElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
+const CSS = `
+* {
+  box-sizing: content-box;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+`;
+
 export function defineInspectElement() {
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #overlay: HTMLOverlayElement;
@@ -37,7 +46,7 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${Theme}</style>`;
+      shadow.innerHTML = `<style>${Theme}${CSS}</style>`;
 
       this.#overlay = create<HTMLOverlayElement>(
         InternalElements.HTML_OVERLAY_ELEMENT,
