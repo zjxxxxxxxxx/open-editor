@@ -3,7 +3,7 @@ import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
-const css = `
+const CSS = `
 .container {
   position: fixed;
   top: 0px;
@@ -43,7 +43,7 @@ export function defineToggleElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${css}</style>`;
+      shadow.innerHTML = `<style>${CSS}</style>`;
 
       this.#container = create('div');
       this.#container.classList.add('container');

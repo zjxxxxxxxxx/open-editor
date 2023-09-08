@@ -69,9 +69,16 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     off('contextmenu', onContextMenu, { capture: true });
   }
 
+  let holdElement: HTMLElement;
+
   function onPointerDown(event: PointerEvent) {
     onSilence(event);
     onUnlockDisabled(event);
+
+    const element = <HTMLElement>event.target;
+    if (isValidElement(element)) {
+      holdElement = element;
+    }
   }
 
   function onClick(event: PointerEvent) {
@@ -79,14 +86,12 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     onRestoreDisabled(event);
 
     const element = <HTMLElement>event.target;
-    if (isValidElement(element)) {
+    if (isValidElement(element) && element === holdElement) {
       if (event.metaKey) {
         return onOpenTree(element);
       }
-      onOpenEditor(element);
-    }
 
-    if (!isInternalElement(element)) {
+      onOpenEditor(element);
       onExitInspect();
     }
   }
@@ -115,13 +120,15 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     onSilence(event, true);
     // esc exit.
     if (event.keyCode === 27) {
+      onRestoreDisabled(event);
       onExitInspect();
     }
   }
 
+  // right-click exit.
   function onContextMenu(event: Event) {
     onSilence(event, true);
-    // right-click exit.
+    onRestoreDisabled(event);
     onExitInspect();
   }
 
@@ -142,22 +149,24 @@ function onSilence(event: Event, all?: boolean) {
   }
 }
 
+const unlockID = '__unlock_disabled__';
+
 function onUnlockDisabled(event: Event) {
-  const element = <HTMLInputElement>event.target;
+  const element = <HTMLButtonElement>event.target;
   if (isValidElement(element) && element.disabled) {
     element.disabled = false;
     applyAttrs(element, {
-      __disabled__: '',
+      [unlockID]: '',
     });
   }
 }
 
 function onRestoreDisabled(event: Event) {
-  const element = <HTMLInputElement>event.target;
-  if (isValidElement(element) && element.getAttribute('__disabled__') != null) {
+  const element = <HTMLButtonElement>event.target;
+  if (isValidElement(element) && element.getAttribute(unlockID) != null) {
     element.disabled = true;
     applyAttrs(element, {
-      __disabled__: null,
+      [unlockID]: null,
     });
   }
 }
