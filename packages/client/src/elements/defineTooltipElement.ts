@@ -15,7 +15,7 @@ export interface HTMLTooltipElement extends HTMLElement {
   update(activeElement?: HTMLElement, style?: ComputedStyle): void;
 }
 
-const css = `
+const CSS = `
 .container {
   position: fixed;
   z-index: 1000002;
@@ -60,7 +60,7 @@ export function defineTooltipElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${css}</style>`;
+      shadow.innerHTML = `<style>${CSS}</style>`;
 
       this.#container = create('div');
       this.#container.classList.add('container');
