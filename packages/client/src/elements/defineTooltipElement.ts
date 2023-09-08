@@ -6,7 +6,7 @@ import {
   append,
   getRect,
 } from '../utils/document';
-import { Colors, InternalElements } from '../constants';
+import { Colors, InternalElements, ZIndex } from '../constants';
 import { resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
@@ -18,7 +18,7 @@ export interface HTMLTooltipElement extends HTMLElement {
 const CSS = `
 .container {
   position: fixed;
-  z-index: 1000002;
+  z-index: ${ZIndex.tooltip};
   padding: 10px 20px;
   display: none;
   max-width: calc(100% - 56px);

@@ -7,13 +7,6 @@ export const InternalElements = <const>{
 };
 
 export const Theme = `
-* {
-  box-sizing: content-box;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-}
-
 :host {
   --black: #15181e;
   --white: #ffffff;
@@ -63,6 +56,13 @@ export const Colors = <const>{
   TOOLTIP_COMPONENT_COLOR: 'var(--green)',
   TOOLTIP_ELEMENT_COLOR: 'var(--element)',
   TOOLTIP_FILE_COLOR: 'var(--cyan)',
+};
+
+export const ZIndex = <const>{
+  overlay: '1000000',
+  tooltip: '1000000',
+  tree: '1000001',
+  toggle: '1000002',
 };
 
 export const CLIENT = typeof window !== 'undefined';

@@ -1,7 +1,7 @@
 import { append, applyStyle, create, off, on } from '../utils/document';
 import { openEditor } from '../utils/openEditor';
 import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
-import { InternalElements } from '../constants';
+import { InternalElements, ZIndex } from '../constants';
 
 export interface HTMLTreeElement extends HTMLElement {
   open(element: HTMLElement): void;
@@ -13,7 +13,7 @@ const CSS = `
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000000;
+  z-index: ${ZIndex.tree};
   display: none;
   width: 100vw;
   height: 100vh;
@@ -102,7 +102,7 @@ const CSS = `
 
 .name,
 .file {
-  opacity: 0.66;
+  opacity: 0.8;
 }
 `;
 
