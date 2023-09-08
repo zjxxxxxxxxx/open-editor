@@ -2,6 +2,7 @@ import type { Fiber } from 'react-reconciler';
 import { isFunc } from '@open-editor/shared';
 
 import { ElementSourceMeta } from '../resolveSource';
+import { isValidFileName } from '../util';
 
 export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
   return resolveSourceFromFiber(fiber, deep);
@@ -24,7 +25,7 @@ export function resolveSourceFromFiber(fiber?: Fiber | null, deep?: boolean) {
     let owner = fiber._debugOwner;
 
     const source = fiber._debugSource;
-    if (source) {
+    if (source && isValidFileName(source.fileName)) {
       while (!isFiberComponent(owner)) {
         if (!owner) {
           return tree;
@@ -75,7 +76,7 @@ export function resolveSourceFromInstance(
     let owner = instance._currentElement._owner;
 
     const source = instance._currentElement._source;
-    if (source) {
+    if (source && isValidFileName(source.fileName)) {
       while (!isInstanceComponent(owner)) {
         if (!owner) {
           return tree;

@@ -17,7 +17,11 @@ export function getComponentNameByFile(file = '', suffix = '') {
 
 export function isValidFileName(fileName?: string) {
   if (fileName) {
-    return !fileName.startsWith('/home/runner/');
+    fileName = ensureFileName(fileName);
+    return (
+      !fileName.startsWith('/home/runner/') &&
+      !fileName.startsWith('/node_modules/')
+    );
   }
   return false;
 }

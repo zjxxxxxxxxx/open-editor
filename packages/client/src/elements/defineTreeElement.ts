@@ -8,7 +8,7 @@ export interface HTMLTreeElement extends HTMLElement {
   close(): void;
 }
 
-const css = `
+const CSS = `
 .root {
   position: fixed;
   top: 0;
@@ -102,7 +102,7 @@ const css = `
 
 .name,
 .file {
-  opacity: 0.5;
+  opacity: 0.66;
 }
 `;
 
@@ -121,7 +121,7 @@ export function defineTreeElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${css}</style>`;
+      shadow.innerHTML = `<style>${CSS}</style>`;
 
       this.#root = create('div');
       this.#root.classList.add('root');
