@@ -86,6 +86,7 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     if (element === holdElement) {
       if (event.metaKey) {
         onOpenTree(element);
+        onChangeElement();
       } else {
         onOpenEditor(element);
         onExitInspect();
@@ -97,8 +98,8 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     onSilence(event);
 
     const element = <HTMLElement>event.target;
-    const validElement = isValidElement(element) ? element : undefined;
-    onChangeElement(validElement);
+    const changedElement = isValidElement(element) ? element : undefined;
+    onChangeElement(changedElement);
   }
 
   function onPointerLeave(event: PointerEvent) {
@@ -112,10 +113,11 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     }
   }
 
+  // esc exit.
   function onKeyDown(event: KeyboardEvent) {
     onSilence(event, true);
-    // esc exit.
-    if (event.keyCode === 27) {
+
+    if (event.key === 'Escape') {
       onExitInspect();
     }
   }

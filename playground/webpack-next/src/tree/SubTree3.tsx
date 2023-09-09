@@ -1,3 +1,3 @@
 export default function SubTree3() {
-  return <button>test tree</button>;
+  return <button disabled>test tree</button>;
 }

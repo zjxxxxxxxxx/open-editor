@@ -160,11 +160,7 @@ export function defineInspectElement() {
           * {
             cursor: default !important;
             user-select: none !important;
-          }
-
-          *:hover {
-            touch-action: none !important;
-          }
+          } 
         `;
       }
 

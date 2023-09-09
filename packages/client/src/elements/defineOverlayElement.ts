@@ -3,7 +3,14 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { applyStyle, CSS_util, create, append } from '../utils/document';
+import {
+  applyStyle,
+  CSS_util,
+  create,
+  append,
+  on,
+  off,
+} from '../utils/document';
 import { Colors, InternalElements, ZIndex } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -22,6 +29,7 @@ export function defineOverlayElement() {
     #borderRect: HTMLElement;
     #paddingRect: HTMLElement;
     #contentRect: HTMLElement;
+    #activeElement?: HTMLElement;
 
     constructor() {
       super();
@@ -73,6 +81,10 @@ export function defineOverlayElement() {
       applyStyle(this.#posttionRect, {
         display: 'block',
       });
+      on('scroll', this.#update_RAF, {
+        target: window,
+        capture: true,
+      });
       this.#tooltip.open();
     };
 
@@ -80,13 +92,34 @@ export function defineOverlayElement() {
       applyStyle(this.#posttionRect, {
         display: 'none',
       });
+      off('scroll', this.#update_RAF, {
+        target: window,
+        capture: true,
+      });
       this.#tooltip.close();
     };
 
     public update = (element: HTMLElement) => {
-      const styles = element ? getComputedStyles(element) : emptyComputedStyles;
+      this.#activeElement = element;
+      this.#update();
+    };
+
+    #update = () => {
+      const styles = this.#activeElement
+        ? getComputedStyles(this.#activeElement)
+        : emptyComputedStyles;
       this.#updateStyles(styles);
-      this.#tooltip.update(element, styles.posttion);
+      this.#tooltip.update(this.#activeElement, styles.posttion);
+    };
+
+    #last_RAF = 0;
+    #update_RAF = () => {
+      cancelAnimationFrame(this.#last_RAF);
+      this.#last_RAF = requestAnimationFrame(() => {
+        if (this.#activeElement) {
+          this.#update();
+        }
+      });
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {

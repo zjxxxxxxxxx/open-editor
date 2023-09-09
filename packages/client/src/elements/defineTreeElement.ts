@@ -43,12 +43,12 @@ const CSS = `
   scrollbar-width: none;
 }
 
-.tree {
-  padding-left: 8px;
+.content::-webkit-scrollbar {
+  display: none;
 }
 
-.view::-webkit-scrollbar {
-  display: none;
+.tree {
+  padding-left: 8px;
 }
 
 .close {
@@ -90,13 +90,12 @@ const CSS = `
 
 .name {
   font-size: 14px;
-  font-weight: 300;
   color: var(--green);
 }
 
 .file {
   font-size: 12px;
-  font-weight: 200;
+  font-weight: 300;
   color: var(--cyan);
 }
 

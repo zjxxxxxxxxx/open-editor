@@ -15,12 +15,12 @@
     "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",
-    "release": "run-s build changeset-p",
+    "release": "run-s build changeset:publish",
     "test": "turbo run test",
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
-    "versions": "run-s changeset-v format",
-    "changeset-v": "changeset version",
-    "changeset-p": "changeset publish"
+    "versions": "run-s changeset:version format",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish"
   },
   "engines": {
     "node": ">=16.19.1"
