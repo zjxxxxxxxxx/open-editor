@@ -5,5 +5,5 @@ export default Vue.extend({});
 </script>
 
 <template>
-  <button>test tree</button>
+  <button disabled>test tree</button>
 </template>
