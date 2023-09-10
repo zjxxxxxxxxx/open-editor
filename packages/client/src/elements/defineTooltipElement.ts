@@ -4,9 +4,9 @@ import {
   CSS_util,
   create,
   append,
-  getRect,
+  getDOMRect,
 } from '../utils/document';
-import { Colors, InternalElements, ZIndex } from '../constants';
+import { Colors, InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
@@ -16,9 +16,9 @@ export interface HTMLTooltipElement extends HTMLElement {
 }
 
 const CSS = `
-.container {
+.root {
   position: fixed;
-  z-index: ${ZIndex.tooltip};
+  z-index: var(--z-index-tooltip);
   padding: 10px 20px;
   display: none;
   max-width: calc(100% - 56px);
@@ -28,17 +28,14 @@ const CSS = `
   border: 2px solid transparent;
   pointer-events: none;
 }
-
 .element {
   color: var(--element);
   font-size: 14px;
 }
-
 .component {
   font-size: 16px;
   font-weight: 500;
 }
-
 .file {
   font-size: 14px;
   font-weight: 200;
@@ -49,7 +46,7 @@ const CSS = `
 
 export function defineTooltipElement() {
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
-    #container: HTMLElement;
+    #root: HTMLElement;
     #element: HTMLElement;
     #component: HTMLElement;
     #file: HTMLElement;
@@ -62,8 +59,8 @@ export function defineTooltipElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#container = create('div');
-      this.#container.classList.add('container');
+      this.#root = create('div');
+      this.#root.classList.add('root');
 
       this.#element = create('span');
       this.#element.classList.add('element');
@@ -74,28 +71,28 @@ export function defineTooltipElement() {
       this.#file = create('div');
       this.#file.classList.add('file');
 
-      append(this.#container, this.#element);
-      append(this.#container, this.#component);
-      append(this.#container, this.#file);
-      append(shadow, this.#container);
+      append(this.#root, this.#element);
+      append(this.#root, this.#component);
+      append(this.#root, this.#file);
+      append(shadow, this.#root);
     }
 
     public open = () => {
-      applyStyle(this.#container, {
+      applyStyle(this.#root, {
         display: 'inline-block',
         visibility: 'hidden',
       });
     };
 
     public close = () => {
-      applyStyle(this.#container, {
+      applyStyle(this.#root, {
         display: 'none',
       });
     };
 
     public update = (activeElement?: HTMLElement, style?: ComputedStyle) => {
       // before hidden
-      applyStyle(this.#container, {
+      applyStyle(this.#root, {
         visibility: 'hidden',
         top: CSS_util.px(this.#offset),
         left: CSS_util.px(this.#offset),
@@ -103,9 +100,9 @@ export function defineTooltipElement() {
 
       if (activeElement && style) {
         this.#updateText(activeElement);
-        this.#updatePosition(style);
+        this.#updatePositionStyle(style);
         // after visible
-        applyStyle(this.#container, {
+        applyStyle(this.#root, {
           visibility: 'visible',
         });
       }
@@ -119,7 +116,7 @@ export function defineTooltipElement() {
       this.#file.innerText = meta?.file ?? 'filename not found 😭.';
 
       if (meta) {
-        applyStyle(this.#container, {
+        applyStyle(this.#root, {
           borderColor: Colors.TOOLTIP_BORDER_COLOR,
         });
         applyStyle(this.#component, {
@@ -129,7 +126,7 @@ export function defineTooltipElement() {
           color: Colors.TOOLTIP_FILE_COLOR,
         });
       } else {
-        applyStyle(this.#container, {
+        applyStyle(this.#root, {
           borderColor: Colors.ERROR,
         });
         applyStyle(this.#component, {
@@ -141,36 +138,35 @@ export function defineTooltipElement() {
       }
     }
 
-    #updatePosition(style: ComputedStyle) {
+    #updatePositionStyle(style: ComputedStyle) {
       const {
         // window width excluding the scrollbar width
-        clientWidth: windowWidth,
+        clientWidth: winW,
         // window height excluding the scrollbar height
-        clientHeight: windowHeight,
+        clientHeight: winH,
       } = document.documentElement;
-      const { width: containerWidth, height: containerHeight } = getRect(
-        this.#container,
-      );
+      const { width: rootW, height: rootH } = getDOMRect(this.#root);
+      const positionStyle: Partial<CSSStyleDeclaration> = {};
 
       // on top
-      if (style.top > containerHeight + this.#offset) {
-        applyStyle(this.#container, {
-          top: CSS_util.px(style.top - containerHeight - this.#offset),
-        });
+      if (style.top > rootW + this.#offset) {
+        positionStyle.top = CSS_util.px(style.top - rootH - this.#offset);
       }
       // on bottom
       else {
-        const maxTop = windowHeight - containerHeight - this.#offset;
-        applyStyle(this.#container, {
-          top: CSS_util.px(Math.min(style.bottom + this.#offset, maxTop)),
-        });
+        const maxTop = winH - rootH - this.#offset;
+        positionStyle.top = CSS_util.px(
+          Math.min(style.bottom + this.#offset, maxTop),
+        );
       }
 
       const minLeft = this.#offset;
-      const maxLeft = windowWidth - containerWidth - this.#offset;
-      applyStyle(this.#container, {
-        left: CSS_util.px(Math.max(Math.min(style.left, maxLeft), minLeft)),
-      });
+      const maxLeft = winW - rootW - this.#offset;
+      positionStyle.left = CSS_util.px(
+        Math.max(Math.min(style.left, maxLeft), minLeft),
+      );
+
+      applyStyle(this.#root, positionStyle);
     }
   }
 
