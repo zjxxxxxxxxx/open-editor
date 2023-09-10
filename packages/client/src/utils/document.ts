@@ -78,7 +78,7 @@ export function append(parent: HTMLElement | ShadowRoot, child: HTMLElement) {
   return parent.appendChild(child);
 }
 
-export function getRect(target: Element): Omit<DOMRect, 'toJSON'> {
+export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
 
   const zoom = Number(target.computedStyleMap().get('zoom'));

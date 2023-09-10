@@ -24,6 +24,11 @@ export const Theme = `
   --toggle: var(--black);
   --toggle-bg: #ffffffcc;
   --bg-color: var(--white);
+
+  --z-index-overlay: 1000000;
+  --z-index-tooltip: 1000000;
+  --z-index-tree: 1000001;
+  --z-index-toggle: 1000002;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,31 +43,15 @@ export const Theme = `
 `;
 
 export const Colors = <const>{
-  SUCCESS: 'var(--green)',
   ERROR: 'var(--red)',
-
-  OVERLAY_MARGIN_RECT: 'var(--overlay-margin)',
-  OVERLAY_BORDER_RECT: 'var(--overlay-border)',
-  OVERLAY_PADDING_RECT: 'var(--overlay-padding)',
-  OVERLAY_CONTENT_RECT: 'var(--overlay-content)',
 
   TOGGLE_COLOR: 'var(--toggle)',
   TOGGLE_ACTIVE_COLOR: 'var(--green)',
   TOGGLE_ACTIVE_SHADOW: 'var(--cyan)',
-  TOGGLE_BG_COLOR: 'var(--toggle-bg)',
 
-  TOOLTIP_BG_COLOR: 'var(--bg-color)',
   TOOLTIP_BORDER_COLOR: 'var(--green)',
   TOOLTIP_COMPONENT_COLOR: 'var(--green)',
-  TOOLTIP_ELEMENT_COLOR: 'var(--element)',
   TOOLTIP_FILE_COLOR: 'var(--cyan)',
-};
-
-export const ZIndex = <const>{
-  overlay: '1000000',
-  tooltip: '1000000',
-  tree: '1000001',
-  toggle: '1000002',
 };
 
 export const CLIENT = typeof window !== 'undefined';
