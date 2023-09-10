@@ -149,7 +149,7 @@ export function defineTooltipElement() {
       const positionStyle: Partial<CSSStyleDeclaration> = {};
 
       // on top
-      if (style.top > rootW + this.#offset) {
+      if (style.top > rootH + this.#offset * 2) {
         positionStyle.top = CSS_util.px(style.top - rootH - this.#offset);
       }
       // on bottom
