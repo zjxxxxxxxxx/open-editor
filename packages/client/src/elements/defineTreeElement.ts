@@ -1,7 +1,7 @@
 import { append, applyStyle, create, off, on } from '../utils/document';
 import { openEditor } from '../utils/openEditor';
 import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
-import { InternalElements, ZIndex } from '../constants';
+import { InternalElements } from '../constants';
 
 export interface HTMLTreeElement extends HTMLElement {
   open(element: HTMLElement): void;
@@ -13,14 +13,13 @@ const CSS = `
   position: fixed;
   top: 0;
   left: 0;
-  z-index: ${ZIndex.tree};
+  z-index: var(--z-index-tree);
   display: none;
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(8px);
   background-color: var(--bg-opt);
 }
-
 .popup {
   position: fixed;
   top: 50%;
@@ -34,7 +33,6 @@ const CSS = `
   border-radius: 6px;
   background-color: var(--bg-color);
 }
-
 .content {
   padding-left: 0px;
   max-height: calc(100vh - 156px);
@@ -42,15 +40,12 @@ const CSS = `
   overflow: scroll;
   scrollbar-width: none;
 }
-
 .content::-webkit-scrollbar {
   display: none;
 }
-
 .tree {
   padding-left: 8px;
 }
-
 .close {
   position: absolute;
   top: 8px;
@@ -59,46 +54,38 @@ const CSS = `
   height: 16px;
   fill: var(--green);
 }
-
 .title {
   padding-bottom: 12px;
   color: var(--green);
 }
-
 .element {
   color: var(--element);
   font-size: 14px;
 }
-
 .empty {
   color: var(--red);
   fill: var(--red);
   border-color: var(--red);
 }
-
 .tag:hover > *,
 .tag:hover ~ .tag > * {
   opacity: 1;
   text-decoration: underline;
 }
-
 .msg {
   font-size: 14px;
   font-weight: 200;
   text-decoration: underline;
 }
-
 .name {
   font-size: 14px;
   color: var(--green);
 }
-
 .file {
   font-size: 12px;
   font-weight: 300;
   color: var(--cyan);
 }
-
 .name,
 .file {
   opacity: 0.8;

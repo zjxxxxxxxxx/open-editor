@@ -1,17 +1,16 @@
 import { on, off, applyStyle, create, append } from '../utils/document';
-import { Colors, InternalElements, ZIndex } from '../constants';
+import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
 const CSS = `
-.container {
+.root {
   position: fixed;
   top: 0px;
   right: 0px;
-  z-index: ${ZIndex.toggle};
+  z-index: var(--z-index-toggle);
   padding: 6px;
 }
-
 .button {
   padding: 2px;
   width: 18px;
@@ -36,7 +35,7 @@ export function defineToggleElement() {
       return ['active'];
     }
 
-    #container: HTMLElement;
+    #root: HTMLElement;
     #button: HTMLElement;
 
     constructor() {
@@ -45,16 +44,16 @@ export function defineToggleElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#container = create('div');
-      this.#container.classList.add('container');
+      this.#root = create('div');
+      this.#root.classList.add('root');
 
       this.#button = create('div');
       this.#button.classList.add('button');
       this.#button.title = 'open-editor-toggle';
       this.#button.innerHTML = toggleIcon;
 
-      append(this.#container, this.#button);
-      append(shadow, this.#container);
+      append(this.#root, this.#button);
+      append(shadow, this.#root);
     }
 
     public attributeChangedCallback(_: never, __: never, newValue: string) {

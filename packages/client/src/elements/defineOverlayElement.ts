@@ -11,96 +11,107 @@ import {
   on,
   off,
 } from '../utils/document';
-import { Colors, InternalElements, ZIndex } from '../constants';
+import { InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(element?: HTMLElement): void;
+  update(activeElement?: HTMLElement): void;
 }
+
+const CSS = `
+.posttion {
+  position: fixed;
+  z-index: var(--z-index-overlay);
+  display: none;
+  pointer-events: none;
+}
+.margin {
+  border: 0px solid var(--overlay-margin);
+}
+.border {
+  border: 0px solid var(--overlay-border);
+}
+.padding {
+  border: 0px solid var(--overlay-padding);
+}
+.content {
+  background: var(--overlay-content);
+}
+`;
 
 export function defineOverlayElement() {
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     #tooltip: HTMLTooltipElement;
 
-    #posttionRect: HTMLElement;
-    #marginRect: HTMLElement;
-    #borderRect: HTMLElement;
-    #paddingRect: HTMLElement;
-    #contentRect: HTMLElement;
+    #posttion: HTMLElement;
+    #margin: HTMLElement;
+    #border: HTMLElement;
+    #padding: HTMLElement;
+    #content: HTMLElement;
     #activeElement?: HTMLElement;
 
     constructor() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
+      shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#posttionRect = create('div');
-      applyStyle(this.#posttionRect, {
-        position: 'fixed',
-        zIndex: ZIndex.overlay,
-        display: 'none',
-        pointerEvents: 'none',
-      });
+      this.#posttion = create('div');
+      this.#posttion.classList.add('posttion');
 
-      this.#marginRect = create('div');
-      applyStyle(this.#marginRect, {
-        borderColor: Colors.OVERLAY_MARGIN_RECT,
-      });
+      this.#margin = create('div');
+      this.#margin.classList.add('margin');
 
-      this.#borderRect = create('div');
-      applyStyle(this.#borderRect, {
-        borderColor: Colors.OVERLAY_BORDER_RECT,
-      });
+      this.#border = create('div');
+      this.#border.classList.add('border');
 
-      this.#paddingRect = create('div');
-      applyStyle(this.#paddingRect, {
-        borderColor: Colors.OVERLAY_PADDING_RECT,
-      });
+      this.#padding = create('div');
+      this.#padding.classList.add('padding');
 
-      this.#contentRect = create('div');
-      applyStyle(this.#contentRect, {
-        background: Colors.OVERLAY_CONTENT_RECT,
-      });
+      this.#content = create('div');
+      this.#content.classList.add('content');
 
       this.#tooltip = <HTMLTooltipElement>(
         create(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
 
-      append(this.#paddingRect, this.#contentRect);
-      append(this.#borderRect, this.#paddingRect);
-      append(this.#marginRect, this.#borderRect);
-      append(this.#posttionRect, this.#marginRect);
-      append(shadow, this.#posttionRect);
+      append(this.#padding, this.#content);
+      append(this.#border, this.#padding);
+      append(this.#margin, this.#border);
+      append(this.#posttion, this.#margin);
+      append(shadow, this.#posttion);
       append(shadow, this.#tooltip);
     }
 
     public open = () => {
-      this.#updateStyles(emptyComputedStyles);
-      applyStyle(this.#posttionRect, {
+      applyStyle(this.#posttion, {
         display: 'block',
       });
+      this.#tooltip.open();
+
       on('scroll', this.#update_RAF, {
         target: window,
         capture: true,
       });
-      this.#tooltip.open();
     };
 
     public close = () => {
-      applyStyle(this.#posttionRect, {
+      applyStyle(this.#posttion, {
         display: 'none',
       });
+      this.#tooltip.close();
+      this.update();
+
       off('scroll', this.#update_RAF, {
         target: window,
         capture: true,
       });
-      this.#tooltip.close();
     };
 
-    public update = (element: HTMLElement) => {
-      this.#activeElement = element;
+    public update = (activeElement?: HTMLElement) => {
+      this.#activeElement = activeElement;
       this.#update();
     };
 
@@ -123,30 +134,26 @@ export function defineOverlayElement() {
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
-      applyStyle(this.#posttionRect, {
+      applyStyle(this.#posttion, {
         width: CSS_util.px(styles.posttion.width),
         height: CSS_util.px(styles.posttion.height),
         top: CSS_util.px(styles.posttion.top),
         left: CSS_util.px(styles.posttion.left),
       });
-      applyStyle(this.#contentRect, {
-        width: CSS_util.px(styles.content.width),
-        height: CSS_util.px(styles.content.height),
-      });
-      this.#applyRectStyle(this.#marginRect, styles.margin);
-      this.#applyRectStyle(this.#borderRect, styles.border);
-      this.#applyRectStyle(this.#paddingRect, styles.padding);
+      this.#applyStyle(this.#margin, styles.margin);
+      this.#applyStyle(this.#border, styles.border);
+      this.#applyStyle(this.#padding, styles.padding);
+      this.#applyStyle(this.#content, styles.content);
     }
 
-    #applyRectStyle(rect: HTMLElement, style: ComputedStyle) {
-      applyStyle(rect, {
+    #applyStyle(element: HTMLElement, style: ComputedStyle) {
+      applyStyle(element, {
         width: CSS_util.px(style.width),
         height: CSS_util.px(style.height),
         borderTopWidth: CSS_util.px(style.top),
         borderRightWidth: CSS_util.px(style.right),
         borderBottomWidth: CSS_util.px(style.bottom),
         borderLeftWidth: CSS_util.px(style.left),
-        borderStyle: 'solid',
       });
     }
   }
