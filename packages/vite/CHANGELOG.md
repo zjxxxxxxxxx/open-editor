@@ -1,5 +1,14 @@
 # @open-editor/vite
 
+## 0.0.13
+
+### Patch Changes
+
+- Updated dependencies [[`d55273b`](https://github.com/zjxxxxxxxxx/open-editor/commit/d55273b2341bcee2aac9e05c34b963b6ee51c5f5), [`88abf67`](https://github.com/zjxxxxxxxxx/open-editor/commit/88abf67b71f005deccdef5c6a033583b3a1555c7), [`e817879`](https://github.com/zjxxxxxxxxx/open-editor/commit/e81787942285c687d32081ed422f80fbeb8ea694)]:
+  - @open-editor/client@0.0.13
+  - @open-editor/server@0.0.13
+  - @open-editor/shared@0.0.13
+
 ## 0.0.12
 
 ### Patch Changes
