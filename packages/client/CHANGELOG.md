@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.0.14
+
+### Patch Changes
+
+- [#71](https://github.com/zjxxxxxxxxx/open-editor/pull/71) [`bda6d00`](https://github.com/zjxxxxxxxxx/open-editor/commit/bda6d0092f88bd8b410d6871575ceb995f1ffa3b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix tooltip style error
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.14
+
 ## 0.0.13
 
 ### Patch Changes
