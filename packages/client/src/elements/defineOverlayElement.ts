@@ -26,6 +26,7 @@ const CSS = `
   z-index: var(--z-index-overlay);
   display: none;
   pointer-events: none;
+  will-change: width, height, top, left;
 }
 .margin {
   border: 0px solid var(--overlay-margin);
@@ -91,7 +92,7 @@ export function defineOverlayElement() {
       });
       this.#tooltip.open();
 
-      on('scroll', this.#update_RAF, {
+      on('scroll', this.#update, {
         target: window,
         capture: true,
       });
@@ -104,7 +105,7 @@ export function defineOverlayElement() {
       this.#tooltip.close();
       this.update();
 
-      off('scroll', this.#update_RAF, {
+      off('scroll', this.#update, {
         target: window,
         capture: true,
       });
@@ -121,16 +122,6 @@ export function defineOverlayElement() {
         : emptyComputedStyles;
       this.#updateStyles(styles);
       this.#tooltip.update(this.#activeElement, styles.posttion);
-    };
-
-    #last_RAF = 0;
-    #update_RAF = () => {
-      cancelAnimationFrame(this.#last_RAF);
-      this.#last_RAF = requestAnimationFrame(() => {
-        if (this.#activeElement) {
-          this.#update();
-        }
-      });
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {

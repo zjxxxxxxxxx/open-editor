@@ -34,13 +34,13 @@ export function resolveSource(
 
   let tree: Partial<ElementSourceMeta>[] = [];
   if (debug.key.startsWith('__reactFiber')) {
-    tree = resolveSourceFromReact(debug.value, deep);
+    tree = resolveSourceFromReact(debug, deep);
   } else if (debug.key.startsWith('__reactInternal')) {
-    tree = resolveSourceFromReact15(debug.value, deep);
+    tree = resolveSourceFromReact15(debug, deep);
   } else if (debug.key.startsWith('__vueParent')) {
-    tree = resolveSourceFromVue(debug.value, deep);
+    tree = resolveSourceFromVue(debug, deep);
   } else if (debug.key.startsWith('__vue')) {
-    tree = resolveSourceFromVue2(debug.value, deep);
+    tree = resolveSourceFromVue2(debug, deep);
   }
 
   source.tree = tree.map(normalizeMeta);
