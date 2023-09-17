@@ -18,6 +18,9 @@ const CSS = `
   line-height: 1.5;
   font-weight: 400;
 }
+:host {
+  all: initial !important;
+}
 `;
 
 export function defineInspectElement() {

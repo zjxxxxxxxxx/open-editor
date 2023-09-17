@@ -1,10 +1,11 @@
 import { ComponentInternalInstance } from '@vue/runtime-core';
 
 import { getComponentNameByFile, isValidFileName } from '../util';
+import { ResolveDebug } from '../resolveDebug';
 import { ElementSourceMeta } from '../resolveSource';
 
 export function resolveSourceFromVue(
-  instance?: ComponentInternalInstance | null,
+  { value: instance }: ResolveDebug<ComponentInternalInstance>,
   deep?: boolean,
 ) {
   const tree: Partial<ElementSourceMeta>[] = [];
@@ -30,7 +31,10 @@ export function resolveSourceFromVue(
   return tree;
 }
 
-export function resolveSourceFromVue2(instance?: any | null, deep?: boolean) {
+export function resolveSourceFromVue2(
+  { value: instance }: ResolveDebug,
+  deep?: boolean,
+) {
   const tree: Partial<ElementSourceMeta>[] = [];
 
   if (instance._vnode.componentInstance) {
