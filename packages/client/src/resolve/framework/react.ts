@@ -1,15 +1,19 @@
 import type { Fiber } from 'react-reconciler';
 import { isFunc } from '@open-editor/shared';
 
+import { ResolveDebug } from '../resolveDebug';
 import { ElementSourceMeta } from '../resolveSource';
 import { isValidFileName } from '../util';
 
-export function resolveSourceFromReact(fiber?: Fiber | null, deep?: boolean) {
-  return resolveSourceFromFiber(fiber, deep);
+export function resolveSourceFromReact(
+  debug: ResolveDebug<Fiber>,
+  deep?: boolean,
+) {
+  return resolveSourceFromFiber(debug.value, deep);
 }
 
 export function resolveSourceFromReact15(
-  instance?: any | Fiber | null,
+  { value: instance }: ResolveDebug,
   deep?: boolean,
 ) {
   if (instance && '_debugOwner' in instance) {

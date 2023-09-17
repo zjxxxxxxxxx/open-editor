@@ -4,6 +4,7 @@ const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 module.exports = defineConfig({
   configureWebpack: {
     plugins: [
+      require('unplugin-vue-source/webpack')(),
       new OpenEditorWebpackPlugin({
         displayToggle: true,
       }),

@@ -2,13 +2,12 @@
   "name": "@open-editor/rollup",
   "version": "0.0.14",
   "description": "A rollup plugin for fast find source code.",
-  "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
+      "require": "./dist/index.js",
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     }

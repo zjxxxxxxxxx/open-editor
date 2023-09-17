@@ -27,6 +27,7 @@ const CSS = `
   border-radius: 4px;
   border: 2px solid transparent;
   pointer-events: none;
+  will-change: visibility, top, left;
 }
 .element {
   color: var(--element);
