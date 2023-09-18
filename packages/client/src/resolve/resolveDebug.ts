@@ -1,6 +1,7 @@
 import { isValidElement } from '../utils/element';
 
 export type ResolveDebug<T = any> = {
+  originalElement: HTMLElement;
   element: HTMLElement;
   key: string;
   value?: T | null;
@@ -18,11 +19,12 @@ export const vue2Key = '__vue__';
 
 // support parsing single project multiple frameworks
 export function resolveDebug(element: HTMLElement): ResolveDebug | undefined {
+  const originalElement = element;
   while (isValidElement(element)) {
     const key = findKey(element);
     if (key) {
       const value = (<any>element)[key];
-      if (value) return { element, key, value };
+      if (value) return { originalElement, element, key, value };
     }
     element = element.parentElement!;
   }

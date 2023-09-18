@@ -1,10 +1,9 @@
 import { resolveDebug } from './resolveDebug';
 import { ensureFileName } from './util';
-import {
-  resolveSourceFromReact,
-  resolveSourceFromReact15,
-} from './framework/react';
-import { resolveSourceFromVue, resolveSourceFromVue2 } from './framework/vue';
+import { resolveReact18 } from './framework/react18';
+import { resolveReact15 } from './framework/react15';
+import { resolveVue3 } from './framework/vue3';
+import { resolveVue2 } from './framework/vue2';
 
 export interface ElementSourceMeta {
   name: string;
@@ -32,15 +31,15 @@ export function resolveSource(
     return source;
   }
 
-  let tree: Partial<ElementSourceMeta>[] = [];
+  const tree: Partial<ElementSourceMeta>[] = [];
   if (debug.key.startsWith('__reactFiber')) {
-    tree = resolveSourceFromReact(debug, deep);
+    resolveReact18(debug, tree, deep);
   } else if (debug.key.startsWith('__reactInternal')) {
-    tree = resolveSourceFromReact15(debug, deep);
+    resolveReact15(debug, tree, deep);
   } else if (debug.key.startsWith('__vueParent')) {
-    tree = resolveSourceFromVue(debug, deep);
+    resolveVue3(debug, tree, deep);
   } else if (debug.key.startsWith('__vue')) {
-    tree = resolveSourceFromVue2(debug, deep);
+    resolveVue2(debug, tree, deep);
   }
 
   source.tree = tree.map(normalizeMeta);
