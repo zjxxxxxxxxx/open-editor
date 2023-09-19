@@ -8,11 +8,9 @@ export function ensureFileName(fileName: string) {
   return `/${fileName.replace(/^\//, '')}`;
 }
 
-export function getComponentNameByFile(file = '', suffix = '') {
-  if (file.endsWith(`.${suffix}`)) {
-    const matchRE = new RegExp(`([^/.]+).${suffix}$`);
-    return file.match(matchRE)?.[1];
-  }
+const vueComponentNameRE = /([^/.]+)\.vue$/;
+export function getVueComponentName(file = '') {
+  return file.match(vueComponentNameRE)?.[1];
 }
 
 export function isValidFileName(fileName?: string) {
@@ -24,4 +22,30 @@ export function isValidFileName(fileName?: string) {
     );
   }
   return false;
+}
+
+let hvs: boolean | null = null;
+export function hasVueSource(element: HTMLElement) {
+  if (hvs != null) {
+    return hvs;
+  }
+
+  while (element) {
+    if (element.getAttribute('__source') != null) {
+      return (hvs = true);
+    }
+
+    element = element.parentElement!;
+  }
+
+  return (hvs = false);
+}
+
+export function parseVueSource(__source: string) {
+  const [file, line, column] = __source.split(':');
+  return {
+    file,
+    line: Number(line),
+    column: Number(column),
+  };
 }
