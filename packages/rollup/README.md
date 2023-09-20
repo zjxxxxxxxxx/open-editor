@@ -1,5 +1,8 @@
 # @open-editor/rollup
 
+[![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)
+[![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
+
 A rollup plugin for fast find source code.
 
 > For development only

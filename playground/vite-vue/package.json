@@ -14,7 +14,7 @@
     "@open-editor/vite": "latest",
     "@vitejs/plugin-vue": "^4.2.3",
     "typescript": "^5.0.2",
-    "unplugin-vue-source": "0.0.1-beta.0",
+    "unplugin-vue-source": "latest",
     "vite": "^4.4.5"
   }
 }
