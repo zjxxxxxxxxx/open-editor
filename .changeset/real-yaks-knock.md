@@ -5,4 +5,4 @@
 '@open-editor/webpack': patch
 ---
 
-support integration with unplugin-vue-source
+file with line and column

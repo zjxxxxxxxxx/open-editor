@@ -41,8 +41,8 @@ export function hasVueSource(element: HTMLElement) {
   return (hvs = false);
 }
 
-export function getElementVueSource(element: HTMLElement) {
-  return element.getAttribute('__source');
+export function getElementVueSource(element?: HTMLElement) {
+  return element?.getAttribute('__source');
 }
 
 export function parseVueSource(__source: string) {

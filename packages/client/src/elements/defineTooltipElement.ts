@@ -111,10 +111,13 @@ export function defineTooltipElement() {
 
     #updateText(activeElement: HTMLElement) {
       const { element, meta } = resolveSource(activeElement);
+      const { file, line = 1, column = 1 } = meta ?? {};
 
       this.#element.innerText = `${element} in `;
       this.#component.innerText = `<${meta?.name ?? 'Unknown'}>`;
-      this.#file.innerText = meta?.file ?? 'filename not found 😭.';
+      this.#file.innerText = file
+        ? `${file}:${line}:${column}`
+        : 'filename not found 😭.';
 
       if (meta) {
         applyStyle(this.#root, {
