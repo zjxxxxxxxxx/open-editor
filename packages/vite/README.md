@@ -1,5 +1,8 @@
 # @open-editor/vite
 
+[![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)
+[![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
+
 A vite plugin for fast find source code.
 
 > For development only
