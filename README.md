@@ -1,5 +1,8 @@
 <h1 align="center">Open Editor</h1>
 
+[![CI](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml)
+[![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
+
 A web devtools for fast find source code.
 
 ![image](./public//demo.gif)
