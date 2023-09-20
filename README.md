@@ -1,8 +1,8 @@
 <h1 align="center">Open Editor</h1>
 
-A devtools can help you quickly find the source code.
+A web devtools for fast find source code.
 
-![image](./public//demo1.gif)
+![image](./public//demo.gif)
 
 ## Features
 
@@ -12,63 +12,33 @@ A devtools can help you quickly find the source code.
 - Support React & Next & Vue.
 - Support non-inductive inject client runtime.
 
-## Support Builder
+> For development only
 
-<div align="center">
-  <a target="_blank" href="https://rollupjs.org">
-    <img width="80" height="80" src="https://rollupjs.org/rollup-logo.svg" />
-  </a>
-  <a target="_blank" href="https://vitejs.dev">
-    <img width="80" height="80" src="https://vitejs.dev/logo.svg" />
-  </a>
-  <a target="_blank" href="https://webpack.js.org">
-    <img
-      width="80"
-      height="80"
-      src="https://webpack.js.org/assets/icon-square-big.svg"
-    />
-  </a>
-</div>
+## Frameworks
 
-- Webpack4+
+### React
 
-## Support Framework
+Minimum version requirements `React15+`.
 
-<div align="center">
-  <a target="_blank" href="https://nextjs.org">
-    <picture>
-      <source
-        width="80"
-        height="80"
-        media="(prefers-color-scheme: dark)"
-        srcset="
-          https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_dark_background.png
-        "
-      />
-      <img
-        width="80"
-        height="80"
-        src="https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
-        height="128"
-      />
-    </picture>
-  </a>
-  <a target="_blank" href="https://react.dev">
-    <img width="80" height="80" src="./public/react.svg" />
-  </a>
-  <a target="_blank" href="https://vuejs.org">
-    <img width="80" height="80" src="./public/vue.svg" />
-  </a>
-</div>
+It needs to be used with [@babel/plugin-transform-react-jsx-source](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), usually you don't have to worry about this because it's mostly built into scaffolding tools.
 
-- React15+
-- Vue2+
+### Vue
 
-## Packages
+Minimum version requirements `Vue2+`.
 
-- [@open-editor/rollup](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)
-- [@open-editor/vite](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)
-- [@open-editor/webpack](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack)
+By default, you can only open to files, if you want to open to rows and columns, you need to additionally install [unplugin-vue-source](https://github.com/zjxxxxxxxxx/unplugin-vue-source) to use with it.
+
+## Usage in the browser
+
+1. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
+2. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show component tree.
+3. press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
+
+## Plugins
+
+- [@open-editor/rollup](./packages/rollup/README.md)
+- [@open-editor/vite](./packages/vite/README.md)
+- [@open-editor/webpack](./packages/webpack/README.md)
 
 ## Playground
 
