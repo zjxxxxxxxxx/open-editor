@@ -15,24 +15,24 @@
     "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",
-    "release": "run-s build changeset:publish",
+    "release": "run-s build publish:ci",
     "test": "turbo run test",
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
-    "versions": "run-s changeset:version format",
-    "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish"
+    "versions": "run-s version:ci format",
+    "version:ci": "changeset version",
+    "publish:ci": "changeset publish"
   },
   "engines": {
     "node": ">=16.19.1"
   },
   "packageManager": "pnpm@8.6.11",
   "keywords": [
-    "webpack-plugin",
     "rollup-plugin",
-    "vue-devtools",
-    "react-devtools",
     "vite-plugin",
-    "next-devtools"
+    "webpack-plugin",
+    "next-devtools",
+    "react-devtools",
+    "vue-devtools"
   ],
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.8",
@@ -40,6 +40,9 @@
     "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",
     "@open-editor/shared": "workspace:*",
+    "@open-editor/rollup": "workspace:*",
+    "@open-editor/vite": "workspace:*",
+    "@open-editor/webpack": "workspace:*",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@types/minimist": "^1.2.2",

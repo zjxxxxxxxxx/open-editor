@@ -92,8 +92,7 @@ export default class OpenEditorPlugin {
     }
 
     if (!entry || !isObj(entry)) {
-      // @ts-ignore
-      entry = [].concat(entry);
+      entry = [].concat(entry) as unknown as webpack.EntryNormalized;
     }
 
     if (Array.isArray(entry)) {

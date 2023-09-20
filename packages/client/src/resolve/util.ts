@@ -31,7 +31,7 @@ export function hasVueSource(element: HTMLElement) {
   }
 
   while (element) {
-    if (element.getAttribute('__source') != null) {
+    if (getElementVueSource(element) != null) {
       return (hvs = true);
     }
 
@@ -41,10 +41,14 @@ export function hasVueSource(element: HTMLElement) {
   return (hvs = false);
 }
 
+export function getElementVueSource(element: HTMLElement) {
+  return element.getAttribute('__source');
+}
+
 export function parseVueSource(__source: string) {
   const [file, line, column] = __source.split(':');
   return {
-    file,
+    file: ensureFileName(file),
     line: Number(line),
     column: Number(column),
   };
