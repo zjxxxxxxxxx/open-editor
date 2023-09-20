@@ -19,7 +19,7 @@ export function resolveVue2(
     debug.value = debug.value._vnode.componentInstance;
   }
 
-  if (hasVueSource(debug.element)) {
+  if (hasVueSource(debug.originalElement)) {
     return resolveSourceFromVueSource(debug, tree, deep);
   }
   return resolveSourceFromInstance(debug.value, tree, deep);

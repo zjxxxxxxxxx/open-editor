@@ -217,10 +217,16 @@ export function defineTreeElement() {
         (str, [key, value]) => `${str} data-${key}="${value}"`,
         '',
       );
+      const { name, file, line = 1, column = 1 } = meta ?? {};
+
       return `
         <div class="tag" ${dataset}>
-          <span class="name" ${dataset}>&lt;${meta.name}&gt;</span>
-          ${withFile ? `<span class="file" ${dataset}>${meta.file}</span>` : ''}
+          <span class="name" ${dataset}>&lt;${name}&gt;</span>
+          ${
+            withFile
+              ? `<span class="file" ${dataset}>${file}:${line}:${column}</span>`
+              : ''
+          }
         </div>
       `;
     }
