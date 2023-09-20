@@ -1,5 +1,20 @@
 # @open-editor/client
 
+## 0.0.15
+
+### Patch Changes
+
+- [#75](https://github.com/zjxxxxxxxxx/open-editor/pull/75) [`d136f44`](https://github.com/zjxxxxxxxxx/open-editor/commit/d136f44e94d550b642e2597720024de8878e7809) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - support integration with unplugin-vue-source
+
+- [#79](https://github.com/zjxxxxxxxxx/open-editor/pull/79) [`dd7adc9`](https://github.com/zjxxxxxxxxx/open-editor/commit/dd7adc97e3ebc549fb486da2d0342fd3624948d9) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - file with line and column
+
+- [#78](https://github.com/zjxxxxxxxxx/open-editor/pull/78) [`b14de1a`](https://github.com/zjxxxxxxxxx/open-editor/commit/b14de1a40debf4fa8c6efeb0f5b38754ce916667) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - filter out non-in-project components
+
+- [#77](https://github.com/zjxxxxxxxxx/open-editor/pull/77) [`7f0c9a2`](https://github.com/zjxxxxxxxxx/open-editor/commit/7f0c9a2b224278731c5d9ef9cb8e3eadc9fa3943) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - improve the accuracy of queries via \_\_source
+
+- Updated dependencies []:
+  - @open-editor/shared@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes
