@@ -27,22 +27,19 @@ export function resolveSource(
   };
 
   const debug = resolveDebug(element);
-  if (!debug) {
-    return source;
+  if (debug) {
+    if (debug.key.startsWith('__reactFiber')) {
+      resolveReact18(debug, source.tree, deep);
+    } else if (debug.key.startsWith('__reactInternal')) {
+      resolveReact15(debug, source.tree, deep);
+    } else if (debug.key.startsWith('__vueParent')) {
+      resolveVue3(debug, source.tree, deep);
+    } else if (debug.key.startsWith('__vue')) {
+      resolveVue2(debug, source.tree, deep);
+    }
   }
 
-  const tree: Partial<ElementSourceMeta>[] = [];
-  if (debug.key.startsWith('__reactFiber')) {
-    resolveReact18(debug, tree, deep);
-  } else if (debug.key.startsWith('__reactInternal')) {
-    resolveReact15(debug, tree, deep);
-  } else if (debug.key.startsWith('__vueParent')) {
-    resolveVue3(debug, tree, deep);
-  } else if (debug.key.startsWith('__vue')) {
-    resolveVue2(debug, tree, deep);
-  }
-
-  source.tree = tree.map(normalizeMeta);
+  source.tree = source.tree.map(normalizeMeta);
   source.meta = source.tree[0];
 
   return source;

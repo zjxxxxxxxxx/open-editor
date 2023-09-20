@@ -16,7 +16,7 @@ export function resolveVue3(
   tree: Partial<ElementSourceMeta>[],
   deep?: boolean,
 ) {
-  if (hasVueSource(debug.element)) {
+  if (hasVueSource(debug.originalElement)) {
     return resolveSourceFromVueSource(debug, tree, deep);
   }
   return resolveSourceFromInstance(debug.value, tree, deep);
@@ -74,7 +74,7 @@ function resolveVueSourceAnchor(
   debug: ResolveDebug<ComponentInternalInstance>,
 ) {
   let instance = debug.value;
-  let element = debug.element;
+  let element = debug.originalElement;
 
   while (element && !getElementVueSource(element)) {
     element = element.parentElement!;
