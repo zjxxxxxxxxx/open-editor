@@ -1,7 +1,7 @@
 import { isFunc } from '@open-editor/shared';
 
-import { ResolveDebug } from '../resolveDebug';
-import { ElementSourceMeta } from '../resolveSource';
+import type { ResolveDebug } from '../resolveDebug';
+import type { ElementSourceMeta } from '../resolveSource';
 import { isValidFileName } from '../util';
 import { resolveSourceFromFiber } from './react18';
 
