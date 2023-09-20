@@ -1,14 +1,15 @@
 import type { ComponentInternalInstance } from '@vue/runtime-core';
 import { isStr } from '@open-editor/shared';
 
+import type { ResolveDebug } from '../resolveDebug';
+import type { ElementSourceMeta } from '../resolveSource';
 import {
+  getElementVueSource,
   getVueComponentName,
   hasVueSource,
   isValidFileName,
   parseVueSource,
 } from '../util';
-import { ResolveDebug } from '../resolveDebug';
-import { ElementSourceMeta } from '../resolveSource';
 
 export function resolveVue3(
   debug: ResolveDebug<ComponentInternalInstance>,
@@ -26,7 +27,7 @@ function resolveSourceFromVueSource(
   tree: Partial<ElementSourceMeta>[],
   deep?: boolean,
 ) {
-  let [instance, source] = resolveVueSourceStart(debug);
+  let [instance, source] = resolveVueSourceAnchor(debug);
 
   while (instance) {
     if (instance.parent == null) {
@@ -34,16 +35,15 @@ function resolveSourceFromVueSource(
         name: getComponentName(instance),
         ...source,
       });
-    } else if (instance.props.__source) {
-      const __source = parseVueSource(instance.props.__source as string);
-      if (isValidFileName(__source.file)) {
+    } else if (isStr(getComponentVueSource(instance))) {
+      if (isValidFileName(getComponentFile(instance))) {
         tree.push({
           name: getComponentName(instance),
           ...source,
         });
         if (!deep) return;
 
-        source = __source;
+        source = parseVueSource(getComponentVueSource(instance));
       }
     }
 
@@ -57,10 +57,11 @@ function resolveSourceFromInstance(
   deep?: boolean,
 ) {
   while (instance) {
-    if (isValidFileName(instance.type.__file)) {
+    const file = getComponentFile(instance);
+    if (isValidFileName(file)) {
       tree.push({
         name: getComponentName(instance),
-        file: instance.type.__file,
+        file,
       });
       if (!deep) return;
     }
@@ -69,21 +70,23 @@ function resolveSourceFromInstance(
   }
 }
 
-function resolveVueSourceStart(debug: ResolveDebug<ComponentInternalInstance>) {
+function resolveVueSourceAnchor(
+  debug: ResolveDebug<ComponentInternalInstance>,
+) {
   let instance = debug.value;
   let element = debug.element;
 
-  while (element && !element.getAttribute('__source')) {
+  while (element && !getElementVueSource(element)) {
     element = element.parentElement!;
   }
 
-  const __source = element.getAttribute('__source');
+  const __source = getElementVueSource(element);
   if (isStr(__source)) {
     return <const>[instance, parseVueSource(__source)];
   }
 
   while (instance) {
-    const __source = instance.props.__source;
+    const __source = getComponentVueSource(instance);
     if (isStr(__source)) {
       return <const>[instance.parent, parseVueSource(__source)];
     }
@@ -94,10 +97,18 @@ function resolveVueSourceStart(debug: ResolveDebug<ComponentInternalInstance>) {
   return [];
 }
 
+function getComponentVueSource(instance: ComponentInternalInstance) {
+  return instance.props.__source as string;
+}
+
+function getComponentFile(instance: ComponentInternalInstance) {
+  return instance.type.__file;
+}
+
 function getComponentName(instance: ComponentInternalInstance) {
   return (
     instance.type.name ??
     instance.type.__name ??
-    getVueComponentName(instance.type.__file)
+    getVueComponentName(getComponentFile(instance))
   );
 }

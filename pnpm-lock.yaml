@@ -16,12 +16,21 @@ importers:
       '@open-editor/client':
         specifier: workspace:*
         version: link:packages/client
+      '@open-editor/rollup':
+        specifier: workspace:*
+        version: link:packages/rollup
       '@open-editor/server':
         specifier: workspace:*
         version: link:packages/server
       '@open-editor/shared':
         specifier: workspace:*
         version: link:packages/shared
+      '@open-editor/vite':
+        specifier: workspace:*
+        version: link:packages/vite
+      '@open-editor/webpack':
+        specifier: workspace:*
+        version: link:packages/webpack
       '@rollup/plugin-commonjs':
         specifier: ^25.0.4
         version: 25.0.4(rollup@3.28.1)
@@ -397,12 +406,6 @@ importers:
       unplugin-vue-source:
         specifier: 0.0.1-beta.0
         version: 0.0.1-beta.0
-
-  vue-element-plus-admin:
-    dependencies:
-      '@open-editor/vite':
-        specifier: ^0.0.14
-        version: link:../packages/vite
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:

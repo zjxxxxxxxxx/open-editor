@@ -1,13 +1,14 @@
 import { isStr } from '@open-editor/shared';
 
+import type { ResolveDebug } from '../resolveDebug';
+import type { ElementSourceMeta } from '../resolveSource';
 import {
+  getElementVueSource,
   getVueComponentName,
   hasVueSource,
   isValidFileName,
   parseVueSource,
 } from '../util';
-import { ResolveDebug } from '../resolveDebug';
-import { ElementSourceMeta } from '../resolveSource';
 
 export function resolveVue2(
   debug: ResolveDebug,
@@ -29,7 +30,7 @@ function resolveSourceFromVueSource(
   tree: Partial<ElementSourceMeta>[],
   deep?: boolean,
 ) {
-  let [instance, source] = resolveVueSourceStart(debug);
+  let [instance, source] = resolveVueSourceAnchor(debug);
 
   while (instance && instance.$vnode) {
     if (instance.$parent.$vnode == null) {
@@ -37,16 +38,15 @@ function resolveSourceFromVueSource(
         name: getComponentName(instance),
         ...source,
       });
-    } else if (getVueSource(instance)) {
-      const __source = parseVueSource(getVueSource(instance));
-      if (isValidFileName(__source.file)) {
+    } else if (isStr(getComponentVueSource(instance))) {
+      if (isValidFileName(getComponentFile(instance))) {
         tree.push({
           name: getComponentName(instance),
           ...source,
         });
         if (!deep) return;
 
-        source = __source;
+        source = parseVueSource(getComponentVueSource(instance));
       }
     }
 
@@ -74,23 +74,23 @@ function resolveSourceFromInstance(
   }
 }
 
-function resolveVueSourceStart(debug: ResolveDebug) {
+function resolveVueSourceAnchor(debug: ResolveDebug) {
   let instance = debug.value;
   let element = debug.originalElement;
 
-  while (element && !element.getAttribute('__source')) {
+  while (element && !getElementVueSource(element)) {
     element = element.parentElement!;
   }
 
-  const __source = element.getAttribute('__source');
+  const __source = getElementVueSource(element);
   if (isStr(__source)) {
     return <const>[instance, parseVueSource(__source)];
   }
 
   while (instance) {
-    const __source = getVueSource(instance);
+    const __source = getComponentVueSource(instance);
     if (isStr(__source)) {
-      return <const>[instance, parseVueSource(__source)];
+      return <const>[instance.$parent, parseVueSource(__source)];
     }
 
     instance = instance.$parent;
@@ -99,8 +99,8 @@ function resolveVueSourceStart(debug: ResolveDebug) {
   return [];
 }
 
-function getVueSource(instance: any) {
-  return instance.$vnode.componentInstance?.$props?.__source;
+function getComponentVueSource(instance: any) {
+  return instance.$vnode.componentInstance.$props.__source;
 }
 
 function getComponentName(instance: any) {
