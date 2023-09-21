@@ -1,11 +1,10 @@
 import type { Fiber } from 'react-reconciler';
 import { isFunc } from '@open-editor/shared';
-
 import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createReactResolver } from '../createReactResolver';
 
-let resolver: ReturnType<typeof createReactResolver<Fiber | null | undefined>>;
+let resolver: ReturnType<typeof createReactResolver<Fiber>>;
 function createResolver() {
   resolver = createReactResolver({
     isValid(owner) {
@@ -29,12 +28,12 @@ function createResolver() {
 }
 
 export function fiberResolver(
-  debug: ResolveDebug<Fiber>,
+  fiber: Fiber | null | undefined,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
   if (!resolver) createResolver();
-  resolver(debug.value, tree, deep);
+  resolver(fiber, tree, deep);
 }
 
 export function resolveReact18(
@@ -42,5 +41,5 @@ export function resolveReact18(
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  fiberResolver(debug, tree, deep);
+  fiberResolver(debug.value, tree, deep);
 }

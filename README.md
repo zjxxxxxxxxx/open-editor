@@ -9,11 +9,11 @@ A web devtools for fast find source code.
 
 ## Features
 
-- Support composite key.
-- Support component tree.
-- Support Rollup & Vite & Webpack.
-- Support React & Next & Vue.
-- Support non-inductive inject client runtime.
+- 🎉 Support composite key.
+- 🎯 Support component tree.
+- 💝 Support Rollup & Vite & Webpack.
+- 🌟 Support React & Next & Vue.
+- 🚀 Support non-inductive inject client runtime.
 
 > For development only
 
@@ -23,13 +23,13 @@ A web devtools for fast find source code.
 
 Minimum version requirements `React15+`.
 
-It needs to be used with [@babel/plugin-transform-react-jsx-source](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), usually you don't have to worry about this because it's mostly built into scaffolding tools.
+It needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), usually you don't have to worry about this because it's mostly built into scaffolding tools.
 
 ### Vue
 
 Minimum version requirements `Vue2+`.
 
-By default, you can only open to files, if you want to open to rows and columns, you need to additionally install [unplugin-vue-source](https://github.com/zjxxxxxxxxx/unplugin-vue-source) to use with it.
+By default, you can only open to `file`, if you want to open to `line` and `column`, you need to additionally install [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source) to use with it.
 
 ## Usage in the browser
 
@@ -39,9 +39,9 @@ By default, you can only open to files, if you want to open to rows and columns,
 
 ## Plugins
 
-- [@open-editor/rollup](./packages/rollup/README.md)
-- [@open-editor/vite](./packages/vite/README.md)
-- [@open-editor/webpack](./packages/webpack/README.md)
+- [`@open-editor/rollup`](./packages/rollup/README.md)
+- [`@open-editor/vite`](./packages/vite/README.md)
+- [`@open-editor/webpack`](./packages/webpack/README.md)
 
 ## Playground
 

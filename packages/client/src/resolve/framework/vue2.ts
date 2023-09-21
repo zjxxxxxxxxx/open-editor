@@ -9,7 +9,7 @@ function createResolver() {
     isValidNext: (instance) => Boolean(instance.$parent.$vnode),
     getNext: (instance) => instance.$parent,
     getVueSource: (instance) =>
-      <string>instance.$vnode.componentInstance.$props.__source,
+      <string>instance.$vnode.componentInstance?.$props?.__source,
     getFile(instance) {
       const { Ctor } = instance.$vnode.componentOptions;
       return Ctor?.__file ?? Ctor.options?.__file;

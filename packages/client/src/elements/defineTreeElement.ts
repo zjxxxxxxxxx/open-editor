@@ -27,15 +27,15 @@ const CSS = `
   transform: translate(-50%, -50%);
   display: inline-block;
   padding: 20px;
-  min-width: 300px;
-  max-width: calc(100vw - 112px);
   border: 2px solid var(--green);
   border-radius: 6px;
   background-color: var(--bg-color);
 }
 .content {
-  padding-left: 0px;
-  max-height: calc(100vh - 156px);
+  padding-right: 16px;
+  min-width: 300px; 
+  max-width: min(calc(100vh - 156px), 800px);
+  max-height: min(calc(100vh - 156px), 600px);
   white-space: nowrap;
   overflow: scroll;
   scrollbar-width: none;
@@ -44,7 +44,17 @@ const CSS = `
   display: none;
 }
 .tree {
-  padding-left: 8px;
+  position: relative;
+  padding-left: 16px;
+}
+.line {
+  position: absolute;
+  left: 18px;
+  top: 22px;
+  opacity: 0.4;
+  width: 1px;
+  height: calc(100% - 44px);
+  background: var(--green);
 }
 .close {
   position: absolute;
@@ -70,7 +80,9 @@ const CSS = `
 .tag:hover > *,
 .tag:hover ~ .tag > * {
   opacity: 1;
-  text-decoration: underline;
+}
+.tag:hover ~ .line {
+  opacity: 0.8;
 }
 .msg {
   font-size: 14px;
@@ -88,7 +100,7 @@ const CSS = `
 }
 .name,
 .file {
-  opacity: 0.8;
+  opacity: 0.6;
 }
 `;
 
@@ -205,7 +217,8 @@ export function defineTreeElement() {
         tags += `
           <div class="tree">
             ${subTree}
-          </div>  
+          </div>
+          <div class="line"></div>  
           ${this.#createTag(meta)} 
         `;
       }
