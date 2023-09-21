@@ -3,57 +3,44 @@ import { isFunc } from '@open-editor/shared';
 
 import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
-import { isValidFileName } from '../util';
+import { createReactResolver } from '../createReactResolver';
+
+let resolver: ReturnType<typeof createReactResolver<Fiber | null | undefined>>;
+function createResolver() {
+  resolver = createReactResolver({
+    isValid(owner) {
+      if (owner?._debugSource) {
+        return isFunc(owner.type) || isFunc(owner.type.render);
+      }
+      return false;
+    },
+    getOwner: (target) => target?._debugOwner,
+    getSource: (target) => target?._debugSource,
+    getName(owner) {
+      if (owner) {
+        const component = isFunc(owner.type)
+          ? owner.type
+          : // React.forwardRef(Component)
+            owner.type.render;
+        return component?.name || component?.displayName;
+      }
+    },
+  });
+}
+
+export function fiberResolver(
+  debug: ResolveDebug<Fiber>,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  if (!resolver) createResolver();
+  resolver(debug.value, tree, deep);
+}
 
 export function resolveReact18(
   debug: ResolveDebug<Fiber>,
   tree: Partial<ElementSourceMeta>[],
-  deep?: boolean,
+  deep = false,
 ) {
-  return resolveSourceFromFiber(debug.value, tree, deep);
-}
-
-export function resolveSourceFromFiber(
-  fiber: Fiber | null | undefined,
-  tree: Partial<ElementSourceMeta>[],
-  deep?: boolean,
-) {
-  while (fiber) {
-    let owner = fiber._debugOwner;
-
-    const source = fiber._debugSource;
-    if (source && isValidFileName(source.fileName)) {
-      while (!isFiberComponent(owner)) {
-        if (!owner) return;
-
-        owner = owner._debugOwner;
-      }
-
-      tree.push({
-        name: getFiberComponentName(owner as Fiber),
-        file: source.fileName,
-        line: source.lineNumber,
-        column: (<any>source).columnNumber,
-      });
-
-      if (!deep) return;
-    }
-
-    fiber = owner;
-  }
-}
-
-function isFiberComponent(owner?: Fiber | null) {
-  if (owner && owner._debugSource) {
-    return isFunc(owner.type) || isFunc(owner.type.render);
-  }
-  return false;
-}
-
-function getFiberComponentName(owner: Fiber) {
-  const component = isFunc(owner.type)
-    ? owner.type
-    : // React.forwardRef(Component)
-      owner.type.render;
-  return component?.name || component?.displayName;
+  fiberResolver(debug, tree, deep);
 }
