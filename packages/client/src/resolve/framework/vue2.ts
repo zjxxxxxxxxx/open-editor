@@ -39,7 +39,8 @@ function resolveSourceFromVueSource(
         ...source,
       });
     } else if (isStr(getComponentVueSource(instance))) {
-      if (isValidFileName(getComponentFile(instance))) {
+      const file = getComponentFile(instance);
+      if (isValidFileName(file) && file.endsWith(source.file)) {
         tree.push({
           name: getComponentName(instance),
           ...source,
