@@ -1,6 +1,5 @@
 import { append, create } from './utils/document';
 import { defineElements } from './elements/defineElements';
-
 import { CLIENT, InternalElements } from './constants';
 import { Options, setOptions } from './options';
 

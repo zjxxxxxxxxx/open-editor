@@ -92,7 +92,7 @@ export function defineOverlayElement() {
       });
       this.#tooltip.open();
 
-      on('scroll', this.#update, {
+      on('scroll', this.#update_RAF, {
         target: window,
         capture: true,
       });
@@ -105,7 +105,7 @@ export function defineOverlayElement() {
       this.#tooltip.close();
       this.update();
 
-      off('scroll', this.#update, {
+      off('scroll', this.#update_RAF, {
         target: window,
         capture: true,
       });
@@ -113,15 +113,17 @@ export function defineOverlayElement() {
 
     public update = (activeElement?: HTMLElement) => {
       this.#activeElement = activeElement;
-      this.#update();
+      this.#update_RAF();
     };
 
-    #update = () => {
-      const styles = this.#activeElement
-        ? getComputedStyles(this.#activeElement)
-        : emptyComputedStyles;
-      this.#updateStyles(styles);
-      this.#tooltip.update(this.#activeElement, styles.posttion);
+    #update_RAF = () => {
+      requestAnimationFrame(() => {
+        const styles = this.#activeElement
+          ? getComputedStyles(this.#activeElement)
+          : emptyComputedStyles;
+        this.#updateStyles(styles);
+        this.#tooltip.update(this.#activeElement, styles.posttion);
+      });
     };
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
