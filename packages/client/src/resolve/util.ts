@@ -13,7 +13,7 @@ export function getVueComponentName(file = '') {
   return file.match(vueComponentNameRE)?.[1];
 }
 
-export function isValidFileName(fileName?: string) {
+export function isValidFileName(fileName?: string): fileName is string {
   if (fileName) {
     fileName = ensureFileName(fileName);
     return (
