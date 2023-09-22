@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/server",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "internal utils shared across @open-editor packages",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

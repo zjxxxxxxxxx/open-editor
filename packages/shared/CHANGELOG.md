@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.0.16
+
+### Patch Changes
+
+- [#88](https://github.com/zjxxxxxxxxx/open-editor/pull/88) [`7fced3c`](https://github.com/zjxxxxxxxxx/open-editor/commit/7fced3c47aafee225709708cae246d06c0f78b21) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - add type util `isBol`
+
 ## 0.0.15
 
 ## 0.0.14
