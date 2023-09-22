@@ -29,19 +29,25 @@ export default defineConfig({
 });
 ```
 
-## Configuration
-
-The following show the default values of the configuration
+## Options
 
 ```ts
-OpenEditor({
-  // source root path
-  rootDir: process.cwd(),
-
-  // render the toggle into the browser
-  displayToggle: false,
-
-  // custom openEditor handler
-  onOpenEditor: undefined,
-});
+interface Options {
+  /**
+   * source rootDir path
+   *
+   * @default process.cwd()
+   */
+  rootDir?: string;
+  /**
+   * render the toggle into the browser
+   *
+   * @default false
+   */
+  displayToggle?: boolean;
+  /**
+   * custom openEditor handler
+   */
+  onOpenEditor?(file: string): void;
+}
 ```

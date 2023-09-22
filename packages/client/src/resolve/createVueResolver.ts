@@ -129,16 +129,16 @@ function parseVueSource(__source: string) {
 }
 
 let cacheIsVueSource: boolean | undefined;
-function isVueSource(element: HTMLElement) {
+function isVueSource(element?: HTMLElement | null) {
   if (isBol(cacheIsVueSource)) {
     return cacheIsVueSource;
   }
 
   while (element) {
-    if (getElementVueSource(element) != null) {
+    if (getElementVueSource(element)) {
       return (cacheIsVueSource = true);
     }
-    element = element.parentElement!;
+    element = element.parentElement;
   }
 
   return (cacheIsVueSource = false);
