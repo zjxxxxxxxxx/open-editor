@@ -13,3 +13,7 @@ export function isStr(value: any): value is string {
 export function isNum(value: any): value is number {
   return typeof value === 'number';
 }
+
+export function isBol(value: any): value is boolean {
+  return typeof value === 'boolean';
+}
