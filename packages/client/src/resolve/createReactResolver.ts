@@ -2,24 +2,24 @@ import type { ElementSourceMeta } from './resolveSource';
 import { isValidFileName } from './util';
 
 export interface ReactResolverOptions<T = any> {
-  isValid(target?: T | null): boolean;
-  getOwner(target?: T | null): T | null | undefined;
-  getSource(target?: T | null): any;
-  getName(target?: T | null): string | undefined;
+  isValid(current?: T | null): boolean;
+  getOwner(current?: T | null): T | null | undefined;
+  getSource(current?: T | null): any;
+  getName(current?: T | null): string | undefined;
 }
 
 export function createReactResolver<T = any>(options: ReactResolverOptions<T>) {
   const { isValid, getOwner, getSource, getName } = options;
 
   return function reactResolver(
-    target: T | null | undefined,
+    current: T | null | undefined,
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    while (target) {
-      let owner = getOwner(target);
+    while (current) {
+      let owner = getOwner(current);
 
-      const source = getSource(target);
+      const source = getSource(current);
       if (isValidFileName(source?.fileName)) {
         while (!isValid(owner)) {
           if (!owner) return;
@@ -36,7 +36,7 @@ export function createReactResolver<T = any>(options: ReactResolverOptions<T>) {
         if (!deep) return;
       }
 
-      target = owner;
+      current = owner;
     }
   };
 }

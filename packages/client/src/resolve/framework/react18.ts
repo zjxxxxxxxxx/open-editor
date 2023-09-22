@@ -13,8 +13,8 @@ function createResolver() {
       }
       return false;
     },
-    getOwner: (target) => target?._debugOwner,
-    getSource: (target) => target?._debugSource,
+    getOwner: (fiber) => fiber?._debugOwner,
+    getSource: (fiber) => fiber?._debugSource,
     getName(owner) {
       if (owner) {
         const component = isFunc(owner.type)
@@ -37,9 +37,9 @@ export function fiberResolver(
 }
 
 export function resolveReact18(
-  debug: ResolveDebug<Fiber>,
+  { value: fiber }: ResolveDebug<Fiber>,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  fiberResolver(debug.value, tree, deep);
+  fiberResolver(fiber, tree, deep);
 }

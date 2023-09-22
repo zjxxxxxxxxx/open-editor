@@ -7,7 +7,7 @@ interface VueResolverOptions<T = any> {
   isValid(instance: T): boolean;
   isValidNext(instance: T): boolean;
   getNext(instance: T): T | null | undefined;
-  getVueSource(instance: T): string;
+  getVueSource(instance: T): string | undefined;
   getFile(instance: T): string;
   getName(instance: T): string | undefined;
 }
