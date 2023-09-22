@@ -2,4 +2,4 @@
 '@open-editor/shared': patch
 ---
 
-add type uilt 'isBol'
+add type util 'isBol'

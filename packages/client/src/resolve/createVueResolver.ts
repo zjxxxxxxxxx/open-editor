@@ -44,7 +44,7 @@ function resolveVueSource<T = any>(
       if (
         isStr(__source) &&
         isValidFileName(__file) &&
-        __file.endsWith(source.file)
+        ensureFileName(__file) === source.file
       ) {
         push(instance);
 
@@ -75,7 +75,7 @@ function resolveVueSourceAnchor<T = any>(
   let instance = debug.value;
   let element = debug.originalElement;
 
-  while (element && !getElementVueSource(element)) {
+  while (element && !isStr(getElementVueSource(element))) {
     element = element.parentElement!;
   }
 
@@ -129,16 +129,16 @@ function parseVueSource(__source: string) {
 }
 
 let cacheIsVueSource: boolean | undefined;
-function isVueSource(element: HTMLElement) {
+function isVueSource(element?: HTMLElement | null) {
   if (isBol(cacheIsVueSource)) {
     return cacheIsVueSource;
   }
 
   while (element) {
-    if (getElementVueSource(element) != null) {
+    if (isStr(getElementVueSource(element))) {
       return (cacheIsVueSource = true);
     }
-    element = element.parentElement!;
+    element = element.parentElement;
   }
 
   return (cacheIsVueSource = false);
