@@ -30,8 +30,9 @@ const CSS = `
   will-change: visibility, top, left;
 }
 .element {
-  color: var(--element);
   font-size: 14px;
+  font-weight: 400;
+  color: var(--element);
 }
 .component {
   font-size: 16px;

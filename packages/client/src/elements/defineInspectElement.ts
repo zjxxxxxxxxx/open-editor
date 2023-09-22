@@ -14,7 +14,7 @@ export interface HTMLInspectElement extends HTMLElement {}
 const CSS = `
 * {
   box-sizing: content-box;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Menlo, Monaco, 'Courier New', monospace;
   line-height: 1.5;
   font-weight: 400;
 }

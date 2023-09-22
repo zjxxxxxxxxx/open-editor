@@ -1,4 +1,4 @@
-import { isStr } from '@open-editor/shared';
+import { isBol, isStr } from '@open-editor/shared';
 import type { ResolveDebug } from './resolveDebug';
 import type { ElementSourceMeta } from './resolveSource';
 import { ensureFileName, isValidFileName } from './util';
@@ -19,14 +19,14 @@ export function createVueResolver<T = any>(options: VueResolverOptions<T>) {
     deep: boolean,
   ) {
     if (isVueSource(debug.originalElement)) {
-      resolveSourceFromVueSource(debug, tree, deep, options);
+      resolveVueSource(debug, tree, deep, options);
     } else {
-      resolveSourceFromInstance(debug, tree, deep, options);
+      resolveVueInstance(debug.value, tree, deep, options);
     }
   };
 }
 
-function resolveSourceFromVueSource<T = any>(
+function resolveVueSource<T = any>(
   debug: ResolveDebug<T>,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
@@ -96,15 +96,13 @@ function resolveVueSourceAnchor<T = any>(
   return [];
 }
 
-function resolveSourceFromInstance<T = any>(
-  debug: ResolveDebug<T>,
+function resolveVueInstance<T = any>(
+  instance: T,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
   options: VueResolverOptions,
 ) {
   const { isValid, getNext, getFile, getName } = options;
-
-  let instance = debug.value;
 
   while (isValid(instance)) {
     const __file = getFile(instance);
@@ -130,23 +128,25 @@ function parseVueSource(__source: string) {
   };
 }
 
-let hasVueSource: boolean | null = null;
+let cacheIsVueSource: boolean | undefined;
 function isVueSource(element: HTMLElement) {
-  if (hasVueSource != null) return hasVueSource;
+  if (isBol(cacheIsVueSource)) {
+    return cacheIsVueSource;
+  }
 
   while (element) {
     if (getElementVueSource(element) != null) {
-      return (hasVueSource = true);
+      return (cacheIsVueSource = true);
     }
     element = element.parentElement!;
   }
 
-  return (hasVueSource = false);
+  return (cacheIsVueSource = false);
 }
 
-const vueComponentNameRE = /([^/.]+)\.vue$/;
-export function getNameByFile(file = '') {
-  return file.match(vueComponentNameRE)?.[1];
+const nameRE = /([^/.]+)\.vue$/;
+function getNameByFile(file = '') {
+  return file.match(nameRE)?.[1];
 }
 
 function getElementVueSource(element?: HTMLElement) {

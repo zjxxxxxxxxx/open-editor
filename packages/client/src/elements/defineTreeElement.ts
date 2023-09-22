@@ -49,9 +49,9 @@ const CSS = `
 }
 .line {
   position: absolute;
-  left: 18px;
+  left: 17px;
   top: 22px;
-  opacity: 0.4;
+  opacity: 0.1;
   width: 1px;
   height: calc(100% - 44px);
   background: var(--green);
@@ -66,11 +66,14 @@ const CSS = `
 }
 .title {
   padding-bottom: 12px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--green);
 }
 .element {
-  color: var(--element);
   font-size: 14px;
+  font-weight: 400;
+  color: var(--element);
 }
 .empty {
   color: var(--red);
@@ -82,7 +85,7 @@ const CSS = `
   opacity: 1;
 }
 .tag[data-file]:hover ~ .line {
-  opacity: 0.8;
+  opacity: 0.6;
 }
 .msg {
   font-size: 14px;
@@ -90,17 +93,18 @@ const CSS = `
   text-decoration: underline;
 }
 .name {
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 500;
   color: var(--green);
 }
 .file {
-  font-size: 12px;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 200;
   color: var(--cyan);
 }
 .name,
 .file {
-  opacity: 0.6;
+  opacity: 0.3;
 }
 `;
 
@@ -231,7 +235,7 @@ export function defineTreeElement() {
       if (!withFile) {
         return `
           <div class="tag">
-            <span class="name">&lt;${name}&gt;</span>
+            <span class="name">&lt;/${name}&gt;</span>
           </div>
         `;
       }
