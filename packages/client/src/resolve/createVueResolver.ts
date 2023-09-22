@@ -74,22 +74,23 @@ function resolveVueSourceAnchor<T = any>(
 
   let instance = debug.value;
   let element = debug.originalElement;
+  let __source: string | null | undefined;
 
-  while (element && !isStr(getElementVueSource(element))) {
+  // find the first element with __source
+  while (element && !isStr((__source = getElementVueSource(element)))) {
     element = element.parentElement!;
   }
 
-  const __source = getElementVueSource(element);
-  if (isStr(__source)) {
-    return <const>[instance, parseVueSource(__source)];
+  // if the element exists and belongs to the component, the result is returned
+  if ((<any>element)?.[debug.key] === instance) {
+    return <const>[instance, parseVueSource(__source!)];
   }
 
+  // try to get the result from the component
   while (instance) {
-    const __source = getVueSource(instance);
-    if (isStr(__source)) {
+    if (isStr((__source = getVueSource(instance)))) {
       return <const>[getNext(instance), parseVueSource(__source)];
     }
-
     instance = getNext(instance);
   }
 
