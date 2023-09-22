@@ -116,15 +116,24 @@ export function defineOverlayElement() {
       this.#update_RAF();
     };
 
+    #last_RAF?: number;
     #update_RAF = () => {
-      requestAnimationFrame(() => {
-        const styles = this.#activeElement
-          ? getComputedStyles(this.#activeElement)
-          : emptyComputedStyles;
-        this.#updateStyles(styles);
-        this.#tooltip.update(this.#activeElement, styles.posttion);
+      if (this.#last_RAF) {
+        cancelAnimationFrame(this.#last_RAF);
+      }
+      this.#last_RAF = requestAnimationFrame(() => {
+        this.#last_RAF = undefined;
+        this.#update();
       });
     };
+
+    #update() {
+      const styles = this.#activeElement
+        ? getComputedStyles(this.#activeElement)
+        : emptyComputedStyles;
+      this.#updateStyles(styles);
+      this.#tooltip.update(this.#activeElement, styles.posttion);
+    }
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttion, {

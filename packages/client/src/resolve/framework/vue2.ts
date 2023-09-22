@@ -6,10 +6,12 @@ let resolver: ReturnType<typeof createVueResolver<any>>;
 function createResolver() {
   resolver = createVueResolver({
     isValid: (instance) => Boolean(instance?.$vnode),
-    isValidNext: (instance) => Boolean(instance.$parent.$vnode),
+    isValidNext: (instance) => Boolean(instance.$parent?.$vnode),
     getNext: (instance) => instance.$parent,
-    getVueSource: (instance) =>
-      <string>instance.$vnode.componentInstance?.$props?.__source,
+    getVueSource(instance) {
+      const { $props } = instance.$vnode.componentInstance;
+      return $props?.__source;
+    },
     getFile(instance) {
       const { Ctor } = instance.$vnode.componentOptions;
       return Ctor?.__file ?? Ctor.options?.__file;
