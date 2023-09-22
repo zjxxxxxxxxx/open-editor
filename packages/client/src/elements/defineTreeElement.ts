@@ -33,8 +33,8 @@ const CSS = `
 }
 .content {
   padding-right: 16px;
-  min-width: 300px; 
-  max-width: min(calc(100vh - 156px), 800px);
+  min-width: min(calc(100vw - 156px), 300px);
+  max-width: min(calc(100vw - 156px), 800px);
   max-height: min(calc(100vh - 156px), 600px);
   white-space: nowrap;
   overflow: scroll;
@@ -77,11 +77,11 @@ const CSS = `
   fill: var(--red);
   border-color: var(--red);
 }
-.tag:hover > *,
-.tag:hover ~ .tag > * {
+.tag[data-file]:hover > *,
+.tag[data-file]:hover ~ .tag > * {
   opacity: 1;
 }
-.tag:hover ~ .line {
+.tag[data-file]:hover ~ .line {
   opacity: 0.8;
 }
 .msg {
@@ -226,20 +226,24 @@ export function defineTreeElement() {
     }
 
     #createTag(meta: ElementSourceMeta, withFile?: boolean) {
+      const { name, file, line = 1, column = 1 } = meta ?? {};
+
+      if (!withFile) {
+        return `
+          <div class="tag">
+            <span class="name">&lt;${name}&gt;</span>
+          </div>
+        `;
+      }
+
       const dataset = Object.entries(meta).reduce(
         (str, [key, value]) => `${str} data-${key}="${value}"`,
         '',
       );
-      const { name, file, line = 1, column = 1 } = meta ?? {};
-
       return `
         <div class="tag" ${dataset}>
           <span class="name" ${dataset}>&lt;${name}&gt;</span>
-          ${
-            withFile
-              ? `<span class="file" ${dataset}>${file}:${line}:${column}</span>`
-              : ''
-          }
+          <span class="file" ${dataset}>${file}:${line}:${column}</span>
         </div>
       `;
     }
