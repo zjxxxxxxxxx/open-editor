@@ -9,7 +9,7 @@ function createResolver() {
     isValid: (instance) => Boolean(instance),
     isValidNext: (instance) => Boolean(instance.parent),
     getNext: (instance) => instance.parent,
-    getVueSource: (instance) => <string>instance.props.__source,
+    getSource: (instance) => <string>instance.props.__source,
     getFile: (instance) => <string>instance.type.__file,
     getName: (instance) => instance.type.name ?? instance.type.__name,
   });
