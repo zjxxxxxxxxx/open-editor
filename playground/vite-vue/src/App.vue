@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue';
+import Tree from './components/tree/index.vue';
+import Notes from './components/Notes.vue';
 </script>
 
 <template>
@@ -11,7 +12,16 @@ import HelloWorld from './components/HelloWorld.vue';
       <img src="/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <h1>Vite + Vue</h1>
+  <Tree />
+  <div class="card">
+    <Notes />
+  </div>
+  <p class="read-the-docs">
+    <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+      Github
+    </a>
+  </p>
 </template>
 
 <style scoped>
@@ -26,5 +36,9 @@ import HelloWorld from './components/HelloWorld.vue';
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+
+.read-the-docs {
+  color: #888;
 }
 </style>

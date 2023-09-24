@@ -36,6 +36,7 @@ function resolveVueSource<T = any>(
     options;
 
   let [instance, source] = resolveVueSourceAnchor(debug, options);
+  console.log(instance, source);
 
   while (isValid(instance)) {
     if (isValidNext(instance)) {

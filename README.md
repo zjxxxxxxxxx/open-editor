@@ -3,9 +3,11 @@
 [![CI](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
 
-A web devtools for fast find source code.
+A web devtools for fast find source code, supported in react and vue.
 
-![image](./public//demo.gif)
+If you need to switch back and forth between react and vue frequently, or if you have both react and vue in the same project, then this devtools is for you.
+
+![image](./public/demo.gif)
 
 ## Features
 
@@ -123,7 +125,6 @@ By default, you can only open to `file`, if you want to open to `line` and `colu
         </a>
       </th>
     </tr>
-    <tr></tr>
     <tr>
       <th align="left">webpack + next</th>
       <th>

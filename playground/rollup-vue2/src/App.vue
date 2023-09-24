@@ -1,10 +1,12 @@
 <script lang="ts">
 import Vue from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import Tree from './components/tree/index.vue';
+import Notes from './components/Notes.vue';
 
 export default Vue.extend({
   components: {
-    HelloWorld,
+    Tree,
+    Notes,
   },
 });
 </script>
@@ -19,7 +21,16 @@ export default Vue.extend({
         <img src="../public/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
     </div>
-    <HelloWorld msg="Rollup + Vue2" />
+    <h1>Rollup + Vue2</h1>
+    <Tree />
+    <div class="card">
+      <Notes />
+    </div>
+    <p class="read-the-docs">
+      <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+        Github
+      </a>
+    </p>
   </div>
 </template>
 
@@ -35,5 +46,8 @@ export default Vue.extend({
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.read-the-docs {
+  color: #888;
 }
 </style>

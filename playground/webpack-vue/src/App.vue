@@ -1,17 +1,27 @@
-<script lang="ts" setup>
-import HelloWorld from './components/HelloWorld.vue';
+<script setup lang="ts">
+import Tree from './components/tree/index.vue';
+import Notes from './components/Notes.vue';
 </script>
 
 <template>
   <div>
-    <a href="https://webpack.js.org" target="_blank">
-      <img src="/webpack.svg" class="logo" alt="Webpack logo" />
+    <a href="https://vitejs.dev" target="_blank">
+      <img src="/webpack.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
   </div>
-  <HelloWorld msg="Webpack + Vue" />
+  <h1>Webpack + Vue</h1>
+  <Tree />
+  <div class="card">
+    <Notes />
+  </div>
+  <p class="read-the-docs">
+    <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
+      Github
+    </a>
+  </p>
 </template>
 
 <style scoped>
@@ -22,9 +32,13 @@ import HelloWorld from './components/HelloWorld.vue';
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #1d78c1aa);
+  filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+
+.read-the-docs {
+  color: #888;
 }
 </style>

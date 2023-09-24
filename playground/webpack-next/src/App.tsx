@@ -1,5 +1,6 @@
 import Head from 'next/head';
-import Notes from './Notes';
+import Tree from './components/tree';
+import Notes from './components/Notes';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         </a>
       </div>
       <h1>Webpack + Next</h1>
+      <Tree />
       <div className="card">
         <Notes />
       </div>
