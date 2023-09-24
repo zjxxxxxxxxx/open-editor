@@ -45,11 +45,11 @@ const CSS = `
 }
 .tree {
   position: relative;
-  padding-left: 16px;
+  padding-left: 14px;
 }
 .line {
   position: absolute;
-  left: 17px;
+  left: 15px;
   top: 22px;
   opacity: 0.1;
   width: 1px;
@@ -72,7 +72,6 @@ const CSS = `
 }
 .element {
   font-size: 14px;
-  font-weight: 400;
   color: var(--element);
 }
 .empty {
@@ -88,18 +87,16 @@ const CSS = `
   opacity: 0.6;
 }
 .msg {
-  font-size: 14px;
-  font-weight: 200;
+  font-size: 12px;
   text-decoration: underline;
 }
 .name {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--green);
 }
 .file {
-  font-size: 14px;
-  font-weight: 200;
+  font-size: 12px;
   color: var(--cyan);
 }
 .name,
@@ -186,7 +183,7 @@ export function defineTreeElement() {
         <div class="title">
           <span class="element">${
             source.element
-          } in </span> &lt;Component Tree&gt;
+          } in </span> &lt;ComponentTree&gt;
         </div>
         <span class="close">${closeIcon}</span>
         <div class="tree content">
@@ -199,7 +196,7 @@ export function defineTreeElement() {
       this.#popup.classList.add('empty');
       this.#popup.innerHTML = `
         <div class="title empty">
-          <span class="element">${source.element} in </span> &lt;Component Tree&gt;
+          <span class="element">${source.element} in </span> &lt;ComponentTree&gt;
         </div>
         <span class="close empty">${closeIcon}</span>
         <div class="msg empty">empty tree 😭.</div>
