@@ -1,7 +1,7 @@
 {
   "name": "@open-editor/webpack",
   "version": "0.0.16",
-  "description": "A webpack plugin for fast find source code.",
+  "description": "A webpack plugin for fast find source code, supported in react and vue.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

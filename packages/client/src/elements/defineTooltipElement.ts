@@ -31,7 +31,6 @@ const CSS = `
 }
 .element {
   font-size: 14px;
-  font-weight: 400;
   color: var(--element);
 }
 .component {
@@ -39,8 +38,8 @@ const CSS = `
   font-weight: 500;
 }
 .file {
+  margin-top: 2px;
   font-size: 14px;
-  font-weight: 200;
   text-decoration: underline;
   word-wrap: break-word;
 }

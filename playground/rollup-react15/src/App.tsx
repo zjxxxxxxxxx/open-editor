@@ -1,4 +1,5 @@
-import Notes from './Notes';
+import Tree from './components/tree';
+import Notes from './components/Notes';
 import './App.css';
 
 export default function App(): React.JSX.Element {
@@ -17,6 +18,7 @@ export default function App(): React.JSX.Element {
         </a>
       </div>
       <h1>Rollup + React15</h1>
+      <Tree />
       <div className="card">
         <Notes />
       </div>

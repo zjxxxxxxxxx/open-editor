@@ -1,4 +1,5 @@
-import Notes from './Notes';
+import Tree from './components/tree';
+import Notes from './components/Notes';
 import './App.css';
 
 export default function App() {
@@ -13,6 +14,7 @@ export default function App() {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <Tree />
       <div className="card">
         <Notes />
       </div>
