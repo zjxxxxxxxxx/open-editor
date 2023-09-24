@@ -28,6 +28,9 @@ const CSS = `
   pointer-events: none;
   will-change: width, height, top, left;
 }
+.posttion div {
+  will-change: border;
+}
 .margin {
   border: 0px solid var(--overlay-margin);
 }
