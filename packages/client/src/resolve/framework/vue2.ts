@@ -8,19 +8,15 @@ function createResolver() {
     isValid: (instance) => Boolean(instance?.$vnode),
     isValidNext: (instance) => Boolean(instance.$parent?.$vnode),
     getNext: (instance) => instance.$parent,
-    getVueSource(instance) {
-      const { $props } = instance.$vnode.componentInstance;
-      return $props?.__source;
-    },
-    getFile(instance) {
-      const { Ctor } = instance.$vnode.componentOptions;
-      return Ctor?.__file ?? Ctor.options?.__file;
-    },
-    getName(instance) {
-      const { Ctor } = instance.$vnode.componentOptions;
-      return Ctor.options?.name;
-    },
+    getSource: (instance) => instance.$props?.__source,
+    getFile: (instance) =>
+      getCtor(instance).__file ?? getCtor(instance).options?.__file,
+    getName: (instance) => getCtor(instance).options?.name,
   });
+
+  function getCtor(instance: any) {
+    return instance.$vnode.componentOptions.Ctor;
+  }
 }
 
 export function resolveVue2(
@@ -28,8 +24,9 @@ export function resolveVue2(
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  if (debug.value._vnode.componentInstance) {
-    debug.value = debug.value._vnode.componentInstance;
+  const componentInstance = debug.value._vnode.componentInstance;
+  if (componentInstance) {
+    debug.value = componentInstance;
   }
 
   if (!resolver) createResolver();

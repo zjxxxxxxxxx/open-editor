@@ -7,7 +7,7 @@ interface VueResolverOptions<T = any> {
   isValid(instance: T): boolean;
   isValidNext(instance: T): boolean;
   getNext(instance: T): T | null | undefined;
-  getVueSource(instance: T): string | undefined;
+  getSource(instance: T): string | undefined;
   getFile(instance: T): string;
   getName(instance: T): string | undefined;
 }
@@ -32,15 +32,14 @@ function resolveVueSource<T = any>(
   deep: boolean,
   options: VueResolverOptions,
 ) {
-  const { isValid, isValidNext, getNext, getVueSource, getFile, getName } =
+  const { isValid, isValidNext, getNext, getSource, getFile, getName } =
     options;
 
   let [instance, source] = resolveVueSourceAnchor(debug, options);
-  console.log(instance, source);
 
   while (isValid(instance)) {
     if (isValidNext(instance)) {
-      const __source = getVueSource(instance);
+      const __source = getSource(instance);
       const __file = getFile(instance);
       if (
         isStr(__source) &&
@@ -69,27 +68,31 @@ function resolveVueSource<T = any>(
 
 function resolveVueSourceAnchor<T = any>(
   debug: ResolveDebug,
-  options: Pick<VueResolverOptions<T>, 'getVueSource' | 'getNext'>,
+  options: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
 ) {
-  const { getVueSource, getNext } = options;
+  const { isValidNext, getSource, getNext } = options;
 
   let instance = debug.value;
-  let element = debug.originalElement;
+  let element = debug.originalElement as HTMLElement & Record<string, any>;
   let __source: string | null | undefined;
 
   // find the first element with __source
   while (element && !isStr((__source = getElementVueSource(element)))) {
     element = element.parentElement!;
   }
-
   // if the element exists and belongs to the component, the result is returned
-  if ((<any>element)?.[debug.key] === instance) {
-    return <const>[instance, parseVueSource(__source!)];
+  if (element) {
+    if (element[debug.key] ? element[debug.key] === instance : true) {
+      return <const>[instance, parseVueSource(__source!)];
+    }
   }
-
+  // the root component returns the result directly
+  if (isStr(__source) && !isValidNext(instance)) {
+    return <const>[instance, parseVueSource(__source)];
+  }
   // try to get the result from the component
   while (instance) {
-    if (isStr((__source = getVueSource(instance)))) {
+    if (isStr((__source = getSource(instance)))) {
       return <const>[getNext(instance), parseVueSource(__source)];
     }
     instance = getNext(instance);
