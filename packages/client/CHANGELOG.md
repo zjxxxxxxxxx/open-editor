@@ -1,5 +1,20 @@
 # @open-editor/client
 
+## 0.1.0
+
+### Minor Changes
+
+- [#97](https://github.com/zjxxxxxxxxx/open-editor/pull/97) [`04521d7`](https://github.com/zjxxxxxxxxx/open-editor/commit/04521d7de16135d67ce5aaa2529b438494e41967) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - move toggle lengthwise
+
+### Patch Changes
+
+- [#96](https://github.com/zjxxxxxxxxx/open-editor/pull/96) [`eee4b34`](https://github.com/zjxxxxxxxxx/open-editor/commit/eee4b34eba31f807cf3f274d0bcc661df9ac9bda) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix `isVueSource` ignoring components
+
+- [#93](https://github.com/zjxxxxxxxxx/open-editor/pull/93) [`1faaf2c`](https://github.com/zjxxxxxxxxx/open-editor/commit/1faaf2c91934eb5930263e45c0f500afd29f4dd6) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix vue2 fail to find component
+
+- Updated dependencies [[`04521d7`](https://github.com/zjxxxxxxxxx/open-editor/commit/04521d7de16135d67ce5aaa2529b438494e41967)]:
+  - @open-editor/shared@0.1.0
+
 ## 0.0.16
 
 ### Patch Changes
