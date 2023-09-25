@@ -1,4 +1,11 @@
-import { on, off, applyStyle, create, append } from '../utils/document';
+import {
+  on,
+  off,
+  applyStyle,
+  create,
+  append,
+  CSS_util,
+} from '../utils/document';
 import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -10,6 +17,7 @@ const CSS = `
   right: 0px;
   z-index: var(--z-index-toggle);
   padding: 6px;
+  touch-action: none;
 }
 .button {
   padding: 2px;
@@ -19,6 +27,12 @@ const CSS = `
   background-color: var(--toggle-bg);
   transition: all 0.3s ease-out;
   border-radius: 50%;
+}
+@media (max-width: 960px) {
+  .button {
+    width: 26px;
+    height: 26px;
+  }
 }
 `;
 
@@ -35,6 +49,8 @@ export function defineToggleElement() {
       return ['active'];
     }
 
+    #cacheId = '__open_editor_toggle_pos_y__';
+    #touching = false;
     #root: HTMLElement;
     #button: HTMLElement;
 
@@ -46,6 +62,10 @@ export function defineToggleElement() {
 
       this.#root = create('div');
       this.#root.classList.add('root');
+
+      applyStyle(this.#root, {
+        top: CSS_util.px(parseInt(localStorage[this.#cacheId])),
+      });
 
       this.#button = create('div');
       this.#button.classList.add('button');
@@ -74,13 +94,43 @@ export function defineToggleElement() {
       on('click', this.#dispatchToggle, {
         target: this.#button,
       });
+      on('pointerdown', this.#touchStart, {
+        target: this.#root,
+      });
+      on('pointerup', this.#touchEnd);
+      on('pointermove', this.#changePosY);
     }
 
     public disconnectedCallback() {
       off('click', this.#dispatchToggle, {
         target: this.#button,
       });
+      off('pointerdown', this.#touchStart, {
+        target: this.#root,
+      });
+      off('pointerup', this.#touchEnd);
+      off('pointermove', this.#changePosY);
     }
+
+    #touchStart = () => {
+      this.#touching = true;
+    };
+
+    #touchEnd = () => {
+      this.#touching = false;
+    };
+
+    #changePosY = (e: PointerEvent) => {
+      if (this.#touching) {
+        e.preventDefault();
+        const { clientHeight: winH } = document.documentElement;
+        const { offsetHeight: toggleH } = this.#root;
+        const y = Math.min(Math.max(e.pageY - toggleH / 2, 0), winH - toggleH);
+        applyStyle(this.#root, {
+          top: CSS_util.px((localStorage[this.#cacheId] = y)),
+        });
+      }
+    };
 
     #dispatchToggle = () => {
       this.dispatchEvent(new CustomEvent('toggle'));
