@@ -51,6 +51,7 @@ export function defineToggleElement() {
 
     #cacheId = '__open_editor_toggle_pos_y__';
     #touching = false;
+    #active = false;
     #root: HTMLElement;
     #button: HTMLElement;
 
@@ -78,11 +79,13 @@ export function defineToggleElement() {
 
     public attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
+        this.#active = true;
         applyStyle(this.#button, {
           color: Colors.TOGGLE_ACTIVE_COLOR,
           filter: `drop-shadow(0 0 8px ${Colors.TOGGLE_ACTIVE_SHADOW})`,
         });
       } else {
+        this.#active = false;
         applyStyle(this.#button, {
           color: Colors.TOGGLE_COLOR,
           filter: 'none',
@@ -121,7 +124,7 @@ export function defineToggleElement() {
     };
 
     #changePosY = (e: PointerEvent) => {
-      if (this.#touching) {
+      if (this.#touching && !this.#active) {
         e.preventDefault();
         const { clientHeight: winH } = document.documentElement;
         const { offsetHeight: toggleH } = this.#root;
