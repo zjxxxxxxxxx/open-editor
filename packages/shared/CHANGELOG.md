@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.1.0
+
+### Minor Changes
+
+- [#97](https://github.com/zjxxxxxxxxx/open-editor/pull/97) [`04521d7`](https://github.com/zjxxxxxxxxx/open-editor/commit/04521d7de16135d67ce5aaa2529b438494e41967) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - move toggle lengthwise
+
 ## 0.0.16
 
 ### Patch Changes
