@@ -5,7 +5,7 @@
     "packages/*"
   ],
   "type": "module",
-  "description": "A web devtools for fast find source code, supported in react and vue.",
+  "description": "A web devtools for fast find source code, supported in React & Vue.",
   "scripts": {
     "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
     "clean": "rimraf -g {packages/**/.turbo,node_modules/.cache}",
