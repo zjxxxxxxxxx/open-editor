@@ -3,9 +3,11 @@
 [![CI](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml)
 [![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
 
-A web devtools for fast find source code, supported in react and vue.
+A web devtools for fast find source code, supported in `React` & `Vue`.
 
-If you need to switch back and forth between react and vue frequently, or if you have both react and vue in the same project, then this devtools is for you.
+They achieve exactly the same effect whether in `React` or `Vue`.
+
+If you need to switch back and forth between `React` & `Vue` frequently, or if you have both `React` & `Vue` in the same project, then this devtools is for you.
 
 ![image](./public/demo.gif)
 
@@ -165,3 +167,10 @@ By default, you can only open to `file`, if you want to open to `line` and `colu
     </tr>
   </tbody>
 </table>
+
+# Thanks
+
+The library was mainly inspired by a few great libraries.
+
+- [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
+- [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
