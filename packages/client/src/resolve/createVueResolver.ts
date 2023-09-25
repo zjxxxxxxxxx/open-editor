@@ -18,7 +18,7 @@ export function createVueResolver<T = any>(options: VueResolverOptions<T>) {
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    if (isVueSource(debug.originalElement)) {
+    if (isVueSource(debug, options)) {
       resolveVueSource(debug, tree, deep, options);
     } else {
       resolveVueInstance(debug.value, tree, deep, options);
@@ -134,16 +134,25 @@ function parseVueSource(__source: string) {
 }
 
 let cacheIsVueSource: boolean | undefined;
-function isVueSource(element?: HTMLElement | null) {
+function isVueSource<T = any>(
+  debug: ResolveDebug,
+  options: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
+) {
   if (isBol(cacheIsVueSource)) {
     return cacheIsVueSource;
   }
 
-  while (element) {
-    if (isStr(getElementVueSource(element))) {
+  if (document.querySelector('*[__source]')) {
+    return (cacheIsVueSource = true);
+  }
+
+  const { getNext, getSource } = options;
+  let { value: instance } = debug;
+  while (instance) {
+    if (isStr(getSource(instance))) {
       return (cacheIsVueSource = true);
     }
-    element = element.parentElement;
+    instance = getNext(instance);
   }
 
   return (cacheIsVueSource = false);
