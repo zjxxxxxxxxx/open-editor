@@ -40,6 +40,7 @@ By default, you can only open to `file`, if you want to open to `line` and `colu
 1. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then click the HTML element you wish to inspect.
 2. press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, then press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show component tree.
 3. press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
+4. 🖱 hold the toggle button and drag the mouse to adjust the toggle position.
 
 ## Plugins
 
