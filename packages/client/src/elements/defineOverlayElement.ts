@@ -11,6 +11,7 @@ import {
   on,
   off,
 } from '../utils/document';
+import { create_RAF } from '../utils/createRAF';
 import { InternalElements } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -119,24 +120,13 @@ export function defineOverlayElement() {
       this.#update_RAF();
     };
 
-    #last_RAF?: number;
-    #update_RAF = () => {
-      if (this.#last_RAF) {
-        cancelAnimationFrame(this.#last_RAF);
-      }
-      this.#last_RAF = requestAnimationFrame(() => {
-        this.#last_RAF = undefined;
-        this.#update();
-      });
-    };
-
-    #update() {
+    #update_RAF = create_RAF(() => {
       const styles = this.#activeElement
         ? getComputedStyles(this.#activeElement)
         : emptyComputedStyles;
       this.#updateStyles(styles);
       this.#tooltip.update(this.#activeElement, styles.posttion);
-    }
+    });
 
     #updateStyles(styles: Record<string, ComputedStyle>) {
       applyStyle(this.#posttion, {
