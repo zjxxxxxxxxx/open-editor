@@ -6,6 +6,7 @@ import {
   append,
   CSS_util,
 } from '../utils/document';
+import { create_RAF } from '../utils/createRAF';
 import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -64,10 +65,6 @@ export function defineToggleElement() {
       this.#root = create('div');
       this.#root.classList.add('root');
 
-      applyStyle(this.#root, {
-        top: CSS_util.px(parseInt(localStorage[this.#cacheId])),
-      });
-
       this.#button = create('div');
       this.#button.classList.add('button');
       this.#button.title = 'open-editor-toggle';
@@ -75,6 +72,8 @@ export function defineToggleElement() {
 
       append(this.#root, this.#button);
       append(shadow, this.#root);
+
+      this.#updatePosY_RAF();
     }
 
     public attributeChangedCallback(_: never, __: never, newValue: string) {
@@ -97,6 +96,9 @@ export function defineToggleElement() {
       on('click', this.#dispatchToggle, {
         target: this.#button,
       });
+      on('resize', this.#updatePosY_RAF, {
+        target: window,
+      });
       on('pointerdown', this.#touchStart, {
         target: this.#root,
       });
@@ -107,6 +109,9 @@ export function defineToggleElement() {
     public disconnectedCallback() {
       off('click', this.#dispatchToggle, {
         target: this.#button,
+      });
+      off('resize', this.#updatePosY_RAF, {
+        target: window,
       });
       off('pointerdown', this.#touchStart, {
         target: this.#root,
@@ -126,14 +131,21 @@ export function defineToggleElement() {
     #changePosY = (e: PointerEvent) => {
       if (this.#touching && !this.#active) {
         e.preventDefault();
-        const { clientHeight: winH } = document.documentElement;
-        const { offsetHeight: toggleH } = this.#root;
-        const y = Math.min(Math.max(e.pageY - toggleH / 2, 0), winH - toggleH);
-        applyStyle(this.#root, {
-          top: CSS_util.px((localStorage[this.#cacheId] = y)),
-        });
+        localStorage[this.#cacheId] = e.pageY;
+        this.#updatePosY_RAF();
       }
     };
+
+    #updatePosY_RAF = create_RAF(() => {
+      const { clientHeight: winH } = document.documentElement;
+      const { offsetHeight: toggleH } = this.#root;
+      const cachePosY = parseInt(localStorage[this.#cacheId]);
+
+      const y = Math.min(Math.max(cachePosY - toggleH / 2, 0), winH - toggleH);
+      applyStyle(this.#root, {
+        top: CSS_util.px(y),
+      });
+    });
 
     #dispatchToggle = () => {
       this.dispatchEvent(new CustomEvent('toggle'));
