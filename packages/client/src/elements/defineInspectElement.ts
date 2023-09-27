@@ -1,8 +1,8 @@
 import { applyAttrs, create, on, off, append } from '../utils/document';
 import { isValidElement } from '../utils/element';
-import { setupListenersOnHTML } from '../utils/setupListenersOnHTML';
+import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
-import { InternalElements, Theme } from '../constants';
+import { InternalElements, Theme, captureOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import { HTMLOverlayElement } from './defineOverlayElement';
@@ -17,6 +17,10 @@ const CSS = `
   font-family: Menlo, Monaco, 'Courier New', monospace;
   line-height: 1.5;
   font-weight: 400;
+  cursor: default !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
 }
 :host {
   all: initial !important;
@@ -73,8 +77,8 @@ export function defineInspectElement() {
     }
 
     public connectedCallback() {
-      on('keydown', this.#onKeydown, { capture: true });
-      on('pointermove', this.#changePointer, { capture: true });
+      on('keydown', this.#onKeydown, captureOpts);
+      on('pointermove', this.#changePointer, captureOpts);
       on('exit', this.#cleanupHandlers, {
         target: this.#tree,
       });
@@ -87,8 +91,8 @@ export function defineInspectElement() {
     }
 
     public disconnectedCallback() {
-      off('keydown', this.#onKeydown, { capture: true });
-      off('pointermove', this.#changePointer, { capture: true });
+      off('keydown', this.#onKeydown, captureOpts);
+      off('pointermove', this.#changePointer, captureOpts);
       off('exit', this.#cleanupHandlers, {
         target: this.#tree,
       });
@@ -125,12 +129,6 @@ export function defineInspectElement() {
       if (!this.#active) {
         this.#active = true;
         this.#overlay.open();
-        this.#cleanupListenersOnHTML = setupListenersOnHTML({
-          onChangeElement: this.#overlay.update,
-          onOpenTree: this.#tree.open,
-          onOpenEditor: this.#openEditor,
-          onExitInspect: this.#cleanupHandlers,
-        });
 
         if (this.#pointer) {
           const { x, y } = this.#pointer;
@@ -140,18 +138,24 @@ export function defineInspectElement() {
           }
         }
 
+        this.#cleanupListenersOnWindow = setupListenersOnWindow({
+          onChangeElement: this.#overlay.update,
+          onOpenTree: this.#tree.open,
+          onOpenEditor: this.#openEditor,
+          onExitInspect: this.#cleanupHandlers,
+        });
         this.#appendResetStyle();
       }
     }
 
-    #cleanupListenersOnHTML!: () => void;
+    #cleanupListenersOnWindow!: () => void;
 
     #cleanupHandlers = () => {
       if (this.#active) {
         this.#active = false;
         this.#overlay.close();
         this.#tree.close();
-        this.#cleanupListenersOnHTML();
+        this.#cleanupListenersOnWindow();
         this.#removeResetStyle();
       }
     };
@@ -163,7 +167,9 @@ export function defineInspectElement() {
           * {
             cursor: default !important;
             user-select: none !important;
-          } 
+            -webkit-user-select: none !important;
+            -webkit-touch-callout: none !important;
+          }
         `;
       }
 

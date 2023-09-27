@@ -1,5 +1,8 @@
+import { captureOpts } from '../constants';
 import { on, off, applyAttrs } from './document';
 import { isInternalElement, isValidElement } from './element';
+import type { LongPressEvent } from './longPressHandler';
+import { longPressHandler } from './longPressHandler';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
@@ -8,7 +11,7 @@ export interface SetupHandlersOptions {
   onExitInspect(): void;
 }
 
-export function setupListenersOnHTML(options: SetupHandlersOptions) {
+export function setupListenersOnWindow(options: SetupHandlersOptions) {
   const onChangeElement = wrapHoldElementRestoreDisabled(
     options.onChangeElement,
   );
@@ -16,62 +19,72 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
   const onOpenTree = wrapHoldElementRestoreDisabled(options.onOpenTree);
   const onExitInspect = wrapHoldElementRestoreDisabled(options.onExitInspect);
 
-  function registerListenersOnHTML() {
-    on('click', onClick, { capture: true });
+  function registerEventListeners() {
+    on('click', onClick, {
+      ...captureOpts,
+      target: document,
+    });
 
-    on('mousedown', onSilence, { capture: true });
-    on('mouseenter', onSilence, { capture: true });
-    on('mouseleave', onSilence, { capture: true });
-    on('mousemove', onSilence, { capture: true });
-    on('mouseout', onSilence, { capture: true });
-    on('mouseover', onSilence, { capture: true });
-    on('mouseup', onSilence, { capture: true });
+    on('mousedown', onSilence, captureOpts);
+    on('mouseenter', onSilence, captureOpts);
+    on('mouseleave', onSilence, captureOpts);
+    on('mousemove', onSilence, captureOpts);
+    on('mouseout', onSilence, captureOpts);
+    on('mouseover', onSilence, captureOpts);
+    on('mouseup', onSilence, captureOpts);
 
-    on('pointercancel', onSilence, { capture: true });
-    on('pointerdown', onPointerDown, { capture: true });
-    on('pointerenter', onSilence, { capture: true });
-    on('pointerleave', onPointerLeave, { capture: true });
-    on('pointermove', onSilence, { capture: true });
-    on('pointerout', onSilence, { capture: true });
-    on('pointerover', onPointerOver, { capture: true });
-    on('pointerup', onSilence, { capture: true });
+    on('pointercancel', onSilence, captureOpts);
+    on('pointerdown', onPointerDown, captureOpts);
+    on('pointerenter', onSilence, captureOpts);
+    on('pointerleave', onPointerLeave, captureOpts);
+    on('pointermove', onSilence, captureOpts);
+    on('pointerout', onSilence, captureOpts);
+    on('pointerover', onPointerOver, captureOpts);
+    on('pointerup', onSilence, captureOpts);
 
-    on('touchstart', onSilence, { capture: true });
-    on('touchend', onSilence, { capture: true });
-    on('touchcancel', onSilence, { capture: true });
-    on('touchmove', onSilence, { capture: true });
+    on('touchstart', onSilence, captureOpts);
+    on('touchend', onSilence, captureOpts);
+    on('touchcancel', onSilence, captureOpts);
+    on('touchmove', onSilence, captureOpts);
 
-    on('keydown', onKeyDown, { capture: true });
-    on('contextmenu', onContextMenu, { capture: true });
+    on('keydown', onKeyDown, captureOpts);
+    on('contextmenu', onContextMenu, captureOpts);
+
+    longPressHandler.on(onLongPress, captureOpts);
   }
 
-  function removeEventListenersOnHTML() {
-    off('click', onClick, { capture: true });
+  function removeEventListeners() {
+    off('click', onClick, {
+      ...captureOpts,
+      target: document,
+    });
 
-    off('mousedown', onSilence, { capture: true });
-    off('mouseenter', onSilence, { capture: true });
-    off('mouseleave', onSilence, { capture: true });
-    off('mousemove', onSilence, { capture: true });
-    off('mouseout', onSilence, { capture: true });
-    off('mouseover', onSilence, { capture: true });
-    off('mouseup', onSilence, { capture: true });
+    off('mousedown', onSilence, captureOpts);
+    off('mouseenter', onSilence, captureOpts);
+    off('mouseleave', onSilence, captureOpts);
+    off('mousemove', onSilence, captureOpts);
+    off('mouseout', onSilence, captureOpts);
+    off('mouseover', onSilence, captureOpts);
+    off('mouseup', onSilence, captureOpts);
 
-    off('pointercancel', onSilence, { capture: true });
-    off('pointerdown', onPointerDown, { capture: true });
-    off('pointerenter', onSilence, { capture: true });
-    off('pointerleave', onPointerLeave, { capture: true });
-    off('pointermove', onSilence, { capture: true });
-    off('pointerout', onSilence, { capture: true });
-    off('pointerover', onPointerOver, { capture: true });
-    off('pointerup', onSilence, { capture: true });
+    off('pointercancel', onSilence, captureOpts);
+    off('pointerdown', onPointerDown, captureOpts);
+    off('pointerenter', onSilence, captureOpts);
+    off('pointerleave', onPointerLeave, captureOpts);
+    off('pointermove', onSilence, captureOpts);
+    off('pointerout', onSilence, captureOpts);
+    off('pointerover', onPointerOver, captureOpts);
+    off('pointerup', onSilence, captureOpts);
 
-    off('touchstart', onSilence, { capture: true });
-    off('touchend', onSilence, { capture: true });
-    off('touchcancel', onSilence, { capture: true });
-    off('touchmove', onSilence, { capture: true });
+    off('touchstart', onSilence, captureOpts);
+    off('touchend', onSilence, captureOpts);
+    off('touchcancel', onSilence, captureOpts);
+    off('touchmove', onSilence, captureOpts);
 
-    off('keydown', onKeyDown, { capture: true });
-    off('contextmenu', onContextMenu, { capture: true });
+    off('keydown', onKeyDown, captureOpts);
+    off('contextmenu', onContextMenu, captureOpts);
+
+    longPressHandler.off(onLongPress, captureOpts);
   }
 
   function onPointerDown(event: PointerEvent) {
@@ -81,7 +94,6 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
 
   function onClick(event: PointerEvent) {
     onSilence(event);
-
     const element = <HTMLElement>event.target;
     if (element === holdElement) {
       if (event.metaKey) {
@@ -128,8 +140,16 @@ export function setupListenersOnHTML(options: SetupHandlersOptions) {
     onExitInspect();
   }
 
-  registerListenersOnHTML();
-  return removeEventListenersOnHTML;
+  function onLongPress(event: LongPressEvent) {
+    const element = event.detail;
+    if (isValidElement(element)) {
+      onChangeElement();
+      onOpenTree(element);
+    }
+  }
+
+  registerEventListeners();
+  return removeEventListeners;
 }
 
 function onSilence(event: Event, all?: boolean) {
@@ -138,10 +158,9 @@ function onSilence(event: Event, all?: boolean) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // See https://www.chromestatus.com/feature/5093566007214080.
     if (!(<any>event).type.startsWith('touch')) {
-      event.preventDefault?.();
+      event.preventDefault();
     }
-    event.stopPropagation?.();
-    event.stopImmediatePropagation?.();
+    event.stopPropagation();
   }
 }
 

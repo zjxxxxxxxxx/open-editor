@@ -12,7 +12,7 @@ import {
   off,
 } from '../utils/document';
 import { create_RAF } from '../utils/createRAF';
-import { InternalElements } from '../constants';
+import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
@@ -96,10 +96,7 @@ export function defineOverlayElement() {
       });
       this.#tooltip.open();
 
-      on('scroll', this.#update_RAF, {
-        target: window,
-        capture: true,
-      });
+      on('scroll', this.#update_RAF, captureOpts);
     };
 
     public close = () => {
@@ -109,10 +106,7 @@ export function defineOverlayElement() {
       this.#tooltip.close();
       this.update();
 
-      off('scroll', this.#update_RAF, {
-        target: window,
-        capture: true,
-      });
+      off('scroll', this.#update_RAF, captureOpts);
     };
 
     public update = (activeElement?: HTMLElement) => {

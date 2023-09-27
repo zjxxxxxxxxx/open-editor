@@ -38,11 +38,9 @@ export function on(
   listener: (ev: any) => void,
   options?: AddEventListenerOptions & { target?: any },
 ): void;
-export function on(type: any, listener: any, options: any = {}) {
-  if (!options.target) {
-    options.target = document.documentElement;
-  }
-  options.target.addEventListener(type, listener, options);
+export function on(type: any, listener: any, rawOptions: any = {}) {
+  const { target = window, ...options } = rawOptions;
+  target.addEventListener(type, listener, options);
 }
 
 export function off<K extends keyof HTMLElementEventMap>(
@@ -55,11 +53,9 @@ export function off(
   listener: (ev: any) => void,
   options?: EventListenerOptions & { target?: any },
 ): void;
-export function off(type: any, listener: any, options: any = {}) {
-  if (!options.target) {
-    options.target = document.documentElement;
-  }
-  options.target.removeEventListener(type, listener, options);
+export function off(type: any, listener: any, rawOptions: any = {}) {
+  const { target = window, ...options } = rawOptions;
+  target.removeEventListener(type, listener, options);
 }
 
 export function create<K extends keyof HTMLElementTagNameMap>(
