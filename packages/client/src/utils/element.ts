@@ -8,8 +8,10 @@ export function isInternalElement(element: HTMLElement) {
 }
 
 const filterElementRE = /^(html|body|iframe)$/;
+export function isFilterElement(element: HTMLElement) {
+  return filterElementRE.test(element.localName);
+}
+
 export function isValidElement(element: HTMLElement) {
-  return (
-    !isInternalElement(element) && !filterElementRE.test(element.localName)
-  );
+  return !isInternalElement(element) && !isFilterElement(element);
 }

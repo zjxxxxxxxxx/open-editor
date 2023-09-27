@@ -55,3 +55,7 @@ export const Colors = <const>{
 };
 
 export const CLIENT = typeof window !== 'undefined';
+
+export const captureOpts = {
+  capture: true,
+};

@@ -17,13 +17,13 @@ const CSS = `
   top: 0px;
   right: 0px;
   z-index: var(--z-index-toggle);
-  padding: 6px;
+  padding: 8px;
   touch-action: none;
 }
 .button {
   padding: 2px;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   color: var(--toggle);
   background-color: var(--toggle-bg);
   transition: all 0.3s ease-out;
@@ -96,9 +96,7 @@ export function defineToggleElement() {
       on('click', this.#dispatchToggle, {
         target: this.#button,
       });
-      on('resize', this.#updatePosY_RAF, {
-        target: window,
-      });
+      on('resize', this.#updatePosY_RAF);
       on('pointerdown', this.#touchStart, {
         target: this.#root,
       });
@@ -110,9 +108,7 @@ export function defineToggleElement() {
       off('click', this.#dispatchToggle, {
         target: this.#button,
       });
-      off('resize', this.#updatePosY_RAF, {
-        target: window,
-      });
+      off('resize', this.#updatePosY_RAF);
       off('pointerdown', this.#touchStart, {
         target: this.#root,
       });

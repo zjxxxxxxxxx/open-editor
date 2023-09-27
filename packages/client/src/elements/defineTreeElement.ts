@@ -1,7 +1,7 @@
 import { append, applyStyle, create, off, on } from '../utils/document';
 import { openEditor } from '../utils/openEditor';
-import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
 import { InternalElements } from '../constants';
+import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
 
 export interface HTMLTreeElement extends HTMLElement {
   open(element: HTMLElement): void;
@@ -32,12 +32,12 @@ const CSS = `
   background-color: var(--bg-color);
 }
 .content {
-  padding-right: 16px;
-  min-width: min(calc(100vw - 156px), 300px);
-  max-width: min(calc(100vw - 156px), 800px);
-  max-height: min(calc(100vh - 156px), 600px);
+  padding-right: 14px;
+  min-width: min(calc(100vw - 152px), 300px);
+  max-width: min(calc(100vw - 152px), 800px);
+  max-height: min(calc(100vh - 152px), 600px);
   white-space: nowrap;
-  overflow: scroll;
+  overflow: auto;
   scrollbar-width: none;
 }
 .content::-webkit-scrollbar {
@@ -133,18 +133,12 @@ export function defineTreeElement() {
     }
 
     public connectedCallback() {
-      on('click', this.close, {
-        target: this.#root,
-      });
       on('click', this.#handlePopupEvent, {
         target: this.#popup,
       });
     }
 
     public disconnectedCallback() {
-      off('click', this.close, {
-        target: this.#root,
-      });
       off('click', this.#handlePopupEvent, {
         target: this.#popup,
       });
@@ -186,8 +180,10 @@ export function defineTreeElement() {
           } in </span> &lt;ComponentTree&gt;
         </div>
         <span class="close">${closeIcon}</span>
-        <div class="tree content">
-          ${this.#buildTree(source.tree)}
+        <div class="content">
+          <div class="tree">
+            ${this.#buildTree(source.tree)}
+          </div>
         </div>
       `;
     }
