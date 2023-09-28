@@ -1,7 +1,10 @@
+import { isStr } from '@open-editor/shared';
 import { append, applyStyle, create, off, on } from '../utils/document';
+import { createStyleInject } from '../utils/createStyleInject';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements } from '../constants';
-import { ElementSource, ElementSourceMeta, resolveSource } from '../resolve';
+import type { ElementSource, ElementSourceMeta } from '../resolve';
+import { resolveSource } from '../resolve';
 
 export interface HTMLTreeElement extends HTMLElement {
   open(element: HTMLElement): void;
@@ -105,6 +108,12 @@ const CSS = `
 }
 `;
 
+const scrollLockCSS = `
+body {
+  overflow: hidden !important;
+}
+`;
+
 const closeIcon = `
 <svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
   <path d="M619.53908575 512l327.95607772-327.19338858a76.26885573 76.26885573 0 1 0-108.30177489-108.30177489L512 404.46091425l-327.19338858-327.95607772a76.26885573 76.26885573 0 0 0-108.30177489 108.30177489l327.95607772 327.19338858-327.95607772 327.19338858a76.26885573 76.26885573 0 0 0 0 108.30177489 76.26885573 76.26885573 0 0 0 108.30177489 0l327.19338858-327.95607772 327.19338858 327.95607772a76.26885573 76.26885573 0 0 0 108.30177489 0 76.26885573 76.26885573 0 0 0 0-108.30177489z"></path>
@@ -112,9 +121,12 @@ const closeIcon = `
 `;
 
 export function defineTreeElement() {
+  const scrollLockStyle = createStyleInject(scrollLockCSS);
+
   class TreeElement extends HTMLElement implements HTMLTreeElement {
     #root: HTMLElement;
     #popup: HTMLElement;
+    #holdElement?: HTMLElement;
 
     constructor() {
       super();
@@ -136,10 +148,16 @@ export function defineTreeElement() {
       on('click', this.#handlePopupEvent, {
         target: this.#popup,
       });
+      on('pointerdown', this.#setHoldElement, {
+        target: this.#popup,
+      });
     }
 
     public disconnectedCallback() {
       off('click', this.#handlePopupEvent, {
+        target: this.#popup,
+      });
+      off('pointerdown', this.#setHoldElement, {
         target: this.#popup,
       });
       off('click', this.close, {
@@ -163,12 +181,15 @@ export function defineTreeElement() {
       on('click', this.close, {
         target: this.#root.querySelector('.close'),
       });
+
+      scrollLockStyle.insert();
     };
 
     public close = () => {
       applyStyle(this.#root, {
         display: 'none',
       });
+      scrollLockStyle.remove();
     };
 
     #renderTreeView(source: ElementSource) {
@@ -245,19 +266,24 @@ export function defineTreeElement() {
       `;
     }
 
+    #setHoldElement = (e: PointerEvent) => {
+      this.#holdElement = <HTMLElement>e.target;
+    };
+
     #handlePopupEvent = (e: PointerEvent) => {
       const element = <HTMLElement>e.target;
-      const hasSource = Object.keys(element.dataset).length;
-      if (!hasSource) {
-        e.stopPropagation();
-        return;
-      }
+      // Prevent the display of the component tree by long press, which accidentally triggers the click event
+      if (element === this.#holdElement) {
+        if (!isStr(element.dataset.file)) {
+          return;
+        }
 
-      openEditor(
-        <ElementSourceMeta>(<unknown>element.dataset),
-        this.dispatchEvent.bind(this),
-      );
-      this.dispatchEvent(new CustomEvent('exit'));
+        openEditor(
+          <ElementSourceMeta>(<unknown>element.dataset),
+          this.dispatchEvent.bind(this),
+        );
+        this.dispatchEvent(new CustomEvent('exit'));
+      }
     };
   }
 

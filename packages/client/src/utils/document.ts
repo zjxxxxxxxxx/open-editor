@@ -38,8 +38,8 @@ export function on(
   listener: (ev: any) => void,
   options?: AddEventListenerOptions & { target?: any },
 ): void;
-export function on(type: any, listener: any, rawOptions: any = {}) {
-  const { target = window, ...options } = rawOptions;
+export function on(type: any, listener: any, rawOpts: any = {}) {
+  const { target = window, ...options } = rawOpts;
   target.addEventListener(type, listener, options);
 }
 
@@ -53,8 +53,8 @@ export function off(
   listener: (ev: any) => void,
   options?: EventListenerOptions & { target?: any },
 ): void;
-export function off(type: any, listener: any, rawOptions: any = {}) {
-  const { target = window, ...options } = rawOptions;
+export function off(type: any, listener: any, rawOpts: any = {}) {
+  const { target = window, ...options } = rawOpts;
   target.removeEventListener(type, listener, options);
 }
 

@@ -94,6 +94,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
   function onClick(event: PointerEvent) {
     onSilence(event);
+
     const element = <HTMLElement>event.target;
     if (element === holdElement) {
       if (event.metaKey) {
