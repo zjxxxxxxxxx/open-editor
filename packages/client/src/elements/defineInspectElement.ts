@@ -1,5 +1,6 @@
 import { applyAttrs, create, on, off, append } from '../utils/document';
 import { isValidElement } from '../utils/element';
+import { createStyleInject } from '../utils/createStyleInject';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements, Theme, captureOpts } from '../constants';
@@ -27,13 +28,23 @@ const CSS = `
 }
 `;
 
+const resetCSS = `
+* {
+  cursor: default !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+`;
+
 export function defineInspectElement() {
+  const resetStyle = createStyleInject(resetCSS);
+
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     #overlay: HTMLOverlayElement;
     #tree: HTMLTreeElement;
     #toggle?: HTMLToggleElement;
     #pointer!: PointerEvent;
-    #resetStyle!: HTMLStyleElement;
 
     #__active__!: boolean;
     get #active() {
@@ -144,7 +155,7 @@ export function defineInspectElement() {
           onOpenEditor: this.#openEditor,
           onExitInspect: this.#cleanupHandlers,
         });
-        this.#appendResetStyle();
+        resetStyle.insert();
       }
     }
 
@@ -156,29 +167,9 @@ export function defineInspectElement() {
         this.#overlay.close();
         this.#tree.close();
         this.#cleanupListenersOnWindow();
-        this.#removeResetStyle();
+        resetStyle.remove();
       }
     };
-
-    #appendResetStyle() {
-      if (!this.#resetStyle) {
-        this.#resetStyle = create('style');
-        this.#resetStyle.innerHTML = `
-          * {
-            cursor: default !important;
-            user-select: none !important;
-            -webkit-user-select: none !important;
-            -webkit-touch-callout: none !important;
-          }
-        `;
-      }
-
-      append(document.body, this.#resetStyle);
-    }
-
-    #removeResetStyle() {
-      this.#resetStyle.remove();
-    }
 
     #openEditor = (element: HTMLElement) => {
       const { meta } = resolveSource(element);
