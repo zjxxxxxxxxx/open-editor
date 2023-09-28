@@ -11,13 +11,13 @@ export type LongPressEvent = CustomEvent<HTMLElement>;
 
 export type LongPressListener = (ev: LongPressEvent) => void;
 
-export type ListenerMap = {
-  listener: LongPressListener;
-  options: LongPressOptions;
-  cleanup: any;
+export type LongPressCache = {
+  cb: LongPressListener;
+  opts: LongPressOptions;
+  stop: () => void;
 };
 
-const targetMap = new WeakMap<Target, ListenerMap[]>();
+const targetMap = new WeakMap<Target, LongPressCache[]>();
 
 export const longPressHandler = {
   on: onLongPress,
@@ -26,67 +26,75 @@ export const longPressHandler = {
 
 function onLongPress(
   listener: LongPressListener,
-  rawOptions: LongPressOptions = {},
+  rawOpts: LongPressOptions = {},
 ) {
-  const options = {
-    ...rawOptions,
-    target: rawOptions.target ?? window,
+  const { target = window, once, ...options } = rawOpts;
+  const caches = targetMap.get(target) ?? [];
+  const cleanup = setupListener((event) => {
+    listener(event);
+    if (once) {
+      offLongPress(listener, rawOpts);
+    }
+  }, options);
+  const cache = {
+    cb: listener,
+    opts: rawOpts,
+    stop: cleanup,
   };
-
-  const listenerMaps = targetMap.get(options.target) ?? [];
-  listenerMaps.push({
-    listener,
-    options,
-    cleanup: setupListener(listener, options),
-  });
-  targetMap.set(options.target, listenerMaps);
+  targetMap.set(target, [...caches, cache]);
 }
 
 function offLongPress(
   listener: LongPressListener,
-  rawOptions: LongPressOptions = {},
+  rawOpts: LongPressOptions = {},
 ) {
-  const options = {
-    ...rawOptions,
-    target: rawOptions.target ?? window,
-  };
-
-  const listenerMaps = targetMap.get(options.target);
-  if (listenerMaps) {
-    const nextListenerMaps = listenerMaps.filter((listenerMap) => {
-      if (
-        listenerMap.listener === listener &&
-        listenerMap.options.capture === options.capture
-      ) {
-        listenerMap.cleanup();
+  const { target = window } = rawOpts;
+  const caches = targetMap.get(target);
+  if (caches) {
+    const nextCaches = caches.filter((cache) => {
+      if (isSameListener(cache, listener, rawOpts)) {
+        cache.stop();
         return false;
       }
       return true;
     });
-    if (nextListenerMaps.length) {
-      targetMap.set(options.target, nextListenerMaps);
+    if (nextCaches.length) {
+      targetMap.set(target, nextCaches);
     } else {
-      targetMap.delete(options.target);
+      targetMap.delete(target);
     }
   }
 }
 
-function setupListener(listener: LongPressListener, options: LongPressOptions) {
-  let timer: NodeJS.Timeout | number | null = null;
+const optionKeys = <const>['capture', 'passive', 'once'];
+function isSameListener(
+  cache: LongPressCache,
+  cb: LongPressListener,
+  opts: LongPressOptions,
+) {
+  return (
+    cache.cb === cb && optionKeys.every((key) => cache.opts[key] === opts[key])
+  );
+}
+
+function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
+  const { wait = 500, ...options } = rawOpts;
+
+  let waitTimer: NodeJS.Timeout | number | null = null;
 
   function start(event: PointerEvent) {
-    timer = setTimeout(() => {
+    waitTimer = setTimeout(() => {
       const customEvent = new CustomEvent('longpress', {
         detail: <HTMLElement>event.target,
       });
       listener(customEvent);
-    }, options.wait ?? 600);
+    }, wait);
   }
 
   function clean() {
-    if (timer != null) {
-      clearTimeout(timer);
-      timer = null;
+    if (waitTimer != null) {
+      clearTimeout(waitTimer);
+      waitTimer = null;
     }
   }
 
