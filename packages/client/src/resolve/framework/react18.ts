@@ -13,8 +13,12 @@ function createResolver() {
       }
       return false;
     },
-    getOwner: (fiber) => fiber?._debugOwner,
-    getSource: (fiber) => fiber?._debugSource,
+    getOwner(fiber) {
+      return fiber?._debugOwner;
+    },
+    getSource(fiber) {
+      return fiber?._debugSource;
+    },
     getName(owner) {
       if (owner) {
         const component = isFunc(owner.type)

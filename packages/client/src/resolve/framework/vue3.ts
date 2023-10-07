@@ -6,12 +6,24 @@ import { createVueResolver } from '../createVueResolver';
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
 function createResolver() {
   resolver = createVueResolver({
-    isValid: (instance) => Boolean(instance),
-    isValidNext: (instance) => Boolean(instance.parent),
-    getNext: (instance) => instance.parent,
-    getSource: (instance) => <string>instance.props.__source,
-    getFile: (instance) => <string>instance.type.__file,
-    getName: (instance) => instance.type.name ?? instance.type.__name,
+    isValid(instance) {
+      return Boolean(instance);
+    },
+    isValidNext(instance) {
+      return Boolean(instance.parent);
+    },
+    getNext(instance) {
+      return instance.parent;
+    },
+    getSource(instance) {
+      return <string>instance.props.__source;
+    },
+    getFile(instance) {
+      return <string>instance.type.__file;
+    },
+    getName(instance) {
+      return instance.type.name ?? instance.type.__name;
+    },
   });
 }
 

@@ -44,14 +44,14 @@ function buildBundles(
     bundles.push({
       file: output,
       format: 'esm',
-      sourcemap: true,
+      sourcemap: __DEV__,
     });
   } else {
     if (output.require) {
       bundles.push({
         file: output.require,
         format: 'cjs',
-        sourcemap: true,
+        sourcemap: __DEV__,
       });
     }
 
@@ -59,7 +59,7 @@ function buildBundles(
       bundles.push({
         file: output.import,
         format: 'esm',
-        sourcemap: true,
+        sourcemap: __DEV__,
       });
     }
   }
@@ -76,7 +76,10 @@ function buildBundles(
         commonjs(),
         esbuild({
           target: __TARGET__,
-          minify: !__DEV__,
+          minifySyntax: !__DEV__,
+          supported: {
+            'class-field': true,
+          },
         }),
       ],
     };
