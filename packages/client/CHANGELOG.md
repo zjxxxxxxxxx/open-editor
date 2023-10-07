@@ -1,5 +1,20 @@
 # @open-editor/client
 
+## 0.2.0
+
+### Minor Changes
+
+- [#101](https://github.com/zjxxxxxxxxx/open-editor/pull/101) [`fee5fe0`](https://github.com/zjxxxxxxxxx/open-editor/commit/fee5fe0da31338e61f92557fc51c00088e821470) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - long press show component tree
+
+### Patch Changes
+
+- [#99](https://github.com/zjxxxxxxxxx/open-editor/pull/99) [`67527da`](https://github.com/zjxxxxxxxxx/open-editor/commit/67527dad0b6f7dfb91145e3025e9e6abbff9dc3c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix posY initialization out of screen scope
+
+- [#102](https://github.com/zjxxxxxxxxx/open-editor/pull/102) [`ea53c03`](https://github.com/zjxxxxxxxxx/open-editor/commit/ea53c036f56a87e71ae9ef1611ea487a41c8a778) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - prevents long presses from accidentally triggering click events
+
+- Updated dependencies []:
+  - @open-editor/shared@0.2.0
+
 ## 0.1.0
 
 ### Minor Changes
