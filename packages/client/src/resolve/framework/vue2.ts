@@ -5,13 +5,24 @@ import { createVueResolver } from '../createVueResolver';
 let resolver: ReturnType<typeof createVueResolver<any>>;
 function createResolver() {
   resolver = createVueResolver({
-    isValid: (instance) => Boolean(instance?.$vnode),
-    isValidNext: (instance) => Boolean(instance.$parent?.$vnode),
-    getNext: (instance) => instance.$parent,
-    getSource: (instance) => instance.$props?.__source,
-    getFile: (instance) =>
-      getCtor(instance).__file ?? getCtor(instance).options?.__file,
-    getName: (instance) => getCtor(instance).options?.name,
+    isValid(instance) {
+      return Boolean(instance?.$vnode);
+    },
+    isValidNext(instance) {
+      return Boolean(instance.$parent?.$vnode);
+    },
+    getNext(instance) {
+      return instance.$parent;
+    },
+    getSource(instance) {
+      return instance.$props?.__source;
+    },
+    getFile(instance) {
+      return getCtor(instance).__file ?? getCtor(instance).options?.__file;
+    },
+    getName(instance) {
+      return getCtor(instance).options?.name;
+    },
   });
 
   function getCtor(instance: any) {

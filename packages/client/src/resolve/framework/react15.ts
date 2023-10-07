@@ -16,8 +16,12 @@ function createResolver() {
       }
       return false;
     },
-    getOwner: (instance) => instance?._currentElement._owner,
-    getSource: (instance) => instance?._currentElement._source,
+    getOwner(instance) {
+      return instance?._currentElement._owner;
+    },
+    getSource(instance) {
+      return instance?._currentElement._source;
+    },
     getName(owner) {
       if (owner) {
         const component = isFunc(owner._currentElement.type)

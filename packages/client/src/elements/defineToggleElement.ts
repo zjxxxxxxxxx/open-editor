@@ -50,11 +50,11 @@ export function defineToggleElement() {
       return ['active'];
     }
 
-    #cacheId = '__open_editor_toggle_pos_y__';
-    #touching = false;
-    #active = false;
-    #root: HTMLElement;
-    #button: HTMLElement;
+    private cacheId = '__open_editor_toggle_pos_y__';
+    private touching = false;
+    private active = false;
+    private root: HTMLElement;
+    private button: HTMLElement;
 
     constructor() {
       super();
@@ -62,88 +62,88 @@ export function defineToggleElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#root = create('div');
-      this.#root.classList.add('root');
+      this.root = create('div');
+      this.root.classList.add('root');
 
-      this.#button = create('div');
-      this.#button.classList.add('button');
-      this.#button.title = 'open-editor-toggle';
-      this.#button.innerHTML = toggleIcon;
+      this.button = create('div');
+      this.button.classList.add('button');
+      this.button.title = 'open-editor-toggle';
+      this.button.innerHTML = toggleIcon;
 
-      append(this.#root, this.#button);
-      append(shadow, this.#root);
+      append(this.root, this.button);
+      append(shadow, this.root);
 
-      this.#updatePosY_RAF();
+      this.updatePosY_RAF();
     }
 
-    public attributeChangedCallback(_: never, __: never, newValue: string) {
+    attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
-        this.#active = true;
-        applyStyle(this.#button, {
+        this.active = true;
+        applyStyle(this.button, {
           color: Colors.TOGGLE_ACTIVE_COLOR,
           filter: `drop-shadow(0 0 8px ${Colors.TOGGLE_ACTIVE_SHADOW})`,
         });
       } else {
-        this.#active = false;
-        applyStyle(this.#button, {
+        this.active = false;
+        applyStyle(this.button, {
           color: Colors.TOGGLE_COLOR,
           filter: 'none',
         });
       }
     }
 
-    public connectedCallback() {
-      on('click', this.#dispatchToggle, {
-        target: this.#button,
+    connectedCallback() {
+      on('click', this.dispatchToggle, {
+        target: this.button,
       });
-      on('resize', this.#updatePosY_RAF);
-      on('pointerdown', this.#touchStart, {
-        target: this.#root,
+      on('resize', this.updatePosY_RAF);
+      on('pointerdown', this.touchStart, {
+        target: this.root,
       });
-      on('pointerup', this.#touchEnd);
-      on('pointermove', this.#changePosY);
+      on('pointerup', this.touchEnd);
+      on('pointermove', this.changePosY);
     }
 
-    public disconnectedCallback() {
-      off('click', this.#dispatchToggle, {
-        target: this.#button,
+    disconnectedCallback() {
+      off('click', this.dispatchToggle, {
+        target: this.button,
       });
-      off('resize', this.#updatePosY_RAF);
-      off('pointerdown', this.#touchStart, {
-        target: this.#root,
+      off('resize', this.updatePosY_RAF);
+      off('pointerdown', this.touchStart, {
+        target: this.root,
       });
-      off('pointerup', this.#touchEnd);
-      off('pointermove', this.#changePosY);
+      off('pointerup', this.touchEnd);
+      off('pointermove', this.changePosY);
     }
 
-    #touchStart = () => {
-      this.#touching = true;
+    private touchStart = () => {
+      this.touching = true;
     };
 
-    #touchEnd = () => {
-      this.#touching = false;
+    private touchEnd = () => {
+      this.touching = false;
     };
 
-    #changePosY = (e: PointerEvent) => {
-      if (this.#touching && !this.#active) {
+    private changePosY = (e: PointerEvent) => {
+      if (this.touching && !this.active) {
         e.preventDefault();
-        localStorage[this.#cacheId] = e.pageY;
-        this.#updatePosY_RAF();
+        localStorage[this.cacheId] = e.pageY;
+        this.updatePosY_RAF();
       }
     };
 
-    #updatePosY_RAF = create_RAF(() => {
+    private updatePosY_RAF = create_RAF(() => {
       const { clientHeight: winH } = document.documentElement;
-      const { offsetHeight: toggleH } = this.#root;
-      const cachePosY = parseInt(localStorage[this.#cacheId]);
+      const { offsetHeight: toggleH } = this.root;
+      const cachePosY = parseInt(localStorage[this.cacheId]);
 
       const y = Math.min(Math.max(cachePosY - toggleH / 2, 0), winH - toggleH);
-      applyStyle(this.#root, {
+      applyStyle(this.root, {
         top: CSS_util.px(y),
       });
     });
 
-    #dispatchToggle = () => {
+    private dispatchToggle = () => {
       this.dispatchEvent(new CustomEvent('toggle'));
     };
   }

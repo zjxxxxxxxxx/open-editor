@@ -21,6 +21,7 @@ const CSS = `
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   background-color: var(--bg-opt);
 }
 .popup {
@@ -124,9 +125,9 @@ export function defineTreeElement() {
   const scrollLockStyle = createStyleInject(scrollLockCSS);
 
   class TreeElement extends HTMLElement implements HTMLTreeElement {
-    #root: HTMLElement;
-    #popup: HTMLElement;
-    #holdElement?: HTMLElement;
+    private root: HTMLElement;
+    private popup: HTMLElement;
+    private holdElement?: HTMLElement;
 
     constructor() {
       super();
@@ -134,67 +135,67 @@ export function defineTreeElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#root = create('div');
-      this.#root.classList.add('root');
+      this.root = create('div');
+      this.root.classList.add('root');
 
-      this.#popup = create('div');
-      this.#popup.classList.add('popup');
+      this.popup = create('div');
+      this.popup.classList.add('popup');
 
-      append(this.#root, this.#popup);
-      append(shadow, this.#root);
+      append(this.root, this.popup);
+      append(shadow, this.root);
     }
 
-    public connectedCallback() {
-      on('click', this.#handlePopupEvent, {
-        target: this.#popup,
+    connectedCallback() {
+      on('click', this.handlePopupEvent, {
+        target: this.popup,
       });
-      on('pointerdown', this.#setHoldElement, {
-        target: this.#popup,
+      on('pointerdown', this.setHoldElement, {
+        target: this.popup,
       });
     }
 
-    public disconnectedCallback() {
-      off('click', this.#handlePopupEvent, {
-        target: this.#popup,
+    disconnectedCallback() {
+      off('click', this.handlePopupEvent, {
+        target: this.popup,
       });
-      off('pointerdown', this.#setHoldElement, {
-        target: this.#popup,
+      off('pointerdown', this.setHoldElement, {
+        target: this.popup,
       });
       off('click', this.close, {
-        target: this.#root.querySelector('.close'),
+        target: this.root.querySelector('.close'),
       });
     }
 
-    public open = (element: HTMLElement) => {
+    open = (element: HTMLElement) => {
       const source = resolveSource(element, true);
 
       const hasTree = !!source.tree.length;
       if (hasTree) {
-        this.#renderTreeView(source);
+        this.renderTreeView(source);
       } else {
-        this.#renderEmptyView(source);
+        this.renderEmptyView(source);
       }
 
-      applyStyle(this.#root, {
+      applyStyle(this.root, {
         display: 'block',
       });
       on('click', this.close, {
-        target: this.#root.querySelector('.close'),
+        target: this.root.querySelector('.close'),
       });
 
       scrollLockStyle.insert();
     };
 
-    public close = () => {
-      applyStyle(this.#root, {
+    close = () => {
+      applyStyle(this.root, {
         display: 'none',
       });
       scrollLockStyle.remove();
     };
 
-    #renderTreeView(source: ElementSource) {
-      this.#popup.classList.remove('empty');
-      this.#popup.innerHTML = `
+    private renderTreeView(source: ElementSource) {
+      this.popup.classList.remove('empty');
+      this.popup.innerHTML = `
         <div class="title">
           <span class="element">${
             source.element
@@ -203,15 +204,15 @@ export function defineTreeElement() {
         <span class="close">${closeIcon}</span>
         <div class="content">
           <div class="tree">
-            ${this.#buildTree(source.tree)}
+            ${this.buildTree(source.tree)}
           </div>
         </div>
       `;
     }
 
-    #renderEmptyView(source: ElementSource) {
-      this.#popup.classList.add('empty');
-      this.#popup.innerHTML = `
+    private renderEmptyView(source: ElementSource) {
+      this.popup.classList.add('empty');
+      this.popup.innerHTML = `
         <div class="title empty">
           <span class="element">${source.element} in </span> &lt;ComponentTree&gt;
         </div>
@@ -220,30 +221,30 @@ export function defineTreeElement() {
       `;
     }
 
-    #buildTree(tree: ElementSourceMeta[]) {
+    private buildTree(tree: ElementSourceMeta[]) {
       let template = '';
       while (tree.length) {
         const meta = tree.shift()!;
-        template = this.#buildTemplate(meta, template);
+        template = this.buildTemplate(meta, template);
       }
       return template;
     }
 
-    #buildTemplate(meta: ElementSourceMeta, subTree: string) {
-      let tags = this.#createTag(meta, true);
+    private buildTemplate(meta: ElementSourceMeta, subTree: string) {
+      let tags = this.createTag(meta, true);
       if (subTree) {
         tags += `
           <div class="tree">
             ${subTree}
           </div>
           <div class="line"></div>  
-          ${this.#createTag(meta)} 
+          ${this.createTag(meta)} 
         `;
       }
       return tags;
     }
 
-    #createTag(meta: ElementSourceMeta, withFile?: boolean) {
+    private createTag(meta: ElementSourceMeta, withFile?: boolean) {
       const { name, file, line = 1, column = 1 } = meta ?? {};
 
       if (!withFile) {
@@ -266,14 +267,14 @@ export function defineTreeElement() {
       `;
     }
 
-    #setHoldElement = (e: PointerEvent) => {
-      this.#holdElement = <HTMLElement>e.target;
+    private setHoldElement = (e: PointerEvent) => {
+      this.holdElement = <HTMLElement>e.target;
     };
 
-    #handlePopupEvent = (e: PointerEvent) => {
+    private handlePopupEvent = (e: PointerEvent) => {
       const element = <HTMLElement>e.target;
       // Prevent the display of the component tree by long press, which accidentally triggers the click event
-      if (element === this.#holdElement) {
+      if (element === this.holdElement) {
         if (!isStr(element.dataset.file)) {
           return;
         }

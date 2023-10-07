@@ -48,14 +48,14 @@ const CSS = `
 
 export function defineOverlayElement() {
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
-    #tooltip: HTMLTooltipElement;
+    private tooltip: HTMLTooltipElement;
 
-    #posttion: HTMLElement;
-    #margin: HTMLElement;
-    #border: HTMLElement;
-    #padding: HTMLElement;
-    #content: HTMLElement;
-    #activeElement?: HTMLElement;
+    private posttion: HTMLElement;
+    private margin: HTMLElement;
+    private border: HTMLElement;
+    private padding: HTMLElement;
+    private content: HTMLElement;
+    private activeElement?: HTMLElement;
 
     constructor() {
       super();
@@ -63,79 +63,79 @@ export function defineOverlayElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${CSS}</style>`;
 
-      this.#posttion = create('div');
-      this.#posttion.classList.add('posttion');
+      this.posttion = create('div');
+      this.posttion.classList.add('posttion');
 
-      this.#margin = create('div');
-      this.#margin.classList.add('margin');
+      this.margin = create('div');
+      this.margin.classList.add('margin');
 
-      this.#border = create('div');
-      this.#border.classList.add('border');
+      this.border = create('div');
+      this.border.classList.add('border');
 
-      this.#padding = create('div');
-      this.#padding.classList.add('padding');
+      this.padding = create('div');
+      this.padding.classList.add('padding');
 
-      this.#content = create('div');
-      this.#content.classList.add('content');
+      this.content = create('div');
+      this.content.classList.add('content');
 
-      this.#tooltip = <HTMLTooltipElement>(
+      this.tooltip = <HTMLTooltipElement>(
         create(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
 
-      append(this.#padding, this.#content);
-      append(this.#border, this.#padding);
-      append(this.#margin, this.#border);
-      append(this.#posttion, this.#margin);
-      append(shadow, this.#posttion);
-      append(shadow, this.#tooltip);
+      append(this.padding, this.content);
+      append(this.border, this.padding);
+      append(this.margin, this.border);
+      append(this.posttion, this.margin);
+      append(shadow, this.posttion);
+      append(shadow, this.tooltip);
     }
 
-    public open = () => {
-      applyStyle(this.#posttion, {
+    open = () => {
+      applyStyle(this.posttion, {
         display: 'block',
       });
-      this.#tooltip.open();
+      this.tooltip.open();
 
-      on('scroll', this.#update_RAF, captureOpts);
+      on('scroll', this.update_RAF, captureOpts);
     };
 
-    public close = () => {
-      applyStyle(this.#posttion, {
+    close = () => {
+      applyStyle(this.posttion, {
         display: 'none',
       });
-      this.#tooltip.close();
+      this.tooltip.close();
       this.update();
 
-      off('scroll', this.#update_RAF, captureOpts);
+      off('scroll', this.update_RAF, captureOpts);
     };
 
-    public update = (activeElement?: HTMLElement) => {
-      this.#activeElement = activeElement;
-      this.#update_RAF();
+    update = (activeElement?: HTMLElement) => {
+      this.activeElement = activeElement;
+      this.update_RAF();
     };
 
-    #update_RAF = create_RAF(() => {
-      const styles = this.#activeElement
-        ? getComputedStyles(this.#activeElement)
+    private update_RAF = create_RAF(() => {
+      const styles = this.activeElement
+        ? getComputedStyles(this.activeElement)
         : emptyComputedStyles;
-      this.#updateStyles(styles);
-      this.#tooltip.update(this.#activeElement, styles.posttion);
+      this.updateStyles(styles);
+      this.tooltip.update(this.activeElement, styles.posttion);
     });
 
-    #updateStyles(styles: Record<string, ComputedStyle>) {
-      applyStyle(this.#posttion, {
+    private updateStyles(styles: Record<string, ComputedStyle>) {
+      applyStyle(this.posttion, {
         width: CSS_util.px(styles.posttion.width),
         height: CSS_util.px(styles.posttion.height),
         top: CSS_util.px(styles.posttion.top),
         left: CSS_util.px(styles.posttion.left),
       });
-      this.#applyStyle(this.#margin, styles.margin);
-      this.#applyStyle(this.#border, styles.border);
-      this.#applyStyle(this.#padding, styles.padding);
-      this.#applyStyle(this.#content, styles.content);
+      this.applyStyle(this.margin, styles.margin);
+      this.applyStyle(this.border, styles.border);
+      this.applyStyle(this.padding, styles.padding);
+      this.applyStyle(this.content, styles.content);
     }
 
-    #applyStyle(element: HTMLElement, style: ComputedStyle) {
+    private applyStyle(element: HTMLElement, style: ComputedStyle) {
       applyStyle(element, {
         width: CSS_util.px(style.width),
         height: CSS_util.px(style.height),
