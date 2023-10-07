@@ -41,20 +41,20 @@ export function defineInspectElement() {
   const resetStyle = createStyleInject(resetCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    #overlay: HTMLOverlayElement;
-    #tree: HTMLTreeElement;
-    #toggle?: HTMLToggleElement;
-    #pointer!: PointerEvent;
+    private overlay: HTMLOverlayElement;
+    private tree: HTMLTreeElement;
+    private toggle?: HTMLToggleElement;
+    private pointer!: PointerEvent;
 
-    #__active__!: boolean;
-    get #active() {
-      return this.#__active__;
+    private __active__!: boolean;
+    private get active() {
+      return this.__active__;
     }
-    set #active(value) {
-      this.#__active__ = value;
+    private set active(value) {
+      this.__active__ = value;
 
-      if (this.#toggle) {
-        applyAttrs(this.#toggle, {
+      if (this.toggle) {
+        applyAttrs(this.toggle, {
           active: value,
         });
       }
@@ -66,112 +66,112 @@ export function defineInspectElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       shadow.innerHTML = `<style>${Theme}${CSS}</style>`;
 
-      this.#overlay = create<HTMLOverlayElement>(
+      this.overlay = create<HTMLOverlayElement>(
         InternalElements.HTML_OVERLAY_ELEMENT,
       );
-      this.#tree = create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT);
+      this.tree = create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT);
 
-      append(shadow, this.#overlay);
-      append(shadow, this.#tree);
+      append(shadow, this.overlay);
+      append(shadow, this.tree);
 
       const options = getOptions();
       if (options.displayToggle) {
-        this.#toggle = create<HTMLToggleElement>(
+        this.toggle = create<HTMLToggleElement>(
           InternalElements.HTML_TOGGLE_ELEMENT,
         );
-        applyAttrs(this.#toggle, {
+        applyAttrs(this.toggle, {
           enable: true,
         });
 
-        append(shadow, this.#toggle);
+        append(shadow, this.toggle);
       }
     }
 
-    public connectedCallback() {
-      on('keydown', this.#onKeydown, captureOpts);
-      on('pointermove', this.#changePointer, captureOpts);
-      on('exit', this.#cleanupHandlers, {
-        target: this.#tree,
+    connectedCallback() {
+      on('keydown', this.onKeydown, captureOpts);
+      on('pointermove', this.changePointer, captureOpts);
+      on('exit', this.cleanupHandlers, {
+        target: this.tree,
       });
 
-      if (this.#toggle) {
-        on('toggle', this.#toggleActiveEffect, {
-          target: this.#toggle,
+      if (this.toggle) {
+        on('toggle', this.toggleActiveEffect, {
+          target: this.toggle,
         });
       }
     }
 
-    public disconnectedCallback() {
-      off('keydown', this.#onKeydown, captureOpts);
-      off('pointermove', this.#changePointer, captureOpts);
-      off('exit', this.#cleanupHandlers, {
-        target: this.#tree,
+    disconnectedCallback() {
+      off('keydown', this.onKeydown, captureOpts);
+      off('pointermove', this.changePointer, captureOpts);
+      off('exit', this.cleanupHandlers, {
+        target: this.tree,
       });
 
-      if (this.#toggle) {
-        off('toggle', this.#toggleActiveEffect, {
-          target: this.#toggle,
+      if (this.toggle) {
+        off('toggle', this.toggleActiveEffect, {
+          target: this.toggle,
         });
       }
 
-      this.#cleanupHandlers();
+      this.cleanupHandlers();
     }
 
-    #changePointer = (event: PointerEvent) => {
-      this.#pointer = event;
+    private changePointer = (event: PointerEvent) => {
+      this.pointer = event;
     };
 
-    #onKeydown = (event: KeyboardEvent) => {
+    private onKeydown = (event: KeyboardEvent) => {
       // toggle
       if (event.altKey && event.metaKey && event.keyCode === 79) {
-        this.#toggleActiveEffect();
+        this.toggleActiveEffect();
       }
     };
 
-    #toggleActiveEffect = () => {
-      if (!this.#active) {
-        this.#setupHandlers();
+    private toggleActiveEffect = () => {
+      if (!this.active) {
+        this.setupHandlers();
       } else {
-        this.#cleanupHandlers();
+        this.cleanupHandlers();
       }
     };
 
-    #setupHandlers() {
-      if (!this.#active) {
-        this.#active = true;
-        this.#overlay.open();
+    private setupHandlers() {
+      if (!this.active) {
+        this.active = true;
+        this.overlay.open();
 
-        if (this.#pointer) {
-          const { x, y } = this.#pointer;
+        if (this.pointer) {
+          const { x, y } = this.pointer;
           const initElement = <HTMLElement>document.elementFromPoint(x, y);
           if (initElement && isValidElement(initElement)) {
-            this.#overlay.update(initElement);
+            this.overlay.update(initElement);
           }
         }
 
-        this.#cleanupListenersOnWindow = setupListenersOnWindow({
-          onChangeElement: this.#overlay.update,
-          onOpenTree: this.#tree.open,
-          onOpenEditor: this.#openEditor,
-          onExitInspect: this.#cleanupHandlers,
+        this.cleanupListenersOnWindow = setupListenersOnWindow({
+          onChangeElement: this.overlay.update,
+          onOpenTree: this.tree.open,
+          onOpenEditor: this.openEditor,
+          onExitInspect: this.cleanupHandlers,
         });
         resetStyle.insert();
       }
     }
 
-    #cleanupListenersOnWindow!: () => void;
+    private cleanupListenersOnWindow!: () => void;
 
-    #cleanupHandlers = () => {
-      if (this.#active) {
-        this.#active = false;
-        this.#overlay.close();
-        this.#tree.close();
-        this.#cleanupListenersOnWindow();
+    private cleanupHandlers = () => {
+      if (this.active) {
+        this.active = false;
+        this.overlay.close();
+        this.tree.close();
+        this.cleanupListenersOnWindow();
         resetStyle.remove();
       }
     };
 
-    #openEditor = (element: HTMLElement) => {
+    private openEditor = (element: HTMLElement) => {
       const { meta } = resolveSource(element);
       if (meta) {
         openEditor(meta, this.dispatchEvent.bind(this));
