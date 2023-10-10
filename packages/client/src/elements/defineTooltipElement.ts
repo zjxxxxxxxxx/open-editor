@@ -6,6 +6,7 @@ import {
   append,
   getDOMRect,
 } from '../utils/document';
+import { getSafeArea } from '../utils/safeArea';
 import { Colors, InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
@@ -150,22 +151,23 @@ export function defineTooltipElement() {
         clientHeight: winH,
       } = document.documentElement;
       const { width: rootW, height: rootH } = getDOMRect(this.root);
+      const { top, right, bottom, left } = getSafeArea();
       const positionStyle: Partial<CSSStyleDeclaration> = {};
 
       // on top
-      if (style.top > rootH + offset * 2) {
+      if (style.top > rootH + offset * 2 + top) {
         positionStyle.top = CSS_util.px(style.top - rootH - offset);
       }
       // on bottom
       else {
-        const maxTop = winH - rootH - offset;
+        const maxTop = winH - rootH - offset - bottom;
         positionStyle.top = CSS_util.px(
           Math.min(style.bottom + offset, maxTop),
         );
       }
 
-      const minLeft = offset;
-      const maxLeft = winW - rootW - offset;
+      const minLeft = offset + left;
+      const maxLeft = winW - rootW - offset - right;
       positionStyle.left = CSS_util.px(
         Math.max(Math.min(style.left, maxLeft), minLeft),
       );
