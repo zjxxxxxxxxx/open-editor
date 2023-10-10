@@ -1,4 +1,5 @@
-import { CSS_util, getDOMRect } from './document';
+import { createStyleGetter } from './createStyleGetter';
+import { getDOMRect } from './document';
 
 export interface ComputedStyle {
   width: number;
@@ -39,11 +40,7 @@ export function getComputedStyles(
     bottom,
     left,
   } = getDOMRect(element);
-  const style = window.getComputedStyle(element, null);
-  const getStyle = style.getPropertyValue.bind(style);
-  const getValue = (property: string) => {
-    return Math.max(CSS_util.pv(getStyle(property)), 0);
-  };
+  const getValue = createStyleGetter(element);
 
   const marginTop = getValue('margin-top');
   const marginRight = getValue('margin-right');

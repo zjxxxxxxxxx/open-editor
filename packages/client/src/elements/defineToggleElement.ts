@@ -7,6 +7,7 @@ import {
   CSS_util,
 } from '../utils/document';
 import { create_RAF } from '../utils/createRAF';
+import { getSafeArea } from '../utils/safeArea';
 import { Colors, InternalElements } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -15,7 +16,6 @@ const CSS = `
 .root {
   position: fixed;
   top: 0px;
-  right: 0px;
   z-index: var(--z-index-toggle);
   padding: 8px;
   touch-action: none;
@@ -51,7 +51,7 @@ export function defineToggleElement() {
     }
 
     private cacheId = '__open_editor_toggle_pos_y__';
-    private touching = false;
+    private touch?: { pageY: number; posY: number };
     private active = false;
     private root: HTMLElement;
     private button: HTMLElement;
@@ -72,8 +72,6 @@ export function defineToggleElement() {
 
       append(this.root, this.button);
       append(shadow, this.root);
-
-      this.updatePosY_RAF();
     }
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
@@ -93,14 +91,19 @@ export function defineToggleElement() {
     }
 
     connectedCallback() {
+      applyStyle(this.root, {
+        right: CSS_util.px(getSafeArea().right),
+      });
+      this.updatePosY_RAF();
+
       on('click', this.dispatchToggle, {
         target: this.button,
       });
       on('resize', this.updatePosY_RAF);
-      on('pointerdown', this.touchStart, {
+      on('pointerdown', this.saveTouch, {
         target: this.root,
       });
-      on('pointerup', this.touchEnd);
+      on('pointerup', this.cleanTouch);
       on('pointermove', this.changePosY);
     }
 
@@ -109,25 +112,29 @@ export function defineToggleElement() {
         target: this.button,
       });
       off('resize', this.updatePosY_RAF);
-      off('pointerdown', this.touchStart, {
+      off('pointerdown', this.saveTouch, {
         target: this.root,
       });
-      off('pointerup', this.touchEnd);
+      off('pointerup', this.cleanTouch);
       off('pointermove', this.changePosY);
     }
 
-    private touchStart = () => {
-      this.touching = true;
+    private saveTouch = (e: PointerEvent) => {
+      this.touch = {
+        pageY: e.pageY,
+        posY: parseInt(localStorage[this.cacheId]) || 0,
+      };
     };
 
-    private touchEnd = () => {
-      this.touching = false;
+    private cleanTouch = () => {
+      this.touch = undefined;
     };
 
     private changePosY = (e: PointerEvent) => {
-      if (this.touching && !this.active) {
+      if (this.touch && !this.active) {
         e.preventDefault();
-        localStorage[this.cacheId] = e.pageY;
+        localStorage[this.cacheId] =
+          e.pageY - this.touch.pageY + this.touch.posY;
         this.updatePosY_RAF();
       }
     };
@@ -135,9 +142,12 @@ export function defineToggleElement() {
     private updatePosY_RAF = create_RAF(() => {
       const { clientHeight: winH } = document.documentElement;
       const { offsetHeight: toggleH } = this.root;
-      const cachePosY = parseInt(localStorage[this.cacheId]);
+      const { top, bottom } = getSafeArea();
+      const cachePosY = parseInt(localStorage[this.cacheId]) || 0;
 
-      const y = Math.min(Math.max(cachePosY - toggleH / 2, 0), winH - toggleH);
+      const minY = top;
+      const maxY = winH - toggleH - bottom;
+      const y = Math.min(Math.max(cachePosY - toggleH / 2, minY), maxY);
       applyStyle(this.root, {
         top: CSS_util.px(y),
       });
