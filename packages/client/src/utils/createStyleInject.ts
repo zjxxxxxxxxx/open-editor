@@ -8,7 +8,6 @@ export function createStyleInject(css: string, target = document.body) {
       style = create('style');
       style.innerHTML = css;
     }
-
     append(target, style);
   }
 
