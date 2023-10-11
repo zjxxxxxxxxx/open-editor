@@ -195,90 +195,29 @@ export function defineTreeElement() {
 
     private renderTreeView(source: ElementSource) {
       this.popup.classList.remove('empty');
-      this.popup.innerHTML = `
-        <div class="title">
-          <span class="element">${
-            source.element
-          } in </span> &lt;ComponentTree&gt;
-        </div>
-        <span class="close">${closeIcon}</span>
-        <div class="content">
-          <div class="tree">
-            ${this.buildTree(source.tree)}
-          </div>
-        </div>
-      `;
+      const title = `<div class="title"><span class="element">${source.element} in </span> &lt;ComponentTree&gt;</div>`;
+      const close = `<span class="close">${closeIcon}</span>`;
+      const tree = buildTree(source.tree);
+      const content = `<div class="content"><div class="tree">${tree}</div></div>`;
+      this.popup.innerHTML = `${title} ${close} ${content}`;
     }
 
     private renderEmptyView(source: ElementSource) {
       this.popup.classList.add('empty');
-      this.popup.innerHTML = `
-        <div class="title empty">
-          <span class="element">${source.element} in </span> &lt;ComponentTree&gt;
-        </div>
-        <span class="close empty">${closeIcon}</span>
-        <div class="msg empty">empty tree 😭.</div>
-      `;
+      const title = `<div class="title empty"><span class="element">${source.element} in </span> &lt;ComponentTree&gt;</div>`;
+      const close = `<span class="close empty">${closeIcon}</span>`;
+      const content = `<div class="msg empty">empty tree 😭.</div>`;
+      this.popup.innerHTML = `${title} ${close} ${content}`;
     }
 
-    private buildTree(tree: ElementSourceMeta[]) {
-      let template = '';
-      while (tree.length) {
-        const meta = tree.shift()!;
-        template = this.buildTemplate(meta, template);
-      }
-      return template;
-    }
-
-    private buildTemplate(meta: ElementSourceMeta, subTree: string) {
-      let tags = this.createTag(meta, true);
-      if (subTree) {
-        tags += `
-          <div class="tree">
-            ${subTree}
-          </div>
-          <div class="line"></div>  
-          ${this.createTag(meta)} 
-        `;
-      }
-      return tags;
-    }
-
-    private createTag(meta: ElementSourceMeta, withFile?: boolean) {
-      const { name, file, line = 1, column = 1 } = meta ?? {};
-
-      if (!withFile) {
-        return `
-          <div class="tag">
-            <span class="name">&lt;/${name}&gt;</span>
-          </div>
-        `;
-      }
-
-      const dataset = Object.entries(meta).reduce(
-        (str, [key, value]) => `${str} data-${key}="${value}"`,
-        '',
-      );
-      return `
-        <div class="tag" ${dataset}>
-          <span class="name" ${dataset}>&lt;${name}&gt;</span>
-          <span class="file" ${dataset}>${file}:${line}:${column}</span>
-        </div>
-      `;
-    }
-
-    private setHoldElement = (e: PointerEvent) => {
-      this.holdElement = <HTMLElement>e.target;
+    private setHoldElement = (event: PointerEvent) => {
+      this.holdElement = <HTMLElement>event.target;
     };
 
-    private handlePopupEvent = (e: PointerEvent) => {
-      const element = <HTMLElement>e.target;
+    private handlePopupEvent = (event: PointerEvent) => {
+      const element = <HTMLElement>event.target;
       // Prevent the display of the component tree by long press, which accidentally triggers the click event
-      if (element === this.holdElement) {
-        if (!isStr(element.dataset.file)) {
-          return;
-        }
-
+      if (element === this.holdElement && isStr(element.dataset.file)) {
         openEditor(
           <ElementSourceMeta>(<unknown>element.dataset),
           this.dispatchEvent.bind(this),
@@ -286,6 +225,38 @@ export function defineTreeElement() {
         this.dispatchEvent(new CustomEvent('exit'));
       }
     };
+  }
+
+  function buildTree(tree: ElementSourceMeta[]) {
+    let template = '';
+    while (tree.length) {
+      const meta = tree.shift()!;
+      const startTag = createTag(meta, true);
+      if (!template) {
+        template = startTag;
+      } else {
+        const endTag = createTag(meta);
+        const childTag = `<div class="tree">${template}</div><div class="line"></div>`;
+        template = `${startTag} ${childTag} ${endTag}`;
+      }
+    }
+    return template;
+  }
+
+  function createTag(meta: ElementSourceMeta, withFile?: boolean) {
+    const { name, file, line = 1, column = 1 } = meta ?? {};
+
+    if (!withFile) {
+      return `<div class="tag"><span class="name">&lt;/${name}&gt;</span></div>`;
+    }
+
+    const dataset = Object.entries(meta).reduce(
+      (str, [key, value]) => `${str} data-${key}="${value}"`,
+      '',
+    );
+    const tagName = `<span class="name" ${dataset}>&lt;${name}&gt;</span>`;
+    const fileName = `<span class="file" ${dataset}>${file}:${line}:${column}</span>`;
+    return `<div class="tag" ${dataset}> ${tagName} ${fileName} </div>`;
   }
 
   customElements.define(InternalElements.HTML_TREE_ELEMENT, TreeElement);

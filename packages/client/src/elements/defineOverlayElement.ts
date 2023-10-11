@@ -129,22 +129,22 @@ export function defineOverlayElement() {
         top: CSS_util.px(styles.posttion.top),
         left: CSS_util.px(styles.posttion.left),
       });
-      this.applyStyle(this.margin, styles.margin);
-      this.applyStyle(this.border, styles.border);
-      this.applyStyle(this.padding, styles.padding);
-      this.applyStyle(this.content, styles.content);
+      applyRectStyle(this.margin, styles.margin);
+      applyRectStyle(this.border, styles.border);
+      applyRectStyle(this.padding, styles.padding);
+      applyRectStyle(this.content, styles.content);
     }
+  }
 
-    private applyStyle(element: HTMLElement, style: ComputedStyle) {
-      applyStyle(element, {
-        width: CSS_util.px(style.width),
-        height: CSS_util.px(style.height),
-        borderTopWidth: CSS_util.px(style.top),
-        borderRightWidth: CSS_util.px(style.right),
-        borderBottomWidth: CSS_util.px(style.bottom),
-        borderLeftWidth: CSS_util.px(style.left),
-      });
-    }
+  function applyRectStyle(element: HTMLElement, style: ComputedStyle) {
+    applyStyle(element, {
+      width: CSS_util.px(style.width),
+      height: CSS_util.px(style.height),
+      borderTopWidth: CSS_util.px(style.top),
+      borderRightWidth: CSS_util.px(style.right),
+      borderBottomWidth: CSS_util.px(style.bottom),
+      borderLeftWidth: CSS_util.px(style.left),
+    });
   }
 
   customElements.define(InternalElements.HTML_OVERLAY_ELEMENT, OverlayElement);

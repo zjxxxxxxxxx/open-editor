@@ -59,3 +59,5 @@ export const CLIENT = typeof window !== 'undefined';
 export const captureOpts = {
   capture: true,
 };
+
+export const POS_Y_CACHE_ID = '__open_editor_toggle_pos_y__';
