@@ -1,3 +1,5 @@
+import { createStyleGetter } from './createStyleGetter';
+
 export function applyStyle(
   element: HTMLElement,
   ...styles: Partial<CSSStyleDeclaration>[]
@@ -75,9 +77,10 @@ export function append(parent: HTMLElement | ShadowRoot, child: HTMLElement) {
 }
 
 export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
+  const getValue = createStyleGetter(target);
   const domRect = target.getBoundingClientRect().toJSON();
 
-  const zoom = Number(target.computedStyleMap().get('zoom'));
+  const zoom = getValue('zoom') || 1;
   if (zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
   }
