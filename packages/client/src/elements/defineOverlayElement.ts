@@ -21,7 +21,7 @@ export interface HTMLOverlayElement extends HTMLElement {
   update(activeElement?: HTMLElement): void;
 }
 
-const CSS = `
+const CSS = postcss`
 .posttion {
   position: fixed;
   z-index: var(--z-index-overlay);
@@ -30,7 +30,7 @@ const CSS = `
   will-change: width, height, top, left;
 }
 .posttion div {
-  will-change: border;
+  will-change: width, height, border;
 }
 .margin {
   border: 0px solid var(--overlay-margin);

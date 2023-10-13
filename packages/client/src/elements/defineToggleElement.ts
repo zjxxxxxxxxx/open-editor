@@ -12,7 +12,7 @@ import { Colors, InternalElements, POS_Y_CACHE_ID } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
-const CSS = `
+const CSS = postcss`
 .root {
   position: fixed;
   top: 0px;

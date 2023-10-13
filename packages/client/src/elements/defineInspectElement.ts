@@ -12,7 +12,7 @@ import { HTMLToggleElement } from './defineToggleElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
-const CSS = `
+const CSS = postcss`
 * {
   box-sizing: content-box;
   font-family: Menlo, Monaco, 'Courier New', monospace;
@@ -20,7 +20,6 @@ const CSS = `
   font-weight: 400;
   cursor: default !important;
   user-select: none !important;
-  -webkit-user-select: none !important;
   -webkit-touch-callout: none !important;
 }
 :host {
@@ -28,11 +27,10 @@ const CSS = `
 }
 `;
 
-const resetCSS = `
+const resetCSS = postcss`
 * {
   cursor: default !important;
   user-select: none !important;
-  -webkit-user-select: none !important;
   -webkit-touch-callout: none !important;
 }
 `;

@@ -6,7 +6,7 @@ export const InternalElements = <const>{
   HTML_TREE_ELEMENT: 'open-editor-tree',
 };
 
-export const Theme = `
+export const Theme = postcss`
 :host {
   --black: #15181e;
   --white: #ffffff;
