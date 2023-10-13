@@ -16,7 +16,7 @@ export interface HTMLTooltipElement extends HTMLElement {
   update(activeElement?: HTMLElement, style?: ComputedStyle): void;
 }
 
-const CSS = `
+const CSS = postcss`
 .root {
   position: fixed;
   z-index: var(--z-index-tooltip);
