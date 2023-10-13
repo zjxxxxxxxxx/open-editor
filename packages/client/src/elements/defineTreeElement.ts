@@ -11,7 +11,7 @@ export interface HTMLTreeElement extends HTMLElement {
   close(): void;
 }
 
-const CSS = `
+const CSS = postcss`
 .root {
   position: fixed;
   top: 0;
@@ -21,7 +21,6 @@ const CSS = `
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
   background-color: var(--bg-opt);
 }
 .popup {
@@ -109,7 +108,7 @@ const CSS = `
 }
 `;
 
-const scrollLockCSS = `
+const scrollLockCSS = postcss`
 body {
   overflow: hidden !important;
 }

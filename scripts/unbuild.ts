@@ -5,10 +5,13 @@ import commonjs from '@rollup/plugin-commonjs';
 import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
-import { readjson } from './utils';
+import postcss from './postcss';
+import { clientRoot, readjson } from './utils';
 
 const __DEV__ = '__DEV__' in process.env;
 const __TARGET__ = process.env.__TARGET__ || 'es6';
+
+const isClient = clientRoot === resolve();
 
 export type BuildOutput =
   | string
@@ -72,6 +75,7 @@ function buildBundles(
         return source.startsWith('@') || basename(source) === source;
       },
       plugins: [
+        isClient ? postcss() : undefined,
         nodeResolve(),
         commonjs(),
         esbuild({
@@ -81,7 +85,7 @@ function buildBundles(
             'class-field': true,
           },
         }),
-      ],
+      ].filter(Boolean),
     };
   }
 }
