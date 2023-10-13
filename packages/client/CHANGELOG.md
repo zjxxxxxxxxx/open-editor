@@ -1,5 +1,16 @@
 # @open-editor/client
 
+## 0.2.1
+
+### Patch Changes
+
+- [#108](https://github.com/zjxxxxxxxxx/open-editor/pull/108) [`8e18b9e`](https://github.com/zjxxxxxxxxx/open-editor/commit/8e18b9ed4394aec5d2fe70290d75cd6870f92d0b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix getDOMRect error in firefox
+
+- [#105](https://github.com/zjxxxxxxxxx/open-editor/pull/105) [`3e11e54`](https://github.com/zjxxxxxxxxx/open-editor/commit/3e11e54c779dae7a39c2b2dc7169677374546205) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix safe-area blocking UI interaction
+
+- Updated dependencies []:
+  - @open-editor/shared@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

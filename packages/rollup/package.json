@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/rollup",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A rollup plugin for fast find source code, supported in React & Vue.",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
