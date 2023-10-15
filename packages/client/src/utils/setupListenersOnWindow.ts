@@ -136,9 +136,11 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   }
 
   // right-click exit.
-  function onContextMenu(event: MouseEvent) {
+  function onContextMenu(event: PointerEvent) {
     onSilence(event, true);
-    onExitInspect();
+    if (event.pointerType === 'mouse') {
+      onExitInspect();
+    }
   }
 
   function onLongPress(event: LongPressEvent) {
