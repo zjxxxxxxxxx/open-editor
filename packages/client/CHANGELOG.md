@@ -1,5 +1,16 @@
 # @open-editor/client
 
+## 0.2.3
+
+### Patch Changes
+
+- [#110](https://github.com/zjxxxxxxxxx/open-editor/pull/110) [`3a263cb`](https://github.com/zjxxxxxxxxx/open-editor/commit/3a263cb03102ac368baad2e732a6a294fded11fb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix right click trigger long-press
+
+- [#112](https://github.com/zjxxxxxxxxx/open-editor/pull/112) [`4acb46b`](https://github.com/zjxxxxxxxxx/open-editor/commit/4acb46b0855f46f8c4ccf49f08a93d5c7fe37f64) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - disable scroll when inspect on mobile
+
+- Updated dependencies []:
+  - @open-editor/shared@0.2.3
+
 ## 0.2.1
 
 ### Patch Changes
