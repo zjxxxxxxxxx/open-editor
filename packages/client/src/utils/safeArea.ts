@@ -1,7 +1,7 @@
 import { createStyleGetter } from './createStyleGetter';
 import { createStyleInject } from './createStyleInject';
 
-const CSS = `
+const CSS = postcss`
 :root {
   --sait: env(safe-area-inset-top);
   --sair: env(safe-area-inset-right);
