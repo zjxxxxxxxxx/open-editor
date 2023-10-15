@@ -20,7 +20,7 @@ const CSS = postcss`
   font-weight: 400;
   cursor: default;
   user-select: none;
-  touch-callout: none;
+  -webkit-touch-callout: none;
 }
 :host {
   all: initial !important;
@@ -31,7 +31,7 @@ const resetCSS = postcss`
 * {
   cursor: default !important;
   user-select: none !important;
-  touch-callout: none !important;
+  -webkit-touch-callout: none !important;
 }
 `;
 
