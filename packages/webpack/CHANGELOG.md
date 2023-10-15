@@ -1,5 +1,14 @@
 # @open-editor/webpack
 
+## 0.2.2
+
+### Patch Changes
+
+- Updated dependencies [[`3a263cb`](https://github.com/zjxxxxxxxxx/open-editor/commit/3a263cb03102ac368baad2e732a6a294fded11fb), [`4acb46b`](https://github.com/zjxxxxxxxxx/open-editor/commit/4acb46b0855f46f8c4ccf49f08a93d5c7fe37f64)]:
+  - @open-editor/client@0.2.2
+  - @open-editor/server@0.2.2
+  - @open-editor/shared@0.2.2
+
 ## 0.2.1
 
 ### Patch Changes
