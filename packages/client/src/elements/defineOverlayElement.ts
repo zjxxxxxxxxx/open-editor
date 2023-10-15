@@ -12,6 +12,7 @@ import {
   off,
 } from '../utils/document';
 import { create_RAF } from '../utils/createRAF';
+import { createStyleInject } from '../utils/createStyleInject';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -46,7 +47,15 @@ const CSS = postcss`
 }
 `;
 
+const touchLockCSS = postcss`
+html {
+  touch-action: none !important;
+}
+`;
+
 export function defineOverlayElement() {
+  const touchLockStyle = createStyleInject(touchLockCSS);
+
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     private tooltip: HTMLTooltipElement;
 
@@ -91,6 +100,7 @@ export function defineOverlayElement() {
     }
 
     open = () => {
+      touchLockStyle.insert();
       applyStyle(this.posttion, {
         display: 'block',
       });
@@ -100,6 +110,7 @@ export function defineOverlayElement() {
     };
 
     close = () => {
+      touchLockStyle.remove();
       applyStyle(this.posttion, {
         display: 'none',
       });
