@@ -83,12 +83,16 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
   let waitTimer: NodeJS.Timeout | number | null = null;
 
   function start(event: PointerEvent) {
-    waitTimer = setTimeout(() => {
-      const customEvent = new CustomEvent('longpress', {
-        detail: <HTMLElement>event.target,
-      });
-      listener(customEvent);
-    }, wait);
+    // Left Mouse, Touch Contact, Pen contact
+    // see: https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events#determining_button_states
+    if (event.button === 0 && event.buttons === 1) {
+      waitTimer = setTimeout(() => {
+        const customEvent = new CustomEvent('longpress', {
+          detail: <HTMLElement>event.target,
+        });
+        listener(customEvent);
+      }, wait);
+    }
   }
 
   function clean() {
