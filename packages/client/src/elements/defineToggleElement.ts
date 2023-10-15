@@ -5,6 +5,7 @@ import {
   create,
   append,
   CSS_util,
+  setShadowCSS,
 } from '../utils/document';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/safeArea';
@@ -59,17 +60,20 @@ export function defineToggleElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${CSS}</style>`;
+      setShadowCSS(shadow, CSS);
 
-      this.root = create('div');
-      this.root.classList.add('root');
+      this.root = create(
+        'div',
+        {
+          className: 'root',
+        },
+        (this.button = create('div', {
+          className: 'button',
+          title: 'open-editor-toggle',
+          html: toggleIcon,
+        })),
+      );
 
-      this.button = create('div');
-      this.button.classList.add('button');
-      this.button.title = 'open-editor-toggle';
-      this.button.innerHTML = toggleIcon;
-
-      append(this.root, this.button);
       append(shadow, this.root);
     }
 
