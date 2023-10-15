@@ -1,3 +1,4 @@
+import { isStr } from '@open-editor/shared';
 import { createStyleGetter } from './createStyleGetter';
 
 export function applyStyle(
@@ -60,20 +61,51 @@ export function off(type: any, listener: any, rawOpts: any = {}) {
   target.removeEventListener(type, listener, options);
 }
 
-export function create<K extends keyof HTMLElementTagNameMap>(
-  tagName: K,
-  options?: ElementCreationOptions,
-): HTMLElementTagNameMap[K];
-export function create<T extends HTMLElement>(
-  tagName: string,
-  options?: ElementCreationOptions,
-): T;
-export function create(tagName: string, options?: ElementCreationOptions) {
-  return document.createElement(tagName, options);
+export interface Props extends Record<string, any> {
+  className?: string;
+  style?: Partial<CSSStyleDeclaration>;
+  html?: string;
+  text?: string;
 }
 
-export function append(parent: HTMLElement | ShadowRoot, child: HTMLElement) {
-  return parent.appendChild(child);
+export type Children = (HTMLElement | string)[];
+
+export function create<K extends keyof HTMLElementTagNameMap>(
+  type: K,
+  props?: Props,
+  ...children: Children
+): HTMLElementTagNameMap[K];
+export function create<T extends HTMLElement>(
+  type: string,
+  props?: Props,
+  ...children: Children
+): T;
+export function create(type: string, props: Props = {}, ...children: Children) {
+  const element = document.createElement(type);
+
+  const { className, style, html, ...restProps } = props;
+  if (className) {
+    element.classList.add(className);
+  }
+  if (style) {
+    applyStyle(element, style);
+  }
+  if (html) {
+    element.innerHTML = html;
+  }
+  applyAttrs(element, restProps);
+
+  for (const child of children) {
+    append(element, isStr(child) ? document.createTextNode(child) : child);
+  }
+
+  return element;
+}
+
+export function append(parent: Node, ...children: Node[]) {
+  for (const child of children) {
+    parent.appendChild(child);
+  }
 }
 
 export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
@@ -86,4 +118,8 @@ export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
   }
 
   return domRect;
+}
+
+export function setShadowCSS(root: ShadowRoot, ...css: string[]) {
+  root.innerHTML = `<style>${css.join('')}</style>`;
 }
