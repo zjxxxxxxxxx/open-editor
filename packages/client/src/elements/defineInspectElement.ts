@@ -1,4 +1,11 @@
-import { applyAttrs, create, on, off, append } from '../utils/document';
+import {
+  applyAttrs,
+  create,
+  on,
+  off,
+  append,
+  setShadowCSS,
+} from '../utils/document';
 import { isValidElement } from '../utils/element';
 import { createStyleInject } from '../utils/createStyleInject';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
@@ -27,16 +34,17 @@ const CSS = postcss`
 }
 `;
 
-const resetCSS = postcss`
+const overrideCSS = postcss`
 * {
   cursor: default !important;
   user-select: none !important;
+  touch-action: none !important;
   -webkit-touch-callout: none !important;
 }
 `;
 
 export function defineInspectElement() {
-  const resetStyle = createStyleInject(resetCSS);
+  const overrideStyle = createStyleInject(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     private overlay: HTMLOverlayElement;
@@ -62,25 +70,22 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${Theme}${CSS}</style>`;
+      setShadowCSS(shadow, Theme, CSS);
 
       this.overlay = create<HTMLOverlayElement>(
         InternalElements.HTML_OVERLAY_ELEMENT,
       );
       this.tree = create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT);
-
-      append(shadow, this.overlay);
-      append(shadow, this.tree);
+      append(shadow, this.overlay, this.tree);
 
       const options = getOptions();
       if (options.displayToggle) {
         this.toggle = create<HTMLToggleElement>(
           InternalElements.HTML_TOGGLE_ELEMENT,
+          {
+            enable: true,
+          },
         );
-        applyAttrs(this.toggle, {
-          enable: true,
-        });
-
         append(shadow, this.toggle);
       }
     }
@@ -137,6 +142,7 @@ export function defineInspectElement() {
     private setupHandlers() {
       if (!this.active) {
         this.active = true;
+        overrideStyle.insert();
         this.overlay.open();
 
         if (this.pointer) {
@@ -153,7 +159,6 @@ export function defineInspectElement() {
           onOpenEditor: this.openEditor,
           onExitInspect: this.cleanupHandlers,
         });
-        resetStyle.insert();
       }
     }
 
@@ -162,10 +167,10 @@ export function defineInspectElement() {
     private cleanupHandlers = () => {
       if (this.active) {
         this.active = false;
+        overrideStyle.remove();
         this.overlay.close();
         this.tree.close();
         this.cleanupListenersOnWindow();
-        resetStyle.remove();
       }
     };
 

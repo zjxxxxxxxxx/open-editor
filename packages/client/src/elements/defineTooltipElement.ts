@@ -5,6 +5,7 @@ import {
   create,
   append,
   getDOMRect,
+  setShadowCSS,
 } from '../utils/document';
 import { getSafeArea } from '../utils/safeArea';
 import { Colors, InternalElements } from '../constants';
@@ -59,23 +60,24 @@ export function defineTooltipElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${CSS}</style>`;
+      setShadowCSS(shadow, CSS);
 
-      this.root = create('div');
-      this.root.classList.add('root');
+      this.root = create(
+        'div',
+        {
+          className: 'root',
+        },
+        (this.element = create('span', {
+          className: 'element',
+        })),
+        (this.component = create('span', {
+          className: 'component',
+        })),
+        (this.file = create('div', {
+          className: 'file',
+        })),
+      );
 
-      this.element = create('span');
-      this.element.classList.add('element');
-
-      this.component = create('span');
-      this.component.classList.add('component');
-
-      this.file = create('div');
-      this.file.classList.add('file');
-
-      append(this.root, this.element);
-      append(this.root, this.component);
-      append(this.root, this.file);
       append(shadow, this.root);
     }
 

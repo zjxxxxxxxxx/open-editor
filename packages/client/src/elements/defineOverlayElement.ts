@@ -10,9 +10,9 @@ import {
   append,
   on,
   off,
+  setShadowCSS,
 } from '../utils/document';
 import { create_RAF } from '../utils/createRAF';
-import { createStyleInject } from '../utils/createStyleInject';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -47,15 +47,7 @@ const CSS = postcss`
 }
 `;
 
-const touchLockCSS = postcss`
-html {
-  touch-action: none !important;
-}
-`;
-
 export function defineOverlayElement() {
-  const touchLockStyle = createStyleInject(touchLockCSS);
-
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
     private tooltip: HTMLTooltipElement;
 
@@ -70,37 +62,43 @@ export function defineOverlayElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${CSS}</style>`;
+      setShadowCSS(shadow, CSS);
 
-      this.posttion = create('div');
-      this.posttion.classList.add('posttion');
-
-      this.margin = create('div');
-      this.margin.classList.add('margin');
-
-      this.border = create('div');
-      this.border.classList.add('border');
-
-      this.padding = create('div');
-      this.padding.classList.add('padding');
-
-      this.content = create('div');
-      this.content.classList.add('content');
-
+      this.posttion = create(
+        'div',
+        {
+          className: 'posttion',
+        },
+        (this.margin = create(
+          'div',
+          {
+            className: 'margin',
+          },
+          (this.border = create(
+            'div',
+            {
+              className: 'border',
+            },
+            (this.padding = create(
+              'div',
+              {
+                className: 'padding',
+              },
+              (this.content = create('div', {
+                className: 'content',
+              })),
+            )),
+          )),
+        )),
+      );
       this.tooltip = <HTMLTooltipElement>(
         create(InternalElements.HTML_TOOLTIP_ELEMENT)
       );
 
-      append(this.padding, this.content);
-      append(this.border, this.padding);
-      append(this.margin, this.border);
-      append(this.posttion, this.margin);
-      append(shadow, this.posttion);
-      append(shadow, this.tooltip);
+      append(shadow, this.posttion, this.tooltip);
     }
 
     open = () => {
-      touchLockStyle.insert();
       applyStyle(this.posttion, {
         display: 'block',
       });
@@ -110,7 +108,6 @@ export function defineOverlayElement() {
     };
 
     close = () => {
-      touchLockStyle.remove();
       applyStyle(this.posttion, {
         display: 'none',
       });

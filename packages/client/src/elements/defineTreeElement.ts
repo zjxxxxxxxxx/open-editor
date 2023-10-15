@@ -1,5 +1,12 @@
 import { isStr } from '@open-editor/shared';
-import { append, applyStyle, create, off, on } from '../utils/document';
+import {
+  append,
+  applyStyle,
+  create,
+  setShadowCSS,
+  off,
+  on,
+} from '../utils/document';
 import { createStyleInject } from '../utils/createStyleInject';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements } from '../constants';
@@ -77,7 +84,7 @@ const CSS = postcss`
   font-size: 14px;
   color: var(--element);
 }
-.empty {
+.empty, .empty .close, .empty .title {
   color: var(--red);
   fill: var(--red);
   border-color: var(--red);
@@ -108,7 +115,7 @@ const CSS = postcss`
 }
 `;
 
-const scrollLockCSS = postcss`
+const overrideCSS = postcss`
 html {
   overflow: hidden !important;
 }
@@ -121,26 +128,39 @@ const closeIcon = `
 `;
 
 export function defineTreeElement() {
-  const scrollLockStyle = createStyleInject(scrollLockCSS);
+  const overrideStyle = createStyleInject(overrideCSS);
 
   class TreeElement extends HTMLElement implements HTMLTreeElement {
     private root: HTMLElement;
     private popup: HTMLElement;
+    private popupClose: HTMLElement;
+    private popupBody: HTMLElement;
     private holdElement?: HTMLElement;
 
     constructor() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      shadow.innerHTML = `<style>${CSS}</style>`;
+      setShadowCSS(shadow, CSS);
 
-      this.root = create('div');
-      this.root.classList.add('root');
+      this.root = create(
+        'div',
+        {
+          className: 'root',
+        },
+        (this.popup = create(
+          'div',
+          {
+            className: 'popup',
+          },
+          (this.popupClose = create('span', {
+            className: 'close',
+            html: closeIcon,
+          })),
+          (this.popupBody = create('div')),
+        )),
+      );
 
-      this.popup = create('div');
-      this.popup.classList.add('popup');
-
-      append(this.root, this.popup);
       append(shadow, this.root);
     }
 
@@ -150,6 +170,9 @@ export function defineTreeElement() {
       });
       on('pointerdown', this.setHoldElement, {
         target: this.popup,
+      });
+      on('click', this.close, {
+        target: this.popupClose,
       });
     }
 
@@ -161,52 +184,70 @@ export function defineTreeElement() {
         target: this.popup,
       });
       off('click', this.close, {
-        target: this.root.querySelector('.close'),
+        target: this.popupClose,
       });
     }
 
     open = (element: HTMLElement) => {
       const source = resolveSource(element, true);
-
-      const hasTree = !!source.tree.length;
-      if (hasTree) {
-        this.renderTreeView(source);
-      } else {
-        this.renderEmptyView(source);
-      }
-
+      this.render(source);
+      overrideStyle.insert();
       applyStyle(this.root, {
         display: 'block',
       });
-      on('click', this.close, {
-        target: this.root.querySelector('.close'),
-      });
-
-      scrollLockStyle.insert();
     };
 
     close = () => {
+      this.popupBody.innerHTML = '';
+
+      overrideStyle.remove();
       applyStyle(this.root, {
         display: 'none',
       });
-      scrollLockStyle.remove();
     };
 
-    private renderTreeView(source: ElementSource) {
-      this.popup.classList.remove('empty');
-      const title = `<div class="title"><span class="element">${source.element} in </span> &lt;ComponentTree&gt;</div>`;
-      const close = `<span class="close">${closeIcon}</span>`;
-      const tree = buildTree(source.tree);
-      const content = `<div class="content"><div class="tree">${tree}</div></div>`;
-      this.popup.innerHTML = `${title} ${close} ${content}`;
-    }
+    private render(source: ElementSource) {
+      const title = create(
+        'div',
+        {
+          className: 'title',
+        },
+        create(
+          'span',
+          {
+            className: 'element',
+          },
+          `${source.element} in `,
+        ),
+        `<ComponentTree>`,
+      );
+      append(this.popupBody, title);
 
-    private renderEmptyView(source: ElementSource) {
-      this.popup.classList.add('empty');
-      const title = `<div class="title empty"><span class="element">${source.element} in </span> &lt;ComponentTree&gt;</div>`;
-      const close = `<span class="close empty">${closeIcon}</span>`;
-      const content = `<div class="msg empty">empty tree 😭.</div>`;
-      this.popup.innerHTML = `${title} ${close} ${content}`;
+      const hasTree = !!source.tree.length;
+      if (hasTree) {
+        const content = create(
+          'div',
+          {
+            className: 'content',
+          },
+          create('div', {
+            className: 'tree',
+            html: buildTree(source.tree),
+          }),
+        );
+        append(this.popupBody, content);
+        this.popup.classList.remove('empty');
+      } else {
+        const content = create(
+          'div',
+          {
+            className: 'msg',
+          },
+          'empty tree 😭.',
+        );
+        append(this.popupBody, content);
+        this.popup.classList.add('empty');
+      }
     }
 
     private setHoldElement = (event: PointerEvent) => {
