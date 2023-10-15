@@ -18,9 +18,9 @@ const CSS = postcss`
   font-family: Menlo, Monaco, 'Courier New', monospace;
   line-height: 1.5;
   font-weight: 400;
-  cursor: default !important;
-  user-select: none !important;
-  -webkit-touch-callout: none !important;
+  cursor: default;
+  user-select: none;
+  touch-callout: none;
 }
 :host {
   all: initial !important;
@@ -31,7 +31,7 @@ const resetCSS = postcss`
 * {
   cursor: default !important;
   user-select: none !important;
-  -webkit-touch-callout: none !important;
+  touch-callout: none !important;
 }
 `;
 

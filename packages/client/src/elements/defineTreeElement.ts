@@ -109,7 +109,7 @@ const CSS = postcss`
 `;
 
 const scrollLockCSS = postcss`
-body {
+html {
   overflow: hidden !important;
 }
 `;
