@@ -1,5 +1,13 @@
 import { isStr } from '@open-editor/shared';
-import { createStyleGetter } from './createStyleGetter';
+
+export const CSS_util = {
+  px(value: string | number) {
+    return `${value}px`;
+  },
+  pv(value: string) {
+    return parseInt(value, 10);
+  },
+};
 
 export function applyStyle(
   element: HTMLElement,
@@ -21,15 +29,6 @@ export function applyAttrs(
     }
   }
 }
-
-export const CSS_util = {
-  px(value: string | number) {
-    return `${value}px`;
-  },
-  pv(value: string) {
-    return parseInt(value, 10);
-  },
-};
 
 export function on<K extends keyof HTMLElementEventMap>(
   type: K,
@@ -64,8 +63,8 @@ export function off(type: any, listener: any, rawOpts: any = {}) {
 export interface Props extends Record<string, any> {
   className?: string;
   style?: Partial<CSSStyleDeclaration>;
-  html?: string;
-  text?: string;
+  __html?: string;
+  __text?: string;
 }
 
 export type Children = (HTMLElement | string)[];
@@ -83,21 +82,23 @@ export function create<T extends HTMLElement>(
 export function create(type: string, props: Props = {}, ...children: Children) {
   const element = document.createElement(type);
 
-  const { className, style, html, ...restProps } = props;
+  const { className, style, __html, __text, ...restProps } = props;
   if (className) {
-    element.classList.add(className);
+    element.classList.add(...className.split(' '));
   }
   if (style) {
     applyStyle(element, style);
   }
-  if (html) {
-    element.innerHTML = html;
+  if (__html) {
+    element.innerHTML = __html;
+  } else if (__text) {
+    element.innerText = __text;
+  } else {
+    for (const child of children) {
+      append(element, isStr(child) ? document.createTextNode(child) : child);
+    }
   }
   applyAttrs(element, restProps);
-
-  for (const child of children) {
-    append(element, isStr(child) ? document.createTextNode(child) : child);
-  }
 
   return element;
 }
@@ -108,18 +109,43 @@ export function append(parent: Node, ...children: Node[]) {
   }
 }
 
+export function setShadowCSS(root: ShadowRoot, ...css: string[]) {
+  root.innerHTML = `<style>${css.join('')}</style>`;
+}
+
 export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
-  const getValue = createStyleGetter(target);
   const domRect = target.getBoundingClientRect().toJSON();
 
-  const zoom = getValue('zoom') || 1;
-  if (zoom !== 1) {
+  const zoom = createStyleGetter(target)('zoom');
+  if (zoom && zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
   }
 
   return domRect;
 }
 
-export function setShadowCSS(root: ShadowRoot, ...css: string[]) {
-  root.innerHTML = `<style>${css.join('')}</style>`;
+export function createStyleGetter(element: Element) {
+  const style = window.getComputedStyle(element, null);
+  return function getValue(property: string) {
+    return CSS_util.pv(style.getPropertyValue(property)) || 0;
+  };
+}
+
+export function createGlobalStyle(css: string) {
+  let style: HTMLStyleElement;
+  function createStyle() {
+    style = create('style');
+    style.innerHTML = css;
+  }
+
+  return {
+    insert() {
+      if (!style) createStyle();
+
+      append(document.body, style);
+    },
+    remove() {
+      style?.remove();
+    },
+  };
 }
