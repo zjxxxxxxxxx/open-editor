@@ -3,15 +3,9 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import {
-  applyStyle,
-  CSS_util,
-  create,
-  append,
-  on,
-  off,
-  setShadowCSS,
-} from '../utils/html';
+import { create, append } from '../utils/dom';
+import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
@@ -62,7 +56,7 @@ export function defineOverlayElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowCSS(shadow, CSS);
+      setShadowStyle(shadow, CSS);
 
       this.posttion = create(
         'div',

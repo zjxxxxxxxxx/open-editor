@@ -4,8 +4,8 @@ import type { ElementSourceMeta } from '../resolveSource';
 import { createVueResolver } from '../createVueResolver';
 
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
-function createResolver() {
-  resolver = createVueResolver({
+function getResolver() {
+  return (resolver ||= createVueResolver({
     isValid(instance) {
       return Boolean(instance);
     },
@@ -22,9 +22,9 @@ function createResolver() {
       return <string>instance.type.__file;
     },
     getName(instance) {
-      return instance.type.name ?? instance.type.__name;
+      return instance.type.name || instance.type.__name;
     },
-  });
+  }));
 }
 
 export function resolveVue3(
@@ -32,6 +32,5 @@ export function resolveVue3(
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  if (!resolver) createResolver();
-  resolver(debug, tree, deep);
+  getResolver()(debug, tree, deep);
 }

@@ -3,8 +3,8 @@ import type { ElementSourceMeta } from '../resolveSource';
 import { createVueResolver } from '../createVueResolver';
 
 let resolver: ReturnType<typeof createVueResolver<any>>;
-function createResolver() {
-  resolver = createVueResolver({
+function getResolver() {
+  return (resolver ||= createVueResolver({
     isValid(instance) {
       return Boolean(instance?.$vnode);
     },
@@ -18,12 +18,12 @@ function createResolver() {
       return instance.$props?.__source;
     },
     getFile(instance) {
-      return getCtor(instance).__file ?? getCtor(instance).options?.__file;
+      return getCtor(instance).__file || getCtor(instance).options?.__file;
     },
     getName(instance) {
       return getCtor(instance).options?.name;
     },
-  });
+  }));
 
   function getCtor(instance: any) {
     return instance.$vnode.componentOptions.Ctor;
@@ -39,7 +39,5 @@ export function resolveVue2(
   if (componentInstance) {
     debug.value = componentInstance;
   }
-
-  if (!resolver) createResolver();
-  resolver(debug, tree, deep);
+  getResolver()(debug, tree, deep);
 }

@@ -5,8 +5,8 @@ import { createReactResolver } from '../createReactResolver';
 import { fiberResolver } from './react18';
 
 let resolver: ReturnType<typeof createReactResolver<any>>;
-function createResolver() {
-  resolver = createReactResolver({
+function getResolver() {
+  return (resolver ||= createReactResolver({
     isValid(owner) {
       if (owner?._currentElement) {
         return (
@@ -31,7 +31,15 @@ function createResolver() {
         return component?.name || component?.displayName;
       }
     },
-  });
+  }));
+}
+
+export function instanceResolver(
+  instance: any | null | undefined,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  return getResolver()(instance, tree, deep);
 }
 
 export function resolveReact15(
@@ -42,7 +50,6 @@ export function resolveReact15(
   if (instance && '_debugOwner' in instance) {
     fiberResolver(instance, tree, deep);
   } else {
-    if (!resolver) createResolver();
-    resolver(instance, tree, deep);
+    instanceResolver(instance, tree, deep);
   }
 }

@@ -1,12 +1,6 @@
-import {
-  on,
-  off,
-  applyStyle,
-  create,
-  append,
-  CSS_util,
-  setShadowCSS,
-} from '../utils/html';
+import { create, append, getHtml } from '../utils/dom';
+import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
 import { Colors, InternalElements, POS_Y_CACHE_ID } from '../constants';
@@ -60,7 +54,7 @@ export function defineToggleElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowCSS(shadow, CSS);
+      setShadowStyle(shadow, CSS);
 
       this.root = create(
         'div',
@@ -144,7 +138,7 @@ export function defineToggleElement() {
     };
 
     private updatePosY_RAF = create_RAF(() => {
-      const { clientHeight: winH } = document.documentElement;
+      const { clientHeight: winH } = getHtml();
       const { offsetHeight: toggleH } = this.root;
       const { top, bottom } = getSafeArea();
       const cachePosY = getCachePosY();

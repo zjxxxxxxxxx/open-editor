@@ -1,4 +1,5 @@
-import { createStyleGetter, getDOMRect } from './html';
+import { getDOMRect } from './dom';
+import { createStyleGetter } from './style';
 
 export interface ComputedStyle {
   width: number;

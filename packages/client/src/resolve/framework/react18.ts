@@ -5,8 +5,8 @@ import type { ElementSourceMeta } from '../resolveSource';
 import { createReactResolver } from '../createReactResolver';
 
 let resolver: ReturnType<typeof createReactResolver<Fiber>>;
-function createResolver() {
-  resolver = createReactResolver({
+function getResolver() {
+  return (resolver ||= createReactResolver({
     isValid(owner) {
       if (owner?._debugSource) {
         return isFunc(owner.type) || isFunc(owner.type.render);
@@ -28,7 +28,7 @@ function createResolver() {
         return component?.name || component?.displayName;
       }
     },
-  });
+  }));
 }
 
 export function fiberResolver(
@@ -36,8 +36,7 @@ export function fiberResolver(
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  if (!resolver) createResolver();
-  resolver(fiber, tree, deep);
+  return getResolver()(fiber, tree, deep);
 }
 
 export function resolveReact18(
