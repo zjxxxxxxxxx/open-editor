@@ -1,13 +1,7 @@
 import { isStr } from '@open-editor/shared';
-import {
-  append,
-  applyStyle,
-  create,
-  setShadowCSS,
-  off,
-  on,
-  createGlobalStyle,
-} from '../utils/html';
+import { append, create } from '../utils/dom';
+import { applyStyle, createGlobalStyle, setShadowStyle } from '../utils/style';
+import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements } from '../constants';
 import type { ElementSource, ElementSourceMeta } from '../resolve';
@@ -120,7 +114,7 @@ const CSS = postcss`
 `;
 
 const overrideCSS = postcss`
-html {
+:root {
   overflow: hidden !important;
 }
 `;
@@ -146,7 +140,7 @@ export function defineTreeElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowCSS(shadow, CSS);
+      setShadowStyle(shadow, CSS);
 
       this.root = create(
         'div',
@@ -220,7 +214,6 @@ export function defineTreeElement() {
     };
 
     private setHoldElement = (event: PointerEvent) => {
-      console.log(event);
       this.holdElement = <HTMLElement>event.target;
     };
 

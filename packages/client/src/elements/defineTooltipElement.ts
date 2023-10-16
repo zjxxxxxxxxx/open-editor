@@ -1,12 +1,6 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import {
-  applyStyle,
-  CSS_util,
-  create,
-  append,
-  getDOMRect,
-  setShadowCSS,
-} from '../utils/html';
+import { create, append, getDOMRect, getHtml } from '../utils/dom';
+import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
 import { getSafeArea } from '../utils/getSafeArea';
 import { Colors, InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
@@ -60,7 +54,7 @@ export function defineTooltipElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowCSS(shadow, CSS);
+      setShadowStyle(shadow, CSS);
 
       this.root = create(
         'div',
@@ -104,7 +98,7 @@ export function defineTooltipElement() {
 
       if (activeElement && style) {
         this.updateText(activeElement);
-        this.updatePositionStyle(style);
+        this.updatePosStyle(style);
         // after visible
         applyStyle(this.root, {
           visibility: 'visible',
@@ -145,13 +139,13 @@ export function defineTooltipElement() {
       }
     }
 
-    private updatePositionStyle(style: ComputedStyle) {
+    private updatePosStyle(style: ComputedStyle) {
       const {
         // window width excluding the scrollbar width
         clientWidth: winW,
         // window height excluding the scrollbar height
         clientHeight: winH,
-      } = document.documentElement;
+      } = getHtml();
       const { width: rootW, height: rootH } = getDOMRect(this.root);
       const { top, right, bottom, left } = getSafeArea();
       const positionStyle: Partial<CSSStyleDeclaration> = {};

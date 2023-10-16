@@ -1,12 +1,6 @@
-import {
-  applyAttrs,
-  create,
-  on,
-  off,
-  append,
-  setShadowCSS,
-  createGlobalStyle,
-} from '../utils/html';
+import { applyAttrs, create, append } from '../utils/dom';
+import { createGlobalStyle, setShadowStyle } from '../utils/style';
+import { off, on } from '../utils/event';
 import { isValidElement } from '../utils/element';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
@@ -70,7 +64,7 @@ export function defineInspectElement() {
       super();
 
       const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowCSS(shadow, Theme, CSS);
+      setShadowStyle(shadow, Theme, CSS);
 
       this.overlay = create<HTMLOverlayElement>(
         InternalElements.HTML_OVERLAY_ELEMENT,
