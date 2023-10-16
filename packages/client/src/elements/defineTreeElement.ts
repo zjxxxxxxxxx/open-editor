@@ -6,8 +6,8 @@ import {
   setShadowCSS,
   off,
   on,
-} from '../utils/document';
-import { createStyleInject } from '../utils/createStyleInject';
+  createGlobalStyle,
+} from '../utils/html';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements } from '../constants';
 import type { ElementSource, ElementSourceMeta } from '../resolve';
@@ -20,11 +20,13 @@ export interface HTMLTreeElement extends HTMLElement {
 
 const CSS = postcss`
 .root {
+  display: none;
+}
+.overlay {
   position: fixed;
   top: 0;
   left: 0;
   z-index: var(--z-index-tree);
-  display: none;
   width: 100vw;
   height: 100vh;
   backdrop-filter: blur(8px);
@@ -34,18 +36,19 @@ const CSS = postcss`
   position: fixed;
   top: 50%;
   left: 50%;
+  z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
   display: inline-block;
-  padding: 20px;
+  padding: 22px 28px;
   border: 2px solid var(--green);
   border-radius: 6px;
   background-color: var(--bg-color);
 }
 .content {
   padding-right: 14px;
-  min-width: min(calc(100vw - 152px), 300px);
-  max-width: min(calc(100vw - 152px), 800px);
-  max-height: min(calc(100vh - 152px), 600px);
+  min-width: min(calc(100vw - 176px), 300px);
+  max-width: min(calc(100vw - 176px), 800px);
+  max-height: min(calc(100vh - 176px), 600px);
   white-space: nowrap;
   overflow: auto;
   scrollbar-width: none;
@@ -79,6 +82,7 @@ const CSS = postcss`
   font-size: 16px;
   font-weight: 500;
   color: var(--green);
+  white-space: nowrap;
 }
 .element {
   font-size: 14px;
@@ -128,10 +132,11 @@ const closeIcon = `
 `;
 
 export function defineTreeElement() {
-  const overrideStyle = createStyleInject(overrideCSS);
+  const overrideStyle = createGlobalStyle(overrideCSS);
 
   class TreeElement extends HTMLElement implements HTMLTreeElement {
     private root: HTMLElement;
+    private overlay: HTMLElement;
     private popup: HTMLElement;
     private popupClose: HTMLElement;
     private popupBody: HTMLElement;
@@ -148,6 +153,9 @@ export function defineTreeElement() {
         {
           className: 'root',
         },
+        (this.overlay = create('div', {
+          className: 'overlay',
+        })),
         (this.popup = create(
           'div',
           {
@@ -155,7 +163,7 @@ export function defineTreeElement() {
           },
           (this.popupClose = create('span', {
             className: 'close',
-            html: closeIcon,
+            __html: closeIcon,
           })),
           (this.popupBody = create('div')),
         )),
@@ -165,26 +173,32 @@ export function defineTreeElement() {
     }
 
     connectedCallback() {
-      on('click', this.handlePopupEvent, {
-        target: this.popup,
-      });
       on('pointerdown', this.setHoldElement, {
-        target: this.popup,
+        target: this.root,
       });
-      on('click', this.close, {
+      on('click', this.safeClose, {
+        target: this.overlay,
+      });
+      on('click', this.safeClose, {
         target: this.popupClose,
+      });
+      on('click', this.tryOpenEditor, {
+        target: this.popupBody,
       });
     }
 
     disconnectedCallback() {
-      off('click', this.handlePopupEvent, {
-        target: this.popup,
-      });
       off('pointerdown', this.setHoldElement, {
-        target: this.popup,
+        target: this.root,
       });
-      off('click', this.close, {
+      off('click', this.safeClose, {
+        target: this.overlay,
+      });
+      off('click', this.safeClose, {
         target: this.popupClose,
+      });
+      off('click', this.tryOpenEditor, {
+        target: this.popupBody,
       });
     }
 
@@ -199,11 +213,35 @@ export function defineTreeElement() {
 
     close = () => {
       this.popupBody.innerHTML = '';
-
       overrideStyle.remove();
       applyStyle(this.root, {
         display: 'none',
       });
+    };
+
+    private setHoldElement = (event: PointerEvent) => {
+      console.log(event);
+      this.holdElement = <HTMLElement>event.target;
+    };
+
+    // Prevent the display of the component tree by long press, which accidentally triggers the click event
+    private checkHoldElement = (event: PointerEvent) => {
+      return <HTMLElement>event.target === this.holdElement;
+    };
+
+    private safeClose = (event: PointerEvent) => {
+      if (this.checkHoldElement(event)) {
+        this.close();
+      }
+    };
+
+    private tryOpenEditor = (event: PointerEvent) => {
+      const element = <HTMLElement>event.target!;
+      const source = <ElementSourceMeta>(<unknown>element.dataset);
+      if (this.checkHoldElement(event) && isStr(source.file)) {
+        openEditor(source, (event) => this.dispatchEvent(event));
+        this.dispatchEvent(new CustomEvent('exit'));
+      }
     };
 
     private render(source: ElementSource) {
@@ -225,16 +263,10 @@ export function defineTreeElement() {
 
       const hasTree = !!source.tree.length;
       if (hasTree) {
-        const content = create(
-          'div',
-          {
-            className: 'content',
-          },
-          create('div', {
-            className: 'tree',
-            html: buildTree(source.tree),
-          }),
-        );
+        const content = create('div', {
+          className: 'content tree',
+          __html: buildTree(source.tree),
+        });
         append(this.popupBody, content);
         this.popup.classList.remove('empty');
       } else {
@@ -249,22 +281,6 @@ export function defineTreeElement() {
         this.popup.classList.add('empty');
       }
     }
-
-    private setHoldElement = (event: PointerEvent) => {
-      this.holdElement = <HTMLElement>event.target;
-    };
-
-    private handlePopupEvent = (event: PointerEvent) => {
-      const element = <HTMLElement>event.target;
-      // Prevent the display of the component tree by long press, which accidentally triggers the click event
-      if (element === this.holdElement && isStr(element.dataset.file)) {
-        openEditor(
-          <ElementSourceMeta>(<unknown>element.dataset),
-          this.dispatchEvent.bind(this),
-        );
-        this.dispatchEvent(new CustomEvent('exit'));
-      }
-    };
   }
 
   function buildTree(tree: ElementSourceMeta[]) {

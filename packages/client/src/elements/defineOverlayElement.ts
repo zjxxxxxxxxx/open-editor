@@ -11,7 +11,7 @@ import {
   on,
   off,
   setShadowCSS,
-} from '../utils/document';
+} from '../utils/html';
 import { create_RAF } from '../utils/createRAF';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';

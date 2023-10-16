@@ -1,5 +1,4 @@
-import { createStyleGetter } from './createStyleGetter';
-import { getDOMRect } from './document';
+import { createStyleGetter, getDOMRect } from './html';
 
 export interface ComputedStyle {
   width: number;
@@ -40,26 +39,26 @@ export function getComputedStyles(
     bottom,
     left,
   } = getDOMRect(element);
-  const getValue = createStyleGetter(element);
+  const get = createStyleGetter(element);
 
-  const marginTop = getValue('margin-top');
-  const marginRight = getValue('margin-right');
-  const marginBottom = getValue('margin-bottom');
-  const marginLeft = getValue('margin-left');
+  const marginTop = get('margin-top');
+  const marginRight = get('margin-right');
+  const marginBottom = get('margin-bottom');
+  const marginLeft = get('margin-left');
   const marginWidth = width;
   const marginHeight = height;
 
-  const borderTop = getValue('border-top');
-  const borderRight = getValue('border-right');
-  const borderBottom = getValue('border-bottom');
-  const borderLeft = getValue('border-left');
+  const borderTop = get('border-top');
+  const borderRight = get('border-right');
+  const borderBottom = get('border-bottom');
+  const borderLeft = get('border-left');
   const borderWidth = marginWidth - borderRight - borderLeft;
   const borderHeight = marginHeight - borderTop - borderBottom;
 
-  const paddingTop = getValue('padding-top');
-  const paddingRight = getValue('padding-right');
-  const paddingBottom = getValue('padding-bottom');
-  const paddingLeft = getValue('padding-left');
+  const paddingTop = get('padding-top');
+  const paddingRight = get('padding-right');
+  const paddingBottom = get('padding-bottom');
+  const paddingLeft = get('padding-left');
   const paddingWidth = borderWidth - paddingRight - paddingLeft;
   const paddingHeight = borderHeight - paddingTop - paddingBottom;
 

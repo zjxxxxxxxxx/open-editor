@@ -4,7 +4,7 @@ import { getOptions } from '../options';
 
 export function openEditor(
   source: ElementSourceMeta,
-  dispatchEvent: (evt: CustomEvent) => boolean,
+  dispatchEvent: (event: CustomEvent<URL>) => boolean,
 ) {
   const { protocol, hostname, port } = window.location;
   const { file, line = 1, column = 1 } = source;

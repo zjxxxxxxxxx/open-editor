@@ -5,9 +5,9 @@ import {
   off,
   append,
   setShadowCSS,
-} from '../utils/document';
+  createGlobalStyle,
+} from '../utils/html';
 import { isValidElement } from '../utils/element';
-import { createStyleInject } from '../utils/createStyleInject';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
 import { InternalElements, Theme, captureOpts } from '../constants';
@@ -44,7 +44,7 @@ const overrideCSS = postcss`
 `;
 
 export function defineInspectElement() {
-  const overrideStyle = createStyleInject(overrideCSS);
+  const overrideStyle = createGlobalStyle(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     private overlay: HTMLOverlayElement;
@@ -177,7 +177,7 @@ export function defineInspectElement() {
     private openEditor = (element: HTMLElement) => {
       const { meta } = resolveSource(element);
       if (meta) {
-        openEditor(meta, this.dispatchEvent.bind(this));
+        openEditor(meta, (event) => this.dispatchEvent(event));
       }
     };
   }

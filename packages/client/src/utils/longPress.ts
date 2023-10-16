@@ -1,4 +1,4 @@
-import { off, on } from './document';
+import { off, on } from './html';
 
 export type Target = HTMLElement | Window;
 
@@ -19,7 +19,7 @@ export type LongPressCache = {
 
 const targetMap = new WeakMap<Target, LongPressCache[]>();
 
-export const longPressHandler = {
+export const longPress = {
   on: onLongPress,
   off: offLongPress,
 };

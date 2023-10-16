@@ -1,8 +1,8 @@
 import { captureOpts } from '../constants';
-import { on, off, applyAttrs } from './document';
+import { on, off, applyAttrs } from './html';
 import { isInternalElement, isValidElement } from './element';
-import type { LongPressEvent } from './longPressHandler';
-import { longPressHandler } from './longPressHandler';
+import type { LongPressEvent } from './longPress';
+import { longPress } from './longPress';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
@@ -50,7 +50,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('keydown', onKeyDown, captureOpts);
     on('contextmenu', onContextMenu, captureOpts);
 
-    longPressHandler.on(onLongPress, captureOpts);
+    longPress.on(onLongPress, captureOpts);
   }
 
   function removeEventListeners() {
@@ -84,7 +84,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('keydown', onKeyDown, captureOpts);
     off('contextmenu', onContextMenu, captureOpts);
 
-    longPressHandler.off(onLongPress, captureOpts);
+    longPress.off(onLongPress, captureOpts);
   }
 
   function onPointerDown(event: PointerEvent) {
