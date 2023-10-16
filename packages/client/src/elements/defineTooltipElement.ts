@@ -6,8 +6,8 @@ import {
   append,
   getDOMRect,
   setShadowCSS,
-} from '../utils/document';
-import { getSafeArea } from '../utils/safeArea';
+} from '../utils/html';
+import { getSafeArea } from '../utils/getSafeArea';
 import { Colors, InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 

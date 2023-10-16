@@ -81,6 +81,7 @@ function buildBundles(
         esbuild({
           target: __TARGET__,
           minifySyntax: !__DEV__,
+          minifyWhitespace: !__DEV__,
           supported: {
             'class-field': true,
           },

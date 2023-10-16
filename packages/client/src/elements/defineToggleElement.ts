@@ -6,9 +6,9 @@ import {
   append,
   CSS_util,
   setShadowCSS,
-} from '../utils/document';
+} from '../utils/html';
 import { create_RAF } from '../utils/createRAF';
-import { getSafeArea } from '../utils/safeArea';
+import { getSafeArea } from '../utils/getSafeArea';
 import { Colors, InternalElements, POS_Y_CACHE_ID } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
@@ -70,7 +70,7 @@ export function defineToggleElement() {
         (this.button = create('div', {
           className: 'button',
           title: 'open-editor-toggle',
-          html: toggleIcon,
+          __html: toggleIcon,
         })),
       );
 
@@ -134,7 +134,7 @@ export function defineToggleElement() {
     };
 
     private changePosY = (event: PointerEvent) => {
-      if (this.touchPoint && !this.active) {
+      if (this.touchPoint) {
         const { pageY, posY } = this.touchPoint;
         const nextPosY = event.pageY - pageY + posY;
         event.preventDefault();
