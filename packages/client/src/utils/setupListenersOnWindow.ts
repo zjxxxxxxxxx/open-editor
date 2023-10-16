@@ -1,8 +1,8 @@
 import { captureOpts } from '../constants';
-import { on, off, applyAttrs } from './html';
-import { isInternalElement, isValidElement } from './element';
 import type { LongPressEvent } from './longPress';
-import { longPress } from './longPress';
+import { applyAttrs } from './dom';
+import { off, on } from './event';
+import { isInternalElement, isValidElement } from './element';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
@@ -49,8 +49,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
     on('keydown', onKeyDown, captureOpts);
     on('contextmenu', onContextMenu, captureOpts);
-
-    longPress.on(onLongPress, captureOpts);
+    on('longpress', onLongPress, captureOpts);
   }
 
   function removeEventListeners() {
@@ -83,8 +82,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
     off('keydown', onKeyDown, captureOpts);
     off('contextmenu', onContextMenu, captureOpts);
-
-    longPress.off(onLongPress, captureOpts);
+    off('longpress', onLongPress, captureOpts);
   }
 
   function onPointerDown(event: PointerEvent) {
@@ -168,7 +166,7 @@ function onSilence(event: Event, all?: boolean) {
 }
 
 const unlockID = '__unlock_disabled__';
-let holdElement: HTMLInputElement | HTMLButtonElement | null = null;
+let holdElement: HTMLButtonElement | null = null;
 
 function onHoldElementUnlockDisabled(event: Event) {
   const element = <HTMLButtonElement>event.target;
@@ -185,7 +183,7 @@ function onHoldElementUnlockDisabled(event: Event) {
 
 function onHoldElementRestoreDisabled() {
   if (holdElement) {
-    if (holdElement.getAttribute(unlockID) != null) {
+    if (holdElement.getAttribute(unlockID)) {
       holdElement.disabled = true;
       applyAttrs(holdElement, {
         [unlockID]: null,

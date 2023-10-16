@@ -1,4 +1,4 @@
-import { createStyleGetter, createGlobalStyle } from './html';
+import { createStyleGetter, createGlobalStyle } from './style';
 
 const CSS = postcss`
 :root {
@@ -10,11 +10,13 @@ const CSS = postcss`
 `;
 
 let get: ReturnType<typeof createStyleGetter>;
+function cresteGetter() {
+  createGlobalStyle(CSS).insert();
+  return createStyleGetter(document.body);
+}
+
 export function getSafeArea() {
-  if (!get) {
-    createGlobalStyle(CSS).insert();
-    get = createStyleGetter(document.body);
-  }
+  get ||= cresteGetter();
 
   return {
     top: get('--sait'),
