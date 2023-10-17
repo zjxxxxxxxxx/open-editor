@@ -2,6 +2,18 @@ import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createVueResolver } from '../createVueResolver';
 
+export function resolveVue2(
+  debug: ResolveDebug,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  const componentInstance = debug.value._vnode.componentInstance;
+  if (componentInstance) {
+    debug.value = componentInstance;
+  }
+  getResolver()(debug, tree, deep);
+}
+
 let resolver: ReturnType<typeof createVueResolver<any>>;
 function getResolver() {
   return (resolver ||= createVueResolver({
@@ -28,16 +40,4 @@ function getResolver() {
   function getCtor(instance: any) {
     return instance.$vnode.componentOptions.Ctor;
   }
-}
-
-export function resolveVue2(
-  debug: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
-  deep = false,
-) {
-  const componentInstance = debug.value._vnode.componentInstance;
-  if (componentInstance) {
-    debug.value = componentInstance;
-  }
-  getResolver()(debug, tree, deep);
 }

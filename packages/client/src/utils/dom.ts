@@ -58,7 +58,8 @@ export function applyAttrs(
 ) {
   for (const property of Object.keys(attrs)) {
     const attr = attrs[property];
-    if (attr) {
+    // support '' | 0 | false
+    if (attr != null) {
       element.setAttribute(property, String(attr));
     } else {
       element.removeAttribute(property);
