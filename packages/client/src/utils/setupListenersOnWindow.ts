@@ -159,6 +159,7 @@ let holdElement: HTMLButtonElement | null = null;
 function onHoldElementUnlockDisabled(event: Event) {
   const element = <HTMLButtonElement>event.target;
   if (isValidElement(element)) {
+    // <div disabled/> => <div __unlock_disabled__/>
     if (element.disabled) {
       element.disabled = false;
       applyAttrs(element, {
@@ -171,7 +172,11 @@ function onHoldElementUnlockDisabled(event: Event) {
 
 function onHoldElementRestoreDisabled() {
   if (holdElement) {
-    if (holdElement.getAttribute(unlockID)) {
+    // <div __unlock_disabled__/> => <div disabled/>
+    if (
+      // __unlock_disabled__ === ''
+      holdElement.getAttribute(unlockID) != null
+    ) {
       holdElement.disabled = true;
       applyAttrs(holdElement, {
         [unlockID]: null,

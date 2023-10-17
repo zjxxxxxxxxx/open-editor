@@ -10,13 +10,13 @@ const CSS = postcss`
 `;
 
 let get: ReturnType<typeof createStyleGetter>;
-function cresteGetter() {
+function createGetter() {
   createGlobalStyle(CSS).insert();
   return createStyleGetter(document.body);
 }
 
 export function getSafeArea() {
-  get ||= cresteGetter();
+  get ||= createGetter();
 
   return {
     top: get('--sait'),

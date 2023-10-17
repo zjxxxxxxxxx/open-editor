@@ -1,7 +1,7 @@
 import { ensureFileName } from './util';
 import { resolveDebug } from './resolveDebug';
-import { resolveReact18 } from './framework/react18';
-import { resolveReact15 } from './framework/react15';
+import { resolveReact17Plus } from './framework/react17+';
+import { resolveReact15Plus } from './framework/react15+';
 import { resolveVue3 } from './framework/vue3';
 import { resolveVue2 } from './framework/vue2';
 
@@ -29,9 +29,9 @@ export function resolveSource(
   const debug = resolveDebug(element);
   if (debug) {
     if (debug.key.startsWith('__reactFiber')) {
-      resolveReact18(debug, source.tree, deep);
+      resolveReact17Plus(debug, source.tree, deep);
     } else if (debug.key.startsWith('__reactInternal')) {
-      resolveReact15(debug, source.tree, deep);
+      resolveReact15Plus(debug, source.tree, deep);
     } else if (debug.key.startsWith('__vueParent')) {
       resolveVue3(debug, source.tree, deep);
     } else if (debug.key.startsWith('__vue')) {
