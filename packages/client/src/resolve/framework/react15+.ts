@@ -2,7 +2,27 @@ import { isFunc } from '@open-editor/shared';
 import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createReactResolver } from '../createReactResolver';
-import { fiberResolver } from './react18';
+import { fiberResolver } from './react17+';
+
+export function resolveReact15Plus(
+  { value: instance }: ResolveDebug,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  if (instance && '_debugOwner' in instance) {
+    fiberResolver(instance, tree, deep);
+  } else {
+    instanceResolver(instance, tree, deep);
+  }
+}
+
+export function instanceResolver(
+  instance: any | null | undefined,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  return getResolver()(instance, tree, deep);
+}
 
 let resolver: ReturnType<typeof createReactResolver<any>>;
 function getResolver() {
@@ -32,24 +52,4 @@ function getResolver() {
       }
     },
   }));
-}
-
-export function instanceResolver(
-  instance: any | null | undefined,
-  tree: Partial<ElementSourceMeta>[],
-  deep = false,
-) {
-  return getResolver()(instance, tree, deep);
-}
-
-export function resolveReact15(
-  { value: instance }: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
-  deep = false,
-) {
-  if (instance && '_debugOwner' in instance) {
-    fiberResolver(instance, tree, deep);
-  } else {
-    instanceResolver(instance, tree, deep);
-  }
 }

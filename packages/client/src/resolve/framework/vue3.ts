@@ -3,6 +3,14 @@ import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createVueResolver } from '../createVueResolver';
 
+export function resolveVue3(
+  debug: ResolveDebug,
+  tree: Partial<ElementSourceMeta>[],
+  deep = false,
+) {
+  getResolver()(debug, tree, deep);
+}
+
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
 function getResolver() {
   return (resolver ||= createVueResolver({
@@ -25,12 +33,4 @@ function getResolver() {
       return instance.type.name || instance.type.__name;
     },
   }));
-}
-
-export function resolveVue3(
-  debug: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
-  deep = false,
-) {
-  getResolver()(debug, tree, deep);
 }
