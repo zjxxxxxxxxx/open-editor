@@ -29,13 +29,14 @@ function onLongPress(
   rawOpts: LongPressOptions = {},
 ) {
   const { target = window, once, ...options } = rawOpts;
+  const opts = { ...options, target };
   const caches = targetMap.get(target) ?? [];
   const cleanup = setupListener((event) => {
     listener(event);
     if (once) {
       offLongPress(listener, rawOpts);
     }
-  }, options);
+  }, opts);
   const cache = {
     cb: listener,
     opts: rawOpts,

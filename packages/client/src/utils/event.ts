@@ -8,7 +8,7 @@ export type HTMLElementEventWithLongPressMap = HTMLElementEventMap & {
 export function on<K extends keyof HTMLElementEventWithLongPressMap>(
   type: K,
   listener: (ev: HTMLElementEventWithLongPressMap[K]) => void,
-  options?: AddEventListenerOptions & { target?: HTMLElement },
+  options?: AddEventListenerOptions & { target?: HTMLElement; wait?: number },
 ): void;
 export function on(
   type: string,
@@ -27,7 +27,7 @@ export function on(type: any, listener: any, rawOpts: any = {}) {
 export function off<K extends keyof HTMLElementEventWithLongPressMap>(
   type: K,
   listener: (ev: HTMLElementEventWithLongPressMap[K]) => void,
-  options?: EventListenerOptions & { target?: HTMLElement },
+  options?: EventListenerOptions & { target?: HTMLElement; wait?: number },
 ): void;
 export function off(
   type: string,

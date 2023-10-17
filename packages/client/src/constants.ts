@@ -43,15 +43,9 @@ export const Theme = postcss`
 `;
 
 export const Colors = <const>{
-  ERROR: 'var(--red)',
-
   TOGGLE_COLOR: 'var(--toggle)',
   TOGGLE_ACTIVE_COLOR: 'var(--green)',
   TOGGLE_ACTIVE_SHADOW: 'var(--cyan)',
-
-  TOOLTIP_BORDER_COLOR: 'var(--green)',
-  TOOLTIP_COMPONENT_COLOR: 'var(--green)',
-  TOOLTIP_FILE_COLOR: 'var(--cyan)',
 };
 
 export const CLIENT = typeof window !== 'undefined';

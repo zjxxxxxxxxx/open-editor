@@ -1,10 +1,5 @@
 import { create, append, getHtml } from '../utils/dom';
-import {
-  CSS_util,
-  applyStyle,
-  createGlobalStyle,
-  setShadowStyle,
-} from '../utils/style';
+import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
@@ -15,10 +10,18 @@ export interface HTMLToggleElement extends HTMLElement {}
 const CSS = postcss`
 .root {
   position: fixed;
-  top: 0px;
+  right: 0px;
   z-index: var(--z-index-toggle);
   padding: 8px;
   touch-action: none;
+}
+.overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  display: none;
 }
 .button {
   padding: 2px;
@@ -37,12 +40,6 @@ const CSS = postcss`
 }
 `;
 
-const overrideCSS = postcss`
-* {
-  cursor: move !important;
-}
-`;
-
 const toggleIcon = html`
   <svg
     viewBox="0 0 1024 1024"
@@ -53,22 +50,21 @@ const toggleIcon = html`
   >
     <path
       d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"
-    ></path>
+    />
     <path
       d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"
-    ></path>
+    />
   </svg>
 `;
 
 export function defineToggleElement() {
-  const overrideStyle = createGlobalStyle(overrideCSS);
-
   class ToggleElement extends HTMLElement implements HTMLToggleElement {
     static get observedAttributes() {
       return ['active'];
     }
 
     private root!: HTMLElement;
+    private overlay!: HTMLElement;
     private button!: HTMLElement;
     private dndPoint?: { pageY: number; posY: number };
 
@@ -84,6 +80,10 @@ export function defineToggleElement() {
           ref: (el) => (this.root = el),
           className: 'root',
         },
+        create('div', {
+          ref: (el) => (this.overlay = el),
+          className: 'overlay',
+        }),
         create('div', {
           ref: (el) => (this.button = el),
           className: 'button',
@@ -119,9 +119,8 @@ export function defineToggleElement() {
       });
       on('longpress', this.startDnD, {
         target: this.button,
+        wait: 300,
       });
-      on('pointerup', this.stopDnD);
-      on('pointermove', this.changePosY);
       on('resize', this.updatePosY_RAF);
     }
 
@@ -131,9 +130,8 @@ export function defineToggleElement() {
       });
       off('longpress', this.startDnD, {
         target: this.button,
+        wait: 300,
       });
-      off('pointerup', this.stopDnD);
-      off('pointermove', this.changePosY);
       off('resize', this.updatePosY_RAF);
     }
 
@@ -144,34 +142,40 @@ export function defineToggleElement() {
       };
       applyStyle(this.root, {
         cursor: 'move',
+      });
+      applyStyle(this.button, {
         opacity: '0.8',
         transform: 'scale(1.1)',
       });
-      overrideStyle.insert();
+      applyStyle(this.overlay, {
+        display: 'inherit',
+      });
+      on('pointermove', this.changePosY);
+      on('pointerup', this.stopDnD);
     };
 
     private stopDnD = () => {
-      if (this.dndPoint) {
-        // Modify when the click event is complete
-        setTimeout(() => (this.dndPoint = undefined));
-        applyStyle(this.root, {
-          cursor: null,
-          opacity: null,
-          transform: null,
-        });
-        overrideStyle.remove();
-      }
+      // Modify when the click event is complete
+      setTimeout(() => (this.dndPoint = undefined));
+      applyStyle(this.root, {
+        cursor: null,
+      });
+      applyStyle(this.button, {
+        opacity: null,
+        transform: null,
+      });
+      applyStyle(this.overlay, {
+        display: null,
+      });
+      off('pointermove', this.changePosY);
+      off('pointerup', this.stopDnD);
     };
 
     private changePosY = (event: PointerEvent) => {
-      if (this.dndPoint) {
-        event.preventDefault();
-
-        const { pageY, posY } = this.dndPoint;
-        const nextPosY = event.pageY - pageY + posY;
-        setCachePosY(nextPosY);
-        this.updatePosY_RAF();
-      }
+      const { pageY, posY } = this.dndPoint!;
+      const nextPosY = event.pageY - pageY + posY;
+      setCachePosY(nextPosY);
+      this.updatePosY_RAF();
     };
 
     private updatePosY_RAF = create_RAF(() => {
