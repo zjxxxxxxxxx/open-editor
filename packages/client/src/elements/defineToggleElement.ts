@@ -1,5 +1,10 @@
 import { create, append, getHtml } from '../utils/dom';
-import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import {
+  CSS_util,
+  applyStyle,
+  createGlobalStyle,
+  setShadowStyle,
+} from '../utils/style';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
@@ -32,23 +37,40 @@ const CSS = postcss`
 }
 `;
 
-const toggleIcon = `
-<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" fill="currentColor">
-  <path d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"></path>
-  <path d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"></path>
-</svg>
+const overrideCSS = postcss`
+* {
+  cursor: move !important;
+}
+`;
+
+const toggleIcon = html`
+  <svg
+    viewBox="0 0 1024 1024"
+    xmlns="http://www.w3.org/2000/svg"
+    width="100%"
+    height="100%"
+    fill="currentColor"
+  >
+    <path
+      d="M512 864A352 352 0 1 1 864 512 352.384 352.384 0 0 1 512 864z m0-640A288 288 0 1 0 800 512 288.341333 288.341333 0 0 0 512 224z"
+    ></path>
+    <path
+      d="M512 672A160 160 0 1 1 672 512 160.170667 160.170667 0 0 1 512 672z m0-256A96 96 0 1 0 608 512 96.128 96.128 0 0 0 512 416zM480 170.666667V85.333333a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM85.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32zM480 938.666667v-85.333334a32.213333 32.213333 0 0 1 32-32 32.213333 32.213333 0 0 1 32 32v85.333334a32.213333 32.213333 0 0 1-32 32 32.213333 32.213333 0 0 1-32-32zM853.333333 544a32.213333 32.213333 0 0 1-32-32 32.213333 32.213333 0 0 1 32-32h85.333334a32.213333 32.213333 0 0 1 32 32 32.213333 32.213333 0 0 1-32 32z"
+    ></path>
+  </svg>
 `;
 
 export function defineToggleElement() {
+  const overrideStyle = createGlobalStyle(overrideCSS);
+
   class ToggleElement extends HTMLElement implements HTMLToggleElement {
     static get observedAttributes() {
       return ['active'];
     }
 
-    private active = false;
-    private root: HTMLElement;
-    private button: HTMLElement;
-    private touchPoint?: { pageY: number; posY: number };
+    private root!: HTMLElement;
+    private button!: HTMLElement;
+    private dndPoint?: { pageY: number; posY: number };
 
     constructor() {
       super();
@@ -56,16 +78,18 @@ export function defineToggleElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       setShadowStyle(shadow, CSS);
 
-      this.root = create(
+      create(
         'div',
         {
+          ref: (el) => (this.root = el),
           className: 'root',
         },
-        (this.button = create('div', {
+        create('div', {
+          ref: (el) => (this.button = el),
           className: 'button',
           title: 'open-editor-toggle',
           __html: toggleIcon,
-        })),
+        }),
       );
 
       append(shadow, this.root);
@@ -73,13 +97,11 @@ export function defineToggleElement() {
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
-        this.active = true;
         applyStyle(this.button, {
           color: Colors.TOGGLE_ACTIVE_COLOR,
           filter: `drop-shadow(0 0 8px ${Colors.TOGGLE_ACTIVE_SHADOW})`,
         });
       } else {
-        this.active = false;
         applyStyle(this.button, {
           color: Colors.TOGGLE_COLOR,
           filter: 'none',
@@ -88,50 +110,65 @@ export function defineToggleElement() {
     }
 
     connectedCallback() {
+      this.updatePosY_RAF();
       applyStyle(this.root, {
         right: CSS_util.px(getSafeArea().right),
       });
-      this.updatePosY_RAF();
-
       on('click', this.dispatchToggle, {
         target: this.button,
       });
-      on('resize', this.updatePosY_RAF);
-      on('pointerdown', this.saveTouchPoint, {
-        target: this.root,
+      on('longpress', this.startDnD, {
+        target: this.button,
       });
-      on('pointerup', this.cleanTouchPoint);
+      on('pointerup', this.stopDnD);
       on('pointermove', this.changePosY);
+      on('resize', this.updatePosY_RAF);
     }
 
     disconnectedCallback() {
       off('click', this.dispatchToggle, {
         target: this.button,
       });
-      off('resize', this.updatePosY_RAF);
-      off('pointerdown', this.saveTouchPoint, {
-        target: this.root,
+      off('longpress', this.startDnD, {
+        target: this.button,
       });
-      off('pointerup', this.cleanTouchPoint);
+      off('pointerup', this.stopDnD);
       off('pointermove', this.changePosY);
+      off('resize', this.updatePosY_RAF);
     }
 
-    private saveTouchPoint = (event: PointerEvent) => {
-      this.touchPoint = {
+    private startDnD = (event: PointerEvent) => {
+      this.dndPoint = {
         pageY: event.pageY,
         posY: getCachePosY(),
       };
+      applyStyle(this.root, {
+        cursor: 'move',
+        opacity: '0.8',
+        transform: 'scale(1.1)',
+      });
+      overrideStyle.insert();
     };
 
-    private cleanTouchPoint = () => {
-      this.touchPoint = undefined;
+    private stopDnD = () => {
+      if (this.dndPoint) {
+        // Modify when the click event is complete
+        setTimeout(() => (this.dndPoint = undefined));
+        applyStyle(this.root, {
+          cursor: null,
+          opacity: null,
+          transform: null,
+        });
+        overrideStyle.remove();
+      }
     };
 
     private changePosY = (event: PointerEvent) => {
-      if (this.touchPoint) {
-        const { pageY, posY } = this.touchPoint;
-        const nextPosY = event.pageY - pageY + posY;
+      if (this.dndPoint) {
         event.preventDefault();
+
+        const { pageY, posY } = this.dndPoint;
+        const nextPosY = event.pageY - pageY + posY;
         setCachePosY(nextPosY);
         this.updatePosY_RAF();
       }
@@ -151,7 +188,10 @@ export function defineToggleElement() {
     });
 
     private dispatchToggle = () => {
-      this.dispatchEvent(new CustomEvent('toggle'));
+      // Prevents the click event from being triggered by the end of the drag
+      if (!this.dndPoint) {
+        this.dispatchEvent(new CustomEvent('toggle'));
+      }
     };
   }
 

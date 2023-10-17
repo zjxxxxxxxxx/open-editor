@@ -2,14 +2,14 @@ import { off, on } from './event';
 
 export type Target = HTMLElement | Window;
 
+export type LongPressEvent = PointerEvent;
+
 export interface LongPressOptions extends AddEventListenerOptions {
   target?: Target;
   wait?: number;
 }
 
-export type LongPressEvent = CustomEvent<HTMLElement>;
-
-export type LongPressListener = (ev: LongPressEvent) => void;
+export type LongPressListener = (event: PointerEvent) => void;
 
 export type LongPressCache = {
   cb: LongPressListener;
@@ -80,17 +80,24 @@ function isSameListener(
 function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
   const { wait = 500, ...options } = rawOpts;
 
-  let waitTimer: NodeJS.Timeout | number | null = null;
+  let waitTimer: number | null = null;
 
   function start(event: PointerEvent) {
     // Left Mouse, Touch Contact, Pen contact
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events#determining_button_states
     if (event.button === 0 && event.buttons === 1) {
-      waitTimer = setTimeout(() => {
-        const customEvent = new CustomEvent('longpress', {
-          detail: <HTMLElement>event.target,
+      waitTimer = window.setTimeout(() => {
+        const eventProxy = new Proxy(event, {
+          get(target, p) {
+            if (p === 'type') {
+              return 'longpress';
+            }
+            // @ts-ignore
+            return target[p];
+          },
         });
-        listener(customEvent);
+
+        listener(eventProxy);
       }, wait);
     }
   }

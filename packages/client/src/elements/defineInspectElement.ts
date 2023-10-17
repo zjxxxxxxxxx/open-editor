@@ -41,8 +41,8 @@ export function defineInspectElement() {
   const overrideStyle = createGlobalStyle(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
-    private overlay: HTMLOverlayElement;
-    private tree: HTMLTreeElement;
+    private overlay!: HTMLOverlayElement;
+    private tree!: HTMLTreeElement;
     private toggle?: HTMLToggleElement;
     private pointer!: PointerEvent;
 
@@ -66,21 +66,22 @@ export function defineInspectElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       setShadowStyle(shadow, Theme, CSS);
 
-      this.overlay = create<HTMLOverlayElement>(
-        InternalElements.HTML_OVERLAY_ELEMENT,
-      );
-      this.tree = create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT);
+      create<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
+        ref: (el) => (this.overlay = el),
+      });
+      create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
+        ref: (el) => (this.tree = el),
+      });
+
       append(shadow, this.overlay, this.tree);
 
       const options = getOptions();
       if (options.displayToggle) {
-        this.toggle = create<HTMLToggleElement>(
-          InternalElements.HTML_TOGGLE_ELEMENT,
-          {
-            enable: true,
-          },
-        );
-        append(shadow, this.toggle);
+        create<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
+          ref: (el) => (this.toggle = el),
+          enable: true,
+        });
+        append(shadow, this.toggle!);
       }
     }
 

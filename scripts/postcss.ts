@@ -11,7 +11,11 @@ const NEWLINE_RE = /[\n\f\r]+/g;
 const BEFORE_SPACES_RE = /\s+([{};:!])/g;
 const AFTER_SPACES_RE = /([{};:,])\s+/g;
 
-export default function postssPlugin(): RollupPlugin {
+export interface Options {
+  sourcemap?: boolean;
+}
+
+export default function postssPlugin(options: Options): RollupPlugin {
   const processor = postcss(autoprefixer(), <postcss.Plugin>minifySelectors());
 
   return {
@@ -45,7 +49,10 @@ export default function postssPlugin(): RollupPlugin {
         },
       });
 
-      return s?.toString();
+      return {
+        code: s?.toString(),
+        map: options.sourcemap ? s?.generateMap() : null,
+      };
     },
   };
 }

@@ -1,5 +1,4 @@
 import { captureOpts } from '../constants';
-import type { LongPressEvent } from './longPress';
 import { applyAttrs } from './dom';
 import { off, on } from './event';
 import { isInternalElement, isValidElement } from './element';
@@ -141,8 +140,8 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     }
   }
 
-  function onLongPress(event: LongPressEvent) {
-    const element = event.detail;
+  function onLongPress(event: PointerEvent) {
+    const element = <HTMLElement>event.target;
     if (isValidElement(element)) {
       onChangeElement();
       onOpenTree(element);

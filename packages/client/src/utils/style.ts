@@ -13,9 +13,11 @@ export function setShadowStyle(root: ShadowRoot, ...css: string[]) {
   root.innerHTML = `<style type="text/css">${css.join('')}</style>`;
 }
 
+type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
+
 export function applyStyle(
   element: HTMLElement,
-  ...styles: Partial<CSSStyleDeclaration>[]
+  ...styles: PartialWithNull<CSSStyleDeclaration>[]
 ) {
   Object.assign(element.style, ...styles);
 }
