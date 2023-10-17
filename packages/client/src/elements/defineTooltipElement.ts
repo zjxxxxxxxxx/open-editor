@@ -2,7 +2,7 @@ import type { ComputedStyle } from '../utils/getComputedStyles';
 import { create, append, getDOMRect, getHtml } from '../utils/dom';
 import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
 import { getSafeArea } from '../utils/getSafeArea';
-import { Colors, InternalElements } from '../constants';
+import { InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
@@ -21,7 +21,7 @@ const CSS = postcss`
   visibility: hidden;
   background: var(--bg-color);
   border-radius: 4px;
-  border: 2px solid transparent;
+  border: 2px solid var(--green);
   pointer-events: none;
   will-change: visibility, top, left;
 }
@@ -32,10 +32,12 @@ const CSS = postcss`
 .component {
   font-size: 16px;
   font-weight: 500;
+  color: var(--green);
 }
 .file {
   margin-top: 2px;
   font-size: 14px;
+  color: var(--cyan);
   text-decoration: underline;
   word-wrap: break-word;
 }
@@ -101,47 +103,20 @@ export function defineTooltipElement() {
       });
 
       if (activeElement && style) {
-        this.updateText(activeElement);
-        this.updatePosStyle(style);
-        // after visible
-        applyStyle(this.root, {
-          visibility: 'visible',
-        });
+        const { element, meta } = resolveSource(activeElement);
+        if (meta) {
+          this.element.innerText = `${element} in `;
+          this.component.innerText = `<${meta.name}>`;
+          this.file.innerText = `${meta.file}:${meta.line}:${meta.column}`;
+
+          this.updatePosStyle(style);
+          // after visible
+          applyStyle(this.root, {
+            visibility: 'visible',
+          });
+        }
       }
     };
-
-    private updateText(activeElement: HTMLElement) {
-      const { element, meta } = resolveSource(activeElement);
-      const { file, line = 1, column = 1 } = meta ?? {};
-
-      this.element.innerText = `${element} in `;
-      this.component.innerText = `<${meta?.name ?? 'Unknown'}>`;
-      this.file.innerText = file
-        ? `${file}:${line}:${column}`
-        : 'filename not found 😭.';
-
-      if (meta) {
-        applyStyle(this.root, {
-          borderColor: Colors.TOOLTIP_BORDER_COLOR,
-        });
-        applyStyle(this.component, {
-          color: Colors.TOOLTIP_COMPONENT_COLOR,
-        });
-        applyStyle(this.file, {
-          color: Colors.TOOLTIP_FILE_COLOR,
-        });
-      } else {
-        applyStyle(this.root, {
-          borderColor: Colors.ERROR,
-        });
-        applyStyle(this.component, {
-          color: Colors.ERROR,
-        });
-        applyStyle(this.file, {
-          color: Colors.ERROR,
-        });
-      }
-    }
 
     private updatePosStyle(style: ComputedStyle) {
       const {

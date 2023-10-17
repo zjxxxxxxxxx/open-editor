@@ -1,7 +1,7 @@
 import { captureOpts } from '../constants';
 import { applyAttrs } from './dom';
 import { off, on } from './event';
-import { isInternalElement, isValidElement } from './element';
+import { isValidElement } from './element';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;
@@ -35,7 +35,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('pointercancel', onSilence, captureOpts);
     on('pointerdown', onPointerDown, captureOpts);
     on('pointerenter', onSilence, captureOpts);
-    on('pointerleave', onPointerLeave, captureOpts);
+    on('pointerleave', onSilence, captureOpts);
     on('pointermove', onSilence, captureOpts);
     on('pointerout', onSilence, captureOpts);
     on('pointerover', onPointerOver, captureOpts);
@@ -68,7 +68,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('pointercancel', onSilence, captureOpts);
     off('pointerdown', onPointerDown, captureOpts);
     off('pointerenter', onSilence, captureOpts);
-    off('pointerleave', onPointerLeave, captureOpts);
+    off('pointerleave', onSilence, captureOpts);
     off('pointermove', onSilence, captureOpts);
     off('pointerout', onSilence, captureOpts);
     off('pointerover', onPointerOver, captureOpts);
@@ -112,17 +112,6 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     onChangeElement(changedElement);
   }
 
-  function onPointerLeave(event: PointerEvent) {
-    onSilence(event);
-
-    const element = <HTMLElement>event.target;
-    if (event.pointerType === 'mouse') {
-      if (!isValidElement(element)) {
-        onChangeElement();
-      }
-    }
-  }
-
   // esc exit.
   function onKeyDown(event: KeyboardEvent) {
     onSilence(event, true);
@@ -154,7 +143,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
 
 function onSilence(event: Event, all?: boolean) {
   const element = <HTMLElement>event.target;
-  if (all || !isInternalElement(element)) {
+  if (all || isValidElement(element)) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // See https://www.chromestatus.com/feature/5093566007214080.
     if (!(<any>event).type.startsWith('touch')) {
