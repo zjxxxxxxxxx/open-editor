@@ -7,7 +7,7 @@ export function isInternalElement(element: HTMLElement) {
   return internalElementRE.test(element.localName);
 }
 
-const filterElementRE = /^(html|body|iframe)$/;
+const filterElementRE = /^(html|iframe)$/;
 export function isFilterElement(element: HTMLElement) {
   return filterElementRE.test(element.localName);
 }
