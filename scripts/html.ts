@@ -2,24 +2,18 @@ import type { Plugin as RollupPlugin } from 'rollup';
 import { traverse, types as t } from '@babel/core';
 import { parse } from '@babel/parser';
 import MagicString from 'magic-string';
-import postcss from 'postcss';
-import autoprefixer from 'autoprefixer';
-import minifySelectors from 'postcss-minify-selectors';
 
-const TAG_NAME = 'postcss';
+const TAG_NAME = 'html';
 const NEWLINE_RE = /[\n\f\r]+/g;
-const BEFORE_SPACES_RE = /\s+([{};:!])/g;
-const AFTER_SPACES_RE = /([{};:,])\s+/g;
+const MULTIPLE_SPACES_RE = /\s{2,}/g;
 
 export interface Options {
   sourcemap?: boolean;
 }
 
-export default function postssPlugin(options: Options): RollupPlugin {
-  const processor = postcss(autoprefixer(), <postcss.Plugin>minifySelectors());
-
+export default function htmlPlugin(options: Options): RollupPlugin {
   return {
-    name: 'rollup:postcss',
+    name: 'rollup:html',
     transform(code) {
       let s: MagicString | undefined;
 
@@ -39,12 +33,10 @@ export default function postssPlugin(options: Options): RollupPlugin {
 
             const { start, end } = init.loc!;
             const { raw } = init.quasi.quasis[0].value;
-            const css = processor
-              .process(raw)
-              .css.replace(NEWLINE_RE, '')
-              .replace(BEFORE_SPACES_RE, '$1')
-              .replace(AFTER_SPACES_RE, '$1');
-            s.overwrite(start.index, end.index, `\`${css}\``);
+            const html = raw
+              .replace(NEWLINE_RE, '')
+              .replace(MULTIPLE_SPACES_RE, ' ');
+            s.overwrite(start.index, end.index, `\`${html}\``);
           }
         },
       });

@@ -43,13 +43,12 @@ const CSS = postcss`
 
 export function defineOverlayElement() {
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
-    private tooltip: HTMLTooltipElement;
-
-    private posttion: HTMLElement;
-    private margin: HTMLElement;
-    private border: HTMLElement;
-    private padding: HTMLElement;
-    private content: HTMLElement;
+    private posttion!: HTMLElement;
+    private margin!: HTMLElement;
+    private border!: HTMLElement;
+    private padding!: HTMLElement;
+    private content!: HTMLElement;
+    private tooltip!: HTMLTooltipElement;
     private activeElement?: HTMLElement;
 
     constructor() {
@@ -58,36 +57,42 @@ export function defineOverlayElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       setShadowStyle(shadow, CSS);
 
-      this.posttion = create(
+      create(
         'div',
         {
+          ref: (el) => (this.posttion = el),
           className: 'posttion',
         },
-        (this.margin = create(
+        create(
           'div',
           {
+            ref: (el) => (this.margin = el),
             className: 'margin',
           },
-          (this.border = create(
+          create(
             'div',
             {
+              ref: (el) => (this.border = el),
               className: 'border',
             },
-            (this.padding = create(
+            create(
               'div',
               {
+                ref: (el) => (this.padding = el),
                 className: 'padding',
               },
-              (this.content = create('div', {
+              create('div', {
+                ref: (el) => (this.content = el),
                 className: 'content',
-              })),
-            )),
-          )),
-        )),
+              }),
+            ),
+          ),
+        ),
       );
-      this.tooltip = <HTMLTooltipElement>(
-        create(InternalElements.HTML_TOOLTIP_ELEMENT)
-      );
+
+      create<HTMLTooltipElement>(InternalElements.HTML_TOOLTIP_ELEMENT, {
+        ref: (el) => (this.tooltip = el),
+      });
 
       append(shadow, this.posttion, this.tooltip);
     }

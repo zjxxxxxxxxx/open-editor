@@ -6,6 +6,7 @@ import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
 import postcss from './postcss';
+import html from './html';
 import { clientRoot, readjson } from './utils';
 
 const __DEV__ = '__DEV__' in process.env;
@@ -75,7 +76,16 @@ function buildBundles(
         return source.startsWith('@') || basename(source) === source;
       },
       plugins: [
-        isClient ? postcss() : undefined,
+        ...(isClient
+          ? [
+              postcss({
+                sourcemap: __DEV__,
+              }),
+              html({
+                sourcemap: __DEV__,
+              }),
+            ]
+          : []),
         nodeResolve(),
         commonjs(),
         esbuild({
@@ -86,7 +96,7 @@ function buildBundles(
             'class-field': true,
           },
         }),
-      ].filter(Boolean),
+      ],
     };
   }
 }

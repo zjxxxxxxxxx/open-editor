@@ -1,7 +1,8 @@
 import { isStr } from '@open-editor/shared';
 import { applyStyle, createStyleGetter } from './style';
 
-export interface Props extends Record<string, any> {
+export interface Props<T = HTMLElement> extends Record<string, any> {
+  ref?(el: T): void;
   className?: string;
   style?: Partial<CSSStyleDeclaration>;
   __html?: string;
@@ -12,18 +13,18 @@ export type Children = (HTMLElement | string)[];
 
 export function create<K extends keyof HTMLElementTagNameMap>(
   type: K,
-  props?: Props,
+  props?: Props<HTMLElementTagNameMap[K]>,
   ...children: Children
 ): HTMLElementTagNameMap[K];
 export function create<T extends HTMLElement>(
   type: string,
-  props?: Props,
+  props?: Props<T>,
   ...children: Children
 ): T;
 export function create(type: string, props: Props = {}, ...children: Children) {
   const element = document.createElement(type);
 
-  const { className, style, __html, __text, ...restProps } = props;
+  const { ref, className, style, __html, __text, ...restProps } = props;
   if (className) {
     element.classList.add(...className.split(' '));
   }
@@ -40,6 +41,7 @@ export function create(type: string, props: Props = {}, ...children: Children) {
     }
   }
   applyAttrs(element, restProps);
+  ref?.(element);
 
   return element;
 }
