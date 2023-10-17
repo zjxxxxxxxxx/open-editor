@@ -119,21 +119,29 @@ const overrideCSS = postcss`
 }
 `;
 
-const closeIcon = `
-<svg viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-  <path d="M619.53908575 512l327.95607772-327.19338858a76.26885573 76.26885573 0 1 0-108.30177489-108.30177489L512 404.46091425l-327.19338858-327.95607772a76.26885573 76.26885573 0 0 0-108.30177489 108.30177489l327.95607772 327.19338858-327.95607772 327.19338858a76.26885573 76.26885573 0 0 0 0 108.30177489 76.26885573 76.26885573 0 0 0 108.30177489 0l327.19338858-327.95607772 327.19338858 327.95607772a76.26885573 76.26885573 0 0 0 108.30177489 0 76.26885573 76.26885573 0 0 0 0-108.30177489z"></path>
-</svg>
+const closeIcon = html`
+  <svg
+    viewBox="0 0 1024 1024"
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    width="100%"
+    height="100%"
+  >
+    <path
+      d="M619.53908575 512l327.95607772-327.19338858a76.26885573 76.26885573 0 1 0-108.30177489-108.30177489L512 404.46091425l-327.19338858-327.95607772a76.26885573 76.26885573 0 0 0-108.30177489 108.30177489l327.95607772 327.19338858-327.95607772 327.19338858a76.26885573 76.26885573 0 0 0 0 108.30177489 76.26885573 76.26885573 0 0 0 108.30177489 0l327.19338858-327.95607772 327.19338858 327.95607772a76.26885573 76.26885573 0 0 0 108.30177489 0 76.26885573 76.26885573 0 0 0 0-108.30177489z"
+    ></path>
+  </svg>
 `;
 
 export function defineTreeElement() {
   const overrideStyle = createGlobalStyle(overrideCSS);
 
   class TreeElement extends HTMLElement implements HTMLTreeElement {
-    private root: HTMLElement;
-    private overlay: HTMLElement;
-    private popup: HTMLElement;
-    private popupClose: HTMLElement;
-    private popupBody: HTMLElement;
+    private root!: HTMLElement;
+    private overlay!: HTMLElement;
+    private popup!: HTMLElement;
+    private popupClose!: HTMLElement;
+    private popupBody!: HTMLElement;
     private holdElement?: HTMLElement;
 
     constructor() {
@@ -142,25 +150,31 @@ export function defineTreeElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       setShadowStyle(shadow, CSS);
 
-      this.root = create(
+      create(
         'div',
         {
+          ref: (el) => (this.root = el),
           className: 'root',
         },
-        (this.overlay = create('div', {
+        create('div', {
+          ref: (el) => (this.overlay = el),
           className: 'overlay',
-        })),
-        (this.popup = create(
+        }),
+        create(
           'div',
           {
+            ref: (el) => (this.popup = el),
             className: 'popup',
           },
-          (this.popupClose = create('span', {
+          create('span', {
+            ref: (el) => (this.popupClose = el),
             className: 'close',
             __html: closeIcon,
-          })),
-          (this.popupBody = create('div')),
-        )),
+          }),
+          create('div', {
+            ref: (el) => (this.popupBody = el),
+          }),
+        ),
       );
 
       append(shadow, this.root);

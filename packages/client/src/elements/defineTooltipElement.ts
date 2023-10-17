@@ -45,10 +45,10 @@ export function defineTooltipElement() {
   const offset = 6;
 
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
-    private root: HTMLElement;
-    private element: HTMLElement;
-    private component: HTMLElement;
-    private file: HTMLElement;
+    private root!: HTMLElement;
+    private element!: HTMLElement;
+    private component!: HTMLElement;
+    private file!: HTMLElement;
 
     constructor() {
       super();
@@ -56,20 +56,24 @@ export function defineTooltipElement() {
       const shadow = this.attachShadow({ mode: 'closed' });
       setShadowStyle(shadow, CSS);
 
-      this.root = create(
+      create(
         'div',
         {
+          ref: (el) => (this.root = el),
           className: 'root',
         },
-        (this.element = create('span', {
+        create('span', {
+          ref: (el) => (this.element = el),
           className: 'element',
-        })),
-        (this.component = create('span', {
+        }),
+        create('span', {
+          ref: (el) => (this.component = el),
           className: 'component',
-        })),
-        (this.file = create('div', {
+        }),
+        create('div', {
+          ref: (el) => (this.file = el),
           className: 'file',
-        })),
+        }),
       );
 
       append(shadow, this.root);

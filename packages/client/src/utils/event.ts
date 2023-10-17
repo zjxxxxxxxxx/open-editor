@@ -1,4 +1,5 @@
-import { LongPressEvent, longPress } from './longPress';
+import type { LongPressEvent } from './longPress';
+import { longPress } from './longPress';
 
 export type HTMLElementEventWithLongPressMap = HTMLElementEventMap & {
   longpress: LongPressEvent;
