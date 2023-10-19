@@ -1,5 +1,14 @@
 # @open-editor/rollup
 
+## 0.4.0
+
+### Patch Changes
+
+- Updated dependencies [[`a17cbd0`](https://github.com/zjxxxxxxxxx/open-editor/commit/a17cbd06083eb20b4fb1a801dbb166e4b2889643), [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f), [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f), [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f), [`5dd265e`](https://github.com/zjxxxxxxxxx/open-editor/commit/5dd265e79d36cd57fbd944a1411abf2209633f08)]:
+  - @open-editor/client@0.4.0
+  - @open-editor/server@0.4.0
+  - @open-editor/shared@0.4.0
+
 ## 0.3.0
 
 ### Patch Changes

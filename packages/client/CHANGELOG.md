@@ -1,5 +1,24 @@
 # @open-editor/client
 
+## 0.4.0
+
+### Minor Changes
+
+- [#124](https://github.com/zjxxxxxxxxx/open-editor/pull/124) [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - remove tooltip empty target display
+
+### Patch Changes
+
+- [#123](https://github.com/zjxxxxxxxxx/open-editor/pull/123) [`a17cbd0`](https://github.com/zjxxxxxxxxx/open-editor/commit/a17cbd06083eb20b4fb1a801dbb166e4b2889643) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix toggle button drag and click are in conflict
+
+- [#124](https://github.com/zjxxxxxxxxx/open-editor/pull/124) [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix toggle button active drag failure
+
+- [#124](https://github.com/zjxxxxxxxxx/open-editor/pull/124) [`e87d4a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/e87d4a55f1aac1cd5486ffa39c0e4098076e088f) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix long-press event target error
+
+- [#120](https://github.com/zjxxxxxxxxx/open-editor/pull/120) [`5dd265e`](https://github.com/zjxxxxxxxxx/open-editor/commit/5dd265e79d36cd57fbd944a1411abf2209633f08) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix click tree overlay not close
+
+- Updated dependencies []:
+  - @open-editor/shared@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
