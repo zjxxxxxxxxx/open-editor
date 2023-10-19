@@ -3,6 +3,7 @@ import { append, create } from '../utils/dom';
 import { applyStyle, createGlobalStyle, setShadowStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
+import close from '../icons/close';
 import { InternalElements } from '../constants';
 import type { ElementSource, ElementSourceMeta } from '../resolve';
 import { resolveSource } from '../resolve';
@@ -119,20 +120,6 @@ const overrideCSS = postcss`
 }
 `;
 
-const closeIcon = html`
-  <svg
-    viewBox="0 0 1024 1024"
-    version="1.1"
-    xmlns="http://www.w3.org/2000/svg"
-    width="100%"
-    height="100%"
-  >
-    <path
-      d="M619.53908575 512l327.95607772-327.19338858a76.26885573 76.26885573 0 1 0-108.30177489-108.30177489L512 404.46091425l-327.19338858-327.95607772a76.26885573 76.26885573 0 0 0-108.30177489 108.30177489l327.95607772 327.19338858-327.95607772 327.19338858a76.26885573 76.26885573 0 0 0 0 108.30177489 76.26885573 76.26885573 0 0 0 108.30177489 0l327.19338858-327.95607772 327.19338858 327.95607772a76.26885573 76.26885573 0 0 0 108.30177489 0 76.26885573 76.26885573 0 0 0 0-108.30177489z"
-    ></path>
-  </svg>
-`;
-
 export function defineTreeElement() {
   const overrideStyle = createGlobalStyle(overrideCSS);
 
@@ -169,7 +156,7 @@ export function defineTreeElement() {
           create('span', {
             ref: (el) => (this.popupClose = el),
             className: 'close',
-            __html: closeIcon,
+            __html: close,
           }),
           create('div', {
             ref: (el) => (this.popupBody = el),
