@@ -28,17 +28,12 @@ export default function postssPlugin(options: Options): RollupPlugin {
         plugins: ['typescript'],
       });
       traverse(ast, {
-        VariableDeclarator(path) {
-          const { init } = path.node;
-          if (
-            t.isTaggedTemplateExpression(init) &&
-            t.isIdentifier(init.tag) &&
-            init.tag.name === TAG_NAME
-          ) {
+        TaggedTemplateExpression({ node }) {
+          if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
             s ||= new MagicString(code);
 
-            const { start, end } = init.loc!;
-            const { raw } = init.quasi.quasis[0].value;
+            const { start, end } = node.loc!;
+            const { raw } = node.quasi.quasis[0].value;
             const css = processor
               .process(raw)
               .css.replace(NEWLINE_RE, '')

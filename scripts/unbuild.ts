@@ -1,4 +1,4 @@
-import { basename, resolve } from 'node:path';
+import { resolve } from 'node:path';
 import { OutputOptions, RollupOptions } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -73,7 +73,7 @@ function buildBundles(
       input,
       output: bundles,
       external(source) {
-        return source.startsWith('@') || basename(source) === source;
+        return /^@?[a-z]/.test(source);
       },
       plugins: [
         ...(isClient
@@ -92,9 +92,6 @@ function buildBundles(
           target: __TARGET__,
           minifySyntax: !__DEV__,
           minifyWhitespace: !__DEV__,
-          supported: {
-            'class-field': true,
-          },
         }),
       ],
     };

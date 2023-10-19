@@ -13,9 +13,7 @@ async function main() {
     let { playground, script } = minimist(process.argv.slice(1));
 
     if (!playground) {
-      const playgrounds = readdirSync(resolve('playground')).filter(
-        (i) => i !== '.DS_Store',
-      );
+      const playgrounds = readdirSync(resolve('playground'));
       ({ playground } = await enquirer.prompt<{
         playground: string;
       }>({
