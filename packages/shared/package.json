@@ -2,7 +2,7 @@
   "name": "@open-editor/shared",
   "version": "0.4.0",
   "description": "internal utils shared across @open-editor packages",
-  "main": "./dist/index.cjs",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -12,7 +12,7 @@
       "types": "./dist/index.d.ts"
     },
     "./node": {
-      "require": "./dist/node.cjs",
+      "require": "./dist/node.js",
       "import": "./dist/node.mjs",
       "types": "./dist/node.d.ts"
     }
