@@ -1,5 +1,12 @@
 # @open-editor/client
 
+## 0.4.1
+
+### Patch Changes
+
+- Updated dependencies [[`e0840c1`](https://github.com/zjxxxxxxxxx/open-editor/commit/e0840c179e73d192b01c9b8c80dd32d0b210f6f9)]:
+  - @open-editor/shared@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes
