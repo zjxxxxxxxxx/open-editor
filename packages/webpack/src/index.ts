@@ -53,6 +53,12 @@ export default class OpenEditorPlugin {
         }).apply(compiler);
       });
     } else {
+      compiler.options.module.rules.push({
+        test: /\.mjs$/,
+        type: 'javascript/auto',
+        include: /node_modules/,
+      });
+
       const entry = compiler.options.entry;
       compiler.options.entry = () =>
         this.resolveClientRuntime((clientRuntimeEntry) => {
