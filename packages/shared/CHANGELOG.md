@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.4.1
+
+### Patch Changes
+
+- [#127](https://github.com/zjxxxxxxxxx/open-editor/pull/127) [`e0840c1`](https://github.com/zjxxxxxxxxx/open-editor/commit/e0840c179e73d192b01c9b8c80dd32d0b210f6f9) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix commonjs require fail
+
 ## 0.4.0
 
 ## 0.3.0
