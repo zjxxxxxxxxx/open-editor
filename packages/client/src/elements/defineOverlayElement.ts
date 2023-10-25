@@ -104,6 +104,7 @@ export function defineOverlayElement() {
       this.tooltip.open();
 
       on('scroll', this.update_RAF, captureOpts);
+      on('resize', this.update_RAF, captureOpts);
     };
 
     close = () => {
@@ -114,6 +115,7 @@ export function defineOverlayElement() {
       this.update();
 
       off('scroll', this.update_RAF, captureOpts);
+      off('resize', this.update_RAF, captureOpts);
     };
 
     update = (activeElement?: HTMLElement) => {

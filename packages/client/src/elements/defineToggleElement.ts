@@ -3,8 +3,8 @@ import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
-import radar from '../icons/radar';
-import { Colors, InternalElements, POS_Y_CACHE_ID } from '../constants';
+import gps from '../icons/gps';
+import { InternalElements, POS_Y_CACHE_ID } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
@@ -13,8 +13,8 @@ const CSS = postcss`
   position: fixed;
   right: 0px;
   z-index: var(--z-index-toggle);
-  padding: 8px;
-  touch-action: none;
+  padding: 2px;
+  font-size: 0px;
 }
 .overlay {
   position: fixed;
@@ -25,18 +25,20 @@ const CSS = postcss`
   display: none;
 }
 .button {
-  padding: 2px;
-  width: 20px;
-  height: 20px;
+  padding: 0px;
+  width: 24px;
+  height: 24px;
   color: var(--toggle);
-  background-color: var(--toggle-bg);
+  background: var(--toggle-bg);
   transition: all 0.3s ease-out;
-  border-radius: 50%;
+  border: none;
+  border-radius: 999px;
+  backdrop-filter: blur(8px);
 }
 @media (max-width: 960px) {
   .button {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
   }
 }
 `;
@@ -68,11 +70,11 @@ export function defineToggleElement() {
           ref: (el) => (this.overlay = el),
           className: 'overlay',
         }),
-        create('div', {
+        create('button', {
           ref: (el) => (this.button = el),
           className: 'button',
           title: 'open-editor-toggle',
-          __html: radar,
+          __html: gps,
         }),
       );
 
@@ -82,13 +84,11 @@ export function defineToggleElement() {
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
         applyStyle(this.button, {
-          color: Colors.TOGGLE_ACTIVE_COLOR,
-          filter: `drop-shadow(0 0 8px ${Colors.TOGGLE_ACTIVE_SHADOW})`,
+          color: 'var(--green)',
         });
       } else {
         applyStyle(this.button, {
-          color: Colors.TOGGLE_COLOR,
-          filter: 'none',
+          color: 'var(--toggle)',
         });
       }
     }
@@ -128,11 +128,12 @@ export function defineToggleElement() {
         cursor: 'move',
       });
       applyStyle(this.button, {
+        cursor: 'move',
         opacity: '0.8',
         transform: 'scale(1.1)',
       });
       applyStyle(this.overlay, {
-        display: 'inherit',
+        display: 'block',
       });
       on('pointermove', this.changePosY);
       on('pointerup', this.stopDnD);
@@ -145,6 +146,7 @@ export function defineToggleElement() {
         cursor: null,
       });
       applyStyle(this.button, {
+        cursor: null,
         opacity: null,
         transform: null,
       });
