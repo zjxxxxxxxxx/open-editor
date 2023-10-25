@@ -6,6 +6,7 @@ export default function App() {
   return (
     <>
       <Head>
+        <link rel="icon" type="image/png" href="/logo.png" />
         <title>Open Editor</title>
       </Head>
       <div>
