@@ -28,22 +28,59 @@ const CSS = postcss`
   background-color: var(--bg-opt);
 }
 .popup {
+  --w: calc(100vw - 100px);
+  --h: calc(100vh - 100px);
+
   position: fixed;
   top: 50%;
   left: 50%;
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
   display: inline-block;
-  padding: 22px 28px;
-  border: 2px solid var(--green);
-  border-radius: 6px;
+  padding: 12px;
+  min-width: 250px;
+  max-width: min(var(--w), 800px);
+  max-height: min(var(--h), 600px);
+  border: 1px solid var(--green);
+  filter: drop-shadow(0px 0px 2px var(--green));
+  border-radius: 2px;
   background-color: var(--bg-color);
 }
+.popup.empty {
+  border: 1px solid var(--red);
+  filter: drop-shadow(0px 0px 2px var(--red));
+}
+.close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  color: var(--green);
+  background: var(--bg-color);
+  border: none;
+  border-radius: 99px;
+  backdrop-filter: blur(8px);
+}
+.close:hover {
+  background: var(--green-light);
+}
+.body {
+  font-size: 12px;
+  overflow: hidden;
+}
+.empty, .empty .close, .empty .title {
+  color: var(--red);
+  fill: var(--red);
+  border-color: var(--red);
+}
+.empty .close:hover {
+  background: var(--red-light);
+}
 .content {
-  padding-right: 14px;
-  min-width: min(calc(100vw - 176px), 300px);
-  max-width: min(calc(100vw - 176px), 800px);
-  max-height: min(calc(100vh - 176px), 600px);
+  position: relative;
+  padding: 0px 12px;
   white-space: nowrap;
   overflow: auto;
   scrollbar-width: none;
@@ -51,42 +88,29 @@ const CSS = postcss`
 .content::-webkit-scrollbar {
   display: none;
 }
-.tree {
-  position: relative;
-  padding-left: 14px;
-}
-.line {
-  position: absolute;
-  left: 15px;
-  top: 22px;
-  opacity: 0.1;
-  width: 1px;
-  height: calc(100% - 44px);
-  background: var(--green);
-}
-.close {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 16px;
-  height: 16px;
-  fill: var(--green);
-}
 .title {
-  padding-bottom: 12px;
-  font-size: 16px;
+  padding: 0 38px 4px 0;
+  font-size: 14px;
   font-weight: 500;
   color: var(--green);
   white-space: nowrap;
 }
 .element {
-  font-size: 14px;
   color: var(--element);
 }
-.empty, .empty .close, .empty .title {
-  color: var(--red);
-  fill: var(--red);
-  border-color: var(--red);
+.tree {
+  position: relative;
+  padding-left: 12px;
+  width: fit-content;
+}
+.line {
+  position: absolute;
+  left: 13px;
+  top: 22px;
+  opacity: 0.1;
+  width: 1px;
+  height: calc(100% - 44px);
+  background: var(--green);
 }
 .tag[data-file]:hover > *,
 .tag[data-file]:hover ~ .tag > * {
@@ -96,21 +120,19 @@ const CSS = postcss`
   opacity: 0.6;
 }
 .msg {
-  font-size: 12px;
   text-decoration: underline;
 }
 .name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--green);
 }
 .file {
-  font-size: 12px;
   color: var(--cyan);
 }
 .name,
 .file {
-  opacity: 0.3;
+  opacity: 0.5;
 }
 `;
 
@@ -153,12 +175,13 @@ export function defineTreeElement() {
             ref: (el) => (this.popup = el),
             className: 'popup',
           },
-          create('span', {
+          create('button', {
             ref: (el) => (this.popupClose = el),
             className: 'close',
             __html: close,
           }),
           create('div', {
+            className: 'body',
             ref: (el) => (this.popupBody = el),
           }),
         ),
@@ -258,7 +281,7 @@ export function defineTreeElement() {
       const hasTree = !!source.tree.length;
       if (hasTree) {
         const content = create('div', {
-          className: 'content tree',
+          className: 'content',
           __html: buildTree(source.tree),
         });
         append(this.popupBody, content);
@@ -269,7 +292,7 @@ export function defineTreeElement() {
           {
             className: 'msg',
           },
-          'empty tree 😭.',
+          '>> not found 😭.',
         );
         append(this.popupBody, content);
         this.popup.classList.add('empty');

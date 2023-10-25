@@ -1,7 +1,19 @@
-<h1 align="center">Open Editor</h1>
-
-[![CI](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg)](https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml)
-[![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
+<p align="center">
+  <a href="https://github.com/zjxxxxxxxxx/open-editor">
+      <img width="120px" src="./public/logo.png" alt="Open Editor" />
+      <h1 align="center">Open Editor</h1>
+  </a>
+</p>
+</br>
+<p align="center">
+  <a href="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml">
+    <img src="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor" alt="MIT">
+  </a>
+</p>
+</br>
 
 A web devtools for fast find source code, supported in `React` & `Vue`.
 
@@ -18,6 +30,8 @@ If you need to switch back and forth between `React` & `Vue` frequently, or if y
 - 💝 Support Rollup & Vite & Webpack.
 - 🌟 Support React & Next & Vue.
 - 🚀 Support non-inductive inject client runtime.
+
+Minimum environment requirement `node14+`, `chorme` is recommended for inspect.
 
 > For development only
 

@@ -28,12 +28,7 @@ export function openEditor(
   // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
   if (dispatchEvent(event)) {
     fetch(openURL).catch(() => {
-      console.error(
-        new Error('@open-editor/client: open fail.', {
-          cause: false,
-        }),
-        openURL,
-      );
+      console.error(new Error('@open-editor/client: open fail.'), openURL);
     });
   }
 }

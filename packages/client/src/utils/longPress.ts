@@ -87,19 +87,17 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
     // Left Mouse, Touch Contact, Pen contact
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events#determining_button_states
     if (event.button === 0 && event.buttons === 1) {
-      waitTimer = window.setTimeout(() => {
+      waitTimer = setTimeout(() => {
         const eventProxy = new Proxy(event, {
-          get(target, p) {
-            if (p === 'type') {
-              return 'longpress';
-            }
-            // @ts-ignore
-            return target[p];
-          },
+          get: (target, p) =>
+            p === 'type'
+              ? 'longpress'
+              : // @ts-ignore
+                target[p],
         });
 
         listener(eventProxy);
-      }, wait);
+      }, wait) as unknown as number;
     }
   }
 

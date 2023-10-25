@@ -21,6 +21,7 @@ const CSS = postcss`
   font-weight: 400;
   cursor: default;
   user-select: none;
+  touch-action: none;
   -webkit-touch-callout: none;
 }
 :host {
