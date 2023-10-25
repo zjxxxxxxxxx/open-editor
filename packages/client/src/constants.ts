@@ -12,7 +12,9 @@ export const Theme = postcss`
   --white: #ffffff;
   --grey: #abb2bf;
   --red: #ff335c;
+  --red-light: #ff335c22;
   --green: #00dc82;
+  --green-light: #00dc8222;
   --cyan: #2dd9da;
   --overlay-margin: #f6b26ba8;
   --overlay-border: #ffe599a8;
@@ -26,7 +28,7 @@ export const Theme = postcss`
   --bg-color: var(--white);
 
   --z-index-overlay: 1000000;
-  --z-index-tooltip: 1000000;
+  --z-index-tooltip: 1000003;
   --z-index-tree: 1000001;
   --z-index-toggle: 1000002;
 }
@@ -41,12 +43,6 @@ export const Theme = postcss`
   }
 }
 `;
-
-export const Colors = <const>{
-  TOGGLE_COLOR: 'var(--toggle)',
-  TOGGLE_ACTIVE_COLOR: 'var(--green)',
-  TOGGLE_ACTIVE_SHADOW: 'var(--cyan)',
-};
 
 export const CLIENT = typeof window !== 'undefined';
 

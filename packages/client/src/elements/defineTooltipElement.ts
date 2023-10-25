@@ -15,28 +15,27 @@ const CSS = postcss`
 .root {
   position: fixed;
   z-index: var(--z-index-tooltip);
-  padding: 10px 20px;
+  padding: 6px 8px;
   display: none;
   max-width: calc(100% - 56px);
+  font-size: 12px;
   visibility: hidden;
   background: var(--bg-color);
-  border-radius: 4px;
-  border: 2px solid var(--green);
+  border: 1px solid var(--green);
+  filter: drop-shadow(0px 0px 2px var(--green));
+  border-radius: 2px;
   pointer-events: none;
   will-change: visibility, top, left;
 }
 .element {
-  font-size: 14px;
   color: var(--element);
 }
 .component {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--green);
 }
 .file {
-  margin-top: 2px;
-  font-size: 14px;
   color: var(--cyan);
   text-decoration: underline;
   word-wrap: break-word;
