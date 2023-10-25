@@ -20,6 +20,13 @@ export default Vue.extend({
       <a href="https://vuejs.org/" target="_blank">
         <img src="../public/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
+      <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
+        <img
+          src="../public/logo.png"
+          class="logo open-editor"
+          alt="OpenEditor logo"
+        />
+      </a>
     </div>
     <h1>Rollup + Vue2</h1>
     <Tree />
@@ -46,6 +53,13 @@ export default Vue.extend({
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.logo.open-editor:hover {
+  filter: drop-shadow(0 0 2em #000000aa);
+}
+.open-editor {
+  overflow: hidden;
+  border-radius: 40px;
 }
 .read-the-docs {
   color: #888;

@@ -11,6 +11,9 @@ import Notes from './components/Notes.vue';
     <a href="https://vuejs.org/" target="_blank">
       <img src="/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
+    <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
+      <img src="/logo.png" class="logo open-editor" alt="OpenEditor logo" />
+    </a>
   </div>
   <h1>Webpack + Vue</h1>
   <Tree />
@@ -32,10 +35,17 @@ import Notes from './components/Notes.vue';
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #1d78c1aa);
 }
 .logo.vue:hover {
   filter: drop-shadow(0 0 2em #42b883aa);
+}
+.logo.open-editor:hover {
+  filter: drop-shadow(0 0 2em #000000aa);
+}
+.open-editor {
+  overflow: hidden;
+  border-radius: 40px;
 }
 
 .read-the-docs {
