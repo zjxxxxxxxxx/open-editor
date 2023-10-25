@@ -17,6 +17,13 @@
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+.logo.open-editor:hover {
+  filter: drop-shadow(0 0 2em #000000aa);
+}
+.open-editor {
+  overflow: hidden;
+  border-radius: 40px;
+}
 
 .card {
   padding: 2em;

@@ -2,8 +2,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
+import image from '@rollup/plugin-image';
 import postcss from 'rollup-plugin-postcss';
-import svg from 'rollup-plugin-svg';
 import VueSource from 'unplugin-vue-source/rollup';
 import vue from 'rollup-plugin-vue';
 import openEditor from '@open-editor/rollup';
@@ -45,9 +45,7 @@ export default {
       presets: ['@babel/preset-env', '@babel/preset-typescript'],
     }),
     postcss(),
-    svg({
-      base64: true,
-    }),
+    image(),
     openEditor({
       displayToggle: true,
     }),

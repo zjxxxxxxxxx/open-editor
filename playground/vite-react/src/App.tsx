@@ -12,6 +12,13 @@ export default function App() {
         <a href="https://react.dev" target="_blank">
           <img src="/react.svg" className="logo react" alt="React logo" />
         </a>
+        <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
+          <img
+            src="/logo.png"
+            className="logo open-editor"
+            alt="OpenEditor logo"
+          />
+        </a>
       </div>
       <h1>Vite + React</h1>
       <Tree />

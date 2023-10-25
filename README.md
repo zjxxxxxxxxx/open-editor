@@ -31,7 +31,7 @@ If you need to switch back and forth between `React` & `Vue` frequently, or if y
 - 🌟 Support React & Next & Vue.
 - 🚀 Support non-inductive inject client runtime.
 
-Minimum environment requirement `node14+`, `chorme` is recommended for inspect.
+Minimum environment requirement `node14+`, `chrome` is recommended for inspect.
 
 > For development only
 
@@ -57,13 +57,50 @@ By default, you can only open to `file`, if you want to open to `line` and `colu
 4. press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
 5. 🖱 hold the toggle button and drag the mouse to adjust the toggle position.
 
-## Plugins
+## Packages
 
-- [`@open-editor/rollup`](./packages/rollup/README.md)
-- [`@open-editor/vite`](./packages/vite/README.md)
-- [`@open-editor/webpack`](./packages/webpack/README.md)
+<table>
+  <tbody>
+    <tr>
+      <th align="left">
+        <a href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup">
+          @open-editor/rollup
+        </a>
+      </th>
+      <th align="left"> 
+        <a href="https://www.npmjs.com/package/@open-editor/rollup">
+          <img src="https://img.shields.io/npm/v/@open-editor/rollup?color=" alt="NPM version">
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th align="left">
+        <a href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite">
+          @open-editor/vite
+        </a>
+      </th>
+      <th> 
+        <a href="https://www.npmjs.com/package/@open-editor/vite">
+          <img src="https://img.shields.io/npm/v/@open-editor/vite?color=" alt="NPM version">
+        </a>
+      </th>
+    </tr>
+    <tr>
+      <th>
+        <a href="https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack">
+          @open-editor/webpack
+        </a>
+      </th>
+      <th> 
+        <a href="https://www.npmjs.com/package/@open-editor/webpack">
+          <img src="https://img.shields.io/npm/v/@open-editor/webpack?color=" alt="NPM version">
+        </a>
+      </th>
+    </tr>
+  </tbody>
+</table>
 
-## Playground
+## Playgrounds
 
 <table>
   <tbody>
@@ -185,8 +222,6 @@ By default, you can only open to `file`, if you want to open to `line` and `colu
 </table>
 
 # Thanks
-
-The library was mainly inspired by a few great libraries.
 
 - [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
 - [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
