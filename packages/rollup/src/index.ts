@@ -77,7 +77,6 @@ export default function openEditorPlugin(
       if (include.has(id)) {
         return `import '${runtime.filename}';\n${code}`;
       }
-      return code;
     },
   };
 }
@@ -87,8 +86,5 @@ function getServerPort(options: {
   rootDir?: string;
   onOpenEditor?(file: string): void;
 }) {
-  if (!port) {
-    port = setupServer(options);
-  }
-  return port;
+  return (port ||= setupServer(options));
 }
