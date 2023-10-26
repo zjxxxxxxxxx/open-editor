@@ -56,7 +56,7 @@ export default class OpenEditorPlugin {
       compiler.options.module.rules.push({
         test: /\.mjs$/,
         type: 'javascript/auto',
-        include: /node_modules/,
+        include: /open-editor/,
       });
 
       const entry = compiler.options.entry;
@@ -121,8 +121,5 @@ function getServerPort(options: {
   rootDir?: string;
   onOpenEditor?(file: string): void;
 }) {
-  if (!port) {
-    port = setupServer(options);
-  }
-  return port;
+  return (port ||= setupServer(options));
 }

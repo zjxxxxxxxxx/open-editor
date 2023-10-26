@@ -24,26 +24,18 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
+  background: var(--bg-opt);
   backdrop-filter: blur(8px);
-  background-color: var(--bg-opt);
 }
 .popup {
-  --w: calc(100vw - 100px);
-  --h: calc(100vh - 100px);
-
   position: fixed;
   top: 50%;
   left: 50%;
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
-  display: inline-block;
-  padding: 12px;
-  min-width: 250px;
-  max-width: min(var(--w), 800px);
-  max-height: min(var(--h), 600px);
   border: 1px solid var(--green);
   filter: drop-shadow(0px 0px 2px var(--green));
-  border-radius: 2px;
+  border-radius: 16px;
   background-color: var(--bg-color);
 }
 .popup.empty {
@@ -52,8 +44,8 @@ const CSS = postcss`
 }
 .close {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 8px;
+  right: 8px;
   padding: 8px;
   width: 32px;
   height: 32px;
@@ -67,6 +59,7 @@ const CSS = postcss`
   background: var(--green-light);
 }
 .body {
+  padding: 20px 24px;
   font-size: 12px;
   overflow: hidden;
 }
@@ -79,8 +72,14 @@ const CSS = postcss`
   background: var(--red-light);
 }
 .content {
+  --w: calc(100vw - 148px);
+  --h: calc(100vh - 148px);
+
   position: relative;
   padding: 0px 12px;
+  min-width: 250px;
+  max-width: min(var(--w), 500px);
+  max-height: min(var(--h), 600px);
   white-space: nowrap;
   overflow: auto;
   scrollbar-width: none;
@@ -89,13 +88,14 @@ const CSS = postcss`
   display: none;
 }
 .title {
-  padding: 0 38px 4px 0;
+  padding: 0 32px 16px 0;
   font-size: 14px;
   font-weight: 500;
   color: var(--green);
   white-space: nowrap;
 }
 .element {
+  font-size: 12px;
   color: var(--element);
 }
 .tree {
@@ -107,10 +107,13 @@ const CSS = postcss`
   position: absolute;
   left: 13px;
   top: 22px;
-  opacity: 0.1;
+  opacity: 0.2;
   width: 1px;
   height: calc(100% - 44px);
   background: var(--green);
+}
+.tag {
+  font-size: 13px;
 }
 .tag[data-file]:hover > *,
 .tag[data-file]:hover ~ .tag > * {
@@ -123,16 +126,16 @@ const CSS = postcss`
   text-decoration: underline;
 }
 .name {
-  font-size: 13px;
   font-weight: 500;
   color: var(--green);
 }
 .file {
+  font-size: 12px;
   color: var(--cyan);
 }
 .name,
 .file {
-  opacity: 0.5;
+  opacity: 0.6;
 }
 `;
 

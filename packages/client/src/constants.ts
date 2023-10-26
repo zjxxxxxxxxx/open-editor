@@ -21,7 +21,7 @@ export const Theme = postcss`
   --overlay-padding: #93c47d8c;
   --overlay-content: #6fa7dca8;
 
-  --bg-opt: #ffffff88;
+  --bg-opt: #15181e1;
   --element: var(--black);
   --toggle: var(--black);
   --toggle-bg: #ffffffcc;
@@ -35,7 +35,7 @@ export const Theme = postcss`
 
 @media (prefers-color-scheme: dark) {
   :host {  
-    --bg-opt: #15181e88;
+    --bg-opt: #15181ee;
     --element: var(--grey);
     --toggle: var(--white);
     --toggle-bg: #15181ecc;

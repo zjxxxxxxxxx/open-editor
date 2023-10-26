@@ -129,7 +129,7 @@ export function defineToggleElement() {
       });
       applyStyle(this.button, {
         cursor: 'move',
-        opacity: '0.8',
+        opacity: '0.6',
         transform: 'scale(1.1)',
       });
       applyStyle(this.overlay, {

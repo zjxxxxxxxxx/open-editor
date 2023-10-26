@@ -22,9 +22,6 @@ const CSS = postcss`
   visibility: hidden;
   background: var(--bg-color);
   border: 1px solid var(--green);
-  filter: drop-shadow(0px 0px 2px var(--green));
-  border-radius: 2px;
-  pointer-events: none;
   will-change: visibility, top, left;
 }
 .element {

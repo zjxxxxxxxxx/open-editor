@@ -1,4 +1,5 @@
 import type { Plugin } from 'vite';
+import { readFileSync } from 'node:fs';
 import { ServerApis } from '@open-editor/shared';
 import { createRuntime } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
@@ -72,6 +73,11 @@ export default function openEditorPlugin(
     resolveId(id) {
       if (id === RUNTIME_PUBLIC_PATH) {
         return runtime.filename;
+      }
+    },
+    load(id) {
+      if (id === runtime.filename) {
+        return readFileSync(runtime.filename, 'utf-8');
       }
     },
     transformIndexHtml(html) {
