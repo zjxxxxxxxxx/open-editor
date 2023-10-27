@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.5.0
+
+### Minor Changes
+
+- [#136](https://github.com/zjxxxxxxxxx/open-editor/pull/136) [`4f7bfcd`](https://github.com/zjxxxxxxxxx/open-editor/commit/4f7bfcd6360492d291455278790abb127a1fde11) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - upgrade to a new UI style
+
+### Patch Changes
+
+- [#134](https://github.com/zjxxxxxxxxx/open-editor/pull/134) [`fd468cf`](https://github.com/zjxxxxxxxxx/open-editor/commit/fd468cf4a5492b83fc82a87ed1cc663f2f455ca1) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix import client fail
+
+- Updated dependencies []:
+  - @open-editor/shared@0.5.0
+
 ## 0.4.1
 
 ### Patch Changes
