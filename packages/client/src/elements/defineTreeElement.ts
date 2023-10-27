@@ -16,6 +16,7 @@ export interface HTMLTreeElement extends HTMLElement {
 const CSS = postcss`
 .root {
   display: none;
+  touch-action: none;
 }
 .overlay {
   position: fixed;
@@ -24,7 +25,6 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
-  background: var(--bg-opt);
   backdrop-filter: blur(8px);
 }
 .popup {
@@ -33,50 +33,43 @@ const CSS = postcss`
   left: 50%;
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
-  border: 1px solid var(--green);
-  filter: drop-shadow(0px 0px 2px var(--green));
-  border-radius: 16px;
-  background-color: var(--bg-color);
-}
-.popup.empty {
-  border: 1px solid var(--red);
-  filter: drop-shadow(0px 0px 2px var(--red));
+  color: var(--white);
+  background: var(--black);
+  box-shadow: 0 0 1px var(--white-2);
+  border-radius: 14px;
 }
 .close {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 4px;
+  right: 4px;
   padding: 8px;
   width: 32px;
   height: 32px;
-  color: var(--green);
-  background: var(--bg-color);
+  color: var(--white);
+  background: var(--black);
+  backdrop-filter: blur(8px);
   border: none;
   border-radius: 99px;
-  backdrop-filter: blur(8px);
 }
 .close:hover {
-  background: var(--green-light);
+  background: var(--black-2);
 }
 .body {
-  padding: 20px 24px;
+  padding: 16px 24px;
   font-size: 12px;
   overflow: hidden;
 }
-.empty, .empty .close, .empty .title {
+.error, .error .close, .error .tag {
   color: var(--red);
-  fill: var(--red);
-  border-color: var(--red);
 }
-.empty .close:hover {
+.error .close:hover {
   background: var(--red-light);
 }
 .content {
   --w: calc(100vw - 148px);
   --h: calc(100vh - 148px);
 
-  position: relative;
-  padding: 0px 12px;
+  padding-right: 12px;
   min-width: 250px;
   max-width: min(var(--w), 500px);
   max-height: min(var(--h), 600px);
@@ -89,19 +82,15 @@ const CSS = postcss`
 }
 .title {
   padding: 0 32px 16px 0;
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
-  color: var(--green);
-  white-space: nowrap;
 }
 .element {
-  font-size: 12px;
-  color: var(--element);
+  font-size: 14px;
 }
 .tree {
   position: relative;
   padding-left: 12px;
-  width: fit-content;
 }
 .line {
   position: absolute;
@@ -110,10 +99,10 @@ const CSS = postcss`
   opacity: 0.2;
   width: 1px;
   height: calc(100% - 44px);
-  background: var(--green);
+  background: var(--white);
 }
 .tag {
-  font-size: 13px;
+  margin: 2px 0;
 }
 .tag[data-file]:hover > *,
 .tag[data-file]:hover ~ .tag > * {
@@ -122,16 +111,14 @@ const CSS = postcss`
 .tag[data-file]:hover ~ .line {
   opacity: 0.6;
 }
-.msg {
-  text-decoration: underline;
-}
 .name {
+  font-size: 13px;
   font-weight: 500;
-  color: var(--green);
 }
 .file {
   font-size: 12px;
-  color: var(--cyan);
+  color: var(--white-2);
+  text-decoration: underline;
 }
 .name,
 .file {
@@ -284,21 +271,21 @@ export function defineTreeElement() {
       const hasTree = !!source.tree.length;
       if (hasTree) {
         const content = create('div', {
-          className: 'content',
+          className: 'content tree',
           __html: buildTree(source.tree),
         });
         append(this.popupBody, content);
-        this.popup.classList.remove('empty');
+        this.popup.classList.remove('error');
       } else {
         const content = create(
           'div',
           {
-            className: 'msg',
+            className: 'tag',
           },
           '>> not found 😭.',
         );
         append(this.popupBody, content);
-        this.popup.classList.add('empty');
+        this.popup.classList.add('error');
       }
     }
   }
