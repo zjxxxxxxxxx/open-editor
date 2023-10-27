@@ -17,23 +17,25 @@ const CSS = postcss`
   z-index: var(--z-index-tooltip);
   padding: 6px 8px;
   display: none;
+  padding: 12px 20px;
   max-width: calc(100% - 56px);
-  font-size: 12px;
+  color: var(--white);
   visibility: hidden;
-  background: var(--bg-color);
-  border: 1px solid var(--green);
+  background: var(--black);
+  box-shadow: 0 0 1px var(--white-2);
+  border-radius: 12px;
   will-change: visibility, top, left;
 }
 .element {
-  color: var(--element);
+  font-size: 12px;
 }
 .component {
   font-size: 14px;
   font-weight: 500;
-  color: var(--green);
 }
 .file {
-  color: var(--cyan);
+  font-size: 12px;
+  color: var(--white-2);
   text-decoration: underline;
   word-wrap: break-word;
 }
