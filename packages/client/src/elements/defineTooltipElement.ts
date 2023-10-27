@@ -24,6 +24,7 @@ const CSS = postcss`
   background: var(--black);
   box-shadow: 0 0 1px var(--white-2);
   border-radius: 12px;
+  pointer-events: none;
   will-change: visibility, top, left;
 }
 .element {
