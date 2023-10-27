@@ -28,18 +28,11 @@ const CSS = postcss`
   padding: 0px;
   width: 24px;
   height: 24px;
-  color: var(--toggle);
-  background: var(--toggle-bg);
-  transition: all 0.3s ease-out;
+  color: var(--white-2);
+  background: var(--black);
+  box-shadow: 0 0 1px var(--white-2);
   border: none;
   border-radius: 999px;
-  backdrop-filter: blur(8px);
-}
-@media (max-width: 960px) {
-  .button {
-    width: 32px;
-    height: 32px;
-  }
 }
 `;
 
@@ -78,17 +71,29 @@ export function defineToggleElement() {
         }),
       );
 
+      // Display larger button on the touch screen
+      if ('ontouchstart' in window || navigator.maxTouchPoints) {
+        applyStyle(this.button, {
+          width: '32px',
+          height: '32px',
+        });
+      }
+
       append(shadow, this.root);
     }
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
         applyStyle(this.button, {
-          color: 'var(--green)',
+          color: 'var(--white)',
+          background: 'var(--black-2)',
+          boxShadow: '0 0 1px var(--white)',
         });
       } else {
         applyStyle(this.button, {
-          color: 'var(--toggle)',
+          color: null,
+          background: null,
+          boxShadow: null,
         });
       }
     }
