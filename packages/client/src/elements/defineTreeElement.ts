@@ -279,7 +279,7 @@ export function defineTreeElement() {
         const content = create(
           'div',
           {
-            className: 'tag',
+            className: 'content tag',
           },
           '>> not found 😭.',
         );

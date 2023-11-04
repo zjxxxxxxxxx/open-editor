@@ -1,7 +1,7 @@
 {
   "name": "@open-editor/vite",
   "version": "0.5.0",
-  "description": "A vite plugin for fast find source code, supported in React & Vue.",
+  "description": "A vite plugin for fast find source code.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

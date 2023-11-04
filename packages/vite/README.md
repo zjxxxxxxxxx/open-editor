@@ -3,9 +3,9 @@
 [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)
 [![MIT](https://img.shields.io/github/license/zjxxxxxxxxx/open-editor)](https://opensource.org/licenses/MIT)
 
-A vite plugin for fast find source code, supported in `React` & `Vue`.
+A vite plugin for fast find source code.
 
-> For development only
+> Valid only during development, requires Node.js version 14+.
 
 ## Install
 
@@ -42,7 +42,7 @@ interface Options {
   /**
    * render the toggle into the browser
    *
-   * @default false
+   * @default true
    */
   displayToggle?: boolean;
   /**
@@ -51,3 +51,5 @@ interface Options {
   onOpenEditor?(file: string): void;
 }
 ```
+
+[Github](https://github.com/zjxxxxxxxxx/open-editor)
