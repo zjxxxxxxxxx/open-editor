@@ -36,7 +36,7 @@ function startServer(server: http.Server) {
         const address = server.address();
         if (!address) {
           server.close();
-          reject(new Error('@open-editor/server: start fail.'));
+          reject(Error('@open-editor/server: start fail.'));
           return;
         }
 
