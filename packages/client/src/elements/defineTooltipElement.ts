@@ -19,10 +19,10 @@ const CSS = postcss`
   display: none;
   padding: 12px 20px;
   max-width: calc(100% - 56px);
-  color: var(--white);
+  color: var(--text);
   visibility: hidden;
-  background: var(--black);
-  box-shadow: 0 0 1px var(--white-2);
+  background: var(--fill);
+  box-shadow: 0 0 1px var(--fill-2);
   border-radius: 12px;
   pointer-events: none;
   will-change: visibility, top, left;
@@ -36,7 +36,7 @@ const CSS = postcss`
 }
 .file {
   font-size: 12px;
-  color: var(--white-2);
+  color: var(--text-2);
   text-decoration: underline;
   word-wrap: break-word;
 }
