@@ -33,9 +33,9 @@ const CSS = postcss`
   left: 50%;
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
-  color: var(--white);
-  background: var(--black);
-  box-shadow: 0 0 1px var(--white-2);
+  color: var(--text);
+  background: var(--fill);
+  box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
 .close {
@@ -45,14 +45,14 @@ const CSS = postcss`
   padding: 8px;
   width: 32px;
   height: 32px;
-  color: var(--white);
-  background: var(--black);
+  color: var(--text);
+  background: var(--fill);
   backdrop-filter: blur(8px);
   border: none;
   border-radius: 99px;
 }
 .close:hover {
-  background: var(--black-2);
+  background: var(--fill-2);
 }
 .body {
   padding: 16px 24px;
@@ -70,7 +70,7 @@ const CSS = postcss`
   --h: calc(100vh - 148px);
 
   padding-right: 12px;
-  min-width: 250px;
+  min-width: 220px;
   max-width: min(var(--w), 500px);
   max-height: min(var(--h), 600px);
   white-space: nowrap;
@@ -99,7 +99,7 @@ const CSS = postcss`
   opacity: 0.2;
   width: 1px;
   height: calc(100% - 44px);
-  background: var(--white);
+  background: var(--text);
 }
 .tag {
   margin: 2px 0;
@@ -117,7 +117,7 @@ const CSS = postcss`
 }
 .file {
   font-size: 12px;
-  color: var(--white-2);
+  color: var(--text-2);
   text-decoration: underline;
 }
 .name,
@@ -211,20 +211,19 @@ export function defineTreeElement() {
     }
 
     open = (element: HTMLElement) => {
-      const source = resolveSource(element, true);
-      this.render(source);
       overrideStyle.insert();
+      this.render(resolveSource(element, true));
       applyStyle(this.root, {
         display: 'block',
       });
     };
 
     close = () => {
-      this.popupBody.innerHTML = '';
       overrideStyle.remove();
       applyStyle(this.root, {
         display: 'none',
       });
+      this.popupBody.innerHTML = '';
     };
 
     private setHoldElement = (event: PointerEvent) => {
