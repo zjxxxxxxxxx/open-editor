@@ -53,11 +53,11 @@ function offLongPress(
   const caches = targetMap.get(target);
   if (caches) {
     const nextCaches = caches.filter((cache) => {
-      if (isSameListener(cache, listener, rawOpts)) {
+      const isSame = isSameListener(cache, listener, rawOpts);
+      if (isSame) {
         cache.stop();
-        return false;
       }
-      return true;
+      return !isSame;
     });
     if (nextCaches.length) {
       targetMap.set(target, nextCaches);
@@ -95,6 +95,11 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
               : // @ts-ignore
                 target[p],
         });
+
+        // Give the user a vibration prompt when entering the draggable state.
+        // There are huge compatibility issues, so leave it to chance.
+        // See: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/vibrate
+        navigator.vibrate?.(15);
 
         listener(eventProxy);
       }, wait) as unknown as number;

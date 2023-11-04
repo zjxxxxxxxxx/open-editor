@@ -28,10 +28,11 @@ const CSS = postcss`
   padding: 0px;
   width: 24px;
   height: 24px;
-  color: var(--white-2);
-  background: var(--black);
-  box-shadow: 0 0 1px var(--white-2);
+  color: var(--text-2);
+  background: var(--fill);
+  box-shadow: 0 0 1px var(--fill-2);
   border: none;
+  outline: none;
   border-radius: 999px;
 }
 `;
@@ -85,15 +86,11 @@ export function defineToggleElement() {
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
         applyStyle(this.button, {
-          color: 'var(--white)',
-          background: 'var(--black-2)',
-          boxShadow: '0 0 1px var(--white)',
+          color: 'var(--text)',
         });
       } else {
         applyStyle(this.button, {
           color: null,
-          background: null,
-          boxShadow: null,
         });
       }
     }
