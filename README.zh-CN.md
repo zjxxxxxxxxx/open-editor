@@ -1,0 +1,144 @@
+<p align="center">
+  <a href="https://github.com/zjxxxxxxxxx/open-editor">
+      <img width="120px" src="./public/logo.png" alt="Open Editor" />
+      <h1 align="center">Open Editor</h1>
+  </a>
+</p>
+</br>
+<p align="center">
+  <a href="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml">
+    <img src="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg" alt="CI">
+  </a>
+  <a href="https://opensource.org/licenses/MIT">
+    <img src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor" alt="MIT">
+  </a>
+</p>
+<p align="center">
+  <a href="./README.zh-CN.md">简体中文</a> | <a href="./README.md">English</a>
+</p>
+</br>
+
+一个用于快速查找源代码的 web 开发工具。
+
+无论在`React`还是`Vue`中，都能够达到了完全相同的效果，不论您是一个`React`开发者， 还是一个`Vue`开发者，又或者是一个`React`、`Vue`双料开发者，这款开发工具都非常适合您，它能够帮您省去大量查找代码的时间，使您能够更加专心的写代码。
+
+![image](./public/demo.gif)
+
+> 仅在 development 生效，需要 Node.js 版本 14+。
+
+## 功能
+
+- 🌈 支持 `React`、`Nextjs`、`Vue`。
+- 🔥 支持 `Rollup`、`Vite`、`Webpack`。
+- 🕹️ 支持组合式快捷键。
+- 🎯 支持精准定位行和列。
+- 🚀 支持查找组件树。
+- 👽 支持自动查找可用编辑器。
+
+## 安装包
+
+| 源代码                                                                                          | NPM 版本                                                                                                                       |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   |
+| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       |
+| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) |
+
+## 使用
+
+> 示例以 [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) 作为参考，其他情况下只是选择不同而已，使用方式是完全一致的。
+
+### 使用插件
+
+我们首先需要把插件安装一下。
+
+```bash
+npm -D i @open-editor/vite
+```
+
+然后把插件添加到编译配置中。
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import OpenEditor from '@open-editor/vite';
+
+export default defineConfig({
+  plugins: [
+    react({
+      babel: {
+        retainLines: true,
+      },
+    }),
+    OpenEditor({
+      displayToggle: true,
+    }),
+  ],
+});
+```
+
+到这里代码部分就已经介绍完了。
+
+### 启用检查器
+
+首先需要让项目运行起来。
+
+```bash
+npm run dev
+```
+
+然后在浏览器中打开项目的本地服务器地址，此时可以看见浏览器的右上角出现了一个按钮，这个按钮可以用于切换元素检查器的启用状态。
+
+<img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+
+点击（快捷键：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>）这个按钮就会启用检查器，我们把移动鼠标到需要检查的元素上就可以看见源代码信息。
+
+<img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
+
+此时点击（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素就可以自动在编辑器中打开源代码所在的位置。
+
+<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+
+此时也可以选择不点击元素，而是长按元素查看完整组件树信息。
+
+<img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
+
+然后点击叶子节点就可以自动在编辑器中打开叶子节点所在的位置。
+
+<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+
+### 退出检查器
+
+再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的按钮就会退出检查器。
+
+<img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+
+## 框架
+
+### React
+
+> 需要 React 版本 15+。
+
+`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开源代码的问题，这将会是一个排查问题的方式。
+
+### Vue
+
+> 需要 Vue 版本 2+。
+
+`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在编辑器中打开源代码文件，而没有办法精准定位源代码的行和列。
+
+## 演练场
+
+| 源代码                                                                                             | 在线试玩                                                                                                |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [`rollup/react15`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15) |
+| [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)    |
+| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)         | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)     |
+| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)             | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)       |
+| [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next)   |
+| [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)    |
+
+## 致谢
+
+- [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
+- [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
