@@ -49,7 +49,7 @@
 
 ### 使用插件
 
-我们首先需要把插件安装一下。
+首先需要把插件安装一下。
 
 ```bash
 npm -D i @open-editor/vite
@@ -95,11 +95,11 @@ npm run dev
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-此时点击（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素就可以自动在编辑器中打开源代码所在的位置。
+此时点击元素就可以自动在编辑器中打开源代码所在的位置。
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-此时也可以选择不点击元素，而是长按元素查看完整组件树信息。
+此时也可以选择不点击元素，而是长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树信息。
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

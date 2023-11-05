@@ -15,7 +15,7 @@ export interface Options {
   /**
    * render the toggle into the browser
    *
-   * @default false
+   * @default true
    */
   displayToggle?: boolean;
 
@@ -37,7 +37,7 @@ export default function openEditorPlugin(
 
   const {
     rootDir = process.cwd(),
-    displayToggle = false,
+    displayToggle = true,
     onOpenEditor,
   } = options;
 
