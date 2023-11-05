@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.5.1
+
+### Patch Changes
+
+- [#138](https://github.com/zjxxxxxxxxx/open-editor/pull/138) [`7c120a5`](https://github.com/zjxxxxxxxxx/open-editor/commit/7c120a52a61e7d48bf8bbd03f81abc519233f48a) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - vibrate prompt when long press event is trigger
+
+- Updated dependencies []:
+  - @open-editor/shared@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
