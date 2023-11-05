@@ -49,7 +49,7 @@ Whether in `React` or `Vue`, you can achieve exactly the same effect, whether yo
 
 ### Use plugin
 
-We first need to install the plugin.
+First you need to install the plugin.
 
 ```bash
 npm -D i @open-editor/vite
@@ -95,11 +95,11 @@ Clicking (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + 
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-At this time, click (shortcut key: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) element to automatically open the location of the source code in the editor.
+At this time, click element to automatically open the location of the source code in the editor.
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-At this time, you can also choose not to click on the element, but long press the element to view the complete component tree information.
+At this time, you can also choose not to click on the element, but long press (shortcut key: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) the element to view the complete component tree information.
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

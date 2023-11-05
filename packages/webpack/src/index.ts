@@ -14,7 +14,7 @@ export interface Options {
   /**
    * render the toggle into the browser
    *
-   * @default false
+   * @default true
    */
   displayToggle?: boolean;
 
@@ -34,7 +34,7 @@ export default class OpenEditorPlugin {
   constructor(options: Options = {}) {
     this.options = {
       rootDir: options.rootDir ?? process.cwd(),
-      displayToggle: options.displayToggle ?? false,
+      displayToggle: options.displayToggle ?? true,
       onOpenEditor: options.onOpenEditor,
     };
   }
