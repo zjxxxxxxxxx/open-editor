@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.5.2
+
+### Patch Changes
+
+- [#141](https://github.com/zjxxxxxxxxx/open-editor/pull/141) [`7e32fcd`](https://github.com/zjxxxxxxxxx/open-editor/commit/7e32fcdee8f7225e9fc1ee8ecb7e109087c332c2) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - diaplayToggle default value is set to true
+
+- Updated dependencies []:
+  - @open-editor/client@0.5.2
+  - @open-editor/server@0.5.2
+  - @open-editor/shared@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes
