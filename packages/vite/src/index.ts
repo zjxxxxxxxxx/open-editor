@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 import { readFileSync } from 'node:fs';
 import { ServerApis } from '@open-editor/shared';
-import { createRuntime } from '@open-editor/shared/node';
+import { createRuntime, isDev } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
 
 export interface Options {
@@ -31,9 +31,7 @@ export interface Options {
 export default function openEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
-  if (process.env.NODE_ENV !== 'development') {
-    return;
-  }
+  if (!isDev()) return;
 
   const {
     rootDir = process.cwd(),
