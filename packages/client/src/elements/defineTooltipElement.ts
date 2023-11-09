@@ -1,7 +1,8 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import { create, append, getDOMRect, getHtml } from '../utils/dom';
-import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import { create, getDOMRect, getHtml } from '../utils/dom';
+import { CSS_util, applyStyle } from '../utils/style';
 import { getSafeArea } from '../utils/getSafeArea';
+import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
@@ -54,30 +55,29 @@ export function defineTooltipElement() {
     constructor() {
       super();
 
-      const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowStyle(shadow, CSS);
-
-      create(
-        'div',
-        {
-          ref: (el) => (this.root = el),
-          className: 'root',
-        },
-        create('span', {
-          ref: (el) => (this.element = el),
-          className: 'element',
-        }),
-        create('span', {
-          ref: (el) => (this.component = el),
-          className: 'component',
-        }),
-        create('div', {
-          ref: (el) => (this.file = el),
-          className: 'file',
-        }),
-      );
-
-      append(shadow, this.root);
+      initCustomElement({
+        root: this,
+        style: CSS,
+        children: create(
+          'div',
+          {
+            ref: (el) => (this.root = el),
+            className: 'root',
+          },
+          create('span', {
+            ref: (el) => (this.element = el),
+            className: 'element',
+          }),
+          create('span', {
+            ref: (el) => (this.component = el),
+            className: 'component',
+          }),
+          create('div', {
+            ref: (el) => (this.file = el),
+            className: 'file',
+          }),
+        ),
+      });
     }
 
     open = () => {

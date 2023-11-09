@@ -17,3 +17,7 @@ export function isNum(value: any): value is number {
 export function isBol(value: any): value is boolean {
   return typeof value === 'boolean';
 }
+
+export function isArr<Item = any>(value: any): value is Item[] {
+  return Array.isArray(value);
+}

@@ -20,7 +20,7 @@
 
 A web devtools for fast find source code.
 
-Whether in `React` or `Vue`, you can achieve exactly the same effect, whether you are a `React` developer, a `Vue` developer, or a `React`, `Vue` dual Developers, this development tool is very suitable for you. It can save you a lot of time looking for codes, allowing you to focus more on writing code.
+Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` developer, this development tool can help you. It can save you a lot of time looking for code, allowing you to focus more on writing code. Whether in `React` or `Vue`, it can achieve exactly the same effect.
 
 ![image](./public/demo.gif)
 
@@ -99,7 +99,7 @@ At this time, click element to automatically open the location of the source cod
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-At this time, you can also choose to long press (shortcut key: ⌨️<kbd>command⌘</kbd>+🖱click) element to view the complete component tree information.
+At this time, you can also choose to long press (shortcut key: ⌨️<kbd>command ⌘</kbd>+🖱click) element to view the complete component tree information.
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 
@@ -109,7 +109,7 @@ Then click on the leaf node, and the location of the leaf node will automaticall
 
 ### Exit inspector
 
-Click again (shortcut key 1: ⌨️ <kbd>Options⌥</kbd> + <kbd>Command⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd> , shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
+Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd> , shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 

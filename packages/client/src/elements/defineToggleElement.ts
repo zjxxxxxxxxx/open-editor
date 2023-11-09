@@ -1,8 +1,9 @@
-import { create, append, getHtml } from '../utils/dom';
-import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import { create, getHtml } from '../utils/dom';
+import { CSS_util, applyStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
+import { initCustomElement } from '../utils/initCustomElement';
 import gps from '../icons/gps';
 import { InternalElements, POS_Y_CACHE_ID } from '../constants';
 
@@ -51,26 +52,27 @@ export function defineToggleElement() {
     constructor() {
       super();
 
-      const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowStyle(shadow, CSS);
-
-      create(
-        'div',
-        {
-          ref: (el) => (this.root = el),
-          className: 'root',
-        },
-        create('div', {
-          ref: (el) => (this.overlay = el),
-          className: 'overlay',
-        }),
-        create('button', {
-          ref: (el) => (this.button = el),
-          className: 'button',
-          title: 'open-editor-toggle',
-          __html: gps,
-        }),
-      );
+      initCustomElement({
+        root: this,
+        style: CSS,
+        children: create(
+          'div',
+          {
+            ref: (el) => (this.root = el),
+            className: 'root',
+          },
+          create('div', {
+            ref: (el) => (this.overlay = el),
+            className: 'overlay',
+          }),
+          create('button', {
+            ref: (el) => (this.button = el),
+            className: 'button',
+            title: 'open-editor-toggle',
+            __html: gps,
+          }),
+        ),
+      });
 
       // Display larger button on the touch screen
       if ('ontouchstart' in window || navigator.maxTouchPoints) {
@@ -79,8 +81,6 @@ export function defineToggleElement() {
           height: '32px',
         });
       }
-
-      append(shadow, this.root);
     }
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
