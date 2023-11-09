@@ -1,6 +1,6 @@
 import type { Plugin } from 'rollup';
 import { resolve } from 'node:path';
-import { createRuntime } from '@open-editor/shared/node';
+import { createRuntime, isDev } from '@open-editor/shared/node';
 import { isObj, isStr } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
@@ -31,9 +31,7 @@ export interface Options {
 export default function openEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
-  if (process.env.NODE_ENV !== 'development') {
-    return;
-  }
+  if (!isDev()) return;
 
   const {
     rootDir = process.cwd(),

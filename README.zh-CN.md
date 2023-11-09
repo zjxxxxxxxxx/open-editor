@@ -99,7 +99,7 @@ npm run dev
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-此时也可以选择不点击元素，而是长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树信息。
+此时也可以选择长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树信息。
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

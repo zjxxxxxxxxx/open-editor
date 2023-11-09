@@ -99,7 +99,7 @@ At this time, click element to automatically open the location of the source cod
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-At this time, you can also choose not to click on the element, but long press (shortcut key: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) the element to view the complete component tree information.
+At this time, you can also choose to long press (shortcut key: ⌨️<kbd>command⌘</kbd>+🖱click) element to view the complete component tree information.
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

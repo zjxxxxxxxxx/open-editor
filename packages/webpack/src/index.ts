@@ -1,5 +1,5 @@
 import type webpack from 'webpack';
-import { createRuntime } from '@open-editor/shared/node';
+import { createRuntime, isDev } from '@open-editor/shared/node';
 import { isFunc, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
@@ -40,9 +40,7 @@ export default class OpenEditorPlugin {
   }
 
   apply(compiler: webpack.Compiler) {
-    if (process.env.NODE_ENV !== 'development') {
-      return;
-    }
+    if (!isDev()) return;
 
     this.compiler = compiler;
 
