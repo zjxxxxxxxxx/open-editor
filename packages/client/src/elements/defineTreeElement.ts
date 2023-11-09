@@ -1,8 +1,9 @@
 import { isStr } from '@open-editor/shared';
 import { append, create } from '../utils/dom';
-import { applyStyle, createGlobalStyle, setShadowStyle } from '../utils/style';
+import { applyStyle, createGlobalStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
+import { initCustomElement } from '../utils/initCustomElement';
 import close from '../icons/close';
 import { InternalElements } from '../constants';
 import type { ElementSource, ElementSourceMeta } from '../resolve';
@@ -146,38 +147,37 @@ export function defineTreeElement() {
     constructor() {
       super();
 
-      const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowStyle(shadow, CSS);
-
-      create(
-        'div',
-        {
-          ref: (el) => (this.root = el),
-          className: 'root',
-        },
-        create('div', {
-          ref: (el) => (this.overlay = el),
-          className: 'overlay',
-        }),
-        create(
+      initCustomElement({
+        root: this,
+        style: CSS,
+        children: create(
           'div',
           {
-            ref: (el) => (this.popup = el),
-            className: 'popup',
+            ref: (el) => (this.root = el),
+            className: 'root',
           },
-          create('button', {
-            ref: (el) => (this.popupClose = el),
-            className: 'close',
-            __html: close,
-          }),
           create('div', {
-            className: 'body',
-            ref: (el) => (this.popupBody = el),
+            ref: (el) => (this.overlay = el),
+            className: 'overlay',
           }),
+          create(
+            'div',
+            {
+              ref: (el) => (this.popup = el),
+              className: 'popup',
+            },
+            create('button', {
+              ref: (el) => (this.popupClose = el),
+              className: 'close',
+              __html: close,
+            }),
+            create('div', {
+              className: 'body',
+              ref: (el) => (this.popupBody = el),
+            }),
+          ),
         ),
-      );
-
-      append(shadow, this.root);
+      });
     }
 
     connectedCallback() {

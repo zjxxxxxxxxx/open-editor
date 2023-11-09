@@ -1,18 +1,21 @@
 export default function Notes() {
   return (
     <div>
-      <p>
-        press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> +{' '}
-        <kbd>O</kbd>, then click the HTML element you wish to inspect.
-      </p>
-      <p>
-        press hotkey ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> +{' '}
-        <kbd>O</kbd>, then press hotkey ⌨️ <kbd>command ⌘</kbd> + 🖱 click, show
-        component tree.
-      </p>
-      <p>
-        press hotkey ⌨️ <kbd>esc</kbd> or 🖱 right-click to exit inspect.
-      </p>
+      <div>
+        <h2>Enable inspector</h2>
+        <p>
+          shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> +
+          <kbd>O</kbd>
+        </p>
+      </div>
+      <div>
+        <h2>Exit inspector</h2>
+        <p>
+          shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> +{' '}
+          <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd> , shortcut key 3:
+          🖱right click
+        </p>
+      </div>
     </div>
   );
 }

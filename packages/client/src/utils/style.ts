@@ -9,10 +9,6 @@ export const CSS_util = {
   },
 };
 
-export function setShadowStyle(root: ShadowRoot, ...css: string[]) {
-  root.innerHTML = `<style type="text/css">${css.join('')}</style>`;
-}
-
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 
 export function applyStyle(
