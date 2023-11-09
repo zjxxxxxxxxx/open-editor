@@ -1,9 +1,10 @@
-import { applyAttrs, create, append } from '../utils/dom';
-import { createGlobalStyle, setShadowStyle } from '../utils/style';
+import { applyAttrs, create } from '../utils/dom';
+import { createGlobalStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { isValidElement } from '../utils/element';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
+import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements, Theme, captureOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
@@ -64,26 +65,25 @@ export function defineInspectElement() {
     constructor() {
       super();
 
-      const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowStyle(shadow, Theme, CSS);
-
-      create<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
-        ref: (el) => (this.overlay = el),
-      });
-      create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
-        ref: (el) => (this.tree = el),
-      });
-
-      append(shadow, this.overlay, this.tree);
-
       const options = getOptions();
-      if (options.displayToggle) {
-        create<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
-          ref: (el) => (this.toggle = el),
-          enable: true,
-        });
-        append(shadow, this.toggle!);
-      }
+      initCustomElement({
+        root: this,
+        style: [Theme, CSS],
+        children: [
+          create<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
+            ref: (el) => (this.overlay = el),
+          }),
+          create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
+            ref: (el) => (this.tree = el),
+          }),
+          options.displayToggle
+            ? create<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
+                ref: (el) => (this.toggle = el),
+                enable: true,
+              })
+            : undefined,
+        ].filter(Boolean) as Element[],
+      });
     }
 
     connectedCallback() {

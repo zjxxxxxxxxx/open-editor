@@ -3,10 +3,11 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { create, append } from '../utils/dom';
-import { CSS_util, applyStyle, setShadowStyle } from '../utils/style';
+import { create } from '../utils/dom';
+import { CSS_util, applyStyle } from '../utils/style';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
+import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -54,47 +55,47 @@ export function defineOverlayElement() {
     constructor() {
       super();
 
-      const shadow = this.attachShadow({ mode: 'closed' });
-      setShadowStyle(shadow, CSS);
-
-      create(
-        'div',
-        {
-          ref: (el) => (this.posttion = el),
-          className: 'posttion',
-        },
-        create(
-          'div',
-          {
-            ref: (el) => (this.margin = el),
-            className: 'margin',
-          },
+      initCustomElement({
+        root: this,
+        style: CSS,
+        children: [
           create(
             'div',
             {
-              ref: (el) => (this.border = el),
-              className: 'border',
+              ref: (el) => (this.posttion = el),
+              className: 'posttion',
             },
             create(
               'div',
               {
-                ref: (el) => (this.padding = el),
-                className: 'padding',
+                ref: (el) => (this.margin = el),
+                className: 'margin',
               },
-              create('div', {
-                ref: (el) => (this.content = el),
-                className: 'content',
-              }),
+              create(
+                'div',
+                {
+                  ref: (el) => (this.border = el),
+                  className: 'border',
+                },
+                create(
+                  'div',
+                  {
+                    ref: (el) => (this.padding = el),
+                    className: 'padding',
+                  },
+                  create('div', {
+                    ref: (el) => (this.content = el),
+                    className: 'content',
+                  }),
+                ),
+              ),
             ),
           ),
-        ),
-      );
-
-      create<HTMLTooltipElement>(InternalElements.HTML_TOOLTIP_ELEMENT, {
-        ref: (el) => (this.tooltip = el),
+          create<HTMLTooltipElement>(InternalElements.HTML_TOOLTIP_ELEMENT, {
+            ref: (el) => (this.tooltip = el),
+          }),
+        ],
       });
-
-      append(shadow, this.posttion, this.tooltip);
     }
 
     open = () => {
