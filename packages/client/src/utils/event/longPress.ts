@@ -1,4 +1,4 @@
-import { off, on } from './event';
+import { off, on } from '.';
 
 export type Target = HTMLElement | Window;
 

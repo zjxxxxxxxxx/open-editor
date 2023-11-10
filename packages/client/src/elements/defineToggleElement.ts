@@ -1,9 +1,7 @@
-import { create, getHtml } from '../utils/dom';
-import { CSS_util, applyStyle } from '../utils/style';
+import { getHtml, jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
-import { initCustomElement } from '../utils/initCustomElement';
 import gps from '../icons/gps';
 import { InternalElements, POS_Y_CACHE_ID } from '../constants';
 
@@ -31,7 +29,7 @@ const CSS = postcss`
   height: 24px;
   color: var(--text-2);
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-2);
+  box-shadow: 0 0 1px var(--fill-3);
   border: none;
   outline: none;
   border-radius: 999px;
@@ -52,23 +50,22 @@ export function defineToggleElement() {
     constructor() {
       super();
 
-      initCustomElement({
+      host({
         root: this,
         style: CSS,
-        children: create(
+        element: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
             className: 'root',
           },
-          create('div', {
+          jsx('div', {
             ref: (el) => (this.overlay = el),
             className: 'overlay',
           }),
-          create('button', {
+          jsx('button', {
             ref: (el) => (this.button = el),
             className: 'button',
-            title: 'open-editor-toggle',
             __html: gps,
           }),
         ),
