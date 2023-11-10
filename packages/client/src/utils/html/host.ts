@@ -1,22 +1,23 @@
 import { isArr } from '@open-editor/shared';
-import { append, create } from './dom';
+import { append } from './dom';
+import { jsx } from './jsx';
 
 export interface Options {
   root: Element;
   style: string | string[];
-  children: Element | Element[];
+  element: Element | Element[];
 }
 
-export function initCustomElement(options: Options) {
+export function host(options: Options) {
   if (!isArr(options.style)) options.style = [options.style];
-  if (!isArr(options.children)) options.children = [options.children];
+  if (!isArr(options.element)) options.element = [options.element];
 
   append(
     options.root.attachShadow({ mode: 'closed' }),
-    create('style', {
+    jsx('style', {
       type: 'text/css',
       __html: options.style.join(''),
     }),
-    ...options.children,
+    ...options.element,
   );
 }

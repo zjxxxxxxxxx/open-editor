@@ -1,4 +1,4 @@
-import { isValidElement } from '../utils/element';
+import { isValidElement } from '../utils/validElement';
 
 export type ResolveDebug<T = any> = {
   originalElement: HTMLElement;
@@ -7,14 +7,14 @@ export type ResolveDebug<T = any> = {
   value?: T | null;
 };
 
-const reactKeyStarts = '__reactFiber$';
-const react15KeyStarts = '__reactInternalInstance$';
+const react17PlusKeyStarts = '__reactFiber$';
+const react15PlusKeyStarts = '__reactInternalInstance$';
 // __reactFiber$xxx...
-export let reactKey: string | undefined;
+export let react17PlusKey: string | undefined;
 // __reactInternalInstance$xxx...
-export let react15Key: string | undefined;
+export let react15PlusKey: string | undefined;
 
-export const vueKey = '__vueParentComponent';
+export const vue3Key = '__vueParentComponent';
 export const vue2Key = '__vue__';
 
 // support parsing single project multiple frameworks
@@ -32,8 +32,8 @@ export function resolveDebug(element: HTMLElement): ResolveDebug | undefined {
 
 function findKey(element: HTMLElement) {
   // vue3+
-  if (vueKey in element) {
-    return vueKey;
+  if (vue3Key in element) {
+    return vue3Key;
   }
   // vue2+
   else if (vue2Key in element) {
@@ -41,19 +41,19 @@ function findKey(element: HTMLElement) {
   }
 
   // react17+
-  if (!reactKey) {
-    reactKey = findStartsWith(element, reactKeyStarts);
+  if (!react17PlusKey) {
+    react17PlusKey = findStartsWith(element, react17PlusKeyStarts);
   }
-  if (reactKey && reactKey in element) {
-    return reactKey;
+  if (react17PlusKey && react17PlusKey in element) {
+    return react17PlusKey;
   }
 
   // react15+
-  if (!react15Key) {
-    react15Key = findStartsWith(element, react15KeyStarts);
+  if (!react15PlusKey) {
+    react15PlusKey = findStartsWith(element, react15PlusKeyStarts);
   }
-  if (react15Key && react15Key in element) {
-    return react15Key;
+  if (react15PlusKey && react15PlusKey in element) {
+    return react15PlusKey;
   }
 }
 

@@ -1,4 +1,5 @@
-import { append, create } from './dom';
+import { append } from './dom';
+import { jsx } from './jsx';
 
 export const CSS_util = {
   px(value: string | number) {
@@ -30,7 +31,7 @@ export function createGlobalStyle(css: string) {
   let style: HTMLStyleElement;
   return {
     insert() {
-      style ||= create('style', {
+      style ||= jsx('style', {
         type: 'text/css',
         __html: css,
       });

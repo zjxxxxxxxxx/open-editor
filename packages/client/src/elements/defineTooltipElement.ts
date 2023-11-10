@@ -1,8 +1,13 @@
 import type { ComputedStyle } from '../utils/getComputedStyles';
-import { create, getDOMRect, getHtml } from '../utils/dom';
-import { CSS_util, applyStyle } from '../utils/style';
+import {
+  getDOMRect,
+  getHtml,
+  host,
+  CSS_util,
+  applyStyle,
+  jsx,
+} from '../utils/html';
 import { getSafeArea } from '../utils/getSafeArea';
-import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
@@ -23,7 +28,7 @@ const CSS = postcss`
   color: var(--text);
   visibility: hidden;
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-2);
+  box-shadow: 0 0 1px var(--fill-3);
   border-radius: 12px;
   pointer-events: none;
   will-change: visibility, top, left;
@@ -55,24 +60,24 @@ export function defineTooltipElement() {
     constructor() {
       super();
 
-      initCustomElement({
+      host({
         root: this,
         style: CSS,
-        children: create(
+        element: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
             className: 'root',
           },
-          create('span', {
+          jsx('span', {
             ref: (el) => (this.element = el),
             className: 'element',
           }),
-          create('span', {
+          jsx('span', {
             ref: (el) => (this.component = el),
             className: 'component',
           }),
-          create('div', {
+          jsx('div', {
             ref: (el) => (this.file = el),
             className: 'file',
           }),

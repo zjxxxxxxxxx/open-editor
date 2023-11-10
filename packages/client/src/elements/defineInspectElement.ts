@@ -1,10 +1,8 @@
-import { applyAttrs, create } from '../utils/dom';
-import { createGlobalStyle } from '../utils/style';
+import { applyAttrs, jsx, createGlobalStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
-import { isValidElement } from '../utils/element';
+import { isValidElement } from '../utils/validElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import { openEditor } from '../utils/openEditor';
-import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements, Theme, captureOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
@@ -66,18 +64,18 @@ export function defineInspectElement() {
       super();
 
       const options = getOptions();
-      initCustomElement({
+      host({
         root: this,
         style: [Theme, CSS],
-        children: [
-          create<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
+        element: [
+          jsx<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
             ref: (el) => (this.overlay = el),
           }),
-          create<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
+          jsx<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
             ref: (el) => (this.tree = el),
           }),
           options.displayToggle
-            ? create<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
+            ? jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
                 ref: (el) => (this.toggle = el),
                 enable: true,
               })

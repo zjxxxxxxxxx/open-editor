@@ -1,4 +1,4 @@
-import { createStyleGetter, createGlobalStyle } from './style';
+import { createStyleGetter, createGlobalStyle } from './html';
 
 const CSS = postcss`
 :root {

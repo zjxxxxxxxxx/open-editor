@@ -12,6 +12,7 @@ export const Theme = postcss`
   --text-2: #afafaf;
   --fill: #292a2d;
   --fill-2: #494a4d;
+  --fill-3: #696a6d;
   --red: #ff335c;
   --red-light: #ff335c33;
 
