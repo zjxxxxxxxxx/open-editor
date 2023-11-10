@@ -1,7 +1,7 @@
 import { captureOpts } from '../constants';
-import { applyAttrs } from './dom';
+import { applyAttrs } from './html';
 import { off, on } from './event';
-import { isValidElement } from './element';
+import { isValidElement } from './validElement';
 
 export interface SetupHandlersOptions {
   onChangeElement(element?: HTMLElement): void;

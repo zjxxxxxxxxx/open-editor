@@ -3,11 +3,9 @@ import {
   emptyComputedStyles,
   getComputedStyles,
 } from '../utils/getComputedStyles';
-import { create } from '../utils/dom';
-import { CSS_util, applyStyle } from '../utils/style';
+import { jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
-import { initCustomElement } from '../utils/initCustomElement';
 import { InternalElements, captureOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
@@ -55,35 +53,35 @@ export function defineOverlayElement() {
     constructor() {
       super();
 
-      initCustomElement({
+      host({
         root: this,
         style: CSS,
-        children: [
-          create(
+        element: [
+          jsx(
             'div',
             {
               ref: (el) => (this.posttion = el),
               className: 'posttion',
             },
-            create(
+            jsx(
               'div',
               {
                 ref: (el) => (this.margin = el),
                 className: 'margin',
               },
-              create(
+              jsx(
                 'div',
                 {
                   ref: (el) => (this.border = el),
                   className: 'border',
                 },
-                create(
+                jsx(
                   'div',
                   {
                     ref: (el) => (this.padding = el),
                     className: 'padding',
                   },
-                  create('div', {
+                  jsx('div', {
                     ref: (el) => (this.content = el),
                     className: 'content',
                   }),
@@ -91,7 +89,7 @@ export function defineOverlayElement() {
               ),
             ),
           ),
-          create<HTMLTooltipElement>(InternalElements.HTML_TOOLTIP_ELEMENT, {
+          jsx<HTMLTooltipElement>(InternalElements.HTML_TOOLTIP_ELEMENT, {
             ref: (el) => (this.tooltip = el),
           }),
         ],

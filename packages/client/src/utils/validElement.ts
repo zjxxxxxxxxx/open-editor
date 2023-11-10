@@ -3,12 +3,12 @@ import { InternalElements } from '../constants';
 const internalElementRE = new RegExp(
   `^(${Object.values(InternalElements).join('|')})$`,
 );
-export function isInternalElement(element: HTMLElement) {
+function isInternalElement(element: HTMLElement) {
   return internalElementRE.test(element.localName);
 }
 
 const filterElementRE = /^(html|iframe)$/;
-export function isFilterElement(element: HTMLElement) {
+function isFilterElement(element: HTMLElement) {
   return filterElementRE.test(element.localName);
 }
 

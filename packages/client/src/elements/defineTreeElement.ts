@@ -1,9 +1,13 @@
 import { isStr } from '@open-editor/shared';
-import { append, create } from '../utils/dom';
-import { applyStyle, createGlobalStyle } from '../utils/style';
+import {
+  append,
+  jsx,
+  applyStyle,
+  createGlobalStyle,
+  host,
+} from '../utils/html';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
-import { initCustomElement } from '../utils/initCustomElement';
 import close from '../icons/close';
 import { InternalElements } from '../constants';
 import type { ElementSource, ElementSourceMeta } from '../resolve';
@@ -36,7 +40,7 @@ const CSS = postcss`
   transform: translate(-50%, -50%);
   color: var(--text);
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-2);
+  box-shadow: 0 0 1px var(--fill-3);
   border-radius: 14px;
 }
 .close {
@@ -48,7 +52,6 @@ const CSS = postcss`
   height: 32px;
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: blur(8px);
   border: none;
   border-radius: 99px;
 }
@@ -147,31 +150,31 @@ export function defineTreeElement() {
     constructor() {
       super();
 
-      initCustomElement({
+      host({
         root: this,
         style: CSS,
-        children: create(
+        element: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
             className: 'root',
           },
-          create('div', {
+          jsx('div', {
             ref: (el) => (this.overlay = el),
             className: 'overlay',
           }),
-          create(
+          jsx(
             'div',
             {
               ref: (el) => (this.popup = el),
               className: 'popup',
             },
-            create('button', {
+            jsx('button', {
               ref: (el) => (this.popupClose = el),
               className: 'close',
               __html: close,
             }),
-            create('div', {
+            jsx('div', {
               className: 'body',
               ref: (el) => (this.popupBody = el),
             }),
@@ -251,12 +254,12 @@ export function defineTreeElement() {
     };
 
     private render(source: ElementSource) {
-      const title = create(
+      const title = jsx(
         'div',
         {
           className: 'title',
         },
-        create(
+        jsx(
           'span',
           {
             className: 'element',
@@ -269,14 +272,14 @@ export function defineTreeElement() {
 
       const hasTree = !!source.tree.length;
       if (hasTree) {
-        const content = create('div', {
+        const content = jsx('div', {
           className: 'content tree',
           __html: buildTree(source.tree),
         });
         append(this.popupBody, content);
         this.popup.classList.remove('error');
       } else {
-        const content = create(
+        const content = jsx(
           'div',
           {
             className: 'content tag',
