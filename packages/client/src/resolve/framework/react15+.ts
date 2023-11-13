@@ -1,4 +1,4 @@
-import { isFunc } from '@open-editor/shared';
+import { isFn } from '@open-editor/shared';
 import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createReactResolver } from '../createReactResolver';
@@ -30,8 +30,8 @@ function getResolver() {
     isValid(owner) {
       if (owner?._currentElement) {
         return (
-          isFunc(owner._currentElement.type) ||
-          isFunc(owner._currentElement.type.render)
+          isFn(owner._currentElement.type) ||
+          isFn(owner._currentElement.type.render)
         );
       }
       return false;
@@ -44,7 +44,7 @@ function getResolver() {
     },
     getName(owner) {
       if (owner) {
-        const component = isFunc(owner._currentElement.type)
+        const component = isFn(owner._currentElement.type)
           ? owner._currentElement.type
           : // React.forwardRef(Component)
             owner._currentElement.type.render;

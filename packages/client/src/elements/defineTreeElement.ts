@@ -3,8 +3,10 @@ import {
   append,
   jsx,
   applyStyle,
-  createGlobalStyle,
+  globalStyle,
   host,
+  addClass,
+  reomveClass,
 } from '../utils/html';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
@@ -120,6 +122,7 @@ const CSS = postcss`
   font-weight: 500;
 }
 .file {
+  padding-left: 6px;
   font-size: 12px;
   color: var(--text-2);
   text-decoration: underline;
@@ -137,7 +140,7 @@ const overrideCSS = postcss`
 `;
 
 export function defineTreeElement() {
-  const overrideStyle = createGlobalStyle(overrideCSS);
+  const overrideStyle = globalStyle(overrideCSS);
 
   class TreeElement extends HTMLElement implements HTMLTreeElement {
     private root!: HTMLElement;
@@ -254,74 +257,103 @@ export function defineTreeElement() {
     };
 
     private render(source: ElementSource) {
-      const title = jsx(
-        'div',
-        {
-          className: 'title',
-        },
+      append(
+        this.popupBody,
         jsx(
-          'span',
-          {
-            className: 'element',
-          },
-          `${source.element} in `,
-        ),
-        `<ComponentTree>`,
-      );
-      append(this.popupBody, title);
-
-      const hasTree = !!source.tree.length;
-      if (hasTree) {
-        const content = jsx('div', {
-          className: 'content tree',
-          __html: buildTree(source.tree),
-        });
-        append(this.popupBody, content);
-        this.popup.classList.remove('error');
-      } else {
-        const content = jsx(
           'div',
           {
-            className: 'content tag',
+            className: 'title',
           },
-          '>> not found 😭.',
+          jsx(
+            'span',
+            {
+              className: 'element',
+            },
+            `${source.element} in `,
+          ),
+          `<ComponentTree>`,
+        ),
+      );
+
+      if (source.tree.length) {
+        reomveClass(this.popup, 'error');
+        append(
+          this.popupBody,
+          jsx(
+            'div',
+            {
+              className: 'content tree',
+            },
+            ...buildTree(source.tree),
+          ),
         );
-        append(this.popupBody, content);
-        this.popup.classList.add('error');
+      } else {
+        addClass(this.popup, 'error');
+        append(
+          this.popupBody,
+          jsx(
+            'div',
+            {
+              className: 'content tag',
+            },
+            '>> not found 😭.',
+          ),
+        );
       }
     }
   }
 
   function buildTree(tree: ElementSourceMeta[]) {
-    let template = '';
+    let nodes: HTMLElement[] = [];
     while (tree.length) {
       const meta = tree.shift()!;
-      const startTag = createTag(meta, true);
-      if (!template) {
-        template = startTag;
+      const startNode = createNode(meta, true);
+      if (nodes.length) {
+        const lineNode = jsx('div', {
+          className: 'line',
+        });
+        const childNode = jsx(
+          'div',
+          {
+            className: 'tree',
+          },
+          ...nodes,
+        );
+        const endNode = createNode(meta);
+        nodes = [startNode, lineNode, childNode, endNode];
       } else {
-        const endTag = createTag(meta);
-        const childTag = `<div class="tree">${template}</div><div class="line"></div>`;
-        template = `${startTag} ${childTag} ${endTag}`;
+        nodes = [startNode];
       }
     }
-    return template;
+    return nodes;
   }
 
-  function createTag(meta: ElementSourceMeta, withFile?: boolean) {
+  function createNode(meta: ElementSourceMeta, withFile?: boolean) {
     const { name, file, line = 1, column = 1 } = meta ?? {};
-
-    if (!withFile) {
-      return `<div class="tag"><span class="name">&lt;/${name}&gt;</span></div>`;
-    }
-
-    const dataset = Object.entries(meta).reduce(
-      (str, [key, value]) => `${str} data-${key}="${value}"`,
-      '',
+    const dataset = withFile
+      ? Object.fromEntries(
+          Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
+        )
+      : {};
+    return jsx(
+      'div',
+      {
+        className: 'tag',
+        ...dataset,
+      },
+      jsx('span', {
+        className: 'name',
+        ...dataset,
+        __text: `<${name}/>`,
+      }),
+      withFile
+        ? jsx('span', {
+            className: 'file',
+            ...dataset,
+            __text: `${file}:${line}:${column}`,
+          })
+        : null,
     );
-    const tagName = `<span class="name" ${dataset}>&lt;${name}&gt;</span>`;
-    const fileName = `<span class="file" ${dataset}>${file}:${line}:${column}</span>`;
-    return `<div class="tag" ${dataset}> ${tagName} ${fileName} </div>`;
   }
 
   customElements.define(InternalElements.HTML_TREE_ELEMENT, TreeElement);

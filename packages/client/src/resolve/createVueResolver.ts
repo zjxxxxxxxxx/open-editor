@@ -1,4 +1,4 @@
-import { isBol, isStr } from '@open-editor/shared';
+import { isStr } from '@open-editor/shared';
 import type { ResolveDebug } from './resolveDebug';
 import type { ElementSourceMeta } from './resolveSource';
 import { ensureFileName, isValidFileName } from './util';
@@ -18,15 +18,15 @@ export function createVueResolver<T = any>(options: VueResolverOptions<T>) {
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    if (isVueSource(debug, options)) {
-      resolveVueSource(debug, tree, deep, options);
+    if (isSource(debug, options)) {
+      resolveSource(debug, tree, deep, options);
     } else {
-      resolveVueInstance(debug.value, tree, deep, options);
+      resolveInstance(debug.value, tree, deep, options);
     }
   };
 }
 
-function resolveVueSource<T = any>(
+function resolveSource<T = any>(
   debug: ResolveDebug<T>,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
@@ -35,7 +35,7 @@ function resolveVueSource<T = any>(
   const { isValid, isValidNext, getNext, getSource, getFile, getName } =
     options;
 
-  let [instance, source] = resolveVueSourceAnchor(debug, options);
+  let [instance, source] = getAnchor(debug, options);
 
   while (isValid(instance)) {
     if (isValidNext(instance)) {
@@ -49,7 +49,7 @@ function resolveVueSource<T = any>(
         push(instance);
 
         if (!deep) return;
-        source = parseVueSource(__source);
+        source = parseSource(__source);
       }
     } else {
       push(instance);
@@ -66,7 +66,7 @@ function resolveVueSource<T = any>(
   }
 }
 
-function resolveVueSourceAnchor<T = any>(
+function getAnchor<T = any>(
   debug: ResolveDebug,
   options: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
 ) {
@@ -77,23 +77,23 @@ function resolveVueSourceAnchor<T = any>(
   let __source: string | null | undefined;
 
   // find the first element with __source
-  while (element && !isStr((__source = getElementVueSource(element)))) {
+  while (element && !isStr((__source = element.getAttribute('__source')))) {
     element = element.parentElement!;
   }
   // if the element exists and belongs to the component, the result is returned
   if (element) {
     if (element[debug.key] ? element[debug.key] === instance : true) {
-      return <const>[instance, parseVueSource(__source!)];
+      return <const>[instance, parseSource(__source!)];
     }
   }
   // the root component returns the result directly
   if (isStr(__source) && !isValidNext(instance)) {
-    return <const>[instance, parseVueSource(__source)];
+    return <const>[instance, parseSource(__source)];
   }
   // try to get the result from the component
   while (instance) {
     if (isStr((__source = getSource(instance)))) {
-      return <const>[getNext(instance), parseVueSource(__source)];
+      return <const>[getNext(instance), parseSource(__source)];
     }
     instance = getNext(instance);
   }
@@ -101,7 +101,7 @@ function resolveVueSourceAnchor<T = any>(
   return [];
 }
 
-function resolveVueInstance<T = any>(
+function resolveInstance<T = any>(
   instance: T,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
@@ -124,7 +124,7 @@ function resolveVueInstance<T = any>(
   }
 }
 
-function parseVueSource(__source: string) {
+function parseSource(__source: string) {
   const [file, line, column] = __source.split(':');
   return {
     file: ensureFileName(file),
@@ -133,36 +133,35 @@ function parseVueSource(__source: string) {
   };
 }
 
-let cacheIsVueSource: boolean | undefined;
-function isVueSource<T = any>(
+let isSourceResult: boolean | undefined;
+function isSource<T = any>(
   debug: ResolveDebug,
   options: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
 ) {
-  if (isBol(cacheIsVueSource)) {
-    return cacheIsVueSource;
-  }
+  return (isSourceResult ??= getIsSourceResult(debug, options));
+}
 
+function getIsSourceResult<T = any>(
+  debug: ResolveDebug,
+  options: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
+) {
   if (document.querySelector('*[__source]')) {
-    return (cacheIsVueSource = true);
+    return true;
   }
 
   const { getNext, getSource } = options;
   let { value: instance } = debug;
   while (instance) {
     if (isStr(getSource(instance))) {
-      return (cacheIsVueSource = true);
+      return true;
     }
     instance = getNext(instance);
   }
 
-  return (cacheIsVueSource = false);
+  return false;
 }
 
-const nameRE = /([^/.]+)\.vue$/;
+const nameRE = /([^/.]+)\.(vue|jsx|tsx)$/;
 function getNameByFile(file = '') {
   return file.match(nameRE)?.[1];
-}
-
-function getElementVueSource(element?: HTMLElement) {
-  return element?.getAttribute('__source');
 }

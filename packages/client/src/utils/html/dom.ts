@@ -1,9 +1,7 @@
-import { createStyleGetter } from './style';
+import { computedStyle } from './style';
 
-export function append(parent: Node, ...children: Node[]) {
-  for (const child of children) {
-    parent.appendChild(child);
-  }
+export function getHtml() {
+  return document.documentElement;
 }
 
 export function applyAttrs(
@@ -23,15 +21,16 @@ export function applyAttrs(
 
 export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
-
-  const zoom = createStyleGetter(target)('zoom');
-  if (zoom && zoom !== 1) {
+  const zoom = computedStyle(target)('zoom');
+  // In browsers that do not support zoom, zoom is always empty.
+  if (zoom !== 0 && zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
   }
-
   return domRect;
 }
 
-export function getHtml() {
-  return document.documentElement;
+export function append(parent: Node, ...children: Node[]) {
+  for (const child of children) {
+    parent.appendChild(child);
+  }
 }
