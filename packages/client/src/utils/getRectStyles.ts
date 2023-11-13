@@ -1,6 +1,6 @@
-import { getDOMRect, createStyleGetter } from './html';
+import { getDOMRect, computedStyle } from './html';
 
-export interface ComputedStyle {
+export interface RectStyle {
   width: number;
   height: number;
   top: number;
@@ -9,7 +9,7 @@ export interface ComputedStyle {
   bottom: number;
 }
 
-const emptyComputedStyle = {
+const emptyRectStyle = {
   width: 0,
   height: 0,
   top: 0,
@@ -18,17 +18,17 @@ const emptyComputedStyle = {
   bottom: 0,
 };
 
-export const emptyComputedStyles = {
-  posttion: emptyComputedStyle,
-  margin: emptyComputedStyle,
-  border: emptyComputedStyle,
-  padding: emptyComputedStyle,
-  content: emptyComputedStyle,
+export const emptyRectStyles = {
+  posttion: emptyRectStyle,
+  margin: emptyRectStyle,
+  border: emptyRectStyle,
+  padding: emptyRectStyle,
+  content: emptyRectStyle,
 };
 
-export function getComputedStyles(
-  element: Element,
-): Record<string, ComputedStyle> {
+export function getRectStyles(element?: Element): Record<string, RectStyle> {
+  if (!element) return emptyRectStyles;
+
   const {
     // border + padding + content
     width,
@@ -39,7 +39,7 @@ export function getComputedStyles(
     bottom,
     left,
   } = getDOMRect(element);
-  const get = createStyleGetter(element);
+  const get = computedStyle(element);
 
   const marginTop = get('margin-top');
   const marginRight = get('margin-right');
@@ -106,7 +106,7 @@ export function getComputedStyles(
       bottom: paddingBottom,
     },
     content: {
-      ...emptyComputedStyle,
+      ...emptyRectStyle,
       width: contentWidth,
       height: contentHeight,
     },

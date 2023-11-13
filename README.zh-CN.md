@@ -7,14 +7,13 @@
 </br>
 <p align="center">
   <a href="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml">
-    <img src="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg" alt="CI">
+    <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/zjxxxxxxxxx/open-editor/ci.yml?style=for-the-badge&logo=github&label=CI">
   </a>
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor" alt="MIT">
+  <img alt="GitHub" src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor?style=for-the-badge">
   </a>
 </p>
 <p align="center">
-  <a href="./README.zh-CN.md">简体中文</a> | <a href="./README.md">English</a>
+  <a href="./README.md">English</a> | <a href="./README.zh-CN.md">简体中文</a>
 </p>
 </br>
 
@@ -37,11 +36,11 @@
 
 ## 安装包
 
-| 源代码                                                                                          | NPM 版本                                                                                                                       |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   |
-| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       |
-| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) |
+| 源代码                                                                                          | NPM 版本                                                                                                                       | 下载量                                                                                                                       |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
+| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
+| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
 
 ## 使用
 
@@ -87,7 +86,9 @@ export default defineConfig({
 npm run dev
 ```
 
-然后在浏览器中打开项目的本地服务器地址，此时可以看见浏览器的右上角出现了一个按钮，这个按钮可以用于切换元素检查器的启用状态。
+然后在浏览器中打开项目的本地服务器地址，此时可以看见浏览器的右上角出现了一个切换按钮，这个切换按钮可以用于切换元素检查器的启用状态。
+
+> 如果您认为切换按钮遮挡住了您的用户界面，您可以长按切换按钮，等待切换按钮进入可拖拽状态后，以拖拽的方式调整切换按钮的显示位置
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
