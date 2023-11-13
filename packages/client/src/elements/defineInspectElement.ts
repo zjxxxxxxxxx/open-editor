@@ -199,7 +199,8 @@ export function defineInspectElement() {
         [
           {},
           {
-            boxShadow: 'inset 0 0 30px var(--red)',
+            boxShadow: 'inset 0 0 20px 10px var(--red)',
+            background: 'var(--red-light)',
           },
           {},
         ],
