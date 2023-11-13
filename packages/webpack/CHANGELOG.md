@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.5.3
+
+### Patch Changes
+
+- [#143](https://github.com/zjxxxxxxxxx/open-editor/pull/143) [`5e90269`](https://github.com/zjxxxxxxxxx/open-editor/commit/5e90269b45a586cd13f4c01b047839f31534a72d) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - non-strict dev environment restrictions
+
+- Updated dependencies [[`3989e55`](https://github.com/zjxxxxxxxxx/open-editor/commit/3989e55a552ff7518d86f7cd962dc9e2bc998672), [`5e90269`](https://github.com/zjxxxxxxxxx/open-editor/commit/5e90269b45a586cd13f4c01b047839f31534a72d), [`3989e55`](https://github.com/zjxxxxxxxxx/open-editor/commit/3989e55a552ff7518d86f7cd962dc9e2bc998672)]:
+  - @open-editor/shared@0.5.3
+  - @open-editor/client@0.5.3
+  - @open-editor/server@0.5.3
+
 ## 0.5.2
 
 ### Patch Changes
