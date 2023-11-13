@@ -1,4 +1,4 @@
-import type { ComputedStyle } from '../utils/getComputedStyles';
+import type { RectStyle } from '../utils/getRectStyles';
 import {
   getDOMRect,
   getHtml,
@@ -14,7 +14,7 @@ import { resolveSource } from '../resolve';
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeElement?: HTMLElement, style?: ComputedStyle): void;
+  update(activeElement?: HTMLElement, style?: RectStyle): void;
 }
 
 const CSS = postcss`
@@ -98,7 +98,7 @@ export function defineTooltipElement() {
       });
     };
 
-    update = (activeElement?: HTMLElement, style?: ComputedStyle) => {
+    update = (activeElement?: HTMLElement, style?: RectStyle) => {
       // before hidden
       applyStyle(this.root, {
         visibility: 'hidden',
@@ -122,7 +122,7 @@ export function defineTooltipElement() {
       }
     };
 
-    private updatePosStyle(style: ComputedStyle) {
+    private updatePosStyle(style: RectStyle) {
       const {
         // window width excluding the scrollbar width
         clientWidth: winW,

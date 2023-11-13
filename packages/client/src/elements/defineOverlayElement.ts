@@ -1,8 +1,4 @@
-import {
-  ComputedStyle,
-  emptyComputedStyles,
-  getComputedStyles,
-} from '../utils/getComputedStyles';
+import { RectStyle, getRectStyles } from '../utils/getRectStyles';
 import { jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
@@ -123,14 +119,12 @@ export function defineOverlayElement() {
     };
 
     private update_RAF = create_RAF(() => {
-      const styles = this.activeElement
-        ? getComputedStyles(this.activeElement)
-        : emptyComputedStyles;
+      const styles = getRectStyles(this.activeElement);
       this.updateStyles(styles);
       this.tooltip.update(this.activeElement, styles.posttion);
     });
 
-    private updateStyles(styles: Record<string, ComputedStyle>) {
+    private updateStyles(styles: Record<string, RectStyle>) {
       applyStyle(this.posttion, {
         width: CSS_util.px(styles.posttion.width),
         height: CSS_util.px(styles.posttion.height),
@@ -144,7 +138,7 @@ export function defineOverlayElement() {
     }
   }
 
-  function applyRectStyle(element: HTMLElement, style: ComputedStyle) {
+  function applyRectStyle(element: HTMLElement, style: RectStyle) {
     applyStyle(element, {
       width: CSS_util.px(style.width),
       height: CSS_util.px(style.height),

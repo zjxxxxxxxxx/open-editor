@@ -1,6 +1,6 @@
 import type webpack from 'webpack';
 import { createRuntime, isDev } from '@open-editor/shared/node';
-import { isFunc, isObj } from '@open-editor/shared';
+import { isFn, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -89,7 +89,7 @@ export default class OpenEditorPlugin {
     entry: webpack.EntryNormalized,
     clientRuntimeEntry: string,
   ): any {
-    if (isFunc(entry)) {
+    if (isFn(entry)) {
       return Promise.resolve(entry()).then((originalEntry) => {
         return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
       });

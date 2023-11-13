@@ -1,4 +1,4 @@
-import { createStyleGetter, createGlobalStyle } from './html';
+import { computedStyle, globalStyle } from './html';
 
 const CSS = postcss`
 :root {
@@ -9,10 +9,10 @@ const CSS = postcss`
 }
 `;
 
-let get: ReturnType<typeof createStyleGetter>;
+let get: ReturnType<typeof computedStyle>;
 function createGetter() {
-  createGlobalStyle(CSS).insert();
-  return createStyleGetter(document.body);
+  globalStyle(CSS, true);
+  return computedStyle(document.body);
 }
 
 export function getSafeArea() {

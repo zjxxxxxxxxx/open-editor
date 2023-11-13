@@ -1,4 +1,4 @@
-export function isFunc(value: any): value is () => void {
+export function isFn(value: any): value is () => void {
   return typeof value === 'function';
 }
 
@@ -20,4 +20,8 @@ export function isBol(value: any): value is boolean {
 
 export function isArr<Item = any>(value: any): value is Item[] {
   return Array.isArray(value);
+}
+
+export function isNaN(value: any) {
+  return Number.isNaN(value);
 }

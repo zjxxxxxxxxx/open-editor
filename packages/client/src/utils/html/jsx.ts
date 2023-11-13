@@ -1,6 +1,6 @@
 import { isStr } from '@open-editor/shared';
 import { append, applyAttrs } from './dom';
-import { applyStyle } from './style';
+import { addClass, applyStyle } from './style';
 
 export interface Props<T = HTMLElement> extends Record<string, any> {
   ref?(el: T): void;
@@ -10,7 +10,7 @@ export interface Props<T = HTMLElement> extends Record<string, any> {
   __text?: string;
 }
 
-export type Children = (HTMLElement | string)[];
+export type Children = (HTMLElement | string | null)[];
 
 export function jsx<K extends keyof HTMLElementTagNameMap>(
   type: K,
@@ -27,7 +27,7 @@ export function jsx(type: string, props: Props = {}, ...children: Children) {
 
   const { ref, className, style, __html, __text, ...restProps } = props;
   if (className) {
-    element.classList.add(...className.split(' '));
+    addClass(element, ...className.split(' '));
   }
   if (style) {
     applyStyle(element, style);
@@ -36,11 +36,14 @@ export function jsx(type: string, props: Props = {}, ...children: Children) {
     element.innerHTML = __html;
   } else if (__text) {
     element.innerText = __text;
-  } else {
-    for (const child of children) {
+  }
+
+  for (const child of children) {
+    if (child !== null) {
       append(element, isStr(child) ? document.createTextNode(child) : child);
     }
   }
+
   applyAttrs(element, restProps);
   ref?.(element);
 

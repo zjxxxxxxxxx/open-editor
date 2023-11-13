@@ -37,11 +37,11 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 ## Packages
 
-| Source code                                                                                     | NPM version                                                                                                                    |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   |
-| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       |
-| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) |
+| Source code                                                                                     | NPM version                                                                                                                    | Downloads                                                                                                                    |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
+| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
+| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
 
 ## Usage
 
@@ -87,7 +87,9 @@ First you need to get the project running.
 npm run dev
 ```
 
-Then open the local server address of the project in the browser. At this time, you can see a button appearing in the upper right corner of the browser. This button can be used to switch the enabled state of the Element Inspector.
+Then open the local server address of the project in the browser. At this time, you can see a toggle button appearing in the upper right corner of the browser. This toggle button can be used to toggle the enabled state of the Element Inspector.
+
+> If you think that the switch button blocks your user interface, you can long press the switch button, wait for the switch button to enter the draggable state, and then adjust the display position of the switch button by dragging it.
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
@@ -112,6 +114,8 @@ Then click on the leaf node, and the location of the leaf node will automaticall
 Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd> , shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+
+>
 
 ## Frameworks
 

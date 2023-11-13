@@ -1,5 +1,5 @@
 import type { Fiber } from 'react-reconciler';
-import { isFunc } from '@open-editor/shared';
+import { isFn } from '@open-editor/shared';
 import type { ResolveDebug } from '../resolveDebug';
 import type { ElementSourceMeta } from '../resolveSource';
 import { createReactResolver } from '../createReactResolver';
@@ -25,7 +25,7 @@ function getResolver() {
   return (resolver ||= createReactResolver({
     isValid(owner) {
       if (owner?._debugSource) {
-        return isFunc(owner.type) || isFunc(owner.type.render);
+        return isFn(owner.type) || isFn(owner.type.render);
       }
       return false;
     },
@@ -37,7 +37,7 @@ function getResolver() {
     },
     getName(owner) {
       if (owner) {
-        const component = isFunc(owner.type)
+        const component = isFn(owner.type)
           ? owner.type
           : // React.forwardRef(Component)
             owner.type.render;

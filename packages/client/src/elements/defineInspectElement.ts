@@ -1,8 +1,12 @@
-import { applyAttrs, jsx, createGlobalStyle, host } from '../utils/html';
+import { applyAttrs, jsx, globalStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { isValidElement } from '../utils/validElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
-import { openEditor } from '../utils/openEditor';
+import {
+  offOpenEditorError,
+  onOpenEditorError,
+  openEditor,
+} from '../utils/openEditor';
 import { InternalElements, Theme, captureOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
@@ -26,6 +30,14 @@ const CSS = postcss`
 :host {
   all: initial !important;
 }
+.error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000000000;
+}
 `;
 
 const overrideCSS = postcss`
@@ -38,7 +50,7 @@ const overrideCSS = postcss`
 `;
 
 export function defineInspectElement() {
-  const overrideStyle = createGlobalStyle(overrideCSS);
+  const overrideStyle = globalStyle(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
     private overlay!: HTMLOverlayElement;
@@ -90,6 +102,7 @@ export function defineInspectElement() {
       on('exit', this.cleanupHandlers, {
         target: this.tree,
       });
+      onOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
         on('toggle', this.toggleActiveEffect, {
@@ -104,6 +117,7 @@ export function defineInspectElement() {
       off('exit', this.cleanupHandlers, {
         target: this.tree,
       });
+      offOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
         off('toggle', this.toggleActiveEffect, {
@@ -170,9 +184,32 @@ export function defineInspectElement() {
 
     private openEditor = (element: HTMLElement) => {
       const { meta } = resolveSource(element);
-      if (meta) {
-        openEditor(meta, (event) => this.dispatchEvent(event));
+      if (!meta) {
+        console.error(Error('@open-editor/client: file not found.'));
+        return this.showErrorOverlay();
       }
+      openEditor(meta, (event) => this.dispatchEvent(event));
+    };
+
+    private showErrorOverlay = () => {
+      const errorOverlay = jsx('div', {
+        className: 'error-overlay',
+      });
+      const animation = errorOverlay.animate(
+        [
+          {},
+          {
+            boxShadow: 'inset 0 0 30px var(--red)',
+          },
+          {},
+        ],
+        {
+          duration: 600,
+          easing: 'ease-out',
+        },
+      );
+      animation.onfinish = () => errorOverlay.remove();
+      this.overlay.parentNode!.append(errorOverlay);
     };
   }
 
