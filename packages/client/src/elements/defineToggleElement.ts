@@ -123,10 +123,10 @@ export function defineToggleElement() {
         posY: getCachePosY(),
       };
       applyStyle(this.root, {
-        cursor: 'move',
+        cursor: 'ns-resize',
       });
       applyStyle(this.button, {
-        cursor: 'move',
+        cursor: 'ns-resize',
         opacity: '0.6',
         transform: 'scale(1.1)',
       });

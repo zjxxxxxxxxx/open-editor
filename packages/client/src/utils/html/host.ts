@@ -13,9 +13,7 @@ export function host(root: HTMLElement, opts: Options) {
 
   const shadow = root.attachShadow({ mode: 'closed' });
   Object.defineProperty(root, 'shadowRoot', {
-    get() {
-      return shadow;
-    },
+    value: shadow,
   });
 
   const style = jsx('style', {
