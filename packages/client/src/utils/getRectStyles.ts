@@ -26,8 +26,8 @@ export const emptyRectStyles = {
   content: emptyRectStyle,
 };
 
-export function getRectStyles(element?: Element): Record<string, RectStyle> {
-  if (!element) return emptyRectStyles;
+export function getRectStyles(el?: Element): Record<string, RectStyle> {
+  if (!el) return emptyRectStyles;
 
   const {
     // border + padding + content
@@ -38,8 +38,8 @@ export function getRectStyles(element?: Element): Record<string, RectStyle> {
     right,
     bottom,
     left,
-  } = getDOMRect(element);
-  const get = computedStyle(element);
+  } = getDOMRect(el);
+  const get = computedStyle(el);
 
   const marginTop = get('margin-top');
   const marginRight = get('margin-right');

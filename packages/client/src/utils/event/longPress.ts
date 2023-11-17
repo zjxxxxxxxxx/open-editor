@@ -2,14 +2,12 @@ import { off, on } from '.';
 
 export type Target = HTMLElement | Window;
 
-export type LongPressEvent = PointerEvent;
-
 export interface LongPressOptions extends AddEventListenerOptions {
   target?: Target;
   wait?: number;
 }
 
-export type LongPressListener = (event: PointerEvent) => void;
+export type LongPressListener = (e: PointerEvent) => void;
 
 export type LongPressCache = {
   cb: LongPressListener;
@@ -28,15 +26,20 @@ function onLongPress(
   listener: LongPressListener,
   rawOpts: LongPressOptions = {},
 ) {
-  const { target = window, once, ...options } = rawOpts;
-  const opts = { ...options, target };
+  const { target = window, once, ...opts } = rawOpts;
   const caches = targetMap.get(target) ?? [];
-  const cleanup = setupListener((event) => {
-    listener(event);
-    if (once) {
-      offLongPress(listener, rawOpts);
-    }
-  }, opts);
+  const cleanup = setupListener(
+    (e) => {
+      listener(e);
+      if (once) {
+        offLongPress(listener, rawOpts);
+      }
+    },
+    {
+      ...opts,
+      target,
+    },
+  );
   const cache = {
     cb: listener,
     opts: rawOpts,
@@ -79,21 +82,33 @@ function isSameListener(
 }
 
 function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
-  const { wait = 500, ...options } = rawOpts;
+  const { wait = 500, ...opts } = rawOpts;
+
+  function setup() {
+    on('pointerdown', start, opts);
+    on('pointermove', clean, opts);
+    on('pointerup', clean, opts);
+    on('pointercancel', clean, opts);
+  }
+
+  function cleanup() {
+    off('pointerdown', start, opts);
+    off('pointermove', clean, opts);
+    off('pointerup', clean, opts);
+    off('pointercancel', clean, opts);
+  }
 
   let waitTimer: number | null = null;
 
-  function start(event: PointerEvent) {
+  function start(e: PointerEvent) {
     // Left Mouse, Touch Contact, Pen contact
     // see: https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events#determining_button_states
-    if (event.button === 0 && event.buttons === 1) {
+    if (e.button === 0 && e.buttons === 1) {
       waitTimer = setTimeout(() => {
-        const eventProxy = new Proxy(event, {
-          get: (target, p) =>
-            p === 'type'
-              ? 'longpress'
-              : // @ts-ignore
-                target[p],
+        Object.defineProperty(e, 'type', {
+          get() {
+            return 'longpress';
+          },
         });
 
         // Give the user a vibration prompt when entering the draggable state.
@@ -101,7 +116,7 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
         // See: https://developer.mozilla.org/en-US/docs/Web/API/Navigator/vibrate
         navigator.vibrate?.(15);
 
-        listener(eventProxy);
+        listener(e);
       }, wait) as unknown as number;
     }
   }
@@ -111,20 +126,6 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
       clearTimeout(waitTimer);
       waitTimer = null;
     }
-  }
-
-  function setup() {
-    on('pointerdown', start, options);
-    on('pointermove', clean, options);
-    on('pointerup', clean, options);
-    on('pointercancel', clean, options);
-  }
-
-  function cleanup() {
-    off('pointerdown', start, options);
-    off('pointermove', clean, options);
-    off('pointerup', clean, options);
-    off('pointercancel', clean, options);
   }
 
   setup();

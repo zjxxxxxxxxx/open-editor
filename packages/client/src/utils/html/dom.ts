@@ -4,17 +4,14 @@ export function getHtml() {
   return document.documentElement;
 }
 
-export function applyAttrs(
-  element: HTMLElement,
-  attrs: Record<string, unknown>,
-) {
+export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
   for (const property of Object.keys(attrs)) {
     const attr = attrs[property];
     // support '' | 0 | false
     if (attr != null) {
-      element.setAttribute(property, String(attr));
+      el.setAttribute(property, String(attr));
     } else {
-      element.removeAttribute(property);
+      el.removeAttribute(property);
     }
   }
 }

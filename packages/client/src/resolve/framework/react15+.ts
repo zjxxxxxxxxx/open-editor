@@ -5,51 +5,54 @@ import { createReactResolver } from '../createReactResolver';
 import { fiberResolver } from './react17+';
 
 export function resolveReact15Plus(
-  { value: instance }: ResolveDebug,
+  { value: inst }: ResolveDebug,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  if (instance && '_debugOwner' in instance) {
-    fiberResolver(instance, tree, deep);
+  if (inst && '_debugOwner' in inst) {
+    fiberResolver(inst, tree, deep);
   } else {
-    instanceResolver(instance, tree, deep);
+    instanceResolver(inst, tree, deep);
   }
 }
 
 export function instanceResolver(
-  instance: any | null | undefined,
+  inst: any | null | undefined,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  return getResolver()(instance, tree, deep);
+  return getResolver()(inst, tree, deep);
 }
 
 let resolver: ReturnType<typeof createReactResolver<any>>;
 function getResolver() {
   return (resolver ||= createReactResolver({
     isValid(owner) {
-      if (owner?._currentElement) {
-        return (
-          isFn(owner._currentElement.type) ||
-          isFn(owner._currentElement.type.render)
-        );
+      const el = getEl(owner);
+      if (el) {
+        return isFn(el.type) || isFn(el.type.render);
       }
       return false;
     },
-    getOwner(instance) {
-      return instance?._currentElement._owner;
+    getOwner(inst) {
+      return getEl(inst)?._owner;
     },
-    getSource(instance) {
-      return instance?._currentElement._source;
+    getSource(inst) {
+      return getEl(inst)?._source;
     },
     getName(owner) {
-      if (owner) {
-        const component = isFn(owner._currentElement.type)
-          ? owner._currentElement.type
+      const el = getEl(owner);
+      if (el) {
+        const comp = isFn(el.type)
+          ? el.type
           : // React.forwardRef(Component)
-            owner._currentElement.type.render;
-        return component?.name || component?.displayName;
+            el.type.render;
+        return comp?.name || comp?.displayName;
       }
     },
   }));
+
+  function getEl(inst: any) {
+    return inst?._currentElement;
+  }
 }

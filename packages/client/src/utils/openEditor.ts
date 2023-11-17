@@ -2,11 +2,13 @@ import { ServerApis } from '@open-editor/shared';
 import type { ElementSourceMeta } from '../resolve';
 import { getOptions } from '../options';
 
-const listeners: (() => void)[] = [];
+type Listener = (e: CustomEvent<URL>) => void;
+
+const listeners: Listener[] = [];
 
 export function openEditor(
   source: ElementSourceMeta,
-  dispatchEvent: (event: CustomEvent<URL>) => boolean,
+  dispatchEvent: (e: CustomEvent<URL>) => boolean,
 ) {
   const { protocol, hostname, port } = window.location;
   const { file, line = 1, column = 1 } = source;
@@ -18,8 +20,8 @@ export function openEditor(
   openURL.searchParams.set('column', String(column));
   openURL.port = customPort || port;
 
-  // open-editor event
-  const event = new CustomEvent('openeditor', {
+  // open-editor e
+  const e = new CustomEvent('openeditor', {
     bubbles: true,
     cancelable: true,
     composed: true,
@@ -28,19 +30,19 @@ export function openEditor(
 
   // Dispatches a synthetic event event to target and returns true if either event's cancelable
   // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
-  if (dispatchEvent(event)) {
+  if (dispatchEvent(e)) {
     fetch(openURL).catch(() => {
-      listeners.forEach((listener) => listener());
+      listeners.forEach((listener) => listener(e));
       console.error(Error('@open-editor/client: open fail.'), openURL);
     });
   }
 }
 
-export function onOpenEditorError(listener: () => void) {
+export function onOpenEditorError(listener: Listener) {
   listeners.push(listener);
 }
 
-export function offOpenEditorError(listener: () => void) {
+export function offOpenEditorError(listener: Listener) {
   const index = listeners.indexOf(listener);
   if (index !== -1) {
     listeners.splice(index, 1);

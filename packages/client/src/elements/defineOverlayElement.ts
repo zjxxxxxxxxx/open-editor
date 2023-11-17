@@ -2,13 +2,13 @@ import { RectStyle, getRectStyles } from '../utils/getRectStyles';
 import { jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
-import { InternalElements, captureOpts } from '../constants';
+import { InternalElements, capOpts } from '../constants';
 import type { HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeElement?: HTMLElement): void;
+  update(activeEl?: HTMLElement): void;
 }
 
 const CSS = postcss`
@@ -44,15 +44,14 @@ export function defineOverlayElement() {
     private padding!: HTMLElement;
     private content!: HTMLElement;
     private tooltip!: HTMLTooltipElement;
-    private activeElement?: HTMLElement;
+    private activeEl?: HTMLElement;
 
     constructor() {
       super();
 
-      host({
-        root: this,
-        style: CSS,
-        element: [
+      host(this, {
+        css: CSS,
+        html: [
           jsx(
             'div',
             {
@@ -98,8 +97,8 @@ export function defineOverlayElement() {
       });
       this.tooltip.open();
 
-      on('scroll', this.update_RAF, captureOpts);
-      on('resize', this.update_RAF, captureOpts);
+      on('scroll', this.update_RAF, capOpts);
+      on('resize', this.update_RAF, capOpts);
     };
 
     close = () => {
@@ -109,19 +108,19 @@ export function defineOverlayElement() {
       this.tooltip.close();
       this.update();
 
-      off('scroll', this.update_RAF, captureOpts);
-      off('resize', this.update_RAF, captureOpts);
+      off('scroll', this.update_RAF, capOpts);
+      off('resize', this.update_RAF, capOpts);
     };
 
-    update = (activeElement?: HTMLElement) => {
-      this.activeElement = activeElement;
+    update = (activeEl?: HTMLElement) => {
+      this.activeEl = activeEl;
       this.update_RAF();
     };
 
     private update_RAF = create_RAF(() => {
-      const styles = getRectStyles(this.activeElement);
+      const styles = getRectStyles(this.activeEl);
       this.updateStyles(styles);
-      this.tooltip.update(this.activeElement, styles.posttion);
+      this.tooltip.update(this.activeEl, styles.posttion);
     });
 
     private updateStyles(styles: Record<string, RectStyle>) {
@@ -138,8 +137,8 @@ export function defineOverlayElement() {
     }
   }
 
-  function applyRectStyle(element: HTMLElement, style: RectStyle) {
-    applyStyle(element, {
+  function applyRectStyle(el: HTMLElement, style: RectStyle) {
+    applyStyle(el, {
       width: CSS_util.px(style.width),
       height: CSS_util.px(style.height),
       borderTopWidth: CSS_util.px(style.top),

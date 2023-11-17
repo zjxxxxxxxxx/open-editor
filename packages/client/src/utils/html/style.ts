@@ -13,15 +13,18 @@ export const CSS_util = {
 
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 export function applyStyle(
-  element: HTMLElement,
+  el: HTMLElement,
   ...styles: PartialWithNull<CSSStyleDeclaration>[]
 ) {
-  Object.assign(element.style, ...styles);
+  Object.assign(el.style, ...styles);
 }
 
-export function computedStyle(element: Element) {
-  const style = window.getComputedStyle(element, null);
-  return function get<ToNumber extends boolean = true>(
+export function computedStyle(el: Element) {
+  const style = window.getComputedStyle(el, null);
+  return function get<
+    ToNumber extends boolean = true,
+    ReturnValue = ToNumber extends true ? number : string,
+  >(
     property: string,
     // @ts-ignore
     toNumber: ToNumber = true,
@@ -29,49 +32,44 @@ export function computedStyle(element: Element) {
     const value = style.getPropertyValue(property);
     if (toNumber) {
       const valueNumber = CSS_util.pv(value);
-      return <ToNumber extends true ? number : string>(
-        (isNaN(valueNumber) ? 0 : valueNumber)
-      );
+      return <ReturnValue>(isNaN(valueNumber) ? 0 : valueNumber);
     }
-    return <ToNumber extends true ? number : string>value;
+    return <ReturnValue>value;
   };
 }
 
-export function globalStyle(css: string, defaultInsert = false) {
+export function globalStyle(css: string, defaultMount = false) {
   const style = jsx('style', {
     type: 'text/css',
     __html: css,
   });
-  let inserted = false;
 
-  function insert() {
-    if (!inserted) {
-      inserted = true;
+  let isMounted = false;
+  const mount = () => {
+    if (!isMounted) {
+      isMounted = true;
       append(document.body, style);
     }
-  }
-
-  function remove() {
-    if (inserted) {
-      inserted = false;
+  };
+  const unmount = () => {
+    if (isMounted) {
+      isMounted = false;
       style.remove();
     }
-  }
+  };
 
-  if (defaultInsert) {
-    insert();
-  }
+  if (defaultMount) mount();
 
   return {
-    insert,
-    remove,
+    mount,
+    unmount,
   };
 }
 
-export function addClass(element: HTMLElement, ...classNames: string[]) {
-  element.classList.add(...classNames);
+export function addClass(el: HTMLElement, ...classNames: string[]) {
+  el.classList.add(...classNames);
 }
 
-export function reomveClass(element: HTMLElement, ...classNames: string[]) {
-  element.classList.remove(...classNames);
+export function reomveClass(el: HTMLElement, ...classNames: string[]) {
+  el.classList.remove(...classNames);
 }

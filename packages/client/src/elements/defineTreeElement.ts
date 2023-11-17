@@ -16,7 +16,7 @@ import type { ElementSource, ElementSourceMeta } from '../resolve';
 import { resolveSource } from '../resolve';
 
 export interface HTMLTreeElement extends HTMLElement {
-  open(element: HTMLElement): void;
+  open(el: HTMLElement): void;
   close(): void;
 }
 
@@ -91,7 +91,7 @@ const CSS = postcss`
   font-size: 18px;
   font-weight: 500;
 }
-.element {
+.el {
   font-size: 14px;
 }
 .tree {
@@ -148,15 +148,14 @@ export function defineTreeElement() {
     private popup!: HTMLElement;
     private popupClose!: HTMLElement;
     private popupBody!: HTMLElement;
-    private holdElement?: HTMLElement;
+    private holdEl?: HTMLElement;
 
     constructor() {
       super();
 
-      host({
-        root: this,
-        style: CSS,
-        element: jsx(
+      host(this, {
+        css: CSS,
+        html: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
@@ -216,47 +215,52 @@ export function defineTreeElement() {
       });
     }
 
-    open = (element: HTMLElement) => {
-      overrideStyle.insert();
-      this.render(resolveSource(element, true));
+    open = (el: HTMLElement) => {
+      overrideStyle.mount();
+      this.renderBodyContent(resolveSource(el, true));
       applyStyle(this.root, {
         display: 'block',
       });
     };
 
     close = () => {
-      overrideStyle.remove();
       applyStyle(this.root, {
         display: 'none',
       });
-      this.popupBody.innerHTML = '';
+      this.renderBodyContent();
+      overrideStyle.unmount();
     };
 
-    private setHoldElement = (event: PointerEvent) => {
-      this.holdElement = <HTMLElement>event.target;
+    private setHoldElement = (e: PointerEvent) => {
+      this.holdEl = <HTMLElement>e.target;
     };
 
     // Prevent the display of the component tree by long press, which accidentally triggers the click event
-    private checkHoldElement = (event: PointerEvent) => {
-      return <HTMLElement>event.target === this.holdElement;
+    private checkHoldElement = (e: PointerEvent) => {
+      return <HTMLElement>e.target === this.holdEl;
     };
 
-    private safeClose = (event: PointerEvent) => {
-      if (this.checkHoldElement(event)) {
+    private safeClose = (e: PointerEvent) => {
+      if (this.checkHoldElement(e)) {
         this.close();
       }
     };
 
-    private tryOpenEditor = (event: PointerEvent) => {
-      const element = <HTMLElement>event.target!;
-      const source = <ElementSourceMeta>(<unknown>element.dataset);
-      if (this.checkHoldElement(event) && isStr(source.file)) {
-        openEditor(source, (event) => this.dispatchEvent(event));
+    private tryOpenEditor = (e: PointerEvent) => {
+      const el = <HTMLElement>e.target!;
+      const source = <ElementSourceMeta>(<unknown>el.dataset);
+      if (this.checkHoldElement(e) && isStr(source.file)) {
+        openEditor(source, (e) => this.dispatchEvent(e));
         this.dispatchEvent(new CustomEvent('exit'));
       }
     };
 
-    private render(source: ElementSource) {
+    private renderBodyContent(source?: ElementSource) {
+      // empty
+      if (!source) {
+        return (this.popupBody.innerHTML = '');
+      }
+
       append(
         this.popupBody,
         jsx(
@@ -267,9 +271,9 @@ export function defineTreeElement() {
           jsx(
             'span',
             {
-              className: 'element',
+              className: 'el',
             },
-            `${source.element} in `,
+            `${source.el} in `,
           ),
           `<ComponentTree>`,
         ),
@@ -330,11 +334,7 @@ export function defineTreeElement() {
 
   function createNode(meta: ElementSourceMeta, withFile?: boolean) {
     const { name, file, line = 1, column = 1 } = meta ?? {};
-    const dataset = withFile
-      ? Object.fromEntries(
-          Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
-        )
-      : {};
+    const dataset = withFile ? toDataset(meta) : {};
     return jsx(
       'div',
       {
@@ -353,6 +353,12 @@ export function defineTreeElement() {
             __text: `${file}:${line}:${column}`,
           })
         : null,
+    );
+  }
+
+  function toDataset(meta: ElementSourceMeta) {
+    return Object.fromEntries(
+      Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
     );
   }
 

@@ -23,29 +23,29 @@ export function jsx<T extends HTMLElement>(
   ...children: Children
 ): T;
 export function jsx(type: string, props: Props = {}, ...children: Children) {
-  const element = document.createElement(type);
+  const el = document.createElement(type);
 
-  const { ref, className, style, __html, __text, ...restProps } = props;
+  const { ref, className, style, __html, __text, ...attrs } = props;
   if (className) {
-    addClass(element, ...className.split(' '));
+    addClass(el, ...className.split(' '));
   }
   if (style) {
-    applyStyle(element, style);
+    applyStyle(el, style);
   }
   if (__html) {
-    element.innerHTML = __html;
+    el.innerHTML = __html;
   } else if (__text) {
-    element.innerText = __text;
+    el.innerText = __text;
   }
 
   for (const child of children) {
     if (child !== null) {
-      append(element, isStr(child) ? document.createTextNode(child) : child);
+      append(el, isStr(child) ? document.createTextNode(child) : child);
     }
   }
 
-  applyAttrs(element, restProps);
-  ref?.(element);
+  applyAttrs(el, attrs);
+  ref?.(el);
 
-  return element;
+  return el;
 }

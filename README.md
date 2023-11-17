@@ -7,10 +7,9 @@
 </br>
 <p align="center">
   <a href="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml">
-    <img src="https://github.com/zjxxxxxxxxx/open-editor/actions/workflows/ci.yml/badge.svg" alt="CI">
+    <img alt="GitHub Workflow Status (with event)" src="https://img.shields.io/github/actions/workflow/status/zjxxxxxxxxx/open-editor/ci.yml?style=for-the-badge&logo=github&label=CI">
   </a>
-  <a href="https://opensource.org/licenses/MIT">
-    <img src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor" alt="MIT">
+  <img alt="GitHub" src="https://img.shields.io/github/license/zjxxxxxxxxx/open-editor?style=for-the-badge">
   </a>
 </p>
 <p align="center">

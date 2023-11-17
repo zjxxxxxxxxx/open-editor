@@ -14,7 +14,7 @@ import { resolveSource } from '../resolve';
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeElement?: HTMLElement, style?: RectStyle): void;
+  update(activeEl?: HTMLElement, style?: RectStyle): void;
 }
 
 const CSS = postcss`
@@ -33,10 +33,10 @@ const CSS = postcss`
   pointer-events: none;
   will-change: visibility, top, left;
 }
-.element {
+.el {
   font-size: 12px;
 }
-.component {
+.comp {
   font-size: 14px;
   font-weight: 500;
 }
@@ -53,29 +53,28 @@ export function defineTooltipElement() {
 
   class TooltipElement extends HTMLElement implements HTMLTooltipElement {
     private root!: HTMLElement;
-    private element!: HTMLElement;
-    private component!: HTMLElement;
+    private el!: HTMLElement;
+    private comp!: HTMLElement;
     private file!: HTMLElement;
 
     constructor() {
       super();
 
-      host({
-        root: this,
-        style: CSS,
-        element: jsx(
+      host(this, {
+        css: CSS,
+        html: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
             className: 'root',
           },
           jsx('span', {
-            ref: (el) => (this.element = el),
-            className: 'element',
+            ref: (el) => (this.el = el),
+            className: 'el',
           }),
           jsx('span', {
-            ref: (el) => (this.component = el),
-            className: 'component',
+            ref: (el) => (this.comp = el),
+            className: 'comp',
           }),
           jsx('div', {
             ref: (el) => (this.file = el),
@@ -98,7 +97,7 @@ export function defineTooltipElement() {
       });
     };
 
-    update = (activeElement?: HTMLElement, style?: RectStyle) => {
+    update = (activeEl?: HTMLElement, style?: RectStyle) => {
       // before hidden
       applyStyle(this.root, {
         visibility: 'hidden',
@@ -106,11 +105,11 @@ export function defineTooltipElement() {
         left: CSS_util.px(offset),
       });
 
-      if (activeElement && style) {
-        const { element, meta } = resolveSource(activeElement);
+      if (activeEl && style) {
+        const { el, meta } = resolveSource(activeEl);
         if (meta) {
-          this.element.innerText = `${element} in `;
-          this.component.innerText = `<${meta.name}>`;
+          this.el.innerText = `${el} in `;
+          this.comp.innerText = `<${meta.name}>`;
           this.file.innerText = `${meta.file}:${meta.line}:${meta.column}`;
 
           this.updatePosStyle(style);
@@ -131,27 +130,25 @@ export function defineTooltipElement() {
       } = getHtml();
       const { width: rootW, height: rootH } = getDOMRect(this.root);
       const { top, right, bottom, left } = getSafeArea();
-      const positionStyle: Partial<CSSStyleDeclaration> = {};
 
+      const posStyle: Partial<CSSStyleDeclaration> = {};
       // on top
       if (style.top > rootH + offset * 2 + top) {
-        positionStyle.top = CSS_util.px(style.top - rootH - offset);
+        posStyle.top = CSS_util.px(style.top - rootH - offset);
       }
       // on bottom
       else {
         const maxTop = winH - rootH - offset - bottom;
-        positionStyle.top = CSS_util.px(
-          Math.min(style.bottom + offset, maxTop),
-        );
+        posStyle.top = CSS_util.px(Math.min(style.bottom + offset, maxTop));
       }
 
       const minLeft = offset + left;
       const maxLeft = winW - rootW - offset - right;
-      positionStyle.left = CSS_util.px(
+      posStyle.left = CSS_util.px(
         Math.max(Math.min(style.left, maxLeft), minLeft),
       );
 
-      applyStyle(this.root, positionStyle);
+      applyStyle(this.root, posStyle);
     }
   }
 

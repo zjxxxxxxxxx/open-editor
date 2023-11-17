@@ -3,7 +3,7 @@ import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
 import { getSafeArea } from '../utils/getSafeArea';
 import gps from '../icons/gps';
-import { InternalElements, POS_Y_CACHE_ID } from '../constants';
+import { InternalElements, CACHE_POS_Y_ID } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
@@ -50,10 +50,9 @@ export function defineToggleElement() {
     constructor() {
       super();
 
-      host({
-        root: this,
-        style: CSS,
-        element: jsx(
+      host(this, {
+        css: CSS,
+        html: jsx(
           'div',
           {
             ref: (el) => (this.root = el),
@@ -118,9 +117,9 @@ export function defineToggleElement() {
       off('resize', this.updatePosY_RAF);
     }
 
-    private startDnD = (event: PointerEvent) => {
+    private startDnD = (e: PointerEvent) => {
       this.dndPoint = {
-        pageY: event.pageY,
+        pageY: e.pageY,
         posY: getCachePosY(),
       };
       applyStyle(this.root, {
@@ -139,7 +138,7 @@ export function defineToggleElement() {
     };
 
     private stopDnD = () => {
-      // Modify when the click event is complete
+      // Modify when the click e is complete
       setTimeout(() => (this.dndPoint = undefined));
       applyStyle(this.root, {
         cursor: null,
@@ -156,9 +155,9 @@ export function defineToggleElement() {
       off('pointerup', this.stopDnD);
     };
 
-    private changePosY = (event: PointerEvent) => {
+    private changePosY = (e: PointerEvent) => {
       const { pageY, posY } = this.dndPoint!;
-      const nextPosY = event.pageY - pageY + posY;
+      const nextPosY = e.pageY - pageY + posY;
       setCachePosY(nextPosY);
       this.updatePosY_RAF();
     };
@@ -185,11 +184,11 @@ export function defineToggleElement() {
   }
 
   function getCachePosY() {
-    return +localStorage[POS_Y_CACHE_ID] || 0;
+    return +localStorage[CACHE_POS_Y_ID] || 0;
   }
 
   function setCachePosY(posY: number) {
-    return (localStorage[POS_Y_CACHE_ID] = posY);
+    return (localStorage[CACHE_POS_Y_ID] = posY);
   }
 
   customElements.define(InternalElements.HTML_TOGGLE_ELEMENT, ToggleElement);

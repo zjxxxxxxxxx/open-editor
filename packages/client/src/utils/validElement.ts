@@ -3,15 +3,15 @@ import { InternalElements } from '../constants';
 const internalElementRE = new RegExp(
   `^(${Object.values(InternalElements).join('|')})$`,
 );
-function isInternalElement(element: HTMLElement) {
-  return internalElementRE.test(element.localName);
+function isInternalElement(el: HTMLElement) {
+  return internalElementRE.test(el.localName);
 }
 
 const filterElementRE = /^(html|iframe)$/;
-function isFilterElement(element: HTMLElement) {
-  return filterElementRE.test(element.localName);
+function isFilterElement(el: HTMLElement) {
+  return filterElementRE.test(el.localName);
 }
 
-export function isValidElement(element: HTMLElement) {
-  return !isInternalElement(element) && !isFilterElement(element);
+export function isValidElement(el: HTMLElement) {
+  return !isInternalElement(el) && !isFilterElement(el);
 }

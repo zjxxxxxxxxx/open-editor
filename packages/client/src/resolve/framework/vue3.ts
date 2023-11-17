@@ -14,23 +14,23 @@ export function resolveVue3(
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
 function getResolver() {
   return (resolver ||= createVueResolver({
-    isValid(instance) {
-      return Boolean(instance);
+    isValid(inst) {
+      return Boolean(inst);
     },
-    isValidNext(instance) {
-      return Boolean(instance.parent);
+    isValidNext(inst) {
+      return Boolean(inst.parent);
     },
-    getNext(instance) {
-      return instance.parent;
+    getNext(inst) {
+      return inst.parent;
     },
-    getSource(instance) {
-      return <string>instance.props.__source;
+    getSource(inst) {
+      return <string>inst.props.__source;
     },
-    getFile(instance) {
-      return <string>instance.type.__file;
+    getFile(inst) {
+      return <string>inst.type.__file;
     },
-    getName(instance) {
-      return instance.type.name || instance.type.__name;
+    getName(inst) {
+      return inst.type.name || inst.type.__name;
     },
   }));
 }

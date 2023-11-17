@@ -8,18 +8,18 @@ export interface ReactResolverOptions<T = any> {
   getName(current?: T | null): string | undefined;
 }
 
-export function createReactResolver<T = any>(options: ReactResolverOptions<T>) {
-  const { isValid, getOwner, getSource, getName } = options;
+export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
+  const { isValid, getOwner, getSource, getName } = opts;
 
   return function reactResolver(
-    current: T | null | undefined,
+    cur: T | null | undefined,
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    while (current) {
-      let owner = getOwner(current);
+    while (cur) {
+      let owner = getOwner(cur);
 
-      const source = getSource(current);
+      const source = getSource(cur);
       if (isValidFileName(source?.fileName)) {
         while (!isValid(owner)) {
           if (!owner) return;
@@ -36,7 +36,7 @@ export function createReactResolver<T = any>(options: ReactResolverOptions<T>) {
         if (!deep) return;
       }
 
-      current = owner;
+      cur = owner;
     }
   };
 }

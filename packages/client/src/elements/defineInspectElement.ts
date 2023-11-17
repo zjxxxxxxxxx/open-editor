@@ -1,4 +1,4 @@
-import { applyAttrs, jsx, globalStyle, host } from '../utils/html';
+import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
 import { off, on } from '../utils/event';
 import { isValidElement } from '../utils/validElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
@@ -7,7 +7,7 @@ import {
   onOpenEditorError,
   openEditor,
 } from '../utils/openEditor';
-import { InternalElements, Theme, captureOpts } from '../constants';
+import { InternalElements, Theme, capOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import { HTMLOverlayElement } from './defineOverlayElement';
@@ -36,7 +36,7 @@ const CSS = postcss`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000000000;
+  z-index: var(--z-index-error-overlay);
 }
 `;
 
@@ -53,10 +53,12 @@ export function defineInspectElement() {
   const overrideStyle = globalStyle(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
+    readonly shadowRoot!: ShadowRoot;
+
     private overlay!: HTMLOverlayElement;
     private tree!: HTMLTreeElement;
     private toggle?: HTMLToggleElement;
-    private pointer!: PointerEvent;
+    private pointE!: PointerEvent;
 
     private __active__!: boolean;
     private get active() {
@@ -75,30 +77,28 @@ export function defineInspectElement() {
     constructor() {
       super();
 
-      const options = getOptions();
-      host({
-        root: this,
-        style: [Theme, CSS],
-        element: [
+      const opts = getOptions();
+      host(this, {
+        css: [Theme, CSS],
+        html: [
           jsx<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
             ref: (el) => (this.overlay = el),
           }),
           jsx<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
             ref: (el) => (this.tree = el),
           }),
-          options.displayToggle
+          opts.displayToggle
             ? jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
                 ref: (el) => (this.toggle = el),
-                enable: true,
               })
-            : undefined,
-        ].filter(Boolean) as Element[],
+            : null,
+        ],
       });
     }
 
     connectedCallback() {
-      on('keydown', this.onKeydown, captureOpts);
-      on('pointermove', this.changePointer, captureOpts);
+      on('keydown', this.onKeydown, capOpts);
+      on('pointermove', this.savePointE, capOpts);
       on('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -112,8 +112,8 @@ export function defineInspectElement() {
     }
 
     disconnectedCallback() {
-      off('keydown', this.onKeydown, captureOpts);
-      off('pointermove', this.changePointer, captureOpts);
+      off('keydown', this.onKeydown, capOpts);
+      off('pointermove', this.savePointE, capOpts);
       off('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -128,13 +128,13 @@ export function defineInspectElement() {
       this.cleanupHandlers();
     }
 
-    private changePointer = (event: PointerEvent) => {
-      this.pointer = event;
+    private savePointE = (e: PointerEvent) => {
+      this.pointE = e;
     };
 
-    private onKeydown = (event: KeyboardEvent) => {
+    private onKeydown = (e: KeyboardEvent) => {
       // toggle
-      if (event.altKey && event.metaKey && event.keyCode === 79) {
+      if (e.altKey && e.metaKey && e.keyCode === 79) {
         this.toggleActiveEffect();
       }
     };
@@ -150,14 +150,14 @@ export function defineInspectElement() {
     private setupHandlers() {
       if (!this.active) {
         this.active = true;
-        overrideStyle.insert();
+        overrideStyle.mount();
         this.overlay.open();
 
-        if (this.pointer) {
-          const { x, y } = this.pointer;
-          const initElement = <HTMLElement>document.elementFromPoint(x, y);
-          if (initElement && isValidElement(initElement)) {
-            this.overlay.update(initElement);
+        if (this.pointE) {
+          const { x, y } = this.pointE;
+          const initEl = <HTMLElement>document.elementFromPoint(x, y);
+          if (initEl && isValidElement(initEl)) {
+            this.overlay.update(initEl);
           }
         }
 
@@ -175,27 +175,27 @@ export function defineInspectElement() {
     private cleanupHandlers = () => {
       if (this.active) {
         this.active = false;
-        overrideStyle.remove();
+        overrideStyle.unmount();
         this.overlay.close();
         this.tree.close();
         this.cleanupListenersOnWindow();
       }
     };
 
-    private openEditor = (element: HTMLElement) => {
-      const { meta } = resolveSource(element);
+    private openEditor = (el: HTMLElement) => {
+      const { meta } = resolveSource(el);
       if (!meta) {
         console.error(Error('@open-editor/client: file not found.'));
         return this.showErrorOverlay();
       }
-      openEditor(meta, (event) => this.dispatchEvent(event));
+      openEditor(meta, (e) => this.dispatchEvent(e));
     };
 
     private showErrorOverlay = () => {
       const errorOverlay = jsx('div', {
         className: 'error-overlay',
       });
-      const animation = errorOverlay.animate(
+      const ani = errorOverlay.animate(
         [
           {},
           {
@@ -209,8 +209,10 @@ export function defineInspectElement() {
           easing: 'ease-out',
         },
       );
-      animation.onfinish = () => errorOverlay.remove();
-      this.overlay.parentNode!.append(errorOverlay);
+      on('finish', () => errorOverlay.remove(), {
+        target: ani,
+      });
+      append(this.shadowRoot, errorOverlay);
     };
   }
 
