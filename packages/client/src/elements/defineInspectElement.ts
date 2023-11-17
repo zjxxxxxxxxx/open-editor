@@ -7,7 +7,7 @@ import {
   onOpenEditorError,
   openEditor,
 } from '../utils/openEditor';
-import { InternalElements, Theme, captureOpts } from '../constants';
+import { InternalElements, Theme, capOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import { HTMLOverlayElement } from './defineOverlayElement';
@@ -58,7 +58,7 @@ export function defineInspectElement() {
     private overlay!: HTMLOverlayElement;
     private tree!: HTMLTreeElement;
     private toggle?: HTMLToggleElement;
-    private pointEvt!: PointerEvent;
+    private pointE!: PointerEvent;
 
     private __active__!: boolean;
     private get active() {
@@ -77,18 +77,17 @@ export function defineInspectElement() {
     constructor() {
       super();
 
-      const options = getOptions();
-      host({
-        root: this,
-        style: [Theme, CSS],
-        element: [
+      const opts = getOptions();
+      host(this, {
+        css: [Theme, CSS],
+        html: [
           jsx<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
             ref: (el) => (this.overlay = el),
           }),
           jsx<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
             ref: (el) => (this.tree = el),
           }),
-          options.displayToggle
+          opts.displayToggle
             ? jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
                 ref: (el) => (this.toggle = el),
               })
@@ -98,8 +97,8 @@ export function defineInspectElement() {
     }
 
     connectedCallback() {
-      on('keydown', this.onKeydown, captureOpts);
-      on('pointermove', this.cachePointEvt, captureOpts);
+      on('keydown', this.onKeydown, capOpts);
+      on('pointermove', this.savePointE, capOpts);
       on('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -113,8 +112,8 @@ export function defineInspectElement() {
     }
 
     disconnectedCallback() {
-      off('keydown', this.onKeydown, captureOpts);
-      off('pointermove', this.cachePointEvt, captureOpts);
+      off('keydown', this.onKeydown, capOpts);
+      off('pointermove', this.savePointE, capOpts);
       off('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -129,13 +128,13 @@ export function defineInspectElement() {
       this.cleanupHandlers();
     }
 
-    private cachePointEvt = (event: PointerEvent) => {
-      this.pointEvt = event;
+    private savePointE = (e: PointerEvent) => {
+      this.pointE = e;
     };
 
-    private onKeydown = (event: KeyboardEvent) => {
+    private onKeydown = (e: KeyboardEvent) => {
       // toggle
-      if (event.altKey && event.metaKey && event.keyCode === 79) {
+      if (e.altKey && e.metaKey && e.keyCode === 79) {
         this.toggleActiveEffect();
       }
     };
@@ -154,11 +153,11 @@ export function defineInspectElement() {
         overrideStyle.mount();
         this.overlay.open();
 
-        if (this.pointEvt) {
-          const { x, y } = this.pointEvt;
-          const initElement = <HTMLElement>document.elementFromPoint(x, y);
-          if (initElement && isValidElement(initElement)) {
-            this.overlay.update(initElement);
+        if (this.pointE) {
+          const { x, y } = this.pointE;
+          const initEl = <HTMLElement>document.elementFromPoint(x, y);
+          if (initEl && isValidElement(initEl)) {
+            this.overlay.update(initEl);
           }
         }
 
@@ -183,13 +182,13 @@ export function defineInspectElement() {
       }
     };
 
-    private openEditor = (element: HTMLElement) => {
-      const { meta } = resolveSource(element);
+    private openEditor = (el: HTMLElement) => {
+      const { meta } = resolveSource(el);
       if (!meta) {
         console.error(Error('@open-editor/client: file not found.'));
         return this.showErrorOverlay();
       }
-      openEditor(meta, (event) => this.dispatchEvent(event));
+      openEditor(meta, (e) => this.dispatchEvent(e));
     };
 
     private showErrorOverlay = () => {

@@ -1,152 +1,149 @@
-import { captureOpts } from '../constants';
+import { capOpts } from '../constants';
 import { applyAttrs } from './html';
 import { off, on } from './event';
 import { isValidElement } from './validElement';
 
 export interface SetupHandlersOptions {
-  onChangeElement(element?: HTMLElement): void;
-  onOpenEditor(element: HTMLElement): void;
-  onOpenTree(element: HTMLElement): void;
+  onChangeElement(el?: HTMLElement): void;
+  onOpenEditor(el: HTMLElement): void;
+  onOpenTree(el: HTMLElement): void;
   onExitInspect(): void;
 }
 
-export function setupListenersOnWindow(options: SetupHandlersOptions) {
-  const onChangeElement = wrapHoldElementRestoreDisabled(
-    options.onChangeElement,
-  );
-  const onOpenEditor = wrapHoldElementRestoreDisabled(options.onOpenEditor);
-  const onOpenTree = wrapHoldElementRestoreDisabled(options.onOpenTree);
-  const onExitInspect = wrapHoldElementRestoreDisabled(options.onExitInspect);
+export function setupListenersOnWindow(opts: SetupHandlersOptions) {
+  const onChangeElement = wrapHoldElementRestoreDisabled(opts.onChangeElement);
+  const onOpenEditor = wrapHoldElementRestoreDisabled(opts.onOpenEditor);
+  const onOpenTree = wrapHoldElementRestoreDisabled(opts.onOpenTree);
+  const onExitInspect = wrapHoldElementRestoreDisabled(opts.onExitInspect);
 
   function registerEventListeners() {
     on('click', onClick, {
-      ...captureOpts,
+      ...capOpts,
       target: document,
     });
 
-    on('mousedown', onSilence, captureOpts);
-    on('mouseenter', onSilence, captureOpts);
-    on('mouseleave', onSilence, captureOpts);
-    on('mousemove', onSilence, captureOpts);
-    on('mouseout', onSilence, captureOpts);
-    on('mouseover', onSilence, captureOpts);
-    on('mouseup', onSilence, captureOpts);
+    on('mousedown', onSilence, capOpts);
+    on('mouseenter', onSilence, capOpts);
+    on('mouseleave', onSilence, capOpts);
+    on('mousemove', onSilence, capOpts);
+    on('mouseout', onSilence, capOpts);
+    on('mouseover', onSilence, capOpts);
+    on('mouseup', onSilence, capOpts);
 
-    on('pointercancel', onSilence, captureOpts);
-    on('pointerdown', onPointerDown, captureOpts);
-    on('pointerenter', onSilence, captureOpts);
-    on('pointerleave', onSilence, captureOpts);
-    on('pointermove', onSilence, captureOpts);
-    on('pointerout', onSilence, captureOpts);
-    on('pointerover', onPointerOver, captureOpts);
-    on('pointerup', onSilence, captureOpts);
+    on('pointercancel', onSilence, capOpts);
+    on('pointerdown', onPointerDown, capOpts);
+    on('pointerenter', onSilence, capOpts);
+    on('pointerleave', onSilence, capOpts);
+    on('pointermove', onSilence, capOpts);
+    on('pointerout', onSilence, capOpts);
+    on('pointerover', onPointerOver, capOpts);
+    on('pointerup', onSilence, capOpts);
 
-    on('touchstart', onSilence, captureOpts);
-    on('touchend', onSilence, captureOpts);
-    on('touchcancel', onSilence, captureOpts);
-    on('touchmove', onTouchMove, captureOpts);
+    on('touchstart', onSilence, capOpts);
+    on('touchend', onSilence, capOpts);
+    on('touchcancel', onSilence, capOpts);
+    on('touchmove', onTouchMove, capOpts);
 
-    on('keydown', onKeyDown, captureOpts);
-    on('contextmenu', onContextMenu, captureOpts);
-    on('longpress', onLongPress, captureOpts);
+    on('keydown', onKeyDown, capOpts);
+    on('contextmenu', onContextMenu, capOpts);
+    on('longpress', onLongPress, capOpts);
   }
 
   function removeEventListeners() {
     off('click', onClick, {
-      ...captureOpts,
+      ...capOpts,
       target: document,
     });
 
-    off('mousedown', onSilence, captureOpts);
-    off('mouseenter', onSilence, captureOpts);
-    off('mouseleave', onSilence, captureOpts);
-    off('mousemove', onSilence, captureOpts);
-    off('mouseout', onSilence, captureOpts);
-    off('mouseover', onSilence, captureOpts);
-    off('mouseup', onSilence, captureOpts);
+    off('mousedown', onSilence, capOpts);
+    off('mouseenter', onSilence, capOpts);
+    off('mouseleave', onSilence, capOpts);
+    off('mousemove', onSilence, capOpts);
+    off('mouseout', onSilence, capOpts);
+    off('mouseover', onSilence, capOpts);
+    off('mouseup', onSilence, capOpts);
 
-    off('pointercancel', onSilence, captureOpts);
-    off('pointerdown', onPointerDown, captureOpts);
-    off('pointerenter', onSilence, captureOpts);
-    off('pointerleave', onSilence, captureOpts);
-    off('pointermove', onSilence, captureOpts);
-    off('pointerout', onSilence, captureOpts);
-    off('pointerover', onPointerOver, captureOpts);
-    off('pointerup', onSilence, captureOpts);
+    off('pointercancel', onSilence, capOpts);
+    off('pointerdown', onPointerDown, capOpts);
+    off('pointerenter', onSilence, capOpts);
+    off('pointerleave', onSilence, capOpts);
+    off('pointermove', onSilence, capOpts);
+    off('pointerout', onSilence, capOpts);
+    off('pointerover', onPointerOver, capOpts);
+    off('pointerup', onSilence, capOpts);
 
-    off('touchstart', onSilence, captureOpts);
-    off('touchend', onSilence, captureOpts);
-    off('touchcancel', onSilence, captureOpts);
-    off('touchmove', onTouchMove, captureOpts);
+    off('touchstart', onSilence, capOpts);
+    off('touchend', onSilence, capOpts);
+    off('touchcancel', onSilence, capOpts);
+    off('touchmove', onTouchMove, capOpts);
 
-    off('keydown', onKeyDown, captureOpts);
-    off('contextmenu', onContextMenu, captureOpts);
-    off('longpress', onLongPress, captureOpts);
+    off('keydown', onKeyDown, capOpts);
+    off('contextmenu', onContextMenu, capOpts);
+    off('longpress', onLongPress, capOpts);
   }
 
-  function onPointerDown(event: PointerEvent) {
-    onSilence(event);
-    onHoldElementUnlockDisabled(event);
+  function onPointerDown(e: PointerEvent) {
+    onSilence(e);
+    onHoldElementUnlockDisabled(e);
   }
 
-  function onClick(event: PointerEvent) {
-    onSilence(event);
+  function onClick(e: PointerEvent) {
+    onSilence(e);
 
-    const element = <HTMLElement>event.target;
-    if (element === holdElement) {
-      if (event.metaKey) {
-        onOpenTree(element);
+    const el = <HTMLElement>e.target;
+    if (el === holdEl) {
+      if (e.metaKey) {
+        onOpenTree(el);
         onChangeElement();
       } else {
-        onOpenEditor(element);
+        onOpenEditor(el);
         onExitInspect();
       }
     }
   }
 
-  function onPointerOver(event: PointerEvent) {
-    onSilence(event);
+  function onPointerOver(e: PointerEvent) {
+    onSilence(e);
 
-    const element = <HTMLElement>event.target;
-    const changedElement = isValidElement(element) ? element : undefined;
-    onChangeElement(changedElement);
+    const el = <HTMLElement>e.target;
+    const changedEl = isValidElement(el) ? el : undefined;
+    onChangeElement(changedEl);
   }
 
-  let lastTouchElement: HTMLElement;
-  function onTouchMove(event: TouchEvent) {
-    onSilence(event);
+  let lastTouchEl: HTMLElement | undefined;
+  function onTouchMove(e: TouchEvent) {
+    onSilence(e);
 
-    const { clientX, clientY } = event.touches[0];
-    const element = <HTMLElement>document.elementFromPoint(clientX, clientY);
-    if (element && element !== lastTouchElement) {
-      lastTouchElement = element;
-      const changedElement = isValidElement(element) ? element : undefined;
-      onChangeElement(changedElement);
+    const { clientX, clientY } = e.touches[0];
+    const el = <HTMLElement>document.elementFromPoint(clientX, clientY);
+    if (el && el !== lastTouchEl) {
+      lastTouchEl = isValidElement(el) ? el : undefined;
+      onChangeElement(lastTouchEl);
     }
   }
 
   // esc exit.
-  function onKeyDown(event: KeyboardEvent) {
-    onSilence(event, true);
+  function onKeyDown(e: KeyboardEvent) {
+    onSilence(e, true);
 
-    if (event.key === 'Escape') {
+    if (e.key === 'Escape') {
       onExitInspect();
     }
   }
 
   // right-click exit.
-  function onContextMenu(event: PointerEvent) {
-    onSilence(event, true);
-    if (event.pointerType === 'mouse') {
+  function onContextMenu(e: PointerEvent) {
+    onSilence(e, true);
+    if (e.pointerType === 'mouse') {
       onExitInspect();
     }
   }
 
-  function onLongPress(event: PointerEvent) {
-    const element = <HTMLElement>event.target;
-    if (isValidElement(element)) {
+  function onLongPress(e: PointerEvent) {
+    const el = <HTMLElement>e.target;
+    if (isValidElement(el)) {
       onChangeElement();
-      onOpenTree(element);
+      onOpenTree(el);
     }
   }
 
@@ -154,48 +151,48 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
   return removeEventListeners;
 }
 
-function onSilence(event: Event, all?: boolean) {
-  const element = <HTMLElement>event.target;
-  if (all || isValidElement(element)) {
+function onSilence(e: Event, all?: boolean) {
+  const el = <HTMLElement>e.target;
+  if (all || isValidElement(el)) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // See https://www.chromestatus.com/feature/5093566007214080.
-    if (!(<any>event).type.startsWith('touch')) {
-      event.preventDefault();
+    if (!(<any>e).type.startsWith('touch')) {
+      e.preventDefault();
     }
-    event.stopPropagation();
+    e.stopPropagation();
   }
 }
 
 const unlockID = '__unlock_disabled__';
-let holdElement: HTMLButtonElement | null = null;
+let holdEl: HTMLButtonElement | null = null;
 
-function onHoldElementUnlockDisabled(event: Event) {
-  const element = <HTMLButtonElement>event.target;
-  if (isValidElement(element)) {
+function onHoldElementUnlockDisabled(e: Event) {
+  const el = <HTMLButtonElement>e.target;
+  if (isValidElement(el)) {
     // <div disabled/> => <div __unlock_disabled__/>
-    if (element.disabled) {
-      element.disabled = false;
-      applyAttrs(element, {
+    if (el.disabled) {
+      el.disabled = false;
+      applyAttrs(el, {
         [unlockID]: '',
       });
     }
-    holdElement = element;
+    holdEl = el;
   }
 }
 
 function onHoldElementRestoreDisabled() {
-  if (holdElement) {
+  if (holdEl) {
     // <div __unlock_disabled__/> => <div disabled/>
     if (
       // __unlock_disabled__ === ''
-      holdElement.getAttribute(unlockID) != null
+      holdEl.getAttribute(unlockID) != null
     ) {
-      holdElement.disabled = true;
-      applyAttrs(holdElement, {
+      holdEl.disabled = true;
+      applyAttrs(holdEl, {
         [unlockID]: null,
       });
     }
-    holdElement = null;
+    holdEl = null;
   }
 }
 

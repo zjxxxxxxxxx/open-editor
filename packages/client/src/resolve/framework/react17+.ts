@@ -37,11 +37,11 @@ function getResolver() {
     },
     getName(owner) {
       if (owner) {
-        const component = isFn(owner.type)
+        const comp = isFn(owner.type)
           ? owner.type
           : // React.forwardRef(Component)
             owner.type.render;
-        return component?.name || component?.displayName;
+        return comp?.name || comp?.displayName;
       }
     },
   }));

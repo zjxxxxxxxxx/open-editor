@@ -31,8 +31,8 @@ export const Theme = postcss`
 
 export const CLIENT = typeof window !== 'undefined';
 
-export const captureOpts = {
+export const capOpts = {
   capture: true,
 };
 
-export const POS_Y_CACHE_ID = '__open_editor_toggle_pos_y__';
+export const CACHE_POS_Y_ID = '__open_editor_toggle_pos_y__';

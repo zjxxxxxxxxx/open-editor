@@ -12,16 +12,16 @@ interface VueResolverOptions<T = any> {
   getName(instance: T): string | undefined;
 }
 
-export function createVueResolver<T = any>(options: VueResolverOptions<T>) {
+export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   return function vueResolver(
     debug: ResolveDebug<T>,
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    if (isSource(debug, options)) {
-      resolveSource(debug, tree, deep, options);
+    if (isSource(debug, opts)) {
+      resolveSource(debug, tree, deep, opts);
     } else {
-      resolveInstance(debug.value, tree, deep, options);
+      resolveInstance(debug.value, tree, deep, opts);
     }
   };
 }
@@ -30,37 +30,36 @@ function resolveSource<T = any>(
   debug: ResolveDebug<T>,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
-  options: VueResolverOptions,
+  opts: VueResolverOptions,
 ) {
-  const { isValid, isValidNext, getNext, getSource, getFile, getName } =
-    options;
+  const { isValid, isValidNext, getNext, getSource, getFile, getName } = opts;
 
-  let [instance, source] = getAnchor(debug, options);
+  let [inst, source] = getAnchor(debug, opts);
 
-  while (isValid(instance)) {
-    if (isValidNext(instance)) {
-      const __source = getSource(instance);
-      const __file = getFile(instance);
+  while (isValid(inst)) {
+    if (isValidNext(inst)) {
+      const __source = getSource(inst);
+      const __file = getFile(inst);
       if (
         isStr(__source) &&
         isValidFileName(__file) &&
         ensureFileName(__file) === source.file
       ) {
-        push(instance);
+        push(inst);
 
         if (!deep) return;
         source = parseSource(__source);
       }
     } else {
-      push(instance);
+      push(inst);
     }
 
-    instance = getNext(instance);
+    inst = getNext(inst);
   }
 
-  function push(instance: T) {
+  function push(inst: T) {
     tree.push({
-      name: getName(instance) ?? getNameByFile(getFile(instance)),
+      name: getName(inst) ?? getNameByFile(getFile(inst)),
       ...source,
     });
   }
@@ -68,59 +67,59 @@ function resolveSource<T = any>(
 
 function getAnchor<T = any>(
   debug: ResolveDebug,
-  options: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
+  opts: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
 ) {
-  const { isValidNext, getSource, getNext } = options;
+  const { isValidNext, getSource, getNext } = opts;
 
-  let instance = debug.value;
-  let element = debug.originalElement as HTMLElement & Record<string, any>;
+  let inst = debug.value;
+  let el = debug.originalEl as HTMLElement & Record<string, any>;
   let __source: string | null | undefined;
 
-  // find the first element with __source
-  while (element && !isStr((__source = element.getAttribute('__source')))) {
-    element = element.parentElement!;
+  // find the first el with __source
+  while (el && !isStr((__source = el.getAttribute('__source')))) {
+    el = el.parentElement!;
   }
-  // if the element exists and belongs to the component, the result is returned
-  if (element) {
-    if (element[debug.key] ? element[debug.key] === instance : true) {
-      return <const>[instance, parseSource(__source!)];
+  // if the el exists and belongs to the component, the result is returned
+  if (el) {
+    if (el[debug.key] ? el[debug.key] === inst : true) {
+      return <const>[inst, parseSource(__source!)];
     }
   }
   // the root component returns the result directly
-  if (isStr(__source) && !isValidNext(instance)) {
-    return <const>[instance, parseSource(__source)];
+  if (isStr(__source) && !isValidNext(inst)) {
+    return <const>[inst, parseSource(__source)];
   }
   // try to get the result from the component
-  while (instance) {
-    if (isStr((__source = getSource(instance)))) {
-      return <const>[getNext(instance), parseSource(__source)];
+  while (inst) {
+    if (isStr((__source = getSource(inst)))) {
+      return <const>[getNext(inst), parseSource(__source)];
     }
-    instance = getNext(instance);
+    inst = getNext(inst);
   }
 
   return [];
 }
 
 function resolveInstance<T = any>(
-  instance: T,
+  inst: T,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
-  options: VueResolverOptions,
+  opts: VueResolverOptions,
 ) {
-  const { isValid, getNext, getFile, getName } = options;
+  const { isValid, getNext, getFile, getName } = opts;
 
-  while (isValid(instance)) {
-    const __file = getFile(instance);
+  while (isValid(inst)) {
+    const __file = getFile(inst);
     if (isValidFileName(__file)) {
       tree.push({
-        name: getName(instance) ?? getNameByFile(__file),
+        name: getName(inst) ?? getNameByFile(__file),
         file: __file,
       });
 
       if (!deep) return;
     }
 
-    instance = getNext(instance);
+    inst = getNext(inst);
   }
 }
 
@@ -136,26 +135,26 @@ function parseSource(__source: string) {
 let isSourceResult: boolean | undefined;
 function isSource<T = any>(
   debug: ResolveDebug,
-  options: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
+  opts: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
 ) {
-  return (isSourceResult ??= getIsSourceResult(debug, options));
+  return (isSourceResult ??= getIsSourceResult(debug, opts));
 }
 
 function getIsSourceResult<T = any>(
   debug: ResolveDebug,
-  options: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
+  opts: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
 ) {
   if (document.querySelector('*[__source]')) {
     return true;
   }
 
-  const { getNext, getSource } = options;
-  let { value: instance } = debug;
-  while (instance) {
-    if (isStr(getSource(instance))) {
+  const { getNext, getSource } = opts;
+  let { value: inst } = debug;
+  while (inst) {
+    if (isStr(getSource(inst))) {
       return true;
     }
-    instance = getNext(instance);
+    inst = getNext(inst);
   }
 
   return false;

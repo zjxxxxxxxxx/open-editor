@@ -17,27 +17,27 @@ export function resolveVue2(
 let resolver: ReturnType<typeof createVueResolver<any>>;
 function getResolver() {
   return (resolver ||= createVueResolver({
-    isValid(instance) {
-      return Boolean(instance?.$vnode);
+    isValid(inst) {
+      return Boolean(inst?.$vnode);
     },
-    isValidNext(instance) {
-      return Boolean(instance.$parent?.$vnode);
+    isValidNext(inst) {
+      return Boolean(inst.$parent?.$vnode);
     },
-    getNext(instance) {
-      return instance.$parent;
+    getNext(inst) {
+      return inst.$parent;
     },
-    getSource(instance) {
-      return instance.$props?.__source;
+    getSource(inst) {
+      return inst.$props?.__source;
     },
-    getFile(instance) {
-      return getCtor(instance).__file || getCtor(instance).options?.__file;
+    getFile(inst) {
+      return getCtor(inst).__file || getCtor(inst).options?.__file;
     },
-    getName(instance) {
-      return getCtor(instance).options?.name;
+    getName(inst) {
+      return getCtor(inst).options?.name;
     },
   }));
 
-  function getCtor(instance: any) {
-    return instance.$vnode.componentOptions.Ctor;
+  function getCtor(inst: any) {
+    return inst.$vnode.componentOptions.Ctor;
   }
 }

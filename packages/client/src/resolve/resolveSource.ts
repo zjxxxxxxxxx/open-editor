@@ -12,21 +12,18 @@ export interface ElementSourceMeta {
   column: number;
 }
 export interface ElementSource {
-  element: string;
+  el: string;
   meta?: ElementSourceMeta;
   tree: ElementSourceMeta[];
 }
 
-export function resolveSource(
-  element: HTMLElement,
-  deep?: boolean,
-): ElementSource {
+export function resolveSource(el: HTMLElement, deep?: boolean): ElementSource {
   const source: ElementSource = {
-    element: element.localName,
+    el: el.localName,
     tree: [],
   };
 
-  const debug = resolveDebug(element);
+  const debug = resolveDebug(el);
   if (debug) {
     if (debug.key.startsWith('__reactFiber')) {
       resolveReact17Plus(debug, source.tree, deep);

@@ -13,14 +13,14 @@ export const CSS_util = {
 
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 export function applyStyle(
-  element: HTMLElement,
+  el: HTMLElement,
   ...styles: PartialWithNull<CSSStyleDeclaration>[]
 ) {
-  Object.assign(element.style, ...styles);
+  Object.assign(el.style, ...styles);
 }
 
-export function computedStyle(element: Element) {
-  const style = window.getComputedStyle(element, null);
+export function computedStyle(el: Element) {
+  const style = window.getComputedStyle(el, null);
   return function get<
     ToNumber extends boolean = true,
     ReturnValue = ToNumber extends true ? number : string,
@@ -58,9 +58,7 @@ export function globalStyle(css: string, defaultMount = false) {
     }
   };
 
-  if (defaultMount) {
-    mount();
-  }
+  if (defaultMount) mount();
 
   return {
     mount,
@@ -68,10 +66,10 @@ export function globalStyle(css: string, defaultMount = false) {
   };
 }
 
-export function addClass(element: HTMLElement, ...classNames: string[]) {
-  element.classList.add(...classNames);
+export function addClass(el: HTMLElement, ...classNames: string[]) {
+  el.classList.add(...classNames);
 }
 
-export function reomveClass(element: HTMLElement, ...classNames: string[]) {
-  element.classList.remove(...classNames);
+export function reomveClass(el: HTMLElement, ...classNames: string[]) {
+  el.classList.remove(...classNames);
 }

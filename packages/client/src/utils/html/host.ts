@@ -3,27 +3,26 @@ import { append } from './dom';
 import { Children, jsx } from './jsx';
 
 export interface Options {
-  root: HTMLElement;
-  style: string | string[];
-  element: Children[0] | Children;
+  css: string | string[];
+  html: Children[0] | Children;
 }
 
-export function host(options: Options) {
-  if (!isArr(options.style)) options.style = [options.style];
-  if (!isArr(options.element)) options.element = [options.element];
+export function host(root: HTMLElement, opts: Options) {
+  if (!isArr(opts.css)) opts.css = [opts.css];
+  if (!isArr(opts.html)) opts.html = [opts.html];
 
-  const shadowRoot = options.root.attachShadow({ mode: 'closed' });
-  Object.defineProperty(options.root, 'shadowRoot', {
+  const shadow = root.attachShadow({ mode: 'closed' });
+  Object.defineProperty(root, 'shadowRoot', {
     get() {
-      return shadowRoot;
+      return shadow;
     },
   });
 
   const style = jsx('style', {
     type: 'text/css',
-    __html: options.style.join(''),
+    __html: opts.css.join(''),
   });
-  const { children } = jsx('template', undefined, ...options.element);
+  const { children } = jsx('template', undefined, ...opts.html);
   // @ts-ignore
-  append(shadowRoot, style, ...children);
+  append(shadow, style, ...children);
 }
