@@ -44,7 +44,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     on('touchstart', onSilence, captureOpts);
     on('touchend', onSilence, captureOpts);
     on('touchcancel', onSilence, captureOpts);
-    on('touchmove', onSilence, captureOpts);
+    on('touchmove', onTouchMove, captureOpts);
 
     on('keydown', onKeyDown, captureOpts);
     on('contextmenu', onContextMenu, captureOpts);
@@ -77,7 +77,7 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     off('touchstart', onSilence, captureOpts);
     off('touchend', onSilence, captureOpts);
     off('touchcancel', onSilence, captureOpts);
-    off('touchmove', onSilence, captureOpts);
+    off('touchmove', onTouchMove, captureOpts);
 
     off('keydown', onKeyDown, captureOpts);
     off('contextmenu', onContextMenu, captureOpts);
@@ -110,6 +110,19 @@ export function setupListenersOnWindow(options: SetupHandlersOptions) {
     const element = <HTMLElement>event.target;
     const changedElement = isValidElement(element) ? element : undefined;
     onChangeElement(changedElement);
+  }
+
+  let lastTouchElement: HTMLElement;
+  function onTouchMove(event: TouchEvent) {
+    onSilence(event);
+
+    const { clientX, clientY } = event.touches[0];
+    const element = <HTMLElement>document.elementFromPoint(clientX, clientY);
+    if (element && element !== lastTouchElement) {
+      lastTouchElement = element;
+      const changedElement = isValidElement(element) ? element : undefined;
+      onChangeElement(changedElement);
+    }
   }
 
   // esc exit.
