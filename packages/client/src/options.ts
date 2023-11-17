@@ -17,15 +17,15 @@ export interface Options {
   rootDir: string;
 }
 
-let options: Options;
+let opts: Options;
 
-export function setOptions(opts: Options) {
-  options = opts;
+export function setOptions(userOpts: Options) {
+  opts = userOpts;
 }
 
 export function getOptions() {
-  if (!options) {
+  if (!opts) {
     throw Error('@open-editor/client: options missing.');
   }
-  return options;
+  return opts;
 }

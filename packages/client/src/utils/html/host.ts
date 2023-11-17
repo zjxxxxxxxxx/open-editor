@@ -1,23 +1,28 @@
 import { isArr } from '@open-editor/shared';
 import { append } from './dom';
-import { jsx } from './jsx';
+import { Children, jsx } from './jsx';
 
 export interface Options {
-  root: Element;
-  style: string | string[];
-  element: Element | Element[];
+  css: string | string[];
+  html: Children[0] | Children;
 }
 
-export function host(options: Options) {
-  if (!isArr(options.style)) options.style = [options.style];
-  if (!isArr(options.element)) options.element = [options.element];
+export function host(root: HTMLElement, opts: Options) {
+  if (!isArr(opts.css)) opts.css = [opts.css];
+  if (!isArr(opts.html)) opts.html = [opts.html];
 
-  append(
-    options.root.attachShadow({ mode: 'closed' }),
-    jsx('style', {
-      type: 'text/css',
-      __html: options.style.join(''),
-    }),
-    ...options.element,
-  );
+  const shadow = root.attachShadow({ mode: 'closed' });
+  Object.defineProperty(root, 'shadowRoot', {
+    get() {
+      return shadow;
+    },
+  });
+
+  const style = jsx('style', {
+    type: 'text/css',
+    __html: opts.css.join(''),
+  });
+  const { children } = jsx('template', undefined, ...opts.html);
+  // @ts-ignore
+  append(shadow, style, ...children);
 }

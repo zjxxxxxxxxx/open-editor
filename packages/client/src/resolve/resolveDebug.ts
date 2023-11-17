@@ -1,8 +1,8 @@
 import { isValidElement } from '../utils/validElement';
 
 export type ResolveDebug<T = any> = {
-  originalElement: HTMLElement;
-  element: HTMLElement;
+  originalEl: HTMLElement;
+  el: HTMLElement;
   key: string;
   value?: T | null;
 };
@@ -18,45 +18,45 @@ export const vue3Key = '__vueParentComponent';
 export const vue2Key = '__vue__';
 
 // support parsing single project multiple frameworks
-export function resolveDebug(element: HTMLElement): ResolveDebug | undefined {
-  const originalElement = element;
-  while (isValidElement(element)) {
-    const key = findKey(element);
+export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
+  const originalEl = el;
+  while (isValidElement(el)) {
+    const key = findKey(el);
     if (key) {
-      const value = (<any>element)[key];
-      if (value) return { originalElement, element, key, value };
+      const value = (<any>el)[key];
+      if (value) return { originalEl, el, key, value };
     }
-    element = element.parentElement!;
+    el = el.parentElement!;
   }
 }
 
-function findKey(element: HTMLElement) {
+function findKey(el: HTMLElement) {
   // vue3+
-  if (vue3Key in element) {
+  if (vue3Key in el) {
     return vue3Key;
   }
   // vue2+
-  else if (vue2Key in element) {
+  else if (vue2Key in el) {
     return vue2Key;
   }
 
   // react17+
   if (!react17PlusKey) {
-    react17PlusKey = findStartsWith(element, react17PlusKeyStarts);
+    react17PlusKey = findStartsWith(el, react17PlusKeyStarts);
   }
-  if (react17PlusKey && react17PlusKey in element) {
+  if (react17PlusKey && react17PlusKey in el) {
     return react17PlusKey;
   }
 
   // react15+
   if (!react15PlusKey) {
-    react15PlusKey = findStartsWith(element, react15PlusKeyStarts);
+    react15PlusKey = findStartsWith(el, react15PlusKeyStarts);
   }
-  if (react15PlusKey && react15PlusKey in element) {
+  if (react15PlusKey && react15PlusKey in el) {
     return react15PlusKey;
   }
 }
 
-function findStartsWith(element: HTMLElement, starts: string) {
-  return Object.keys(element).find((key) => key.startsWith(starts));
+function findStartsWith(el: HTMLElement, starts: string) {
+  return Object.keys(el).find((key) => key.startsWith(starts));
 }
