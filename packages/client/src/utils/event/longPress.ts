@@ -106,9 +106,7 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
     if (e.button === 0 && e.buttons === 1) {
       waitTimer = setTimeout(() => {
         Object.defineProperty(e, 'type', {
-          get() {
-            return 'longpress';
-          },
+          value: 'longpress',
         });
 
         // Give the user a vibration prompt when entering the draggable state.

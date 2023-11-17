@@ -75,7 +75,6 @@ const CSS = postcss`
   --w: calc(100vw - 148px);
   --h: calc(100vh - 148px);
 
-  padding-right: 12px;
   min-width: 220px;
   max-width: min(var(--w), 500px);
   max-height: min(var(--h), 600px);
@@ -96,11 +95,11 @@ const CSS = postcss`
 }
 .tree {
   position: relative;
-  padding-left: 12px;
+  padding-left: 9px;
 }
 .line {
   position: absolute;
-  left: 13px;
+  left: 10px;
   top: 22px;
   opacity: 0.2;
   width: 1px;
