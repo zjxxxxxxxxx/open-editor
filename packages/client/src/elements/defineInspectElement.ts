@@ -1,4 +1,4 @@
-import { applyAttrs, jsx, globalStyle, host } from '../utils/html';
+import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
 import { off, on } from '../utils/event';
 import { isValidElement } from '../utils/validElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
@@ -36,7 +36,7 @@ const CSS = postcss`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000000000;
+  z-index: var(--z-index-error-overlay);
 }
 `;
 
@@ -53,10 +53,12 @@ export function defineInspectElement() {
   const overrideStyle = globalStyle(overrideCSS);
 
   class InspectElement extends HTMLElement implements HTMLInspectElement {
+    readonly shadowRoot!: ShadowRoot;
+
     private overlay!: HTMLOverlayElement;
     private tree!: HTMLTreeElement;
     private toggle?: HTMLToggleElement;
-    private pointer!: PointerEvent;
+    private pointEvt!: PointerEvent;
 
     private __active__!: boolean;
     private get active() {
@@ -89,16 +91,15 @@ export function defineInspectElement() {
           options.displayToggle
             ? jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
                 ref: (el) => (this.toggle = el),
-                enable: true,
               })
-            : undefined,
-        ].filter(Boolean) as Element[],
+            : null,
+        ],
       });
     }
 
     connectedCallback() {
       on('keydown', this.onKeydown, captureOpts);
-      on('pointermove', this.changePointer, captureOpts);
+      on('pointermove', this.cachePointEvt, captureOpts);
       on('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -113,7 +114,7 @@ export function defineInspectElement() {
 
     disconnectedCallback() {
       off('keydown', this.onKeydown, captureOpts);
-      off('pointermove', this.changePointer, captureOpts);
+      off('pointermove', this.cachePointEvt, captureOpts);
       off('exit', this.cleanupHandlers, {
         target: this.tree,
       });
@@ -128,8 +129,8 @@ export function defineInspectElement() {
       this.cleanupHandlers();
     }
 
-    private changePointer = (event: PointerEvent) => {
-      this.pointer = event;
+    private cachePointEvt = (event: PointerEvent) => {
+      this.pointEvt = event;
     };
 
     private onKeydown = (event: KeyboardEvent) => {
@@ -150,11 +151,11 @@ export function defineInspectElement() {
     private setupHandlers() {
       if (!this.active) {
         this.active = true;
-        overrideStyle.insert();
+        overrideStyle.mount();
         this.overlay.open();
 
-        if (this.pointer) {
-          const { x, y } = this.pointer;
+        if (this.pointEvt) {
+          const { x, y } = this.pointEvt;
           const initElement = <HTMLElement>document.elementFromPoint(x, y);
           if (initElement && isValidElement(initElement)) {
             this.overlay.update(initElement);
@@ -175,7 +176,7 @@ export function defineInspectElement() {
     private cleanupHandlers = () => {
       if (this.active) {
         this.active = false;
-        overrideStyle.remove();
+        overrideStyle.unmount();
         this.overlay.close();
         this.tree.close();
         this.cleanupListenersOnWindow();
@@ -195,7 +196,7 @@ export function defineInspectElement() {
       const errorOverlay = jsx('div', {
         className: 'error-overlay',
       });
-      const animation = errorOverlay.animate(
+      const ani = errorOverlay.animate(
         [
           {},
           {
@@ -209,8 +210,10 @@ export function defineInspectElement() {
           easing: 'ease-out',
         },
       );
-      animation.onfinish = () => errorOverlay.remove();
-      this.overlay.parentNode!.append(errorOverlay);
+      on('finish', () => errorOverlay.remove(), {
+        target: ani,
+      });
+      append(this.shadowRoot, errorOverlay);
     };
   }
 

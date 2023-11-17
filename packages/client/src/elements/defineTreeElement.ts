@@ -217,19 +217,19 @@ export function defineTreeElement() {
     }
 
     open = (element: HTMLElement) => {
-      overrideStyle.insert();
-      this.render(resolveSource(element, true));
+      overrideStyle.mount();
+      this.renderBodyContent(resolveSource(element, true));
       applyStyle(this.root, {
         display: 'block',
       });
     };
 
     close = () => {
-      overrideStyle.remove();
       applyStyle(this.root, {
         display: 'none',
       });
-      this.popupBody.innerHTML = '';
+      this.renderBodyContent();
+      overrideStyle.unmount();
     };
 
     private setHoldElement = (event: PointerEvent) => {
@@ -256,7 +256,12 @@ export function defineTreeElement() {
       }
     };
 
-    private render(source: ElementSource) {
+    private renderBodyContent(source?: ElementSource) {
+      // empty
+      if (!source) {
+        return (this.popupBody.innerHTML = '');
+      }
+
       append(
         this.popupBody,
         jsx(
@@ -330,11 +335,7 @@ export function defineTreeElement() {
 
   function createNode(meta: ElementSourceMeta, withFile?: boolean) {
     const { name, file, line = 1, column = 1 } = meta ?? {};
-    const dataset = withFile
-      ? Object.fromEntries(
-          Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
-        )
-      : {};
+    const dataset = withFile ? toDataset(meta) : {};
     return jsx(
       'div',
       {
@@ -353,6 +354,12 @@ export function defineTreeElement() {
             __text: `${file}:${line}:${column}`,
           })
         : null,
+    );
+  }
+
+  function toDataset(meta: ElementSourceMeta) {
+    return Object.fromEntries(
+      Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
     );
   }
 

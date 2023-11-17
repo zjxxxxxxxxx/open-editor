@@ -21,7 +21,10 @@ export function applyStyle(
 
 export function computedStyle(element: Element) {
   const style = window.getComputedStyle(element, null);
-  return function get<ToNumber extends boolean = true>(
+  return function get<
+    ToNumber extends boolean = true,
+    ReturnValue = ToNumber extends true ? number : string,
+  >(
     property: string,
     // @ts-ignore
     toNumber: ToNumber = true,
@@ -29,42 +32,39 @@ export function computedStyle(element: Element) {
     const value = style.getPropertyValue(property);
     if (toNumber) {
       const valueNumber = CSS_util.pv(value);
-      return <ToNumber extends true ? number : string>(
-        (isNaN(valueNumber) ? 0 : valueNumber)
-      );
+      return <ReturnValue>(isNaN(valueNumber) ? 0 : valueNumber);
     }
-    return <ToNumber extends true ? number : string>value;
+    return <ReturnValue>value;
   };
 }
 
-export function globalStyle(css: string, defaultInsert = false) {
+export function globalStyle(css: string, defaultMount = false) {
   const style = jsx('style', {
     type: 'text/css',
     __html: css,
   });
-  let inserted = false;
 
-  function insert() {
-    if (!inserted) {
-      inserted = true;
+  let isMounted = false;
+  const mount = () => {
+    if (!isMounted) {
+      isMounted = true;
       append(document.body, style);
     }
-  }
-
-  function remove() {
-    if (inserted) {
-      inserted = false;
+  };
+  const unmount = () => {
+    if (isMounted) {
+      isMounted = false;
       style.remove();
     }
-  }
+  };
 
-  if (defaultInsert) {
-    insert();
+  if (defaultMount) {
+    mount();
   }
 
   return {
-    insert,
-    remove,
+    mount,
+    unmount,
   };
 }
 

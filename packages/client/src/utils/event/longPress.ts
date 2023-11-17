@@ -81,6 +81,20 @@ function isSameListener(
 function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
   const { wait = 500, ...options } = rawOpts;
 
+  function setup() {
+    on('pointerdown', start, options);
+    on('pointermove', clean, options);
+    on('pointerup', clean, options);
+    on('pointercancel', clean, options);
+  }
+
+  function cleanup() {
+    off('pointerdown', start, options);
+    off('pointermove', clean, options);
+    off('pointerup', clean, options);
+    off('pointercancel', clean, options);
+  }
+
   let waitTimer: number | null = null;
 
   function start(event: PointerEvent) {
@@ -111,20 +125,6 @@ function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
       clearTimeout(waitTimer);
       waitTimer = null;
     }
-  }
-
-  function setup() {
-    on('pointerdown', start, options);
-    on('pointermove', clean, options);
-    on('pointerup', clean, options);
-    on('pointercancel', clean, options);
-  }
-
-  function cleanup() {
-    off('pointerdown', start, options);
-    off('pointermove', clean, options);
-    off('pointerup', clean, options);
-    off('pointercancel', clean, options);
   }
 
   setup();
