@@ -1,9 +1,10 @@
-import { RectStyle, getRectStyles } from '../utils/getRectStyles';
+import { type RectStyle, getRectStyles } from '../utils/getRectStyles';
 import { jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
+import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements, capOpts } from '../constants';
-import type { HTMLTooltipElement } from './defineTooltipElement';
+import { type HTMLTooltipElement } from './defineTooltipElement';
 
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
@@ -97,6 +98,7 @@ export function defineOverlayElement() {
       });
       this.tooltip.open();
 
+      SafeAreaObserver.observe(this.update_RAF);
       on('scroll', this.update_RAF, capOpts);
       on('resize', this.update_RAF, capOpts);
     };
@@ -108,6 +110,7 @@ export function defineOverlayElement() {
       this.tooltip.close();
       this.update();
 
+      SafeAreaObserver.unobserve(this.update_RAF);
       off('scroll', this.update_RAF, capOpts);
       off('resize', this.update_RAF, capOpts);
     };
