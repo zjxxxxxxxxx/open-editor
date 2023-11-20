@@ -9,10 +9,10 @@ export const InternalElements = <const>{
 export const Theme = postcss`
 :host {
   --text: #ffffff;
-  --text-2: #afafaf;
-  --fill: #292a2d;
-  --fill-2: #494a4d;
-  --fill-3: #696a6d;
+  --text-2: #cccccc;
+  --fill: #292a2dcc;
+  --fill-2: #696a6d;
+  --cyan: #2dd9da;
   --red: #ff335c;
   --red-light: #ff335c33;
 

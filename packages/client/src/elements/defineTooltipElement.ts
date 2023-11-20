@@ -1,4 +1,4 @@
-import type { RectStyle } from '../utils/getRectStyles';
+import { type RectStyle } from '../utils/getRectStyles';
 import {
   getDOMRect,
   getHtml,
@@ -7,7 +7,7 @@ import {
   applyStyle,
   jsx,
 } from '../utils/html';
-import { getSafeArea } from '../utils/getSafeArea';
+import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements } from '../constants';
 import { resolveSource } from '../resolve';
 
@@ -28,7 +28,8 @@ const CSS = postcss`
   color: var(--text);
   visibility: hidden;
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-3);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 1px var(--fill-2);
   border-radius: 12px;
   pointer-events: none;
   will-change: visibility, top, left;
@@ -129,7 +130,7 @@ export function defineTooltipElement() {
         clientHeight: winH,
       } = getHtml();
       const { width: rootW, height: rootH } = getDOMRect(this.root);
-      const { top, right, bottom, left } = getSafeArea();
+      const { top, right, bottom, left } = SafeAreaObserver.value;
 
       const posStyle: Partial<CSSStyleDeclaration> = {};
       // on top
