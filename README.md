@@ -110,7 +110,7 @@ Then click on the leaf node, and the location of the leaf node will automaticall
 
 ### Exit inspector
 
-Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd> , shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
+Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 

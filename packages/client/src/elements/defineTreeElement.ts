@@ -12,8 +12,11 @@ import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
 import close from '../icons/close';
 import { InternalElements } from '../constants';
-import type { ElementSource, ElementSourceMeta } from '../resolve';
-import { resolveSource } from '../resolve';
+import {
+  type ElementSource,
+  type ElementSourceMeta,
+  resolveSource,
+} from '../resolve';
 
 export interface HTMLTreeElement extends HTMLElement {
   open(el: HTMLElement): void;
@@ -32,7 +35,6 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
-  backdrop-filter: blur(8px);
 }
 .popup {
   position: fixed;
@@ -42,7 +44,8 @@ const CSS = postcss`
   transform: translate(-50%, -50%);
   color: var(--text);
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-3);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
 .close {
@@ -53,7 +56,7 @@ const CSS = postcss`
   width: 32px;
   height: 32px;
   color: var(--text);
-  background: var(--fill);
+  background: transparent;
   border: none;
   border-radius: 99px;
 }

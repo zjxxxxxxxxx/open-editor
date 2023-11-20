@@ -38,31 +38,25 @@ export function computedStyle(el: Element) {
   };
 }
 
-export function globalStyle(css: string, defaultMount = false) {
+export function globalStyle(css: string) {
   const style = jsx('style', {
     type: 'text/css',
     __html: css,
   });
-
   let isMounted = false;
-  const mount = () => {
-    if (!isMounted) {
-      isMounted = true;
-      append(document.body, style);
-    }
-  };
-  const unmount = () => {
-    if (isMounted) {
-      isMounted = false;
-      style.remove();
-    }
-  };
-
-  if (defaultMount) mount();
-
   return {
-    mount,
-    unmount,
+    mount() {
+      if (!isMounted) {
+        isMounted = true;
+        append(document.body, style);
+      }
+    },
+    unmount() {
+      if (isMounted) {
+        isMounted = false;
+        style.remove();
+      }
+    },
   };
 }
 

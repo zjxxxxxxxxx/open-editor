@@ -1,7 +1,18 @@
-import { getHtml, jsx, CSS_util, applyStyle, host } from '../utils/html';
+import {
+  getHtml,
+  jsx,
+  CSS_util,
+  applyStyle,
+  host,
+  addClass,
+  reomveClass,
+} from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
-import { getSafeArea } from '../utils/getSafeArea';
+import {
+  SafeAreaObserver,
+  type SafeAreaValue,
+} from '../utils/SafeAreaObserver';
 import gps from '../icons/gps';
 import { InternalElements, CACHE_POS_Y_ID } from '../constants';
 
@@ -24,15 +35,20 @@ const CSS = postcss`
   display: none;
 }
 .button {
-  padding: 0px;
+  padding: 1px;
   width: 24px;
   height: 24px;
-  color: var(--text-2);
+  color: var(--text);
   background: var(--fill);
-  box-shadow: 0 0 1px var(--fill-3);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 0 1px var(--fill-2);
   border: none;
   outline: none;
   border-radius: 999px;
+}
+.active {
+  color: var(--cyan);
+  box-shadow: 0 0 30px 3px var(--cyan);
 }
 `;
 
@@ -81,21 +97,17 @@ export function defineToggleElement() {
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
-        applyStyle(this.button, {
-          color: 'var(--text)',
-        });
+        addClass(this.button, 'active');
       } else {
-        applyStyle(this.button, {
-          color: null,
-        });
+        reomveClass(this.button, 'active');
       }
     }
 
     connectedCallback() {
+      SafeAreaObserver.observe(this.setSafeRight);
+
       this.updatePosY_RAF();
-      applyStyle(this.root, {
-        right: CSS_util.px(getSafeArea().right),
-      });
+
       on('click', this.dispatchToggle, {
         target: this.button,
       });
@@ -107,6 +119,8 @@ export function defineToggleElement() {
     }
 
     disconnectedCallback() {
+      SafeAreaObserver.unobserve(this.setSafeRight);
+
       off('click', this.dispatchToggle, {
         target: this.button,
       });
@@ -116,6 +130,12 @@ export function defineToggleElement() {
       });
       off('resize', this.updatePosY_RAF);
     }
+
+    private setSafeRight = (value: SafeAreaValue) => {
+      applyStyle(this.root, {
+        right: CSS_util.px(value.right),
+      });
+    };
 
     private startDnD = (e: PointerEvent) => {
       this.dndPoint = {
@@ -127,7 +147,7 @@ export function defineToggleElement() {
       });
       applyStyle(this.button, {
         cursor: 'ns-resize',
-        opacity: '0.6',
+        opacity: '0.8',
         transform: 'scale(1.1)',
       });
       applyStyle(this.overlay, {
@@ -165,7 +185,7 @@ export function defineToggleElement() {
     private updatePosY_RAF = create_RAF(() => {
       const { clientHeight: winH } = getHtml();
       const { offsetHeight: toggleH } = this.root;
-      const { top, bottom } = getSafeArea();
+      const { top, bottom } = SafeAreaObserver.value;
       const cachePosY = getCachePosY();
       const minY = top;
       const maxY = winH - toggleH - bottom;
