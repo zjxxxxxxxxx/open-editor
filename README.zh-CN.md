@@ -112,7 +112,7 @@ npm run dev
 
 再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的按钮就会退出检查器。
 
-<img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+<img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
 
 ## 框架
 

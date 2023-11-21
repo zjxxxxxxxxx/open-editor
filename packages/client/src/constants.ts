@@ -23,9 +23,9 @@ export const Theme = postcss`
 
   --z-index-overlay: 1000000;
   --z-index-error-overlay: 1000000;
-  --z-index-tooltip: 1000003;
-  --z-index-tree: 1000001;
   --z-index-toggle: 1000002;
+  --z-index-tooltip: 1000003;
+  --z-index-tree: 1000003;
 }
 `;
 
