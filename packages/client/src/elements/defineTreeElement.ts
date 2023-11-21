@@ -44,7 +44,7 @@ const CSS = postcss`
   transform: translate(-50%, -50%);
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: blur(24px);
+  backdrop-filter: blur(16px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
@@ -98,11 +98,11 @@ const CSS = postcss`
 }
 .tree {
   position: relative;
-  padding-left: 9px;
+  padding-left: 10px;
 }
 .line {
   position: absolute;
-  left: 10px;
+  left: 11px;
   top: 22px;
   opacity: 0.2;
   width: 1px;
@@ -338,21 +338,22 @@ export function defineTreeElement() {
     const { name, file, line = 1, column = 1 } = meta ?? {};
     const dataset = withFile ? toDataset(meta) : {};
     return jsx(
-      'div',
+      'span',
       {
         className: 'tag',
+        title: withFile ? 'Click to open in your editor' : null,
         ...dataset,
       },
       jsx('span', {
         className: 'name',
-        ...dataset,
         __text: `<${name}/>`,
+        ...dataset,
       }),
       withFile
         ? jsx('span', {
             className: 'file',
-            ...dataset,
             __text: `${file}:${line}:${column}`,
+            ...dataset,
           })
         : null,
     );

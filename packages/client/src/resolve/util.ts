@@ -8,12 +8,7 @@ export function ensureFileName(fileName: string) {
   return `/${fileName.replace(/^\//, '')}`;
 }
 
+const invalidRE = /(^\/home\/runner\/|\/node_modules\/)/;
 export function isValidFileName(fileName?: string): fileName is string {
-  if (fileName) {
-    return (
-      !fileName.startsWith('/home/runner/') &&
-      !ensureFileName(fileName).startsWith('/node_modules/')
-    );
-  }
-  return false;
+  return fileName ? !invalidRE.test(fileName) : false;
 }
