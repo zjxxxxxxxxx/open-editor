@@ -1,5 +1,26 @@
 # @open-editor/client
 
+## 0.6.0
+
+### Minor Changes
+
+- [#153](https://github.com/zjxxxxxxxxx/open-editor/pull/153) [`7e45f5e`](https://github.com/zjxxxxxxxxx/open-editor/commit/7e45f5ea6c9caec4b04020d7fd7688bf766591af) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add frosted glass effect to UI background
+
+### Patch Changes
+
+- [#154](https://github.com/zjxxxxxxxxx/open-editor/pull/154) [`b9cf9a3`](https://github.com/zjxxxxxxxxx/open-editor/commit/b9cf9a3259c734b50d2e13beb9b7b3e97effd7eb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Exclude node_modules completely
+
+- [#151](https://github.com/zjxxxxxxxxx/open-editor/pull/151) [`0e37a02`](https://github.com/zjxxxxxxxxx/open-editor/commit/0e37a02ec2e8e950d9e270731060ab131f810237) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Mobile touch Sync inspect element
+
+- [#151](https://github.com/zjxxxxxxxxx/open-editor/pull/151) [`0e37a02`](https://github.com/zjxxxxxxxxx/open-editor/commit/0e37a02ec2e8e950d9e270731060ab131f810237) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Set the errorOverlay zIndex to 1000000
+
+- [#153](https://github.com/zjxxxxxxxxx/open-editor/pull/153) [`7e45f5e`](https://github.com/zjxxxxxxxxx/open-editor/commit/7e45f5ea6c9caec4b04020d7fd7688bf766591af) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Responsive safe area
+
+- [#154](https://github.com/zjxxxxxxxxx/open-editor/pull/154) [`b9cf9a3`](https://github.com/zjxxxxxxxxx/open-editor/commit/b9cf9a3259c734b50d2e13beb9b7b3e97effd7eb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Responsive touch screen
+
+- Updated dependencies []:
+  - @open-editor/shared@0.6.0
+
 ## 0.5.3
 
 ### Patch Changes

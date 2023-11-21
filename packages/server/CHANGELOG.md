@@ -1,5 +1,12 @@
 # @open-editor/server
 
+## 0.6.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/shared@0.6.0
+
 ## 0.5.3
 
 ### Patch Changes
