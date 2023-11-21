@@ -23,7 +23,7 @@ const CSS = postcss`
   position: fixed;
   right: 0px;
   z-index: var(--z-index-toggle);
-  padding: 2px;
+  padding: 4px;
   font-size: 0px;
 }
 .overlay {
@@ -35,12 +35,9 @@ const CSS = postcss`
   display: none;
 }
 .button {
-  padding: 1px;
-  width: 24px;
-  height: 24px;
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: blur(24px);
+  backdrop-filter: blur(16px);
   box-shadow: 0 0 1px var(--fill-2);
   border: none;
   outline: none;
@@ -62,6 +59,7 @@ export function defineToggleElement() {
     private overlay!: HTMLElement;
     private button!: HTMLElement;
     private dndPoint?: { pageY: number; posY: number };
+    private isTouchScreen!: boolean;
 
     constructor() {
       super();
@@ -85,14 +83,6 @@ export function defineToggleElement() {
           }),
         ),
       });
-
-      // Display larger button on the touch screen
-      if ('ontouchstart' in window || navigator.maxTouchPoints) {
-        applyStyle(this.button, {
-          width: '32px',
-          height: '32px',
-        });
-      }
     }
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
@@ -104,10 +94,10 @@ export function defineToggleElement() {
     }
 
     connectedCallback() {
-      SafeAreaObserver.observe(this.setSafeRight);
-
       this.updatePosY_RAF();
+      this.checkTouchScreen();
 
+      SafeAreaObserver.observe(this.setSafeRight);
       on('click', this.dispatchToggle, {
         target: this.button,
       });
@@ -116,11 +106,11 @@ export function defineToggleElement() {
         wait: 300,
       });
       on('resize', this.updatePosY_RAF);
+      on('resize', this.checkTouchScreen);
     }
 
     disconnectedCallback() {
       SafeAreaObserver.unobserve(this.setSafeRight);
-
       off('click', this.dispatchToggle, {
         target: this.button,
       });
@@ -129,7 +119,23 @@ export function defineToggleElement() {
         wait: 300,
       });
       off('resize', this.updatePosY_RAF);
+      off('resize', this.checkTouchScreen);
     }
+
+    private checkTouchScreen = () => {
+      const isTouchScreen =
+        Boolean(navigator.maxTouchPoints) || 'ontouchstart' in window;
+      if (this.isTouchScreen !== (this.isTouchScreen = isTouchScreen)) {
+        // Display larger button on the touch screen
+        const pad = CSS_util.px(this.isTouchScreen ? 2 : 1);
+        const size = CSS_util.px(this.isTouchScreen ? 34 : 24);
+        applyStyle(this.button, {
+          padding: pad,
+          width: size,
+          height: size,
+        });
+      }
+    };
 
     private setSafeRight = (value: SafeAreaValue) => {
       applyStyle(this.root, {
