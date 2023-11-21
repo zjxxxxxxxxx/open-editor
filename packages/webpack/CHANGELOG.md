@@ -1,5 +1,14 @@
 # @open-editor/webpack
 
+## 0.6.0
+
+### Patch Changes
+
+- Updated dependencies [[`b9cf9a3`](https://github.com/zjxxxxxxxxx/open-editor/commit/b9cf9a3259c734b50d2e13beb9b7b3e97effd7eb), [`0e37a02`](https://github.com/zjxxxxxxxxx/open-editor/commit/0e37a02ec2e8e950d9e270731060ab131f810237), [`0e37a02`](https://github.com/zjxxxxxxxxx/open-editor/commit/0e37a02ec2e8e950d9e270731060ab131f810237), [`7e45f5e`](https://github.com/zjxxxxxxxxx/open-editor/commit/7e45f5ea6c9caec4b04020d7fd7688bf766591af), [`b9cf9a3`](https://github.com/zjxxxxxxxxx/open-editor/commit/b9cf9a3259c734b50d2e13beb9b7b3e97effd7eb), [`7e45f5e`](https://github.com/zjxxxxxxxxx/open-editor/commit/7e45f5ea6c9caec4b04020d7fd7688bf766591af)]:
+  - @open-editor/client@0.6.0
+  - @open-editor/server@0.6.0
+  - @open-editor/shared@0.6.0
+
 ## 0.5.3
 
 ### Patch Changes
