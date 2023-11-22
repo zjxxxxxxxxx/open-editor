@@ -41,17 +41,13 @@ function findKey(el: HTMLElement) {
   }
 
   // react17+
-  if (!react17PlusKey) {
-    react17PlusKey = findStartsWith(el, react17PlusKeyStarts);
-  }
+  react17PlusKey ||= findStartsWith(el, react17PlusKeyStarts);
   if (react17PlusKey && react17PlusKey in el) {
     return react17PlusKey;
   }
 
   // react15+
-  if (!react15PlusKey) {
-    react15PlusKey = findStartsWith(el, react15PlusKeyStarts);
-  }
+  react15PlusKey ||= findStartsWith(el, react15PlusKeyStarts);
   if (react15PlusKey && react15PlusKey in el) {
     return react15PlusKey;
   }
