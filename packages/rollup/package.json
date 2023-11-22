@@ -27,9 +27,12 @@
     "directory": "packages/rollup"
   },
   "keywords": [
+    "open-editor",
     "rollup-plugin",
     "vue-devtools",
-    "react-devtools"
+    "react-devtools",
+    "web-devtools",
+    "devtools"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",

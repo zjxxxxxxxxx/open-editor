@@ -70,14 +70,14 @@ function offLongPress(
   }
 }
 
-const optionKeys = <const>['capture', 'passive', 'once', 'wait'];
+const optKeys = <const>['capture', 'passive', 'once', 'wait'];
 function isSameListener(
   cache: LongPressCache,
   cb: LongPressListener,
   opts: LongPressOptions,
 ) {
   return (
-    cache.cb === cb && optionKeys.every((key) => cache.opts[key] === opts[key])
+    cache.cb === cb && optKeys.every((key) => cache.opts[key] === opts[key])
   );
 }
 
