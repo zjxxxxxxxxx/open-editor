@@ -263,6 +263,12 @@ export function defineTreeElement() {
         return (this.popupBody.innerHTML = '');
       }
 
+      const hasTree = source.tree.length > 0;
+      const treeNodes = hasTree ? buildTree(source.tree) : ['>> not found 😭.'];
+
+      if (hasTree) reomveClass(this.popup, 'error');
+      else addClass(this.popup, 'error');
+
       append(
         this.popupBody,
         jsx(
@@ -279,58 +285,43 @@ export function defineTreeElement() {
           ),
           `<ComponentTree>`,
         ),
+        jsx(
+          'div',
+          {
+            className: 'content tree',
+          },
+          ...treeNodes,
+        ),
       );
-
-      if (source.tree.length) {
-        reomveClass(this.popup, 'error');
-        append(
-          this.popupBody,
-          jsx(
-            'div',
-            {
-              className: 'content tree',
-            },
-            ...buildTree(source.tree),
-          ),
-        );
-      } else {
-        addClass(this.popup, 'error');
-        append(
-          this.popupBody,
-          jsx(
-            'div',
-            {
-              className: 'content tag',
-            },
-            '>> not found 😭.',
-          ),
-        );
-      }
     }
   }
 
   function buildTree(tree: ElementSourceMeta[]) {
     let nodes: HTMLElement[] = [];
+
     while (tree.length) {
       const meta = tree.shift()!;
       const startNode = createNode(meta, true);
       if (nodes.length) {
-        const lineNode = jsx('div', {
-          className: 'line',
-        });
-        const childNode = jsx(
-          'div',
-          {
-            className: 'tree',
-          },
-          ...nodes,
-        );
-        const endNode = createNode(meta);
-        nodes = [startNode, lineNode, childNode, endNode];
+        nodes = [
+          startNode,
+          jsx('div', {
+            className: 'line',
+          }),
+          jsx(
+            'div',
+            {
+              className: 'tree',
+            },
+            ...nodes,
+          ),
+          createNode(meta),
+        ];
       } else {
         nodes = [startNode];
       }
     }
+
     return nodes;
   }
 
@@ -346,7 +337,7 @@ export function defineTreeElement() {
       },
       jsx('span', {
         className: 'name',
-        __text: `<${name}/>`,
+        __text: withFile ? `<${name}>` : `<${name}/>`,
         ...dataset,
       }),
       withFile
