@@ -5,13 +5,7 @@ import openEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    VueSource({}),
-    vue(),
-    openEditor({
-      displayToggle: true,
-    }),
-  ],
+  plugins: [VueSource({}), vue(), openEditor()],
   server: {
     host: '0.0.0.0',
   },

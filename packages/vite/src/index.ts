@@ -20,6 +20,13 @@ export interface Options {
   displayToggle?: boolean;
 
   /**
+   * set UI color mode
+   *
+   * @default 'auto'
+   */
+  colorMode?: 'auto' | 'light' | 'dark';
+
+  /**
    * custom openEditor handler
    */
   onOpenEditor?(file: string): void;
@@ -35,7 +42,8 @@ export default function openEditorPlugin(
 
   const {
     rootDir = process.cwd(),
-    displayToggle = true,
+    displayToggle,
+    colorMode,
     onOpenEditor,
   } = options;
 
@@ -45,6 +53,7 @@ export default function openEditorPlugin(
   runtime.generate({
     rootDir,
     displayToggle,
+    colorMode,
   });
 
   return {

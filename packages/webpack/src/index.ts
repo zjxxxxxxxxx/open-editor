@@ -19,6 +19,13 @@ export interface Options {
   displayToggle?: boolean;
 
   /**
+   * set UI color mode
+   *
+   * @default 'auto'
+   */
+  colorMode?: 'auto' | 'light' | 'dark';
+
+  /**
    * custom openEditor handler
    */
   onOpenEditor?(file: string): void;
@@ -28,14 +35,13 @@ export interface Options {
  * development only
  */
 export default class OpenEditorPlugin {
-  options: Required<Pick<Options, 'displayToggle' | 'rootDir'>> & Options;
+  options: Options;
   compiler!: webpack.Compiler;
 
   constructor(options: Options = {}) {
     this.options = {
+      ...options,
       rootDir: options.rootDir ?? process.cwd(),
-      displayToggle: options.displayToggle ?? true,
-      onOpenEditor: options.onOpenEditor,
     };
   }
 
@@ -76,9 +82,8 @@ export default class OpenEditorPlugin {
 
     getServerPort(this.options).then((port) => {
       runtime.generate({
+        ...this.options,
         port,
-        rootDir: this.options.rootDir,
-        displayToggle: this.options.displayToggle,
       });
     });
 

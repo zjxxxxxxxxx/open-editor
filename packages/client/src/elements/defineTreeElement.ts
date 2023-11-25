@@ -44,7 +44,7 @@ const CSS = postcss`
   transform: translate(-50%, -50%);
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: blur(16px);
+  backdrop-filter: contrast(1.8) blur(32px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
@@ -61,7 +61,7 @@ const CSS = postcss`
   border-radius: 99px;
 }
 .close:hover {
-  background: var(--fill-2);
+  backdrop-filter: contrast(80%);
 }
 .body {
   padding: 16px 24px;

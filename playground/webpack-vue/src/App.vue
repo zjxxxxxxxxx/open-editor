@@ -43,6 +43,11 @@ import Notes from './components/Notes.vue';
 .logo.open-editor:hover {
   filter: drop-shadow(0 0 2em #000000aa);
 }
+@media (prefers-color-scheme: dark) {
+  .logo.open-editor:hover {
+    filter: drop-shadow(0 0 2em #ffffffaa);
+  }
+}
 .open-editor {
   overflow: hidden;
   border-radius: 40px;

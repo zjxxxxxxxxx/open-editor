@@ -1,8 +1,17 @@
 export interface Options {
   /**
    * render the toggle into the browser
+   *
+   * @default true
    */
-  displayToggle: boolean;
+  displayToggle?: boolean;
+
+  /**
+   * set UI color mode
+   *
+   * @default 'auto'
+   */
+  colorMode?: 'auto' | 'light' | 'dark';
 
   /**
    * internal server port
@@ -19,8 +28,14 @@ export interface Options {
 
 let opts: Options;
 
-export function setOptions(userOpts: Options) {
-  opts = userOpts;
+export function setOptions(
+  userOpts: Partial<Options> & Pick<Options, 'rootDir'>,
+) {
+  opts = {
+    ...userOpts,
+    displayToggle: userOpts.displayToggle ?? true,
+    colorMode: userOpts.colorMode ?? 'auto',
+  };
 }
 
 export function getOptions() {
