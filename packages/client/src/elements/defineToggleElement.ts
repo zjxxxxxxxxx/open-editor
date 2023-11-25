@@ -37,15 +37,14 @@ const CSS = postcss`
 .button {
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: contrast(1.8) blur(32px);
   box-shadow: 0 0 1px var(--fill-2);
   border: none;
   outline: none;
   border-radius: 999px;
 }
 .active {
-  color: var(--cyan);
-  box-shadow: 0 0 30px 3px var(--cyan);
+  color: var(--active);
+  box-shadow: 0 0 30px 3px var(--active);
 }
 `;
 

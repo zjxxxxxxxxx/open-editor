@@ -43,8 +43,8 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
   color: var(--text);
-  background: var(--fill);
-  backdrop-filter: contrast(1.8) blur(32px);
+  background: var(--fill-opacity);
+  backdrop-filter: contrast(1.8) blur(40px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }

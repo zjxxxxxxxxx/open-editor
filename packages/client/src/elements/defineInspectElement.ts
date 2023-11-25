@@ -31,16 +31,12 @@ const CSS = postcss`
 :host {
   all: initial !important;
 
-  --red: #ff335c;
-  --red-light: #ff335c33;
-
   --overlay-margin: #f6b26ba8;
   --overlay-border: #ffe599a8;
   --overlay-padding: #93c47d8c;
   --overlay-content: #6fa7dca8;
 
   --z-index-overlay: 1000000;
-  --z-index-error-overlay: 1000000;
   --z-index-toggle: 1000002;
   --z-index-tooltip: 1000003;
   --z-index-tree: 1000003;
@@ -51,7 +47,7 @@ const CSS = postcss`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: var(--z-index-error-overlay);
+  z-index: var(--z-index-overlay);
 }
 `;
 

@@ -30,7 +30,7 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 - 🌈 Support `React`、`Nextjs`、`Vue`。
 - 🔥 Support `Rollup`、`Vite`、`Webpack`。
 - 🕹️ Support combined shortcut keys.
-- 🎯 Support precise positioning of rows and columns.
+- 🎯 Support precise positioning of line and column.
 - 🚀 Support find component tree.
 - 👽 Support automatically find available editors.
 
@@ -70,7 +70,7 @@ export default defineConfig({
       },
     }),
     OpenEditor({
-      displayToggle: true,
+      // options
     }),
   ],
 });
@@ -122,13 +122,13 @@ Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</k
 
 > Requires React version 15+.
 
-`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which It is a plug-in that obtains source code row and column information. Normally you don't need to pay attention to this thing because it is mainly built into the scaffolding tools. If you have issues with `open-editor` not being able to open source code, this would be a way to troubleshoot the issue.
+`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which It is a plug-in that obtains source code line and column information. Normally you don't need to pay attention to this thing because it is mainly built into the scaffolding tools. If you have issues with `open-editor` not being able to open source code, this would be a way to troubleshoot the issue.
 
 ### Vue
 
 > Requires Vue version 2+.
 
-`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code row and column information , if this plug-in is missing, the source code file will only be opened in the editor, and there will be no way to accurately locate the rows and columns of the source code.
+`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plug-in is missing, the source code file will only be opened in the editor, and there will be no way to accurately locate the rows and columns of the source code.
 
 ## Playgrounds
 
