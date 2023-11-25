@@ -28,7 +28,7 @@ const CSS = postcss`
   color: var(--text);
   visibility: hidden;
   background: var(--fill);
-  backdrop-filter: blur(16px);
+  backdrop-filter: contrast(1.8) blur(32px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 12px;
   pointer-events: none;

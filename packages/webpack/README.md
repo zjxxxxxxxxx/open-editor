@@ -46,6 +46,12 @@ interface Options {
    */
   displayToggle?: boolean;
   /**
+   * set UI color mode
+   *
+   * @default 'auto'
+   */
+  colorMode?: 'auto' | 'light' | 'dark';
+  /**
    * custom openEditor handler
    */
   onOpenEditor?(file: string): void;
