@@ -37,7 +37,7 @@ const CSS = postcss`
 .button {
   color: var(--text);
   background: var(--fill);
-  backdrop-filter: blur(16px);
+  backdrop-filter: contrast(1.8) blur(32px);
   box-shadow: 0 0 1px var(--fill-2);
   border: none;
   outline: none;
@@ -127,7 +127,7 @@ export function defineToggleElement() {
         Boolean(navigator.maxTouchPoints) || 'ontouchstart' in window;
       if (this.isTouchScreen !== (this.isTouchScreen = isTouchScreen)) {
         // Display larger button on the touch screen
-        const pad = CSS_util.px(this.isTouchScreen ? 2 : 1);
+        const pad = CSS_util.px(this.isTouchScreen ? 3 : 2);
         const size = CSS_util.px(this.isTouchScreen ? 34 : 24);
         applyStyle(this.button, {
           padding: pad,

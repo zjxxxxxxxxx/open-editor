@@ -48,9 +48,7 @@ export default {
     svg({
       base64: true,
     }),
-    openEditor({
-      displayToggle: true,
-    }),
+    openEditor(),
     liveServer({
       port: 3000,
       wait: 1000,

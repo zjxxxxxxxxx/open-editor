@@ -10,9 +10,7 @@ export default defineConfig({
         retainLines: true,
       },
     }),
-    OpenEditor({
-      displayToggle: true,
-    }),
+    OpenEditor(),
   ],
   server: {
     host: '0.0.0.0',

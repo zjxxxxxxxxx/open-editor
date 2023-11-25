@@ -46,9 +46,7 @@ export default {
     }),
     postcss(),
     image(),
-    openEditor({
-      displayToggle: true,
-    }),
+    openEditor(),
     liveServer({
       port: 3000,
       wait: 1000,

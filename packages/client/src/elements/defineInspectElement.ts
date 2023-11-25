@@ -1,5 +1,6 @@
 import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
 import { off, on } from '../utils/event';
+import { getColorMode } from '../utils/getColorMode';
 import { isValidElement } from '../utils/validElement';
 import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
 import {
@@ -7,7 +8,7 @@ import {
   onOpenEditorError,
   openEditor,
 } from '../utils/openEditor';
-import { InternalElements, Theme, capOpts } from '../constants';
+import { InternalElements, capOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import { HTMLOverlayElement } from './defineOverlayElement';
@@ -29,6 +30,20 @@ const CSS = postcss`
 }
 :host {
   all: initial !important;
+
+  --red: #ff335c;
+  --red-light: #ff335c33;
+
+  --overlay-margin: #f6b26ba8;
+  --overlay-border: #ffe599a8;
+  --overlay-padding: #93c47d8c;
+  --overlay-content: #6fa7dca8;
+
+  --z-index-overlay: 1000000;
+  --z-index-error-overlay: 1000000;
+  --z-index-toggle: 1000002;
+  --z-index-tooltip: 1000003;
+  --z-index-tree: 1000003;
 }
 .error-overlay {
   position: fixed;
@@ -79,7 +94,7 @@ export function defineInspectElement() {
 
       const opts = getOptions();
       host(this, {
-        css: [Theme, CSS],
+        css: [CSS, getColorMode()],
         html: [
           jsx<HTMLOverlayElement>(InternalElements.HTML_OVERLAY_ELEMENT, {
             ref: (el) => (this.overlay = el),
