@@ -70,7 +70,7 @@ export default defineConfig({
       },
     }),
     OpenEditor({
-      displayToggle: true,
+      // options
     }),
   ],
 });

@@ -27,8 +27,8 @@ const CSS = postcss`
   max-width: calc(100% - 56px);
   color: var(--text);
   visibility: hidden;
-  background: var(--fill);
-  backdrop-filter: contrast(1.8) blur(32px);
+  background: var(--fill-opacity);
+  backdrop-filter: contrast(1.8) blur(40px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 12px;
   pointer-events: none;
