@@ -11,10 +11,10 @@ export interface SetupHandlersOptions {
 }
 
 export function setupListenersOnWindow(opts: SetupHandlersOptions) {
-  const onChangeElement = wrapHoldElementRestoreDisabled(opts.onChangeElement);
-  const onOpenEditor = wrapHoldElementRestoreDisabled(opts.onOpenEditor);
-  const onOpenTree = wrapHoldElementRestoreDisabled(opts.onOpenTree);
-  const onExitInspect = wrapHoldElementRestoreDisabled(opts.onExitInspect);
+  const onChangeElement = wrapRestoreHoldElement(opts.onChangeElement);
+  const onOpenEditor = wrapRestoreHoldElement(opts.onOpenEditor);
+  const onOpenTree = wrapRestoreHoldElement(opts.onOpenTree);
+  const onExitInspect = wrapRestoreHoldElement(opts.onExitInspect);
 
   function registerEventListeners() {
     on('click', onClick, {
@@ -84,7 +84,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
   function onPointerDown(e: PointerEvent) {
     onSilence(e);
-    onHoldElementUnlockDisabled(e);
+    onResetHoldElement(e);
   }
 
   function onClick(e: PointerEvent) {
@@ -125,7 +125,6 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
   // esc exit.
   function onKeyDown(e: KeyboardEvent) {
     onSilence(e, true);
-
     if (e.key === 'Escape') {
       onExitInspect();
     }
@@ -140,6 +139,8 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
   }
 
   function onLongPress(e: PointerEvent) {
+    onSilence(e, true);
+
     const el = <HTMLElement>e.target;
     if (isValidElement(el)) {
       onChangeElement();
@@ -156,51 +157,98 @@ function onSilence(e: Event, all?: boolean) {
   if (all || isValidElement(el)) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // See https://www.chromestatus.com/feature/5093566007214080.
-    if (!(<any>e).type.startsWith('touch')) {
+    if (!e.type.startsWith('touch')) {
       e.preventDefault();
     }
     e.stopPropagation();
   }
 }
 
-const unlockID = '__unlock_disabled__';
-let holdEl: HTMLButtonElement | null = null;
+let holdEl: HTMLElement | null = null;
 
-function onHoldElementUnlockDisabled(e: Event) {
-  const el = <HTMLButtonElement>e.target;
+function onResetHoldElement(e: Event) {
+  const el = <HTMLElement>e.target;
   if (isValidElement(el)) {
-    // <div disabled/> => <div __unlock_disabled__/>
-    if (el.disabled) {
-      el.disabled = false;
-      applyAttrs(el, {
-        [unlockID]: '',
-      });
-    }
+    swapHoldElementAttrs(el, {
+      disabled: {
+        from: 'disabled',
+        to: '__disabled__',
+      },
+      href: {
+        from: 'href',
+        to: '__href__',
+      },
+    });
+
     holdEl = el;
   }
 }
 
-function onHoldElementRestoreDisabled() {
+function onRestoreHoldElement() {
   if (holdEl) {
-    // <div __unlock_disabled__/> => <div disabled/>
-    if (
-      // __unlock_disabled__ === ''
-      holdEl.getAttribute(unlockID) != null
-    ) {
-      holdEl.disabled = true;
-      applyAttrs(holdEl, {
-        [unlockID]: null,
-      });
-    }
+    swapHoldElementAttrs(holdEl, {
+      disabled: {
+        from: '__disabled__',
+        to: 'disabled',
+      },
+      href: {
+        from: '__href__',
+        to: 'href',
+      },
+    });
+
     holdEl = null;
   }
 }
 
-function wrapHoldElementRestoreDisabled<T extends (...args: any[]) => any>(
-  fn: T,
-) {
-  return (...args: Parameters<T>) => {
-    onHoldElementRestoreDisabled();
+function wrapRestoreHoldElement<T extends (...args: any[]) => any>(fn: T) {
+  return function wrapped(...args: Parameters<T>) {
+    onRestoreHoldElement();
     return fn(...args);
   };
+}
+
+function swapHoldElementAttrs(
+  el: HTMLElement,
+  attrs: Record<
+    'disabled' | 'href',
+    {
+      from: string;
+      to: string;
+    }
+  >,
+) {
+  const { disabled, href } = attrs;
+
+  // Prevent click events from being blocked
+  const disabledVal = el.getAttribute(disabled.from);
+  if (disabledVal != null) {
+    applyAttrs(el, {
+      [disabled.from]: null,
+      [disabled.to]: disabledVal,
+    });
+  }
+
+  // Prevents the default jump
+  // `e.preventDefault()` has no effect on relative paths
+  const a = findATag(el);
+  if (a) {
+    const hrefVal = a.getAttribute(href.from);
+    if (hrefVal != null) {
+      applyAttrs(a, {
+        [href.from]: null,
+        [href.to]: hrefVal,
+      });
+    }
+  }
+}
+
+function findATag(el?: HTMLElement | null) {
+  while (el) {
+    if (el.tagName === 'A') {
+      return el;
+    }
+    el = el.parentElement;
+  }
+  return null;
 }

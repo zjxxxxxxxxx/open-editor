@@ -3,7 +3,6 @@ import {
   append,
   jsx,
   applyStyle,
-  globalStyle,
   host,
   addClass,
   reomveClass,
@@ -135,15 +134,7 @@ const CSS = postcss`
 }
 `;
 
-const overrideCSS = postcss`
-:root {
-  overflow: hidden !important;
-}
-`;
-
 export function defineTreeElement() {
-  const overrideStyle = globalStyle(overrideCSS);
-
   class TreeElement extends HTMLElement implements HTMLTreeElement {
     private root!: HTMLElement;
     private overlay!: HTMLElement;
@@ -218,11 +209,10 @@ export function defineTreeElement() {
     }
 
     open = (el: HTMLElement) => {
-      overrideStyle.mount();
-      this.renderBodyContent(resolveSource(el, true));
       applyStyle(this.root, {
         display: 'block',
       });
+      this.renderBodyContent(resolveSource(el, true));
     };
 
     close = () => {
@@ -230,7 +220,6 @@ export function defineTreeElement() {
         display: 'none',
       });
       this.renderBodyContent();
-      overrideStyle.unmount();
     };
 
     private setHoldElement = (e: PointerEvent) => {
