@@ -2,8 +2,7 @@
   <div>
     <h2>Enable inspector</h2>
     <p>
-      shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> +
-      <kbd>O</kbd>
+      shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>
     </p>
   </div>
   <div>
