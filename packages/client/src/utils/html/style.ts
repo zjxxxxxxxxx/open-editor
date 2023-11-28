@@ -60,10 +60,10 @@ export function globalStyle(css: string) {
   };
 }
 
-export function addClass(el: HTMLElement, ...classNames: string[]) {
-  el.classList.add(...classNames);
+export function addClass(el: HTMLElement, className: string) {
+  el.classList.add(...className.split(' '));
 }
 
-export function reomveClass(el: HTMLElement, ...classNames: string[]) {
-  el.classList.remove(...classNames);
+export function reomveClass(el: HTMLElement, className: string) {
+  el.classList.remove(...className.split(' '));
 }
