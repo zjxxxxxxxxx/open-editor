@@ -27,22 +27,18 @@ const CSS = postcss`
   max-width: calc(100% - 56px);
   color: var(--text);
   visibility: hidden;
-  background: var(--fill-opacity);
-  backdrop-filter: contrast(1.8) blur(40px);
+  background: var(--fill-opt);
+  backdrop-filter: blur(20px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 12px;
   pointer-events: none;
   will-change: visibility, top, left;
-}
-.el {
-  font-size: 12px;
 }
 .comp {
   font-size: 14px;
   font-weight: 500;
 }
 .file {
-  font-size: 12px;
   color: var(--text-2);
   text-decoration: underline;
   word-wrap: break-word;
@@ -71,7 +67,6 @@ export function defineTooltipElement() {
           },
           jsx('span', {
             ref: (el) => (this.el = el),
-            className: 'el',
           }),
           jsx('span', {
             ref: (el) => (this.comp = el),

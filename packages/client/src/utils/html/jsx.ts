@@ -27,7 +27,7 @@ export function jsx(type: string, props: Props = {}, ...children: Children) {
 
   const { ref, className, style, __html, __text, ...attrs } = props;
   if (className) {
-    addClass(el, ...className.split(' '));
+    addClass(el, className);
   }
   if (style) {
     applyStyle(el, style);
@@ -37,6 +37,7 @@ export function jsx(type: string, props: Props = {}, ...children: Children) {
   } else if (__text) {
     el.innerText = __text;
   }
+  applyAttrs(el, attrs);
 
   for (const child of children) {
     if (child !== null) {
@@ -44,7 +45,6 @@ export function jsx(type: string, props: Props = {}, ...children: Children) {
     }
   }
 
-  applyAttrs(el, attrs);
   ref?.(el);
 
   return el;

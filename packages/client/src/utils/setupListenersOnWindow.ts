@@ -11,10 +11,10 @@ export interface SetupHandlersOptions {
 }
 
 export function setupListenersOnWindow(opts: SetupHandlersOptions) {
-  const onChangeElement = wrapRestoreHoldElement(opts.onChangeElement);
-  const onOpenEditor = wrapRestoreHoldElement(opts.onOpenEditor);
-  const onOpenTree = wrapRestoreHoldElement(opts.onOpenTree);
-  const onExitInspect = wrapRestoreHoldElement(opts.onExitInspect);
+  const onChangeElement = wrapCleanHoldElement(opts.onChangeElement);
+  const onOpenEditor = wrapCleanHoldElement(opts.onOpenEditor);
+  const onOpenTree = wrapCleanHoldElement(opts.onOpenTree);
+  const onExitInspect = wrapCleanHoldElement(opts.onExitInspect);
 
   function registerEventListeners() {
     on('click', onClick, {
@@ -84,7 +84,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
   function onPointerDown(e: PointerEvent) {
     onSilence(e);
-    onResetHoldElement(e);
+    setHoldElement(e);
   }
 
   function onClick(e: PointerEvent) {
@@ -116,7 +116,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
     const { clientX, clientY } = e.touches[0];
     const el = <HTMLElement>document.elementFromPoint(clientX, clientY);
-    if (el && el !== lastTouchEl) {
+    if (el !== lastTouchEl) {
       lastTouchEl = isValidElement(el) ? el : undefined;
       onChangeElement(lastTouchEl);
     }
@@ -166,10 +166,10 @@ function onSilence(e: Event, all?: boolean) {
 
 let holdEl: HTMLElement | null = null;
 
-function onResetHoldElement(e: Event) {
+function setHoldElement(e: Event) {
   const el = <HTMLElement>e.target;
   if (isValidElement(el)) {
-    swapHoldElementAttrs(el, {
+    resetAttrs(el, {
       disabled: {
         from: 'disabled',
         to: '__disabled__',
@@ -184,9 +184,9 @@ function onResetHoldElement(e: Event) {
   }
 }
 
-function onRestoreHoldElement() {
+function cleanHoldElement() {
   if (holdEl) {
-    swapHoldElementAttrs(holdEl, {
+    resetAttrs(holdEl, {
       disabled: {
         from: '__disabled__',
         to: 'disabled',
@@ -201,14 +201,14 @@ function onRestoreHoldElement() {
   }
 }
 
-function wrapRestoreHoldElement<T extends (...args: any[]) => any>(fn: T) {
-  return function wrapped(...args: Parameters<T>) {
-    onRestoreHoldElement();
+function wrapCleanHoldElement<T extends (...args: any[]) => any>(fn: T) {
+  return function wrapped(...args: Parameters<T>): ReturnType<T> {
+    cleanHoldElement();
     return fn(...args);
   };
 }
 
-function swapHoldElementAttrs(
+function resetAttrs(
   el: HTMLElement,
   attrs: Record<
     'disabled' | 'href',
@@ -221,25 +221,23 @@ function swapHoldElementAttrs(
   const { disabled, href } = attrs;
 
   // Prevent click events from being blocked
-  const disabledVal = el.getAttribute(disabled.from);
-  if (disabledVal != null) {
-    applyAttrs(el, {
-      [disabled.from]: null,
-      [disabled.to]: disabledVal,
-    });
-  }
+  swapAttr(el, disabled.from, disabled.to);
 
   // Prevents the default jump
   // `e.preventDefault()` has no effect on relative paths
   const a = findATag(el);
   if (a) {
-    const hrefVal = a.getAttribute(href.from);
-    if (hrefVal != null) {
-      applyAttrs(a, {
-        [href.from]: null,
-        [href.to]: hrefVal,
-      });
-    }
+    swapAttr(a, href.from, href.to);
+  }
+}
+
+function swapAttr(el: HTMLElement, from: string, to: string) {
+  const val = el.getAttribute(from);
+  if (val != null) {
+    applyAttrs(el, {
+      [from]: null,
+      [to]: val,
+    });
   }
 }
 

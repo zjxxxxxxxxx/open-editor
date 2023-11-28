@@ -21,8 +21,9 @@ const CSS = postcss`
 * {
   box-sizing: content-box;
   font-family: Menlo, Monaco, 'Courier New', monospace;
-  line-height: 1.5;
+  font-size: 12px;
   font-weight: 400;
+  line-height: 1.5;
   cursor: default;
   user-select: none;
   touch-action: none;
@@ -167,7 +168,7 @@ export function defineInspectElement() {
         if (this.pointE) {
           const { x, y } = this.pointE;
           const initEl = <HTMLElement>document.elementFromPoint(x, y);
-          if (initEl && isValidElement(initEl)) {
+          if (isValidElement(initEl)) {
             this.overlay.update(initEl);
           }
         }

@@ -12,6 +12,6 @@ function isFilterElement(el: HTMLElement) {
   return filterElementRE.test(el.localName);
 }
 
-export function isValidElement(el: HTMLElement) {
-  return !isInternalElement(el) && !isFilterElement(el);
+export function isValidElement(el?: HTMLElement | null) {
+  return !!el && !isInternalElement(el) && !isFilterElement(el);
 }
