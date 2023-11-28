@@ -43,8 +43,8 @@ const CSS = postcss`
   border-radius: 999px;
 }
 .active {
-  color: var(--active);
-  box-shadow: 0 0 30px 3px var(--active);
+  color: var(--cyan);
+  box-shadow: 0 0 30px 3px var(--cyan);
 }
 `;
 

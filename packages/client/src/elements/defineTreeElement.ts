@@ -34,6 +34,7 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
+  backdrop-filter: blur(10px);
 }
 .popup {
   position: fixed;
@@ -42,8 +43,8 @@ const CSS = postcss`
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
   color: var(--text);
-  background: var(--fill-opacity);
-  backdrop-filter: contrast(1.8) blur(40px);
+  background: var(--fill-opt);
+  backdrop-filter: blur(20px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
@@ -60,11 +61,10 @@ const CSS = postcss`
   border-radius: 99px;
 }
 .close:hover {
-  backdrop-filter: contrast(80%);
+  backdrop-filter: contrast(0.5);
 }
 .body {
   padding: 16px 24px;
-  font-size: 12px;
   overflow: hidden;
 }
 .error, .error .close, .error .tag {
@@ -74,7 +74,7 @@ const CSS = postcss`
   background: var(--red-light);
 }
 .content {
-  --w: calc(100vw - 148px);
+  --w: calc(100vw - 96px);
   --h: calc(100vh - 148px);
 
   min-width: 220px;
@@ -124,7 +124,6 @@ const CSS = postcss`
 }
 .file {
   padding-left: 6px;
-  font-size: 12px;
   color: var(--text-2);
   text-decoration: underline;
 }
