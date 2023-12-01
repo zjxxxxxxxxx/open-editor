@@ -1,5 +1,20 @@
 # @open-editor/client
 
+## 0.6.1
+
+### Patch Changes
+
+- [#160](https://github.com/zjxxxxxxxxx/open-editor/pull/160) [`2e9a4fd`](https://github.com/zjxxxxxxxxx/open-editor/commit/2e9a4fd7baedf9a01aaa39dd8453d7ff09491524) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Prevents the default jump of the a tag
+
+- [#162](https://github.com/zjxxxxxxxxx/open-editor/pull/162) [`65af498`](https://github.com/zjxxxxxxxxx/open-editor/commit/65af49868c12bda88991525596ce3f60cb50fcc0) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add option `once`
+
+- [#160](https://github.com/zjxxxxxxxxx/open-editor/pull/160) [`2e9a4fd`](https://github.com/zjxxxxxxxxx/open-editor/commit/2e9a4fd7baedf9a01aaa39dd8453d7ff09491524) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Remove the slash from the tree start node
+
+- [#156](https://github.com/zjxxxxxxxxx/open-editor/pull/156) [`0e80ca9`](https://github.com/zjxxxxxxxxx/open-editor/commit/0e80ca950484509f0001bbc9c9ddc34b0ea55d77) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Multiple color mode
+
+- Updated dependencies []:
+  - @open-editor/shared@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes
