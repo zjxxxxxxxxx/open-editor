@@ -86,21 +86,21 @@ First you need to get the project running.
 npm run dev
 ```
 
-Then open the local server address of the project in the browser. At this time, you can see a toggle button appearing in the upper right corner of the browser. This toggle button can be used to toggle the enabled state of the Element Inspector.
+At this time, open the local server address of the project in the browser, and you will see a toggle button appearing in the upper right corner of the browser. This toggle button can be used to toggle the enabled status of the inspector.
 
 > If you think that the switch button blocks your user interface, you can long press the switch button, wait for the switch button to enter the draggable state, and then adjust the display position of the switch button by dragging it.
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
-Clicking (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) will enable the inspector. We move the mouse to the point where we need to inspect Source code information can be seen on the element.
+Enable the inspector by clicking (shortcut: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-At this time, click element to automatically open the location of the source code in the editor.
+At this point, click on the element to automatically open the source code file in the code editor and locate the line and column.
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-At this time, you can also choose to long press (shortcut key: ⌨️<kbd>command ⌘</kbd>+🖱click) element to view the complete component tree information.
+At this time, you can also choose to long press (shortcut key: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) element to view the complete component tree.
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 
@@ -110,7 +110,7 @@ Then click on the leaf node, and the location of the leaf node will automaticall
 
 ### Exit inspector
 
-Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱right click) button in the upper right corner of the browser will exit the inspector.
+Click again (shortcut key 1: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱 right-click) the switch button in the upper right corner of the browser to exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
 
@@ -122,13 +122,13 @@ Click again (shortcut key 1: ⌨️ <kbd>Options ⌥</kbd> + <kbd>Command ⌘</k
 
 > Requires React version 15+.
 
-`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which It is a plug-in that obtains source code line and column information. Normally you don't need to pay attention to this thing because it is mainly built into the scaffolding tools. If you have issues with `open-editor` not being able to open source code, this would be a way to troubleshoot the issue.
+`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plug-in for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
 
 ### Vue
 
 > Requires Vue version 2+.
 
-`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plug-in is missing, the source code file will only be opened in the editor, and there will be no way to accurately locate the rows and columns of the source code.
+`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plug-in is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
 
 ## Playgrounds
 

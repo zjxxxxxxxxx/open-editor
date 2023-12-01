@@ -86,31 +86,31 @@ export default defineConfig({
 npm run dev
 ```
 
-然后在浏览器中打开项目的本地服务器地址，此时可以看见浏览器的右上角出现了一个切换按钮，这个切换按钮可以用于切换元素检查器的启用状态。
+此时在浏览器中打开项目的本地服务器地址，您会看见浏览器的右上角出现了一个切换按钮，这个切换按钮可以用于切换检查器的启用状态。
 
 > 如果您认为切换按钮遮挡住了您的用户界面，您可以长按切换按钮，等待切换按钮进入可拖拽状态后，以拖拽的方式调整切换按钮的显示位置
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
-点击（快捷键：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>）这个按钮就会启用检查器，我们把移动鼠标到需要检查的元素上就可以看见源代码信息。
+点击（快捷键：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>）浏览器右上角的切换按钮即可启用检查器，然后，我们移动鼠标到需要检查的元素上即可看见源代码位置信息。
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-此时点击元素就可以自动在编辑器中打开源代码所在的位置。
+此时点击元素即可自动在代码编辑器中打开源代码文件，并定位到行和列。
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-此时也可以选择长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树信息。
+此时也可以选择长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树。
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 
-然后点击叶子节点就可以自动在编辑器中打开叶子节点所在的位置。
+然后点击树节点即可自动在代码编辑器中打开源代码文件，并定位到行和列。
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
 ### 退出检查器
 
-再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的按钮就会退出检查器。
+再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的切换按钮即可退出检查器。
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
 
@@ -120,13 +120,13 @@ npm run dev
 
 > 需要 React 版本 15+。
 
-`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开源代码的问题，这将会是一个排查问题的方式。
+`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
 
 ### Vue
 
 > 需要 Vue 版本 2+。
 
-`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在编辑器中打开源代码文件，而没有办法精准定位源代码的行和列。
+`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，但无法定位到行和列。
 
 ## 演练场
 

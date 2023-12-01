@@ -18,6 +18,7 @@ import {
 } from '../resolve';
 
 export interface HTMLTreeElement extends HTMLElement {
+  show: boolean;
   open(el: HTMLElement): void;
   close(): void;
 }
@@ -135,6 +136,8 @@ const CSS = postcss`
 
 export function defineTreeElement() {
   class TreeElement extends HTMLElement implements HTMLTreeElement {
+    show = false;
+
     private root!: HTMLElement;
     private overlay!: HTMLElement;
     private popup!: HTMLElement;
@@ -208,6 +211,7 @@ export function defineTreeElement() {
     }
 
     open = (el: HTMLElement) => {
+      this.show = true;
       applyStyle(this.root, {
         display: 'block',
       });
@@ -215,6 +219,7 @@ export function defineTreeElement() {
     };
 
     close = () => {
+      this.show = false;
       applyStyle(this.root, {
         display: 'none',
       });
@@ -241,7 +246,6 @@ export function defineTreeElement() {
       const source = <ElementSourceMeta>(<unknown>el.dataset);
       if (this.checkHoldElement(e) && isStr(source.file)) {
         openEditor(source, (e) => this.dispatchEvent(e));
-        this.dispatchEvent(new CustomEvent('exit'));
       }
     };
 

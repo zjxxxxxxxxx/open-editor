@@ -111,9 +111,6 @@ export function defineInspectElement() {
     connectedCallback() {
       on('keydown', this.onKeydown, capOpts);
       on('pointermove', this.savePointE, capOpts);
-      on('exit', this.cleanupHandlers, {
-        target: this.tree,
-      });
       onOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
@@ -126,9 +123,6 @@ export function defineInspectElement() {
     disconnectedCallback() {
       off('keydown', this.onKeydown, capOpts);
       off('pointermove', this.savePointE, capOpts);
-      off('exit', this.cleanupHandlers, {
-        target: this.tree,
-      });
       offOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
@@ -185,11 +179,10 @@ export function defineInspectElement() {
     private cleanupListenersOnWindow!: () => void;
 
     private cleanupHandlers = () => {
-      if (this.active) {
+      if (this.active && !this.tree.show) {
         this.active = false;
         overrideStyle.unmount();
         this.overlay.close();
-        this.tree.close();
         this.cleanupListenersOnWindow();
       }
     };
