@@ -2,6 +2,7 @@ import { capOpts } from '../constants';
 import { applyAttrs } from './html';
 import { off, on } from './event';
 import { isValidElement } from './validElement';
+import { getOptions } from '../options';
 
 export interface SetupHandlersOptions {
   onChangeElement(el?: HTMLElement): void;
@@ -15,6 +16,8 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
   const onOpenEditor = wrapCleanHoldElement(opts.onOpenEditor);
   const onOpenTree = wrapCleanHoldElement(opts.onOpenTree);
   const onExitInspect = wrapCleanHoldElement(opts.onExitInspect);
+
+  const { once } = getOptions();
 
   function registerEventListeners() {
     on('click', onClick, {
@@ -96,8 +99,8 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
         onOpenTree(el);
         onChangeElement();
       } else {
+        if (once) onExitInspect();
         onOpenEditor(el);
-        onExitInspect();
       }
     }
   }
@@ -143,6 +146,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
     const el = <HTMLElement>e.target;
     if (isValidElement(el)) {
+      if (once) onExitInspect();
       onChangeElement();
       onOpenTree(el);
     }
