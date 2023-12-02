@@ -16,6 +16,7 @@ import {
   type ElementSourceMeta,
   resolveSource,
 } from '../resolve';
+import { getOptions } from '../options';
 
 export interface HTMLTreeElement extends HTMLElement {
   show: boolean;
@@ -245,6 +246,8 @@ export function defineTreeElement() {
       const el = <HTMLElement>e.target!;
       const source = <ElementSourceMeta>(<unknown>el.dataset);
       if (this.checkHoldElement(e) && isStr(source.file)) {
+        const { once } = getOptions();
+        if (once) this.close();
         openEditor(source, (e) => this.dispatchEvent(e));
       }
     };
