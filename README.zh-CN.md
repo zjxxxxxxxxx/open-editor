@@ -126,7 +126,7 @@ npm run dev
 
 > 需要 Vue 版本 2+。
 
-`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，但无法定位到行和列。
+`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
 
 ## 演练场
 

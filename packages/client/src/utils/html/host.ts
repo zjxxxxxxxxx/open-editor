@@ -1,10 +1,10 @@
 import { isArr } from '@open-editor/shared';
 import { append } from './dom';
-import { Children, jsx } from './jsx';
+import { JSXNode, jsx } from './jsx';
 
 export interface Options {
   css: string | string[];
-  html: Children[0] | Children;
+  html: JSXNode | JSXNode[];
 }
 
 export function host(root: HTMLElement, opts: Options) {

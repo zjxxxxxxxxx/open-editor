@@ -7,9 +7,8 @@ function isInternalElement(el: HTMLElement) {
   return internalElementRE.test(el.localName);
 }
 
-const filterElementRE = /^(html|iframe)$/;
 function isFilterElement(el: HTMLElement) {
-  return filterElementRE.test(el.localName);
+  return el.localName === 'iframe';
 }
 
 export function isValidElement(el?: HTMLElement | null) {
