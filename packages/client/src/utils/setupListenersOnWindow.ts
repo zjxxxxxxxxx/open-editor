@@ -111,9 +111,15 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
   function onPointerCancel(e: PointerEvent) {
     onSilence(e);
-    onChangeElement();
+
+    // On desktop devices, when the mouse leaves the element, overlay needs to be hidden.
+    if (isMouseEvent(e)) {
+      onChangeElement();
+    }
   }
 
+  // In mobile devices, `pointerover` is not triggered repeatedly following the movement of the finger,
+  // and the checked element can only be switched through `touchmove`.
   let lastTouchEl: HTMLElement | undefined;
   function onTouchMove(e: TouchEvent) {
     onSilence(e);
@@ -131,7 +137,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
       // esc exit.
       (<any>e).key === 'Escape' ||
       // right-click exit.
-      e.pointerType === 'mouse'
+      isMouseEvent(e)
     ) {
       onSilence(e, true);
       onExitInspect();
@@ -157,6 +163,7 @@ function onSilence(e: Event, all?: boolean) {
   const el = <HTMLElement>e.target;
   if (all || isValidElement(el)) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
+    // Only need to handle touch events, excluding other events such as pointer
     // See https://www.chromestatus.com/feature/5093566007214080.
     if (!e.type.startsWith('touch')) {
       e.preventDefault();
@@ -250,4 +257,8 @@ function findATag(el?: HTMLElement | null) {
     el = el.parentElement;
   }
   return null;
+}
+
+function isMouseEvent(e: PointerEvent) {
+  return e.pointerType === 'mouse';
 }
