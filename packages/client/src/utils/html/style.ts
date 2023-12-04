@@ -1,6 +1,7 @@
-import { isNaN } from '@open-editor/shared';
 import { append } from './dom';
 import { jsx } from './jsx';
+
+type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 
 export const CSS_util = {
   px(value: string | number) {
@@ -11,7 +12,6 @@ export const CSS_util = {
   },
 };
 
-type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 export function applyStyle(
   el: HTMLElement,
   ...styles: PartialWithNull<CSSStyleDeclaration>[]
@@ -29,11 +29,9 @@ export function computedStyle(el: Element) {
     // @ts-ignore
     toNumber: ToNumber = true,
   ) {
-    const value = style.getPropertyValue(property);
-    if (toNumber) {
-      const valueNumber = CSS_util.pv(value);
-      return <ReturnValue>(isNaN(valueNumber) ? 0 : valueNumber);
-    }
+    let value = style.getPropertyValue(property);
+    // @ts-ignore
+    if (toNumber) value = CSS_util.pv(value) || 0;
     return <ReturnValue>value;
   };
 }

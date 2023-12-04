@@ -160,7 +160,7 @@ function getIsSourceResult<T = any>(
   return false;
 }
 
-const nameRE = /([^/.]+)\.(vue|jsx|tsx)$/;
+const nameRE = /([^/.]+)\.(vue|jsx|tsx|js|ts|mjs|cjs)$/;
 function getNameByFile(file = '') {
   return file.match(nameRE)?.[1];
 }
