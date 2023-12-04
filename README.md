@@ -104,7 +104,7 @@ At this time, you can also choose to long press (shortcut key: ⌨️ <kbd>comma
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 
-Then click on the leaf node, and the location of the leaf node will automatically open in the editor.
+Then click on the tree node to automatically open the source code file in the code editor and locate the line and column.
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 

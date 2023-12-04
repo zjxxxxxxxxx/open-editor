@@ -20,10 +20,7 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
   const { once } = getOptions();
 
   function registerEventListeners() {
-    on('click', onClick, {
-      ...capOpts,
-      target: document,
-    });
+    on('click', onClick, capOpts);
 
     on('mousedown', onSilence, capOpts);
     on('mouseenter', onSilence, capOpts);
@@ -33,12 +30,12 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     on('mouseover', onSilence, capOpts);
     on('mouseup', onSilence, capOpts);
 
-    on('pointercancel', onSilence, capOpts);
+    on('pointercancel', onPointerCancel, capOpts);
     on('pointerdown', onPointerDown, capOpts);
     on('pointerenter', onSilence, capOpts);
     on('pointerleave', onSilence, capOpts);
     on('pointermove', onSilence, capOpts);
-    on('pointerout', onSilence, capOpts);
+    on('pointerout', onPointerCancel, capOpts);
     on('pointerover', onPointerOver, capOpts);
     on('pointerup', onSilence, capOpts);
 
@@ -47,16 +44,14 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     on('touchcancel', onSilence, capOpts);
     on('touchmove', onTouchMove, capOpts);
 
-    on('keydown', onKeyDown, capOpts);
-    on('contextmenu', onContextMenu, capOpts);
     on('longpress', onLongPress, capOpts);
+
+    on('keydown', onQuickExit, capOpts);
+    on('contextmenu', onQuickExit, capOpts);
   }
 
   function removeEventListeners() {
-    off('click', onClick, {
-      ...capOpts,
-      target: document,
-    });
+    off('click', onClick, capOpts);
 
     off('mousedown', onSilence, capOpts);
     off('mouseenter', onSilence, capOpts);
@@ -66,12 +61,12 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     off('mouseover', onSilence, capOpts);
     off('mouseup', onSilence, capOpts);
 
-    off('pointercancel', onSilence, capOpts);
+    off('pointercancel', onPointerCancel, capOpts);
     off('pointerdown', onPointerDown, capOpts);
     off('pointerenter', onSilence, capOpts);
     off('pointerleave', onSilence, capOpts);
     off('pointermove', onSilence, capOpts);
-    off('pointerout', onSilence, capOpts);
+    off('pointerout', onPointerCancel, capOpts);
     off('pointerover', onPointerOver, capOpts);
     off('pointerup', onSilence, capOpts);
 
@@ -80,9 +75,10 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     off('touchcancel', onSilence, capOpts);
     off('touchmove', onTouchMove, capOpts);
 
-    off('keydown', onKeyDown, capOpts);
-    off('contextmenu', onContextMenu, capOpts);
     off('longpress', onLongPress, capOpts);
+
+    off('keydown', onQuickExit, capOpts);
+    off('contextmenu', onQuickExit, capOpts);
   }
 
   function onPointerDown(e: PointerEvent) {
@@ -113,6 +109,11 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     onChangeElement(changedEl);
   }
 
+  function onPointerCancel(e: PointerEvent) {
+    onSilence(e);
+    onChangeElement();
+  }
+
   let lastTouchEl: HTMLElement | undefined;
   function onTouchMove(e: TouchEvent) {
     onSilence(e);
@@ -125,18 +126,14 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
     }
   }
 
-  // esc exit.
-  function onKeyDown(e: KeyboardEvent) {
-    onSilence(e, true);
-    if (e.key === 'Escape') {
-      onExitInspect();
-    }
-  }
-
-  // right-click exit.
-  function onContextMenu(e: PointerEvent) {
-    onSilence(e, true);
-    if (e.pointerType === 'mouse') {
+  function onQuickExit(e: PointerEvent) {
+    if (
+      // esc exit.
+      (<any>e).key === 'Escape' ||
+      // right-click exit.
+      e.pointerType === 'mouse'
+    ) {
+      onSilence(e, true);
       onExitInspect();
     }
   }

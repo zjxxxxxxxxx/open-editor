@@ -330,17 +330,23 @@ export function defineTreeElement() {
         title: withFile ? 'Click to open in your editor' : null,
         ...dataset,
       },
-      jsx('span', {
-        className: 'name',
-        __text: withFile ? `<${name}>` : `<${name}/>`,
-        ...dataset,
-      }),
+      jsx(
+        'span',
+        {
+          className: 'name',
+          ...dataset,
+        },
+        withFile ? `<${name}>` : `<${name}/>`,
+      ),
       withFile
-        ? jsx('span', {
-            className: 'file',
-            __text: `${file}:${line}:${column}`,
-            ...dataset,
-          })
+        ? jsx(
+            'span',
+            {
+              className: 'file',
+              ...dataset,
+            },
+            `${file}:${line}:${column}`,
+          )
         : null,
     );
   }

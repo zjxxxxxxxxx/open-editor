@@ -99,11 +99,10 @@ export function defineInspectElement() {
           jsx<HTMLTreeElement>(InternalElements.HTML_TREE_ELEMENT, {
             ref: (el) => (this.tree = el),
           }),
-          opts.displayToggle
-            ? jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
-                ref: (el) => (this.toggle = el),
-              })
-            : null,
+          opts.displayToggle &&
+            jsx<HTMLToggleElement>(InternalElements.HTML_TOGGLE_ELEMENT, {
+              ref: (el) => (this.toggle = el),
+            }),
         ],
       });
     }
