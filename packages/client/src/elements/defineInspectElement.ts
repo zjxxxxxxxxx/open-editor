@@ -109,7 +109,7 @@ export function defineInspectElement() {
 
     connectedCallback() {
       on('keydown', this.onKeydown, capOpts);
-      on('pointermove', this.savePointE, capOpts);
+      on('mousemove', this.savePointE, capOpts);
       onOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
@@ -121,7 +121,7 @@ export function defineInspectElement() {
 
     disconnectedCallback() {
       off('keydown', this.onKeydown, capOpts);
-      off('pointermove', this.savePointE, capOpts);
+      off('mousemove', this.savePointE, capOpts);
       offOpenEditorError(this.showErrorOverlay);
 
       if (this.toggle) {
