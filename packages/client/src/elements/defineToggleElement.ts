@@ -5,7 +5,7 @@ import {
   applyStyle,
   host,
   addClass,
-  reomveClass,
+  removeClass,
 } from '../utils/html';
 import { off, on } from '../utils/event';
 import { create_RAF } from '../utils/createRAF';
@@ -88,7 +88,7 @@ export function defineToggleElement() {
       if (newValue === 'true') {
         addClass(this.button, 'active');
       } else {
-        reomveClass(this.button, 'active');
+        removeClass(this.button, 'active');
       }
     }
 

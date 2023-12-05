@@ -5,7 +5,9 @@ import {
   applyStyle,
   host,
   addClass,
-  reomveClass,
+  removeClass,
+  getHtml,
+  globalStyle,
 } from '../utils/html';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
@@ -182,6 +184,10 @@ export function defineTreeElement() {
     }
 
     connectedCallback() {
+      globalStyle(postcss`.oe-screen-lock {
+        overflow: hidden;
+      }`).mount();
+
       on('pointerdown', this.setHoldElement, {
         target: this.root,
       });
@@ -216,14 +222,16 @@ export function defineTreeElement() {
       applyStyle(this.root, {
         display: 'block',
       });
+      addClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent(resolveSource(el, true));
     };
 
     close = () => {
       this.show = false;
       applyStyle(this.root, {
-        display: 'none',
+        display: null,
       });
+      removeClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent();
     };
 
@@ -261,7 +269,7 @@ export function defineTreeElement() {
       const hasTree = source.tree.length > 0;
       const treeNodes = hasTree ? buildTree(source.tree) : ['>> not found 😭.'];
 
-      if (hasTree) reomveClass(this.popup, 'error');
+      if (hasTree) removeClass(this.popup, 'error');
       else addClass(this.popup, 'error');
 
       append(

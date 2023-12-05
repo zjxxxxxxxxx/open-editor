@@ -46,7 +46,7 @@ export function globalStyle(css: string) {
     mount() {
       if (!isMounted) {
         isMounted = true;
-        append(document.body, style);
+        append(document.head, style);
       }
     },
     unmount() {
@@ -62,6 +62,6 @@ export function addClass(el: HTMLElement, className: string) {
   el.classList.add(...className.split(' '));
 }
 
-export function reomveClass(el: HTMLElement, className: string) {
+export function removeClass(el: HTMLElement, className: string) {
   el.classList.remove(...className.split(' '));
 }
