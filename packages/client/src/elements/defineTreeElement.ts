@@ -12,7 +12,7 @@ import {
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
 import close from '../icons/close';
-import { InternalElements } from '../constants';
+import { InternalElements, capOpts } from '../constants';
 import {
   type ElementSource,
   type ElementSourceMeta,
@@ -146,7 +146,7 @@ export function defineTreeElement() {
     private popup!: HTMLElement;
     private popupClose!: HTMLElement;
     private popupBody!: HTMLElement;
-    private holdEl?: HTMLElement;
+    private clickable = false;
 
     constructor() {
       super();
@@ -187,34 +187,6 @@ export function defineTreeElement() {
       globalStyle(postcss`.oe-screen-lock {
         overflow: hidden;
       }`).mount();
-
-      on('pointerdown', this.setHoldElement, {
-        target: this.root,
-      });
-      on('click', this.safeClose, {
-        target: this.overlay,
-      });
-      on('click', this.safeClose, {
-        target: this.popupClose,
-      });
-      on('click', this.tryOpenEditor, {
-        target: this.popupBody,
-      });
-    }
-
-    disconnectedCallback() {
-      off('pointerdown', this.setHoldElement, {
-        target: this.root,
-      });
-      off('click', this.safeClose, {
-        target: this.overlay,
-      });
-      off('click', this.safeClose, {
-        target: this.popupClose,
-      });
-      off('click', this.tryOpenEditor, {
-        target: this.popupBody,
-      });
     }
 
     open = (el: HTMLElement) => {
@@ -224,6 +196,22 @@ export function defineTreeElement() {
       });
       addClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent(resolveSource(el, true));
+
+      // Prevent the display of the component tree by long press, which accidentally triggers the click event
+      on('pointerup', this.enableClick, {
+        target: this.root,
+      });
+      on('keydown', this.exit, capOpts);
+
+      on('click', this.exit, {
+        target: this.overlay,
+      });
+      on('click', this.exit, {
+        target: this.popupClose,
+      });
+      on('click', this.tryOpenEditor, {
+        target: this.popupBody,
+      });
     };
 
     close = () => {
@@ -233,19 +221,30 @@ export function defineTreeElement() {
       });
       removeClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent();
+
+      off('keydown', this.exit, capOpts);
+
+      off('click', this.exit, {
+        target: this.overlay,
+      });
+      off('click', this.exit, {
+        target: this.popupClose,
+      });
+      off('click', this.tryOpenEditor, {
+        target: this.popupBody,
+      });
     };
 
-    private setHoldElement = (e: PointerEvent) => {
-      this.holdEl = <HTMLElement>e.target;
+    private enableClick = () => {
+      this.clickable = true;
+      off('pointerup', this.enableClick, {
+        target: this.root,
+      });
     };
 
-    // Prevent the display of the component tree by long press, which accidentally triggers the click event
-    private checkHoldElement = (e: PointerEvent) => {
-      return <HTMLElement>e.target === this.holdEl;
-    };
-
-    private safeClose = (e: PointerEvent) => {
-      if (this.checkHoldElement(e)) {
+    private exit = (e: KeyboardEvent) => {
+      if ((e.type === 'keydown' && e.key === 'Escape') || this.clickable) {
+        this.clickable = false;
         this.close();
       }
     };
@@ -253,7 +252,7 @@ export function defineTreeElement() {
     private tryOpenEditor = (e: PointerEvent) => {
       const el = <HTMLElement>e.target!;
       const source = <ElementSourceMeta>(<unknown>el.dataset);
-      if (this.checkHoldElement(e) && isStr(source.file)) {
+      if (this.clickable && isStr(source.file)) {
         const { once } = getOptions();
         if (once) this.close();
         openEditor(source, (e) => this.dispatchEvent(e));
