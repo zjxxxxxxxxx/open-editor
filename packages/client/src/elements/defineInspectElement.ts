@@ -155,8 +155,13 @@ export function defineInspectElement() {
     private setupHandlers() {
       if (!this.active) {
         this.active = true;
-        overrideStyle.mount();
         this.overlay.open();
+        this.cleanupListenersOnWindow = setupListenersOnWindow({
+          onChangeElement: this.overlay.update,
+          onOpenTree: this.tree.open,
+          onOpenEditor: this.openEditor,
+          onExitInspect: this.cleanupHandlers,
+        });
 
         if (this.pointE) {
           const { x, y } = this.pointE;
@@ -166,12 +171,7 @@ export function defineInspectElement() {
           }
         }
 
-        this.cleanupListenersOnWindow = setupListenersOnWindow({
-          onChangeElement: this.overlay.update,
-          onOpenTree: this.tree.open,
-          onOpenEditor: this.openEditor,
-          onExitInspect: this.cleanupHandlers,
-        });
+        overrideStyle.mount();
       }
     }
 
@@ -180,9 +180,10 @@ export function defineInspectElement() {
     private cleanupHandlers = () => {
       if (this.active && !this.tree.show) {
         this.active = false;
-        overrideStyle.unmount();
         this.overlay.close();
         this.cleanupListenersOnWindow();
+
+        overrideStyle.unmount();
       }
     };
 

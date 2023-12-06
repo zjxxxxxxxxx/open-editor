@@ -52,6 +52,12 @@ interface Options {
    */
   colorMode?: 'auto' | 'light' | 'dark';
   /**
+   * exit the check after opening the editor or component tree
+   *
+   * @default true
+   */
+  once?: boolean;
+  /**
    * custom openEditor handler
    */
   onOpenEditor?(file: string): void;
