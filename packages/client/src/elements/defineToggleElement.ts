@@ -201,6 +201,9 @@ export function defineToggleElement() {
     });
 
     private dispatchToggle = () => {
+      // Let the button lose focus to prevent the click event from being accidentally triggered by pressing the Enter key or the Space bar.
+      this.button.blur();
+
       // Prevents the click event from being triggered by the end of the drag
       if (!this.dndPoint) {
         this.dispatchEvent(new CustomEvent('toggle'));

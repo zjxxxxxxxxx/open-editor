@@ -91,11 +91,11 @@ export function setupListenersOnWindow(opts: SetupHandlersOptions) {
 
     const el = <HTMLElement>e.target;
     if (el === holdEl) {
+      if (once) onExitInspect();
       if (e.metaKey) {
         onOpenTree(el);
         onChangeElement();
       } else {
-        if (once) onExitInspect();
         onOpenEditor(el);
       }
     }
