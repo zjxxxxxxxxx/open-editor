@@ -1,7 +1,7 @@
 import { isStr } from '@open-editor/shared';
-import type { ResolveDebug } from './resolveDebug';
-import type { ElementSourceMeta } from './resolveSource';
-import { ensureFileName, isValidFileName } from './util';
+import type { ElementSourceMeta } from '../';
+import type { ResolveDebug } from '../resolveDebug';
+import { ensureFileName, isValidFileName } from '../util';
 
 interface VueResolverOptions<T = any> {
   isValid(instance: T): boolean;
@@ -18,15 +18,15 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
     tree: Partial<ElementSourceMeta>[],
     deep: boolean,
   ) {
-    if (isSource(debug, opts)) {
-      resolveSource(debug, tree, deep, opts);
+    if (isVueSource(debug, opts)) {
+      resolveByVueSource(debug, tree, deep, opts);
     } else {
-      resolveInstance(debug.value, tree, deep, opts);
+      resolveByInstance(debug.value, tree, deep, opts);
     }
   };
 }
 
-function resolveSource<T = any>(
+function resolveByVueSource<T = any>(
   debug: ResolveDebug<T>,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
@@ -48,7 +48,7 @@ function resolveSource<T = any>(
         push(inst);
 
         if (!deep) return;
-        source = parseSource(__source);
+        source = parseVueSource(__source);
       }
     } else {
       push(inst);
@@ -65,42 +65,7 @@ function resolveSource<T = any>(
   }
 }
 
-function getAnchor<T = any>(
-  debug: ResolveDebug,
-  opts: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
-) {
-  const { isValidNext, getSource, getNext } = opts;
-
-  let inst = debug.value;
-  let el = debug.originalEl as HTMLElement & Record<string, any>;
-  let __source: string | null | undefined;
-
-  // find the first el with __source
-  while (el && !isStr((__source = el.getAttribute('__source')))) {
-    el = el.parentElement!;
-  }
-  // if the el exists and belongs to the component, the result is returned
-  if (el) {
-    if (el[debug.key] ? el[debug.key] === inst : true) {
-      return <const>[inst, parseSource(__source!)];
-    }
-  }
-  // the root component returns the result directly
-  if (isStr(__source) && !isValidNext(inst)) {
-    return <const>[inst, parseSource(__source)];
-  }
-  // try to get the result from the component
-  while (inst) {
-    if (isStr((__source = getSource(inst)))) {
-      return <const>[getNext(inst), parseSource(__source)];
-    }
-    inst = getNext(inst);
-  }
-
-  return [];
-}
-
-function resolveInstance<T = any>(
+function resolveByInstance<T = any>(
   inst: T,
   tree: Partial<ElementSourceMeta>[],
   deep: boolean,
@@ -123,7 +88,42 @@ function resolveInstance<T = any>(
   }
 }
 
-function parseSource(__source: string) {
+function getAnchor<T = any>(
+  debug: ResolveDebug,
+  opts: Pick<VueResolverOptions<T>, 'isValidNext' | 'getSource' | 'getNext'>,
+) {
+  const { isValidNext, getSource, getNext } = opts;
+
+  let inst = debug.value;
+  let el = debug.originalEl as HTMLElement & Record<string, any>;
+  let __source: string | null | undefined;
+
+  // find the first el with __source
+  while (el && !isStr((__source = el.getAttribute('__source')))) {
+    el = el.parentElement!;
+  }
+  // if the el exists and belongs to the component, the result is returned
+  if (el) {
+    if (el[debug.key] ? el[debug.key] === inst : true) {
+      return <const>[inst, parseVueSource(__source!)];
+    }
+  }
+  // the root component returns the result directly
+  if (isStr(__source) && !isValidNext(inst)) {
+    return <const>[inst, parseVueSource(__source)];
+  }
+  // try to get the result from the component
+  while (inst) {
+    if (isStr((__source = getSource(inst)))) {
+      return <const>[getNext(inst), parseVueSource(__source)];
+    }
+    inst = getNext(inst);
+  }
+
+  return [];
+}
+
+function parseVueSource(__source: string) {
   const [file, line, column] = __source.split(':');
   return {
     file: ensureFileName(file),
@@ -132,15 +132,15 @@ function parseSource(__source: string) {
   };
 }
 
-let isSourceResult: boolean | undefined;
-function isSource<T = any>(
+function isVueSource<T = any>(
   debug: ResolveDebug,
   opts: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
 ) {
-  return (isSourceResult ??= getIsSourceResult(debug, opts));
+  return (hasVueSource ??= findVueSource(debug, opts));
 }
 
-function getIsSourceResult<T = any>(
+let hasVueSource: boolean | undefined;
+function findVueSource<T = any>(
   debug: ResolveDebug,
   opts: Pick<VueResolverOptions<T>, 'getSource' | 'getNext'>,
 ) {

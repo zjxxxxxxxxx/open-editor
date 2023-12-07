@@ -63,5 +63,3 @@ interface Options {
   onOpenEditor?(file: string): void;
 }
 ```
-
-[Github](https://github.com/zjxxxxxxxxx/open-editor)

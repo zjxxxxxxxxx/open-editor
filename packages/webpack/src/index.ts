@@ -1,5 +1,5 @@
 import type webpack from 'webpack';
-import { createRuntime, isDev } from '@open-editor/shared/node';
+import { createClient, isDev } from '@open-editor/shared/node';
 import { isFn, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
@@ -58,8 +58,8 @@ export default class OpenEditorPlugin {
     this.compiler = compiler;
 
     if (compiler.webpack?.version.startsWith('5')) {
-      this.resolveClientRuntime((clientRuntimeEntry) => {
-        new compiler.webpack.EntryPlugin(compiler.context, clientRuntimeEntry, {
+      this.resolveClient((clientEntry) => {
+        new compiler.webpack.EntryPlugin(compiler.context, clientEntry, {
           name: undefined,
         }).apply(compiler);
       });
@@ -72,8 +72,8 @@ export default class OpenEditorPlugin {
 
       const entry = compiler.options.entry;
       compiler.options.entry = () =>
-        this.resolveClientRuntime((clientRuntimeEntry) => {
-          return this.injectClientRuntime(entry, clientRuntimeEntry);
+        this.resolveClient((clientEntry) => {
+          return this.injectClient(entry, clientEntry);
         });
       compiler.hooks.entryOption.call(
         compiler.options.context!,
@@ -82,28 +82,23 @@ export default class OpenEditorPlugin {
     }
   }
 
-  async resolveClientRuntime<
-    Callback extends (clientRuntimeEntry: string) => any,
-  >(callback: Callback): Promise<ReturnType<Callback>> {
-    const runtime = createRuntime(import.meta.url);
-
+  async resolveClient<Callback extends (clientEntry: string) => any>(
+    callback: Callback,
+  ): Promise<ReturnType<Callback>> {
+    const client = createClient(import.meta.url);
     getServerPort(this.options).then((port) => {
-      runtime.generate({
+      client.generate({
         ...this.options,
         port,
       });
     });
-
-    return callback(runtime.filename);
+    return callback(client.filename);
   }
 
-  injectClientRuntime(
-    entry: webpack.EntryNormalized,
-    clientRuntimeEntry: string,
-  ): any {
+  injectClient(entry: webpack.EntryNormalized, clientEntry: string): any {
     if (isFn(entry)) {
       return Promise.resolve(entry()).then((originalEntry) => {
-        return this.injectClientRuntime(originalEntry, clientRuntimeEntry);
+        return this.injectClient(originalEntry, clientEntry);
       });
     }
 
@@ -112,13 +107,13 @@ export default class OpenEditorPlugin {
     }
 
     if (Array.isArray(entry)) {
-      return [...entry, clientRuntimeEntry];
+      return [...entry, clientEntry];
     }
 
     return Object.fromEntries(
       Object.entries(entry).map(([key, entry]) => [
         key,
-        this.injectClientRuntime(entry, clientRuntimeEntry),
+        this.injectClient(entry, clientEntry),
       ]),
     );
   }

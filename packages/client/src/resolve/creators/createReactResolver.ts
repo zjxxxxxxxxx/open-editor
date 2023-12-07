@@ -1,5 +1,5 @@
-import type { ElementSourceMeta } from './resolveSource';
-import { isValidFileName } from './util';
+import type { ElementSourceMeta } from '../';
+import { isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
   isValid(current?: T | null): boolean;
