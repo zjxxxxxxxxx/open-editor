@@ -1,6 +1,6 @@
 import type { Plugin } from 'rollup';
 import { resolve } from 'node:path';
-import { createRuntime, isDev } from '@open-editor/shared/node';
+import { createClient, isDev } from '@open-editor/shared/node';
 import { isObj, isStr } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
@@ -55,7 +55,7 @@ export default function openEditorPlugin(
     onOpenEditor,
   } = options;
 
-  const runtime = createRuntime(import.meta.url);
+  const client = createClient(import.meta.url);
   const include = new Set<string>();
 
   return {
@@ -81,7 +81,7 @@ export default function openEditorPlugin(
         rootDir,
         onOpenEditor,
       });
-      runtime.generate({
+      client.generate({
         port,
         rootDir,
         displayToggle,
@@ -91,7 +91,7 @@ export default function openEditorPlugin(
     },
     transform(code, id) {
       if (include.has(id)) {
-        return `import '${runtime.filename}';\n${code}`;
+        return `import '${client.filename}';\n${code}`;
       }
     },
   };

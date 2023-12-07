@@ -34,19 +34,23 @@
 - 🚀 支持查找组件树。
 - 👽 支持自动查找可用编辑器。
 
-## 安装包
-
-| 源代码                                                                                          | NPM 版本                                                                                                                       | 下载量                                                                                                                       |
-| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
-| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
-| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
-
 ## 使用
 
-> 示例以 [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) 作为参考，其他情况下只是选择不同而已，使用方式是完全一致的。
+### React
+
+> 需要 React 版本 15+。
+
+`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
+
+### Vue
+
+> 需要 Vue 版本 2+。
+
+`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
 
 ### 使用插件
+
+> 示例以 [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) 作为参考，其他情况下只是选择不同而已，使用方式是完全一致的。
 
 首先需要把插件安装一下。
 
@@ -114,19 +118,13 @@ npm run dev
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
 
-## 框架
+## 安装包
 
-### React
-
-> 需要 React 版本 15+。
-
-`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
-
-### Vue
-
-> 需要 Vue 版本 2+。
-
-`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
+| 源代码                                                                                          | NPM 版本                                                                                                                       | 下载量                                                                                                                       |
+| ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
+| [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
+| [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
 
 ## 演练场
 

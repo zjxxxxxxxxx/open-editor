@@ -1,18 +1,18 @@
 import type { ComponentInternalInstance } from '@vue/runtime-core';
+import type { ElementSourceMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
-import type { ElementSourceMeta } from '../resolveSource';
-import { createVueResolver } from '../createVueResolver';
+import { createVueResolver } from '../creators/createVueResolver';
 
 export function resolveVue3(
   debug: ResolveDebug,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  getResolver()(debug, tree, deep);
+  ensureLazyResolver()(debug, tree, deep);
 }
 
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
-function getResolver() {
+function ensureLazyResolver() {
   return (resolver ||= createVueResolver({
     isValid(inst) {
       return Boolean(inst);
