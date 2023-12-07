@@ -82,7 +82,7 @@ function isSameListener(
 }
 
 function setupListener(listener: LongPressListener, rawOpts: LongPressOptions) {
-  const { wait = 500, ...opts } = rawOpts;
+  const { wait = 300, ...opts } = rawOpts;
 
   function setup() {
     on('pointerdown', start, opts);

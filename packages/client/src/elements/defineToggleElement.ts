@@ -57,7 +57,7 @@ export function defineToggleElement() {
     private root!: HTMLElement;
     private overlay!: HTMLElement;
     private button!: HTMLElement;
-    private dndPoint?: { pageY: number; posY: number };
+    private dnding = false;
     private isTouchScreen!: boolean;
 
     constructor() {
@@ -94,59 +94,34 @@ export function defineToggleElement() {
 
     connectedCallback() {
       this.updatePosY_RAF();
-      this.checkTouchScreen();
-
-      SafeAreaObserver.observe(this.setSafeRight);
+      this.updateToggleSize();
+      SafeAreaObserver.observe(this.updateToggleRight);
+      on('resize', this.updatePosY_RAF);
+      on('resize', this.updateToggleSize);
+      on('longpress', this.startDnD, {
+        target: this.button,
+        wait: 200,
+      });
       on('click', this.dispatchToggle, {
         target: this.button,
       });
-      on('longpress', this.startDnD, {
-        target: this.button,
-        wait: 300,
-      });
-      on('resize', this.updatePosY_RAF);
-      on('resize', this.checkTouchScreen);
     }
 
     disconnectedCallback() {
-      SafeAreaObserver.unobserve(this.setSafeRight);
+      SafeAreaObserver.unobserve(this.updateToggleRight);
+      off('resize', this.updatePosY_RAF);
+      off('resize', this.updateToggleSize);
+      off('longpress', this.startDnD, {
+        target: this.button,
+        wait: 200,
+      });
       off('click', this.dispatchToggle, {
         target: this.button,
       });
-      off('longpress', this.startDnD, {
-        target: this.button,
-        wait: 300,
-      });
-      off('resize', this.updatePosY_RAF);
-      off('resize', this.checkTouchScreen);
     }
 
-    private checkTouchScreen = () => {
-      const isTouchScreen =
-        Boolean(navigator.maxTouchPoints) || 'ontouchstart' in window;
-      if (this.isTouchScreen !== (this.isTouchScreen = isTouchScreen)) {
-        // Display larger button on the touch screen
-        const pad = CSS_util.px(this.isTouchScreen ? 3 : 2);
-        const size = CSS_util.px(this.isTouchScreen ? 34 : 24);
-        applyStyle(this.button, {
-          padding: pad,
-          width: size,
-          height: size,
-        });
-      }
-    };
-
-    private setSafeRight = (value: SafeAreaValue) => {
-      applyStyle(this.root, {
-        right: CSS_util.px(value.right),
-      });
-    };
-
-    private startDnD = (e: PointerEvent) => {
-      this.dndPoint = {
-        pageY: e.pageY,
-        posY: getCachePosY(),
-      };
+    private startDnD = () => {
+      this.dnding = true;
       applyStyle(this.root, {
         cursor: 'ns-resize',
       });
@@ -164,7 +139,7 @@ export function defineToggleElement() {
 
     private stopDnD = () => {
       // Modify when the click e is complete
-      setTimeout(() => (this.dndPoint = undefined));
+      setTimeout(() => (this.dnding = false));
       applyStyle(this.root, {
         cursor: null,
       });
@@ -180,10 +155,31 @@ export function defineToggleElement() {
       off('pointerup', this.stopDnD);
     };
 
+    private updateToggleSize = () => {
+      if (
+        this.isTouchScreen !==
+        (this.isTouchScreen =
+          Boolean(navigator.maxTouchPoints) || 'ontouchstart' in window)
+      ) {
+        // Display larger button on the touch screen
+        const pad = CSS_util.px(this.isTouchScreen ? 3 : 2);
+        const size = CSS_util.px(this.isTouchScreen ? 34 : 24);
+        applyStyle(this.button, {
+          padding: pad,
+          width: size,
+          height: size,
+        });
+      }
+    };
+
+    private updateToggleRight = (value: SafeAreaValue) => {
+      applyStyle(this.root, {
+        right: CSS_util.px(value.right),
+      });
+    };
+
     private changePosY = (e: PointerEvent) => {
-      const { pageY, posY } = this.dndPoint!;
-      const nextPosY = e.pageY - pageY + posY;
-      setCachePosY(nextPosY);
+      setCachePosY(e.clientY);
       this.updatePosY_RAF();
     };
 
@@ -205,7 +201,7 @@ export function defineToggleElement() {
       this.button.blur();
 
       // Prevents the click event from being triggered by the end of the drag
-      if (!this.dndPoint) {
+      if (!this.dnding) {
         this.dispatchEvent(new CustomEvent('toggle'));
       }
     };
