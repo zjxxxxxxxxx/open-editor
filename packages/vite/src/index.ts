@@ -65,8 +65,6 @@ export default function openEditorPlugin(
     once,
   });
 
-  let transformed = false;
-
   return {
     name: 'vite:open-editor',
     apply: 'serve',
@@ -94,8 +92,7 @@ export default function openEditorPlugin(
       }
     },
     transform(code, id) {
-      if (!transformed && id.endsWith(VITE_CLIENT_PATH)) {
-        transformed = true;
+      if (id.endsWith(VITE_CLIENT_PATH)) {
         return `import '${client.filename}';\n${code}`;
       }
     },
