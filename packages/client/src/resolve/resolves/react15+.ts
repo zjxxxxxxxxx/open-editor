@@ -1,8 +1,8 @@
 import { isFn } from '@open-editor/shared';
+import type { ElementSourceMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
-import type { ElementSourceMeta } from '../resolveSource';
-import { createReactResolver } from '../createReactResolver';
-import { fiberResolver } from './react17+';
+import { createReactResolver } from '../creators/createReactResolver';
+import { resolveByFiber } from './react17+';
 
 export function resolveReact15Plus(
   { value: inst }: ResolveDebug,
@@ -10,22 +10,22 @@ export function resolveReact15Plus(
   deep = false,
 ) {
   if (inst && '_debugOwner' in inst) {
-    fiberResolver(inst, tree, deep);
+    resolveByFiber(inst, tree, deep);
   } else {
-    instanceResolver(inst, tree, deep);
+    resolveByInstance(inst, tree, deep);
   }
 }
 
-export function instanceResolver(
+export function resolveByInstance(
   inst: any | null | undefined,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  return getResolver()(inst, tree, deep);
+  return ensureLazyResolver()(inst, tree, deep);
 }
 
 let resolver: ReturnType<typeof createReactResolver<any>>;
-function getResolver() {
+function ensureLazyResolver() {
   return (resolver ||= createReactResolver({
     isValid(owner) {
       const el = getEl(owner);

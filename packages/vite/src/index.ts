@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 import { readFileSync } from 'node:fs';
 import { ServerApis } from '@open-editor/shared';
-import { createRuntime, isDev } from '@open-editor/shared/node';
+import { createClient, isDev } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
 
 export interface Options {
@@ -55,15 +55,17 @@ export default function openEditorPlugin(
     onOpenEditor,
   } = options;
 
-  const RUNTIME_PUBLIC_PATH = '/@open-editor/client';
+  const VITE_CLIENT_PATH = '/vite/dist/client/client.mjs';
 
-  const runtime = createRuntime(import.meta.url);
-  runtime.generate({
+  const client = createClient(import.meta.url);
+  client.generate({
     rootDir,
     displayToggle,
     colorMode,
     once,
   });
+
+  let transformed = false;
 
   return {
     name: 'vite:open-editor',
@@ -71,10 +73,10 @@ export default function openEditorPlugin(
 
     config: () => ({
       optimizeDeps: {
-        exclude: [runtime.filename],
+        exclude: [client.filename],
       },
       resolve: {
-        dedupe: [runtime.filename],
+        dedupe: [client.filename],
       },
     }),
     configureServer(server) {
@@ -86,30 +88,16 @@ export default function openEditorPlugin(
         }),
       );
     },
-    resolveId(id) {
-      if (id === RUNTIME_PUBLIC_PATH) {
-        return runtime.filename;
-      }
-    },
     load(id) {
-      if (id === runtime.filename) {
-        return readFileSync(runtime.filename, 'utf-8');
+      if (id === client.filename) {
+        return readFileSync(client.filename, 'utf-8');
       }
     },
-    transformIndexHtml(html) {
-      return {
-        html,
-        tags: [
-          {
-            tag: 'script',
-            attrs: {
-              type: 'module',
-              src: RUNTIME_PUBLIC_PATH,
-            },
-            injectTo: 'head',
-          },
-        ],
-      };
+    transform(code, id) {
+      if (!transformed && id.endsWith(VITE_CLIENT_PATH)) {
+        transformed = true;
+        return `import '${client.filename}';\n${code}`;
+      }
     },
   };
 }

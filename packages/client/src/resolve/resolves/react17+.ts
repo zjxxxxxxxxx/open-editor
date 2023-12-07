@@ -1,27 +1,27 @@
 import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
+import type { ElementSourceMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
-import type { ElementSourceMeta } from '../resolveSource';
-import { createReactResolver } from '../createReactResolver';
+import { createReactResolver } from '../creators/createReactResolver';
 
 export function resolveReact17Plus(
   { value: fiber }: ResolveDebug<Fiber>,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  fiberResolver(fiber, tree, deep);
+  resolveByFiber(fiber, tree, deep);
 }
 
-export function fiberResolver(
+export function resolveByFiber(
   fiber: Fiber | null | undefined,
   tree: Partial<ElementSourceMeta>[],
   deep = false,
 ) {
-  return getResolver()(fiber, tree, deep);
+  return ensureLazyResolver()(fiber, tree, deep);
 }
 
 let resolver: ReturnType<typeof createReactResolver<Fiber>>;
-function getResolver() {
+function ensureLazyResolver() {
   return (resolver ||= createReactResolver({
     isValid(owner) {
       if (owner?._debugSource) {

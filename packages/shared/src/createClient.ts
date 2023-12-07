@@ -1,14 +1,14 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolvePath } from './resolve';
 
-const runtimeId = '@open-editor/client/runtime';
+const clientId = '@open-editor/client/client';
 const template = <const>`import { setupClient } from './index';
 if (typeof window !== 'undefined') {
   setupClient(__OPTIONS__)
 }`;
 
-export function createRuntime(url: string) {
-  const filename = resolvePath(runtimeId, url);
+export function createClient(url: string) {
+  const filename = resolvePath(clientId, url);
 
   function generate(options: object) {
     const oldCode = existsSync(filename)

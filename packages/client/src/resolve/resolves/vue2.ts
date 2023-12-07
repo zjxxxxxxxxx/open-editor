@@ -1,6 +1,6 @@
+import type { ElementSourceMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
-import type { ElementSourceMeta } from '../resolveSource';
-import { createVueResolver } from '../createVueResolver';
+import { createVueResolver } from '../creators/createVueResolver';
 
 export function resolveVue2(
   debug: ResolveDebug,
@@ -11,11 +11,11 @@ export function resolveVue2(
   if (componentInstance) {
     debug.value = componentInstance;
   }
-  getResolver()(debug, tree, deep);
+  ensureLazyResolver()(debug, tree, deep);
 }
 
 let resolver: ReturnType<typeof createVueResolver<any>>;
-function getResolver() {
+function ensureLazyResolver() {
   return (resolver ||= createVueResolver({
     isValid(inst) {
       return Boolean(inst?.$vnode);

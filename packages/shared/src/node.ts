@@ -1,3 +1,3 @@
 export * from './resolve';
-export * from './createRuntime';
+export * from './createClient';
 export * from './env';

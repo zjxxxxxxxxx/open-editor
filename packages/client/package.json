@@ -11,7 +11,7 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./runtime": "./dist/runtime.js"
+    "./client": "./dist/client.js"
   },
   "files": [
     "dist"
