@@ -1,7 +1,6 @@
-import { type RectStyle, getRectStyles } from '../utils/getRectStyles';
+import { type RectBox, getRectBoxs } from '../utils/getRectBoxs';
 import { jsx, CSS_util, applyStyle, host } from '../utils/html';
 import { off, on } from '../utils/event';
-import { create_RAF } from '../utils/createRAF';
 import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements, capOpts } from '../constants';
 import { type HTMLTooltipElement } from './defineTooltipElement';
@@ -13,14 +12,14 @@ export interface HTMLOverlayElement extends HTMLElement {
 }
 
 const CSS = postcss`
-.posttion {
+.position {
   position: fixed;
   z-index: var(--z-index-overlay);
   display: none;
   pointer-events: none;
   will-change: width, height, top, left;
 }
-.posttion div {
+.position div {
   will-change: width, height, border;
 }
 .margin {
@@ -39,7 +38,7 @@ const CSS = postcss`
 
 export function defineOverlayElement() {
   class OverlayElement extends HTMLElement implements HTMLOverlayElement {
-    private posttion!: HTMLElement;
+    private position!: HTMLElement;
     private margin!: HTMLElement;
     private border!: HTMLElement;
     private padding!: HTMLElement;
@@ -56,8 +55,8 @@ export function defineOverlayElement() {
           jsx(
             'div',
             {
-              ref: (el) => (this.posttion = el),
-              className: 'posttion',
+              ref: (el) => (this.position = el),
+              className: 'position',
             },
             jsx(
               'div',
@@ -93,61 +92,61 @@ export function defineOverlayElement() {
     }
 
     open = () => {
-      applyStyle(this.posttion, {
+      applyStyle(this.position, {
         display: 'block',
       });
       this.tooltip.open();
 
-      SafeAreaObserver.observe(this.update_RAF);
-      on('scroll', this.update_RAF, capOpts);
-      on('resize', this.update_RAF, capOpts);
+      SafeAreaObserver.observe(this._update);
+      on('scroll', this._update, capOpts);
+      on('resize', this._update, capOpts);
     };
 
     close = () => {
-      applyStyle(this.posttion, {
+      applyStyle(this.position, {
         display: 'none',
       });
       this.tooltip.close();
       this.update();
 
-      SafeAreaObserver.unobserve(this.update_RAF);
-      off('scroll', this.update_RAF, capOpts);
-      off('resize', this.update_RAF, capOpts);
+      SafeAreaObserver.unobserve(this._update);
+      off('scroll', this._update, capOpts);
+      off('resize', this._update, capOpts);
     };
 
     update = (activeEl?: HTMLElement) => {
       this.activeEl = activeEl;
-      this.update_RAF();
+      this._update();
     };
 
-    private update_RAF = create_RAF(() => {
-      const styles = getRectStyles(this.activeEl);
-      this.updateStyles(styles);
-      this.tooltip.update(this.activeEl, styles.posttion);
-    });
+    private _update = () => {
+      const boxs = getRectBoxs(this.activeEl);
+      this.updateBoxs(boxs);
+      this.tooltip.update(this.activeEl, boxs.position);
+    };
 
-    private updateStyles(styles: Record<string, RectStyle>) {
-      applyStyle(this.posttion, {
-        width: CSS_util.px(styles.posttion.width),
-        height: CSS_util.px(styles.posttion.height),
-        top: CSS_util.px(styles.posttion.top),
-        left: CSS_util.px(styles.posttion.left),
+    private updateBoxs(boxs: Record<string, RectBox>) {
+      applyStyle(this.position, {
+        width: CSS_util.px(boxs.position.width),
+        height: CSS_util.px(boxs.position.height),
+        top: CSS_util.px(boxs.position.top),
+        left: CSS_util.px(boxs.position.left),
       });
-      applyRectStyle(this.margin, styles.margin);
-      applyRectStyle(this.border, styles.border);
-      applyRectStyle(this.padding, styles.padding);
-      applyRectStyle(this.content, styles.content);
+      applyRectBox(this.margin, boxs.margin);
+      applyRectBox(this.border, boxs.border);
+      applyRectBox(this.padding, boxs.padding);
+      applyRectBox(this.content, boxs.content);
     }
   }
 
-  function applyRectStyle(el: HTMLElement, style: RectStyle) {
+  function applyRectBox(el: HTMLElement, box: RectBox) {
     applyStyle(el, {
-      width: CSS_util.px(style.width),
-      height: CSS_util.px(style.height),
-      borderTopWidth: CSS_util.px(style.top),
-      borderRightWidth: CSS_util.px(style.right),
-      borderBottomWidth: CSS_util.px(style.bottom),
-      borderLeftWidth: CSS_util.px(style.left),
+      width: CSS_util.px(box.width),
+      height: CSS_util.px(box.height),
+      borderTopWidth: CSS_util.px(box.top),
+      borderRightWidth: CSS_util.px(box.right),
+      borderBottomWidth: CSS_util.px(box.bottom),
+      borderLeftWidth: CSS_util.px(box.left),
     });
   }
 

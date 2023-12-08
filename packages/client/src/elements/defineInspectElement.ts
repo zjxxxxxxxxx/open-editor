@@ -2,7 +2,7 @@ import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
 import { off, on } from '../utils/event';
 import { getColorMode } from '../utils/getColorMode';
 import { isValidElement } from '../utils/validElement';
-import { setupListenersOnWindow } from '../utils/setupListenersOnWindow';
+import { setupListeners } from '../utils/setupListeners';
 import {
   offOpenEditorError,
   onOpenEditorError,
@@ -11,9 +11,9 @@ import {
 import { InternalElements, capOpts } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
-import { HTMLOverlayElement } from './defineOverlayElement';
-import { HTMLTreeElement } from './defineTreeElement';
-import { HTMLToggleElement } from './defineToggleElement';
+import { type HTMLOverlayElement } from './defineOverlayElement';
+import { type HTMLTreeElement } from './defineTreeElement';
+import { type HTMLToggleElement } from './defineToggleElement';
 
 export interface HTMLInspectElement extends HTMLElement {}
 
@@ -130,7 +130,7 @@ export function defineInspectElement() {
         });
       }
 
-      this.cleanupHandlers();
+      this.cleanHandlers();
     }
 
     private savePointE = (e: PointerEvent) => {
@@ -148,19 +148,19 @@ export function defineInspectElement() {
       if (!this.active) {
         this.setupHandlers();
       } else {
-        this.cleanupHandlers();
+        this.cleanHandlers();
       }
     };
 
     private setupHandlers() {
-      if (!this.active) {
+      if (!this.active && !this.tree.show) {
         this.active = true;
         this.overlay.open();
-        this.cleanupListenersOnWindow = setupListenersOnWindow({
+        this.cleanListeners = setupListeners({
           onChangeElement: this.overlay.update,
           onOpenTree: this.tree.open,
           onOpenEditor: this.openEditor,
-          onExitInspect: this.cleanupHandlers,
+          onExitInspect: this.cleanHandlers,
         });
 
         if (this.pointE) {
@@ -175,13 +175,13 @@ export function defineInspectElement() {
       }
     }
 
-    private cleanupListenersOnWindow!: () => void;
+    private cleanListeners!: () => void;
 
-    private cleanupHandlers = () => {
+    private cleanHandlers = () => {
       if (this.active && !this.tree.show) {
         this.active = false;
         this.overlay.close();
-        this.cleanupListenersOnWindow();
+        this.cleanListeners();
 
         overrideStyle.unmount();
       }

@@ -27,12 +27,13 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 ## Features
 
-- 🌈 Support `React`、`Nextjs`、`Vue`。
+- 🌈 Support `React`、`Nextjs`、`Vue`、`Nuxt`。
 - 🔥 Support `Rollup`、`Vite`、`Webpack`。
 - 🕹️ Support combined shortcut keys.
 - 🎯 Support precise positioning of line and column.
 - 🚀 Support find component tree.
-- 👽 Support automatically find available editors.
+- 📱 Support mobile devices.
+- 👽 Automatically opens available editors.
 
 ## Usage
 
