@@ -1,4 +1,4 @@
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import { isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
@@ -13,7 +13,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   return function reactResolver(
     cur: T | null | undefined,
-    tree: Partial<ElementSourceMeta>[],
+    tree: Partial<SourceCodeMeta>[],
     deep: boolean,
   ) {
     while (cur) {

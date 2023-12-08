@@ -1,5 +1,5 @@
 import { isStr } from '@open-editor/shared';
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { ensureFileName, isValidFileName } from '../util';
 
@@ -15,7 +15,7 @@ interface VueResolverOptions<T = any> {
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   return function vueResolver(
     debug: ResolveDebug<T>,
-    tree: Partial<ElementSourceMeta>[],
+    tree: Partial<SourceCodeMeta>[],
     deep: boolean,
   ) {
     if (isVueSource(debug, opts)) {
@@ -28,7 +28,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
 function resolveByVueSource<T = any>(
   debug: ResolveDebug<T>,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep: boolean,
   opts: VueResolverOptions,
 ) {
@@ -67,7 +67,7 @@ function resolveByVueSource<T = any>(
 
 function resolveByInstance<T = any>(
   inst: T,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep: boolean,
   opts: VueResolverOptions,
 ) {

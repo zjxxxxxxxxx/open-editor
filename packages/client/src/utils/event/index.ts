@@ -1,7 +1,9 @@
-import { longPress } from './longPress';
+import longpress from './longpress';
+import quickexit from './quickexit';
 
 export type HTMLElementEventWithLongPressMap = HTMLElementEventMap & {
   longpress: PointerEvent;
+  quickexit: PointerEvent;
 };
 
 export function on<K extends keyof HTMLElementEventWithLongPressMap>(
@@ -15,12 +17,14 @@ export function on(
   opts?: AddEventListenerOptions & { target?: any },
 ): void;
 export function on(type: any, listener: any, rawOpts: any = {}) {
+  rawOpts.target ??= window;
   if (type === 'longpress') {
-    return longPress.on(listener, rawOpts);
+    longpress.on(listener, rawOpts);
+  } else if (type === 'quickexit') {
+    quickexit.on(listener, rawOpts);
+  } else {
+    rawOpts.target.addEventListener(type, listener, rawOpts);
   }
-
-  const { target = window, ...opts } = rawOpts;
-  target.addEventListener(type, listener, opts);
 }
 
 export function off<K extends keyof HTMLElementEventWithLongPressMap>(
@@ -34,10 +38,12 @@ export function off(
   opts?: EventListenerOptions & { target?: any },
 ): void;
 export function off(type: any, listener: any, rawOpts: any = {}) {
+  rawOpts.target ??= window;
   if (type === 'longpress') {
-    return longPress.off(listener, rawOpts);
+    longpress.off(listener, rawOpts);
+  } else if (type === 'quickexit') {
+    quickexit.off(listener, rawOpts);
+  } else {
+    rawOpts.target.removeEventListener(type, listener, rawOpts);
   }
-
-  const { target = window, ...opts } = rawOpts;
-  target.removeEventListener(type, listener, opts);
 }

@@ -11,50 +11,46 @@ export interface SafeAreaValue {
 
 export type SafeAreaListener = (value: SafeAreaValue) => void;
 
+const listeners: SafeAreaListener[] = [];
+const isEmptyListeners = () => listeners.length === 0;
+
+let value: SafeAreaValue;
+// init
+if (CLIENT) updateValue();
+
 export class SafeAreaObserver {
   static get value() {
     return value;
   }
-  static observe = observe;
-  static unobserve = unobserve;
-}
-
-const listeners: SafeAreaListener[] = [];
-const isEmptyListeners = () => listeners.length === 0;
-const notify = () => listeners.forEach((listener) => listener(value));
-
-function observe(listener: SafeAreaListener) {
-  if (isEmptyListeners()) {
-    on('resize', handleScreenChange);
+  static observe(listener: SafeAreaListener) {
+    if (isEmptyListeners()) {
+      on('resize', detectionScreen);
+    }
+    listeners.push(listener);
+    // Execute immediately to ensure the initial value
+    listener(value);
   }
-  listeners.push(listener);
-  // Execute immediately to ensure the initial value
-  listener(value);
-}
-
-function unobserve(listener: SafeAreaListener) {
-  const index = listeners.indexOf(listener);
-  if (index !== -1) {
-    listeners.splice(index, 1);
-  }
-  if (isEmptyListeners()) {
-    off('resize', handleScreenChange);
+  static unobserve(listener: SafeAreaListener) {
+    const index = listeners.indexOf(listener);
+    if (index !== -1) {
+      listeners.splice(index, 1);
+    }
+    if (isEmptyListeners()) {
+      off('resize', detectionScreen);
+    }
   }
 }
 
 let portrait: boolean;
-function handleScreenChange() {
-  if (portrait !== (portrait = window.outerWidth < window.outerHeight)) {
-    setValue();
-    notify();
+function detectionScreen() {
+  const { outerWidth: w, outerHeight: h } = window;
+  if (portrait !== (portrait = w < h)) {
+    updateValue();
+    listeners.forEach((listener) => listener(value));
   }
 }
 
-let value: SafeAreaValue;
-// init
-if (CLIENT) setValue();
-
-export function setValue() {
+export function updateValue() {
   defineCSSVariables(() => {
     const get = computedStyle(document.body);
     value = {

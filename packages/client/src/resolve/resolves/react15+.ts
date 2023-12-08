@@ -1,12 +1,12 @@
 import { isFn } from '@open-editor/shared';
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createReactResolver } from '../creators/createReactResolver';
 import { resolveByFiber } from './react17+';
 
 export function resolveReact15Plus(
   { value: inst }: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   if (inst && '_debugOwner' in inst) {
@@ -18,7 +18,7 @@ export function resolveReact15Plus(
 
 export function resolveByInstance(
   inst: any | null | undefined,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   return ensureLazyResolver()(inst, tree, deep);

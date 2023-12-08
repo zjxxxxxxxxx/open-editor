@@ -1,11 +1,11 @@
 import type { ComponentInternalInstance } from '@vue/runtime-core';
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createVueResolver } from '../creators/createVueResolver';
 
 export function resolveVue3(
   debug: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   ensureLazyResolver()(debug, tree, deep);

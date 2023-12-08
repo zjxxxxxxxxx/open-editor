@@ -1,5 +1,5 @@
 import { ServerApis } from '@open-editor/shared';
-import type { ElementSourceMeta } from '../resolve';
+import type { SourceCodeMeta } from '../resolve';
 import { getOptions } from '../options';
 
 type Listener = (e: CustomEvent<URL>) => void;
@@ -7,7 +7,7 @@ type Listener = (e: CustomEvent<URL>) => void;
 const listeners: Listener[] = [];
 
 export function openEditor(
-  source: ElementSourceMeta,
+  source: SourceCodeMeta,
   dispatchEvent: (e: CustomEvent<URL>) => boolean,
 ) {
   const { protocol, hostname, port } = window.location;
@@ -16,11 +16,11 @@ export function openEditor(
 
   const openURL = new URL(`${protocol}//${hostname}`);
   openURL.pathname = `${ServerApis.OPEN_EDITOR}${file}`;
+  openURL.port = customPort || port;
   openURL.searchParams.set('line', String(line));
   openURL.searchParams.set('column', String(column));
-  openURL.port = customPort || port;
 
-  // open-editor e
+  // open-editor event
   const e = new CustomEvent('openeditor', {
     bubbles: true,
     cancelable: true,

@@ -12,10 +12,10 @@ import {
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
 import close from '../icons/close';
-import { InternalElements, capOpts } from '../constants';
+import { InternalElements } from '../constants';
 import {
-  type ElementSource,
-  type ElementSourceMeta,
+  type SourceCode,
+  type SourceCodeMeta,
   resolveSource,
 } from '../resolve';
 import { getOptions } from '../options';
@@ -197,19 +197,16 @@ export function defineTreeElement() {
       addClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent(resolveSource(el, true));
 
-      // Prevent the display of the component tree by long press, which accidentally triggers the click event
-      on('pointerup', this.enableClick, {
-        target: this.root,
-      });
-      on('keydown', this.exit, capOpts);
+      this.enableClick();
 
+      on('quickexit', this.close);
       on('click', this.exit, {
         target: this.overlay,
       });
       on('click', this.exit, {
         target: this.popupClose,
       });
-      on('click', this.tryOpenEditor, {
+      on('click', this.openEditor, {
         target: this.popupBody,
       });
     };
@@ -222,36 +219,37 @@ export function defineTreeElement() {
       removeClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent();
 
-      off('keydown', this.exit, capOpts);
-
+      on('quickexit', this.close);
       off('click', this.exit, {
         target: this.overlay,
       });
       off('click', this.exit, {
         target: this.popupClose,
       });
-      off('click', this.tryOpenEditor, {
+      off('click', this.openEditor, {
         target: this.popupBody,
       });
     };
 
+    // Prevent the display of the component tree by long press, which accidentally triggers the click event
     private enableClick = () => {
-      this.clickable = true;
-      off('pointerup', this.enableClick, {
-        target: this.root,
-      });
+      this.clickable = false;
+      const enableClick = () => {
+        this.clickable = true;
+        off('pointerdown', enableClick);
+      };
+      on('pointerdown', enableClick);
     };
 
-    private exit = (e: KeyboardEvent) => {
-      if ((e.type === 'keydown' && e.key === 'Escape') || this.clickable) {
-        this.clickable = false;
+    private exit = () => {
+      if (this.clickable) {
         this.close();
       }
     };
 
-    private tryOpenEditor = (e: PointerEvent) => {
+    private openEditor = (e: PointerEvent) => {
       const el = <HTMLElement>e.target!;
-      const source = <ElementSourceMeta>(<unknown>el.dataset);
+      const source = <SourceCodeMeta>(<unknown>el.dataset);
       if (this.clickable && isStr(source.file)) {
         const { once } = getOptions();
         if (once) this.close();
@@ -259,7 +257,7 @@ export function defineTreeElement() {
       }
     };
 
-    private renderBodyContent(source?: ElementSource) {
+    private renderBodyContent(source?: SourceCode) {
       // empty
       if (!source) {
         return (this.popupBody.innerHTML = '');
@@ -298,7 +296,7 @@ export function defineTreeElement() {
     }
   }
 
-  function buildTree(tree: ElementSourceMeta[]) {
+  function buildTree(tree: SourceCodeMeta[]) {
     let nodes: HTMLElement[] = [];
 
     while (tree.length) {
@@ -327,7 +325,7 @@ export function defineTreeElement() {
     return nodes;
   }
 
-  function createNode(meta: ElementSourceMeta, withFile?: boolean) {
+  function createNode(meta: SourceCodeMeta, withFile?: boolean) {
     const { name, file, line = 1, column = 1 } = meta ?? {};
     const dataset = withFile ? toDataset(meta) : {};
     return jsx(
@@ -358,7 +356,7 @@ export function defineTreeElement() {
     );
   }
 
-  function toDataset(meta: ElementSourceMeta) {
+  function toDataset(meta: SourceCodeMeta) {
     return Object.fromEntries(
       Object.entries(meta).map(([k, v]) => [`data-${k}`, v]),
     );

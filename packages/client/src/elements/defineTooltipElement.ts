@@ -1,4 +1,4 @@
-import { type RectStyle } from '../utils/getRectStyles';
+import { type RectBox } from '../utils/getRectBoxs';
 import {
   getDOMRect,
   getHtml,
@@ -9,12 +9,12 @@ import {
 } from '../utils/html';
 import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements } from '../constants';
-import { resolveSource } from '../resolve';
+import { type SourceCode, resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeEl?: HTMLElement, style?: RectStyle): void;
+  update(activeEl?: HTMLElement, style?: RectBox): void;
 }
 
 const CSS = postcss`
@@ -93,7 +93,7 @@ export function defineTooltipElement() {
       });
     };
 
-    update = (activeEl?: HTMLElement, style?: RectStyle) => {
+    update = (activeEl?: HTMLElement, box?: RectBox) => {
       // before hidden
       applyStyle(this.root, {
         visibility: 'hidden',
@@ -101,23 +101,28 @@ export function defineTooltipElement() {
         left: CSS_util.px(offset),
       });
 
-      if (activeEl && style) {
-        const { el, meta } = resolveSource(activeEl);
-        if (meta) {
-          this.el.innerText = `${el} in `;
-          this.comp.innerText = `<${meta.name}>`;
-          this.file.innerText = `${meta.file}:${meta.line}:${meta.column}`;
+      if (!activeEl) return;
 
-          this.updatePosStyle(style);
-          // after visible
-          applyStyle(this.root, {
-            visibility: 'visible',
-          });
-        }
+      const source = resolveSource(activeEl);
+      if (source.meta) {
+        this.updateText(source);
+        this.updatePosition(box!);
+
+        // after visible
+        applyStyle(this.root, {
+          visibility: 'visible',
+        });
       }
     };
 
-    private updatePosStyle(style: RectStyle) {
+    private updateText(source: SourceCode) {
+      const { el, meta } = source;
+      this.el.innerText = `${el} in `;
+      this.comp.innerText = `<${meta!.name}>`;
+      this.file.innerText = `${meta!.file}:${meta!.line}:${meta!.column}`;
+    }
+
+    private updatePosition(box: RectBox) {
       const {
         // window width excluding the scrollbar width
         clientWidth: winW,
@@ -127,24 +132,22 @@ export function defineTooltipElement() {
       const { width: rootW, height: rootH } = getDOMRect(this.root);
       const { top, right, bottom, left } = SafeAreaObserver.value;
 
-      const posStyle: Partial<CSSStyleDeclaration> = {};
+      const style: Partial<CSSStyleDeclaration> = {};
       // on top
-      if (style.top > rootH + offset * 2 + top) {
-        posStyle.top = CSS_util.px(style.top - rootH - offset);
+      if (box.top > rootH + offset * 2 + top) {
+        style.top = CSS_util.px(box.top - rootH - offset);
       }
       // on bottom
       else {
         const maxTop = winH - rootH - offset - bottom;
-        posStyle.top = CSS_util.px(Math.min(style.bottom + offset, maxTop));
+        style.top = CSS_util.px(Math.min(box.bottom + offset, maxTop));
       }
 
       const minLeft = offset + left;
       const maxLeft = winW - rootW - offset - right;
-      posStyle.left = CSS_util.px(
-        Math.max(Math.min(style.left, maxLeft), minLeft),
-      );
+      style.left = CSS_util.px(Math.max(Math.min(box.left, maxLeft), minLeft));
 
-      applyStyle(this.root, posStyle);
+      applyStyle(this.root, style);
     }
   }
 

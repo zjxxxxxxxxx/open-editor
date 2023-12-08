@@ -1,10 +1,10 @@
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createVueResolver } from '../creators/createVueResolver';
 
 export function resolveVue2(
   debug: ResolveDebug,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   const componentInstance = debug.value._vnode.componentInstance;

@@ -8,13 +8,12 @@ import {
   removeClass,
 } from '../utils/html';
 import { off, on } from '../utils/event';
-import { create_RAF } from '../utils/createRAF';
 import {
   SafeAreaObserver,
   type SafeAreaValue,
 } from '../utils/SafeAreaObserver';
 import gps from '../icons/gps';
-import { InternalElements, CACHE_POS_Y_ID } from '../constants';
+import { InternalElements, CACHE_POS_TOP_ID } from '../constants';
 
 export interface HTMLToggleElement extends HTMLElement {}
 
@@ -93,11 +92,11 @@ export function defineToggleElement() {
     }
 
     connectedCallback() {
-      this.updatePosY_RAF();
-      this.updateToggleSize();
-      SafeAreaObserver.observe(this.updateToggleRight);
-      on('resize', this.updatePosY_RAF);
-      on('resize', this.updateToggleSize);
+      this.updatePosTop();
+      this.updateSize();
+      SafeAreaObserver.observe(this.updatePosRight);
+      on('resize', this.updatePosTop);
+      on('resize', this.updateSize);
       on('longpress', this.startDnD, {
         target: this.button,
         wait: 200,
@@ -108,9 +107,9 @@ export function defineToggleElement() {
     }
 
     disconnectedCallback() {
-      SafeAreaObserver.unobserve(this.updateToggleRight);
-      off('resize', this.updatePosY_RAF);
-      off('resize', this.updateToggleSize);
+      SafeAreaObserver.unobserve(this.updatePosRight);
+      off('resize', this.updatePosTop);
+      off('resize', this.updateSize);
       off('longpress', this.startDnD, {
         target: this.button,
         wait: 200,
@@ -133,7 +132,7 @@ export function defineToggleElement() {
       applyStyle(this.overlay, {
         display: 'block',
       });
-      on('pointermove', this.changePosY);
+      on('pointermove', this.changePosTop);
       on('pointerup', this.stopDnD);
     };
 
@@ -151,11 +150,16 @@ export function defineToggleElement() {
       applyStyle(this.overlay, {
         display: null,
       });
-      off('pointermove', this.changePosY);
+      off('pointermove', this.changePosTop);
       off('pointerup', this.stopDnD);
     };
 
-    private updateToggleSize = () => {
+    private changePosTop = (e: PointerEvent) => {
+      setCachePosTop(e.clientY);
+      this.updatePosTop();
+    };
+
+    private updateSize = () => {
       if (
         this.isTouchScreen !==
         (this.isTouchScreen =
@@ -172,29 +176,24 @@ export function defineToggleElement() {
       }
     };
 
-    private updateToggleRight = (value: SafeAreaValue) => {
+    private updatePosRight = (value: SafeAreaValue) => {
       applyStyle(this.root, {
         right: CSS_util.px(value.right),
       });
     };
 
-    private changePosY = (e: PointerEvent) => {
-      setCachePosY(e.clientY);
-      this.updatePosY_RAF();
-    };
-
-    private updatePosY_RAF = create_RAF(() => {
+    private updatePosTop = () => {
       const { clientHeight: winH } = getHtml();
       const { offsetHeight: toggleH } = this.root;
       const { top, bottom } = SafeAreaObserver.value;
-      const cachePosY = getCachePosY();
+      const cachePosY = getCachePosTop();
       const minY = top;
       const maxY = winH - toggleH - bottom;
       const nextPosY = Math.min(Math.max(cachePosY - toggleH / 2, minY), maxY);
       applyStyle(this.root, {
         top: CSS_util.px(nextPosY),
       });
-    });
+    };
 
     private dispatchToggle = () => {
       // Let the button lose focus to prevent the click event from being accidentally triggered by pressing the Enter key or the Space bar.
@@ -207,12 +206,12 @@ export function defineToggleElement() {
     };
   }
 
-  function getCachePosY() {
-    return +localStorage[CACHE_POS_Y_ID] || 0;
+  function getCachePosTop() {
+    return +localStorage[CACHE_POS_TOP_ID] || 0;
   }
 
-  function setCachePosY(posY: number) {
-    return (localStorage[CACHE_POS_Y_ID] = posY);
+  function setCachePosTop(posY: number) {
+    return (localStorage[CACHE_POS_TOP_ID] = posY);
   }
 
   customElements.define(InternalElements.HTML_TOGGLE_ELEMENT, ToggleElement);

@@ -5,20 +5,20 @@ import { resolveReact15Plus } from './resolves/react15+';
 import { resolveVue3 } from './resolves/vue3';
 import { resolveVue2 } from './resolves/vue2';
 
-export interface ElementSourceMeta {
+export interface SourceCodeMeta {
   name: string;
   file: string;
   line: number;
   column: number;
 }
-export interface ElementSource {
+export interface SourceCode {
   el: string;
-  meta?: ElementSourceMeta;
-  tree: ElementSourceMeta[];
+  meta?: SourceCodeMeta;
+  tree: SourceCodeMeta[];
 }
 
-export function resolveSource(el: HTMLElement, deep?: boolean): ElementSource {
-  const source: ElementSource = {
+export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
+  const source: SourceCode = {
     el: el.localName,
     tree: [],
   };
@@ -42,7 +42,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): ElementSource {
   return source;
 }
 
-export function normalizeMeta(meta: Partial<ElementSourceMeta>) {
+export function normalizeMeta(meta: Partial<SourceCodeMeta>) {
   return {
     name: meta.name || 'Anonymous',
     file: ensureFileName(meta.file!),
