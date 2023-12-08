@@ -1,6 +1,6 @@
 import { getDOMRect, computedStyle } from './html';
 
-export interface RectStyle {
+export interface RectBox {
   width: number;
   height: number;
   top: number;
@@ -9,7 +9,7 @@ export interface RectStyle {
   bottom: number;
 }
 
-const emptyRectStyle = {
+const emptyRectBox = {
   width: 0,
   height: 0,
   top: 0,
@@ -18,16 +18,16 @@ const emptyRectStyle = {
   bottom: 0,
 };
 
-export const emptyRectStyles = {
-  posttion: emptyRectStyle,
-  margin: emptyRectStyle,
-  border: emptyRectStyle,
-  padding: emptyRectStyle,
-  content: emptyRectStyle,
+export const emptyRectBoxs = {
+  position: emptyRectBox,
+  margin: emptyRectBox,
+  border: emptyRectBox,
+  padding: emptyRectBox,
+  content: emptyRectBox,
 };
 
-export function getRectStyles(el?: Element): Record<string, RectStyle> {
-  if (!el) return emptyRectStyles;
+export function getRectBoxs(el?: Element): Record<string, RectBox> {
+  if (!el) return emptyRectBoxs;
 
   const {
     // border + padding + content
@@ -41,10 +41,13 @@ export function getRectStyles(el?: Element): Record<string, RectStyle> {
   } = getDOMRect(el);
   const get = computedStyle(el);
 
-  const marginTop = get('margin-top');
+  // Negative values will cause the position to shift and should be ignored.
+  const marginTop = Math.max(get('margin-top'), 0);
+  // Negative values will cause the position to shift and should be ignored.
+  const marginLeft = Math.max(get('margin-left'), 0);
+
   const marginRight = get('margin-right');
   const marginBottom = get('margin-bottom');
-  const marginLeft = get('margin-left');
   const marginWidth = width;
   const marginHeight = height;
 
@@ -65,21 +68,21 @@ export function getRectStyles(el?: Element): Record<string, RectStyle> {
   const contentWidth = paddingWidth;
   const contentHeight = paddingHeight;
 
-  const posttionTop = top - marginTop;
-  const posttionRight = right + marginRight;
-  const posttionBottom = bottom + marginBottom;
-  const posttionLeft = left - marginLeft;
-  const posttionWidth = marginWidth + marginLeft + marginRight;
-  const posttionHeight = marginHeight + marginTop + marginBottom;
+  const positionTop = top - marginTop;
+  const positionRight = right + marginRight;
+  const positionBottom = bottom + marginBottom;
+  const positionLeft = left - marginLeft;
+  const positionWidth = marginWidth + marginLeft + marginRight;
+  const positionHeight = marginHeight + marginTop + marginBottom;
 
   return {
-    posttion: {
-      width: posttionWidth,
-      height: posttionHeight,
-      top: posttionTop,
-      right: posttionRight,
-      bottom: posttionBottom,
-      left: posttionLeft,
+    position: {
+      width: positionWidth,
+      height: positionHeight,
+      top: positionTop,
+      right: positionRight,
+      bottom: positionBottom,
+      left: positionLeft,
     },
     margin: {
       width: marginWidth,
@@ -106,7 +109,7 @@ export function getRectStyles(el?: Element): Record<string, RectStyle> {
       bottom: paddingBottom,
     },
     content: {
-      ...emptyRectStyle,
+      ...emptyRectBox,
       width: contentWidth,
       height: contentHeight,
     },

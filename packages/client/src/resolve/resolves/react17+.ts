@@ -1,12 +1,12 @@
 import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
-import type { ElementSourceMeta } from '../';
+import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createReactResolver } from '../creators/createReactResolver';
 
 export function resolveReact17Plus(
   { value: fiber }: ResolveDebug<Fiber>,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   resolveByFiber(fiber, tree, deep);
@@ -14,7 +14,7 @@ export function resolveReact17Plus(
 
 export function resolveByFiber(
   fiber: Fiber | null | undefined,
-  tree: Partial<ElementSourceMeta>[],
+  tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
   return ensureLazyResolver()(fiber, tree, deep);
