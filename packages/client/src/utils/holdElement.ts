@@ -1,5 +1,5 @@
 import { applyAttrs } from './html';
-import { isValidElement } from './validElement';
+import { isValidElement } from './isValidElement';
 
 let holdEl: HTMLElement | null = null;
 
@@ -82,7 +82,7 @@ function swapAttr(el: HTMLElement, from: string, to: string) {
   }
 }
 
-function findATag(el?: HTMLElement | null) {
+function findATag(el: HTMLElement | null) {
   while (el) {
     if (el.tagName === 'A') {
       return el;

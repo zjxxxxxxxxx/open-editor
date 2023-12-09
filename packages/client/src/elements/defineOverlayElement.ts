@@ -15,7 +15,7 @@ import { type HTMLTooltipElement } from './defineTooltipElement';
 export interface HTMLOverlayElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeEl?: HTMLElement): void;
+  update(el: HTMLElement | null): void;
 }
 
 const CSS = postcss`
@@ -54,7 +54,7 @@ export function defineOverlayElement() {
     private padding!: HTMLElement;
     private content!: HTMLElement;
     private tooltip!: HTMLTooltipElement;
-    private activeEl?: HTMLElement;
+    private activeEl: HTMLElement | null = null;
 
     constructor() {
       super();
@@ -102,7 +102,7 @@ export function defineOverlayElement() {
     }
 
     open = () => {
-      this.activeEl = undefined;
+      this.activeEl = null;
       this.tooltip.open();
 
       addClass(this.position, 'oe-show');
@@ -124,8 +124,8 @@ export function defineOverlayElement() {
       SafeAreaObserver.unobserve(this.updateOverlay);
     };
 
-    update = (activeEl?: HTMLElement) => {
-      this.activeEl = activeEl;
+    update = (el: HTMLElement | null) => {
+      this.activeEl = el;
       this.updateOverlay();
     };
 

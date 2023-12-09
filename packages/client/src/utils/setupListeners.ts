@@ -1,7 +1,7 @@
 import { capOpts } from '../constants';
 import { getOptions } from '../options';
 import { off, on } from './event';
-import { isValidElement } from './validElement';
+import { isValidElement } from './isValidElement';
 import {
   checkHoldElement,
   setupHoldElement,
@@ -9,7 +9,7 @@ import {
 } from './holdElement';
 
 export interface SetupListenersOptions {
-  onChangeElement(el?: HTMLElement): void;
+  onChangeElement(el: HTMLElement | null): void;
   onOpenEditor(el: HTMLElement): void;
   onOpenTree(el: HTMLElement): void;
   onExitInspect(): void;
@@ -49,7 +49,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     };
   }
 
-  let activeEl: HTMLElement | undefined;
+  let activeEl: HTMLElement | null;
   function onActiveElement(e: PointerEvent) {
     const el = <HTMLElement>(
       (e.pointerType === 'touch'
@@ -57,7 +57,7 @@ export function setupListeners(opts: SetupListenersOptions) {
         : e.target)
     );
     if (el !== activeEl) {
-      activeEl = isValidElement(el) ? el : undefined;
+      activeEl = isValidElement(el) ? el : null;
       onChangeElement(activeEl);
     }
   }
@@ -72,8 +72,7 @@ export function setupListeners(opts: SetupListenersOptions) {
   function onLeaveScreen(e: PointerEvent) {
     // On PC devices, focus is lost when the mouse leaves the browser window
     if (e.pointerType === 'mouse' && e.relatedTarget == null) {
-      activeEl = undefined;
-      onChangeElement();
+      onChangeElement((activeEl = null));
     }
   }
 
@@ -84,7 +83,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     if (checkHoldElement(el)) {
       if (once) onExitInspect();
       if (e.metaKey || e.type === 'longpress') {
-        onChangeElement();
+        onChangeElement((activeEl = null));
         onOpenTree(el);
       } else {
         onOpenEditor(el);

@@ -1,7 +1,7 @@
 import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
 import { off, on } from '../utils/event';
 import { getColorMode } from '../utils/getColorMode';
-import { isValidElement } from '../utils/validElement';
+import { isValidElement } from '../utils/isValidElement';
 import { setupListeners } from '../utils/setupListeners';
 import {
   offOpenEditorError,

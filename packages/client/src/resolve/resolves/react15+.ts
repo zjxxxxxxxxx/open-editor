@@ -21,7 +21,7 @@ export function resolveByInstance(
   tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
-  return ensureLazyResolver()(inst, tree, deep);
+  ensureLazyResolver()(inst, tree, deep);
 }
 
 let resolver: ReturnType<typeof createReactResolver<any>>;
