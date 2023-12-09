@@ -42,7 +42,7 @@ const CSS = postcss`
   --z-index-tooltip: 1000003;
   --z-index-tree: 1000003;
 }
-.error-overlay {
+.oe-error-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -108,6 +108,8 @@ export function defineInspectElement() {
     }
 
     connectedCallback() {
+      globalStyle('.oe-screen-lock{overflow:hidden;}').mount();
+
       on('keydown', this.onKeydown, capOpts);
       on('mousemove', this.savePointE, capOpts);
       onOpenEditorError(this.showErrorOverlay);
@@ -198,7 +200,7 @@ export function defineInspectElement() {
 
     private showErrorOverlay = () => {
       const errorOverlay = jsx('div', {
-        className: 'error-overlay',
+        className: 'oe-error-overlay',
       });
       const ani = errorOverlay.animate(
         [

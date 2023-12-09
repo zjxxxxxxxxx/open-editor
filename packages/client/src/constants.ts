@@ -1,9 +1,9 @@
 export const InternalElements = <const>{
-  HTML_INSPECT_ELEMENT: 'open-editor-inspect',
-  HTML_OVERLAY_ELEMENT: 'open-editor-overlay',
-  HTML_TOOLTIP_ELEMENT: 'open-editor-tooltip',
-  HTML_TOGGLE_ELEMENT: 'open-editor-toggle',
-  HTML_TREE_ELEMENT: 'open-editor-tree',
+  HTML_INSPECT_ELEMENT: 'oe-inspect',
+  HTML_OVERLAY_ELEMENT: 'oe-overlay',
+  HTML_TOOLTIP_ELEMENT: 'oe-tooltip',
+  HTML_TOGGLE_ELEMENT: 'oe-toggle',
+  HTML_TREE_ELEMENT: 'oe-tree',
 };
 
 export const CLIENT = typeof window !== 'undefined';

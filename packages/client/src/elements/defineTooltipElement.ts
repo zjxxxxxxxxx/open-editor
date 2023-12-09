@@ -6,6 +6,8 @@ import {
   CSS_util,
   applyStyle,
   jsx,
+  addClass,
+  removeClass,
 } from '../utils/html';
 import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements } from '../constants';
@@ -18,7 +20,7 @@ export interface HTMLTooltipElement extends HTMLElement {
 }
 
 const CSS = postcss`
-.root {
+.oe-root {
   position: fixed;
   z-index: var(--z-index-tooltip);
   padding: 6px 8px;
@@ -34,14 +36,18 @@ const CSS = postcss`
   pointer-events: none;
   will-change: visibility, top, left;
 }
-.comp {
+.oe-comp {
   font-size: 14px;
   font-weight: 500;
 }
-.file {
+.oe-file {
   color: var(--text-2);
   text-decoration: underline;
   word-wrap: break-word;
+}
+.oe-show {
+  display: inline-block;
+  visibility: hidden;
 }
 `;
 
@@ -63,34 +69,29 @@ export function defineTooltipElement() {
           'div',
           {
             ref: (el) => (this.root = el),
-            className: 'root',
+            className: 'oe-root',
           },
           jsx('span', {
             ref: (el) => (this.el = el),
           }),
           jsx('span', {
             ref: (el) => (this.comp = el),
-            className: 'comp',
+            className: 'oe-comp',
           }),
           jsx('div', {
             ref: (el) => (this.file = el),
-            className: 'file',
+            className: 'oe-file',
           }),
         ),
       });
     }
 
     open = () => {
-      applyStyle(this.root, {
-        display: 'inline-block',
-        visibility: 'hidden',
-      });
+      addClass(this.root, 'oe-show');
     };
 
     close = () => {
-      applyStyle(this.root, {
-        display: 'none',
-      });
+      removeClass(this.root, 'oe-show');
     };
 
     update = (activeEl?: HTMLElement, box?: RectBox) => {
@@ -130,25 +131,35 @@ export function defineTooltipElement() {
         clientHeight: winH,
       } = getHtml();
       const { width: rootW, height: rootH } = getDOMRect(this.root);
-      const { top, right, bottom, left } = SafeAreaObserver.value;
+      const safe = SafeAreaObserver.value;
 
-      const style: Partial<CSSStyleDeclaration> = {};
-      // on top
-      if (box.top > rootH + offset * 2 + top) {
-        style.top = CSS_util.px(box.top - rootH - offset);
-      }
-      // on bottom
-      else {
-        const maxTop = winH - rootH - offset - bottom;
-        style.top = CSS_util.px(Math.min(box.bottom + offset, maxTop));
-      }
+      const curTop =
+        box.top > rootH + offset * 2 + safe.top
+          ? // on top
+            box.top - rootH - offset
+          : // on bottom
+            box.bottom + offset;
+      const posTop = clamp(
+        curTop,
+        offset + safe.top,
+        winH - rootH - offset - safe.bottom,
+      );
 
-      const minLeft = offset + left;
-      const maxLeft = winW - rootW - offset - right;
-      style.left = CSS_util.px(Math.max(Math.min(box.left, maxLeft), minLeft));
+      const posLeft = clamp(
+        box.left,
+        offset + safe.left,
+        winW - rootW - offset - safe.right,
+      );
 
-      applyStyle(this.root, style);
+      applyStyle(this.root, {
+        top: CSS_util.px(posTop),
+        left: CSS_util.px(posLeft),
+      });
     }
+  }
+
+  function clamp(cur: number, start: number, end: number) {
+    return Math.min(Math.max(cur, start), end);
   }
 
   customElements.define(InternalElements.HTML_TOOLTIP_ELEMENT, TooltipElement);
