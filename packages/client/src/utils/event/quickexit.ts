@@ -1,22 +1,23 @@
+import { omit } from '../util';
 import {
-  type CustomEventOptions,
-  type CustomEventListener,
+  type SetupListenerListener,
+  type SetupListenerListenerOptions,
   createCustomEvent,
-} from './createCustomEvent';
+} from './create';
 import { off, on } from '.';
 
 export default createCustomEvent('quickexit', setupListener);
 
 function setupListener(
-  listener: CustomEventListener,
-  opts: CustomEventOptions,
+  listener: SetupListenerListener,
+  opts: SetupListenerListenerOptions,
 ) {
   function setup() {
-    on('keydown', trigger, opts);
+    on('keydown', trigger, omit(opts, 'target'));
     on('contextmenu', trigger, opts);
 
     return () => {
-      off('keydown', trigger, opts);
+      off('keydown', trigger, omit(opts, 'target'));
       off('contextmenu', trigger, opts);
     };
   }
@@ -24,11 +25,9 @@ function setupListener(
   function trigger(e: PointerEvent) {
     if (
       // esc exit.
-      (<any>e).key === 'Escape' ||
+      (<any>e).code === 'Escape' ||
       // right-click exit.
-      e.type === 'contextmenu' ||
-      // self
-      e.type === 'quickexit'
+      e.type === 'contextmenu'
     ) {
       if (!e.type.startsWith('touch')) {
         e.preventDefault();
