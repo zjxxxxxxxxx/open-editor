@@ -10,13 +10,14 @@ import {
   removeClass,
 } from '../utils/html';
 import { SafeAreaObserver } from '../utils/SafeAreaObserver';
+import { isValidElement } from '../utils/isValidElement';
 import { InternalElements } from '../constants';
 import { type SourceCode, resolveSource } from '../resolve';
 
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(activeEl?: HTMLElement, style?: RectBox): void;
+  update(el: HTMLElement | null, box?: RectBox): void;
 }
 
 const CSS = postcss`
@@ -94,7 +95,7 @@ export function defineTooltipElement() {
       removeClass(this.root, 'oe-show');
     };
 
-    update = (activeEl?: HTMLElement, box?: RectBox) => {
+    update = (el: HTMLElement | null, box?: RectBox) => {
       // before hidden
       applyStyle(this.root, {
         visibility: 'hidden',
@@ -102,9 +103,9 @@ export function defineTooltipElement() {
         left: CSS_util.px(offset),
       });
 
-      if (!activeEl) return;
+      if (!isValidElement(el)) return;
 
-      const source = resolveSource(activeEl);
+      const source = resolveSource(el);
       if (source.meta) {
         this.updateText(source);
         this.updatePosition(box!);

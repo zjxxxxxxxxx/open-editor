@@ -17,7 +17,7 @@ export function resolveByFiber(
   tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
-  return ensureLazyResolver()(fiber, tree, deep);
+  ensureLazyResolver()(fiber, tree, deep);
 }
 
 let resolver: ReturnType<typeof createReactResolver<Fiber>>;
