@@ -1,4 +1,13 @@
-import { applyAttrs, jsx, globalStyle, host, append } from '../utils/html';
+import {
+  applyAttrs,
+  jsx,
+  globalStyle,
+  host,
+  append,
+  addClass,
+  removeClass,
+  getHtml,
+} from '../utils/html';
 import { off, on } from '../utils/event';
 import { getColorMode } from '../utils/getColorMode';
 import { isValidElement } from '../utils/isValidElement';
@@ -22,7 +31,7 @@ const CSS = postcss`
   box-sizing: content-box;
   font-family: Menlo, Monaco, 'Courier New', monospace;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.5;
   cursor: default;
   user-select: none;
@@ -41,6 +50,7 @@ const CSS = postcss`
   --z-index-toggle: 1000002;
   --z-index-tooltip: 1000003;
   --z-index-tree: 1000003;
+  --z-index-error-overlay: 1000004;
 }
 .oe-error-overlay {
   position: fixed;
@@ -48,7 +58,7 @@ const CSS = postcss`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: var(--z-index-overlay);
+  z-index: var(--z-index-error-overlay);
 }
 `;
 
@@ -108,7 +118,9 @@ export function defineInspectElement() {
     }
 
     connectedCallback() {
-      globalStyle('.oe-screen-lock{overflow:hidden;}').mount();
+      globalStyle(
+        '.oe-screen-lock{overflow:hidden;}.oe-loading *{cursor:wait!important;}',
+      ).mount();
 
       on('keydown', this.onKeydown, capOpts);
       on('mousemove', this.savePointE, capOpts);
@@ -140,8 +152,7 @@ export function defineInspectElement() {
     };
 
     private onKeydown = (e: KeyboardEvent) => {
-      // toggle
-      if (e.altKey && e.metaKey && e.keyCode === 79) {
+      if (e.altKey && e.metaKey && e.code === 'KeyO') {
         this.toggleActiveEffect();
       }
     };
@@ -189,13 +200,18 @@ export function defineInspectElement() {
       }
     };
 
-    private openEditor = (el: HTMLElement) => {
-      const { meta } = resolveSource(el);
-      if (!meta) {
-        console.error(Error('@open-editor/client: file not found.'));
-        return this.showErrorOverlay();
+    private openEditor = async (el: HTMLElement) => {
+      try {
+        addClass(getHtml(), 'oe-loading');
+        const { meta } = resolveSource(el);
+        if (!meta) {
+          console.error(Error('@open-editor/client: file not found.'));
+          return this.showErrorOverlay();
+        }
+        await openEditor(meta, (e) => this.dispatchEvent(e));
+      } finally {
+        removeClass(getHtml(), 'oe-loading');
       }
-      openEditor(meta, (e) => this.dispatchEvent(e));
     };
 
     private showErrorOverlay = () => {

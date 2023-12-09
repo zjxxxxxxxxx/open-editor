@@ -23,9 +23,9 @@ export function on(
 export function on(type: any, listener: any, opts: any = {}) {
   opts.target ||= window;
   if (type === 'longpress') {
-    longpress.on(listener, opts);
+    longpress.addEventListener(listener, opts);
   } else if (type === 'quickexit') {
-    quickexit.on(listener, opts);
+    quickexit.addEventListener(listener, opts);
   } else {
     opts.target.addEventListener(type, listener, opts);
   }
@@ -47,9 +47,9 @@ export function off(
 export function off(type: any, listener: any, opts: any = {}) {
   opts.target ||= window;
   if (type === 'longpress') {
-    longpress.off(listener, opts);
+    longpress.removeEventListener(listener, opts);
   } else if (type === 'quickexit') {
-    quickexit.off(listener, opts);
+    quickexit.removeEventListener(listener, opts);
   } else {
     opts.target.removeEventListener(type, listener, opts);
   }

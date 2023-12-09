@@ -1,19 +1,17 @@
 import {
-  type CustomEventOptions,
-  type CustomEventListener,
+  type SetupListenerListener,
+  type SetupListenerListenerOptions,
   createCustomEvent,
-} from './createCustomEvent';
+} from './create';
 import { off, on } from '.';
 
-export default createCustomEvent('longpress', setupListener, {
-  addOptions: ['wait'],
-});
+export default createCustomEvent('longpress', setupListener);
 
 function setupListener(
-  listener: CustomEventListener,
-  opts: CustomEventOptions & {
+  listener: SetupListenerListener,
+  opts: SetupListenerListenerOptions<{
     wait?: number;
-  },
+  }>,
 ) {
   const { wait = 300 } = opts;
 

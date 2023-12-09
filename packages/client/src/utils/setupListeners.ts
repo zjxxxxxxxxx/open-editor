@@ -133,5 +133,7 @@ function getSilentEvents() {
     'pointerup',
     // reset
     'dbclick',
+    'submit',
+    'reset',
   ];
 }
