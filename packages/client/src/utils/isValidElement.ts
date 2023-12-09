@@ -8,7 +8,7 @@ function isInternalElement(el: HTMLElement) {
 const filters = [
   // The `html` check is triggered when the mouse leaves the browser,
   // and filtering is needed to ignore this unexpected check.
-  // 'html',
+  'html',
   // `iframe` should be left to the internal inspector.
   'iframe',
 ];

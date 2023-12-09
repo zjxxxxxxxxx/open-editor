@@ -112,7 +112,7 @@ const CSS = postcss`
 }
 .oe-tag {
   margin: 2px 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   opacity: 0.6;
 }
@@ -324,13 +324,13 @@ export function defineTreeElement() {
     const { name, file, line = 1, column = 1 } = meta ?? {};
     const dataset = withFile ? toDataset(meta) : {};
     return jsx(
-      'span',
+      'p',
       {
         className: 'oe-tag',
         title: withFile ? 'Click to open in your editor' : null,
         ...dataset,
       },
-      withFile ? `<${name}>` : `<${name}/>`,
+      `<${name}>`,
       withFile
         ? jsx(
             'span',
