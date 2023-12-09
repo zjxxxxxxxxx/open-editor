@@ -211,7 +211,7 @@ export function defineTreeElement() {
       removeClass(this.root, 'oe-show');
       removeClass(getHtml(), 'oe-screen-lock');
 
-      on('quickexit', this.close);
+      off('quickexit', this.close);
       off('click', this.exit, {
         target: this.overlay,
       });

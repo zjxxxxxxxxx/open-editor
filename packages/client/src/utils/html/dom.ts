@@ -16,7 +16,7 @@ export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
   }
 }
 
-export function getDOMRect(target: Element): Omit<DOMRect, 'toJSON'> {
+export function getDOMRect(target: HTMLElement): Omit<DOMRect, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
   const zoom = computedStyle(target)('zoom');
   // In browsers that do not support zoom, zoom is always empty.

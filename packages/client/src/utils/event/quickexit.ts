@@ -9,18 +9,15 @@ export default createCustomEvent('quickexit', setupListener);
 
 function setupListener(
   listener: CustomEventListener,
-  rawOpts: CustomEventOptions,
+  opts: CustomEventOptions,
 ) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { target, ...opts } = rawOpts;
-
   function setup() {
     on('keydown', trigger, opts);
-    on('contextmenu', trigger, rawOpts);
+    on('contextmenu', trigger, opts);
 
     return () => {
       off('keydown', trigger, opts);
-      off('contextmenu', trigger, rawOpts);
+      off('contextmenu', trigger, opts);
     };
   }
 

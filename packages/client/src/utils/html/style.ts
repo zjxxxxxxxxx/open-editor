@@ -19,7 +19,7 @@ export function applyStyle(
   Object.assign(el.style, ...styles);
 }
 
-export function computedStyle(el: Element) {
+export function computedStyle(el: HTMLElement) {
   const style = window.getComputedStyle(el, null);
   return function get<
     ToNumber extends boolean = true,

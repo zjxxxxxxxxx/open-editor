@@ -11,11 +11,11 @@ export default createCustomEvent('longpress', setupListener, {
 
 function setupListener(
   listener: CustomEventListener,
-  rawOpts: CustomEventOptions & {
+  opts: CustomEventOptions & {
     wait?: number;
   },
 ) {
-  const { wait = 300, ...opts } = rawOpts;
+  const { wait = 300 } = opts;
 
   function setup() {
     on('pointerdown', start, opts);

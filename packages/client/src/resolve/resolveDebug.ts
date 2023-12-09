@@ -1,4 +1,4 @@
-import { isValidElement } from '../utils/validElement';
+import { isValidElement } from '../utils/isValidElement';
 
 export type ResolveDebug<T = any> = {
   originalEl: HTMLElement;

@@ -1,4 +1,5 @@
 import { getDOMRect, computedStyle } from './html';
+import { isValidElement } from './isValidElement';
 
 export interface RectBox {
   width: number;
@@ -26,8 +27,8 @@ export const emptyRectBoxs = {
   content: emptyRectBox,
 };
 
-export function getRectBoxs(el?: Element): Record<string, RectBox> {
-  if (!el) return emptyRectBoxs;
+export function getRectBoxs(el: HTMLElement | null): Record<string, RectBox> {
+  if (!isValidElement(el)) return emptyRectBoxs;
 
   const {
     // border + padding + content

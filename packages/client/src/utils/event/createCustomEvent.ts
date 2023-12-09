@@ -91,8 +91,12 @@ export function createCustomEvent<CustomEventUserOptions extends object>(
     opts: CustomEventUserOptions,
   ) {
     return (
-      // @ts-ignore
-      cache.cb === cb && optKeys.every((key) => cache.opts[key] === opts[key])
+      cache.cb === cb &&
+      optKeys.every(
+        (key) =>
+          // @ts-ignore
+          cache.opts[key] === opts[key],
+      )
     );
   }
 
