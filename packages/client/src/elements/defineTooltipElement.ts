@@ -1,4 +1,5 @@
 import { type RectBox } from '../utils/getRectBoxs';
+import { clamp } from '../utils/util';
 import {
   getDOMRect,
   getHtml,
@@ -17,7 +18,7 @@ import { type SourceCode, resolveSource } from '../resolve';
 export interface HTMLTooltipElement extends HTMLElement {
   open(): void;
   close(): void;
-  update(el: HTMLElement | null, box?: RectBox): void;
+  update(el: HTMLElement | null, box: RectBox): void;
 }
 
 const CSS = postcss`
@@ -95,7 +96,7 @@ export function defineTooltipElement() {
       removeClass(this.root, 'oe-show');
     };
 
-    update = (el: HTMLElement | null, box?: RectBox) => {
+    update = (el: HTMLElement | null, box: RectBox) => {
       // before hidden
       applyStyle(this.root, {
         visibility: 'hidden',
@@ -108,7 +109,7 @@ export function defineTooltipElement() {
       const source = resolveSource(el);
       if (source.meta) {
         this.updateText(source);
-        this.updatePosition(box!);
+        this.updatePosition(box);
 
         // after visible
         applyStyle(this.root, {
@@ -132,20 +133,14 @@ export function defineTooltipElement() {
         clientHeight: winH,
       } = getHtml();
       const { width: rootW, height: rootH } = getDOMRect(this.root);
-      const safe = SafeAreaObserver.value;
+      const { value: safe } = SafeAreaObserver;
 
-      const curTop =
-        box.top > rootH + offset * 2 + safe.top
-          ? // on top
-            box.top - rootH - offset
-          : // on bottom
-            box.bottom + offset;
+      const topArea = box.top > rootH + offset * 2 + safe.top;
       const posTop = clamp(
-        curTop,
+        topArea ? box.top - rootH - offset : box.bottom + offset,
         offset + safe.top,
         winH - rootH - offset - safe.bottom,
       );
-
       const posLeft = clamp(
         box.left,
         offset + safe.left,
@@ -157,10 +152,6 @@ export function defineTooltipElement() {
         left: CSS_util.px(posLeft),
       });
     }
-  }
-
-  function clamp(cur: number, start: number, end: number) {
-    return Math.min(Math.max(cur, start), end);
   }
 
   customElements.define(InternalElements.HTML_TOOLTIP_ELEMENT, TooltipElement);

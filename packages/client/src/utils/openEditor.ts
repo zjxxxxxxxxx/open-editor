@@ -31,10 +31,21 @@ export function openEditor(
   // Dispatches a synthetic event event to target and returns true if either event's cancelable
   // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
   if (dispatchEvent(e)) {
-    fetch(openURL).catch(() => {
-      listeners.forEach((listener) => listener(e));
-      console.error(Error('@open-editor/client: open fail.'), openURL);
-    });
+    return fetch(openURL)
+      .then((res) => {
+        if (res.status !== 200) {
+          return Promise.reject(res);
+        }
+      })
+      .catch((err) => {
+        listeners.forEach((listener) => listener(e));
+
+        throw new OpenEditorError(
+          '@open-editor/client: open fail.',
+          openURL,
+          err,
+        );
+      });
   }
 }
 
@@ -46,5 +57,15 @@ export function offOpenEditorError(listener: Listener) {
   const index = listeners.indexOf(listener);
   if (index !== -1) {
     listeners.splice(index, 1);
+  }
+}
+
+class OpenEditorError extends Error {
+  openURL: URL;
+  response?: Response;
+  constructor(message: string, openURL: URL, response?: Response) {
+    super(message);
+    this.openURL = openURL;
+    this.response = response;
   }
 }

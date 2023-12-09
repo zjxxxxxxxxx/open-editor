@@ -112,26 +112,24 @@ const CSS = postcss`
 }
 .oe-tag {
   margin: 2px 0;
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0.6;
 }
-.oe-tag[data-file]:hover > *,
-.oe-tag[data-file]:hover ~ .oe-tag > * {
+.oe-tag[data-file]:hover,
+.oe-tag[data-file]:hover ~ .oe-tag {
   opacity: 1;
 }
 .oe-tag[data-file]:hover ~ .oe-line {
   opacity: 0.6;
 }
-.oe-name {
-  font-size: 13px;
-  font-weight: 500;
-}
 .oe-file {
   padding-left: 6px;
   color: var(--text-2);
+  font-size: 12px;
+  font-weight: 300;
   text-decoration: underline;
-}
-.oe-name,
-.oe-file {
-  opacity: 0.6;
+  pointer-events: none;
 }
 .oe-show {
   display: block;
@@ -239,13 +237,18 @@ export function defineTreeElement() {
       }
     };
 
-    private openEditor = (e: PointerEvent) => {
+    private openEditor = async (e: PointerEvent) => {
       const el = <HTMLElement>e.target!;
       const source = <SourceCodeMeta>(<unknown>el.dataset);
       if (this.clickable && isStr(source.file)) {
-        const { once } = getOptions();
-        if (once) this.close();
-        openEditor(source, (e) => this.dispatchEvent(e));
+        try {
+          addClass(getHtml(), 'oe-loading');
+          const { once } = getOptions();
+          if (once) this.close();
+          await openEditor(source, (e) => this.dispatchEvent(e));
+        } finally {
+          removeClass(getHtml(), 'oe-loading');
+        }
       }
     };
 
@@ -327,20 +330,12 @@ export function defineTreeElement() {
         title: withFile ? 'Click to open in your editor' : null,
         ...dataset,
       },
-      jsx(
-        'span',
-        {
-          className: 'oe-name',
-          ...dataset,
-        },
-        withFile ? `<${name}>` : `<${name}/>`,
-      ),
+      withFile ? `<${name}>` : `<${name}/>`,
       withFile
         ? jsx(
             'span',
             {
               className: 'oe-file',
-              ...dataset,
             },
             `${file}:${line}:${column}`,
           )
