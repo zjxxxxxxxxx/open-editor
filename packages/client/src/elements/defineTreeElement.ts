@@ -2,12 +2,10 @@ import { isStr } from '@open-editor/shared';
 import {
   append,
   jsx,
-  applyStyle,
   host,
   addClass,
   removeClass,
   getHtml,
-  globalStyle,
 } from '../utils/html';
 import { off, on } from '../utils/event';
 import { openEditor } from '../utils/openEditor';
@@ -27,11 +25,11 @@ export interface HTMLTreeElement extends HTMLElement {
 }
 
 const CSS = postcss`
-.root {
+.oe-root {
   display: none;
   touch-action: none;
 }
-.overlay {
+.oe-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -40,7 +38,7 @@ const CSS = postcss`
   height: 100vh;
   backdrop-filter: blur(10px);
 }
-.popup {
+.oe-popup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -52,7 +50,7 @@ const CSS = postcss`
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
-.close {
+.oe-close {
   position: absolute;
   top: 4px;
   right: 4px;
@@ -64,20 +62,20 @@ const CSS = postcss`
   border: none;
   border-radius: 99px;
 }
-.close:hover {
+.oe-close:hover {
   backdrop-filter: contrast(0.5);
 }
-.body {
+.oe-body {
   padding: 16px 24px;
   overflow: hidden;
 }
-.error, .error .close, .error .tag {
+.oe-error, .oe-error .oe-close, .oe-error .oe-tag {
   color: var(--red);
 }
-.error .close:hover {
+.oe-error .oe-close:hover {
   background: var(--red-light);
 }
-.content {
+.oe-content {
   --w: calc(100vw - 96px);
   --h: calc(100vh - 148px);
 
@@ -88,22 +86,22 @@ const CSS = postcss`
   overflow: auto;
   scrollbar-width: none;
 }
-.content::-webkit-scrollbar {
+.oe-content::-webkit-scrollbar {
   display: none;
 }
-.title {
+.oe-title {
   padding: 0 32px 16px 0;
   font-size: 18px;
   font-weight: 500;
 }
-.el {
+.oe-el {
   font-size: 14px;
 }
-.tree {
+.oe-tree {
   position: relative;
   padding-left: 10px;
 }
-.line {
+.oe-line {
   position: absolute;
   left: 11px;
   top: 22px;
@@ -112,28 +110,31 @@ const CSS = postcss`
   height: calc(100% - 44px);
   background: var(--text);
 }
-.tag {
+.oe-tag {
   margin: 2px 0;
 }
-.tag[data-file]:hover > *,
-.tag[data-file]:hover ~ .tag > * {
+.oe-tag[data-file]:hover > *,
+.oe-tag[data-file]:hover ~ .oe-tag > * {
   opacity: 1;
 }
-.tag[data-file]:hover ~ .line {
+.oe-tag[data-file]:hover ~ .oe-line {
   opacity: 0.6;
 }
-.name {
+.oe-name {
   font-size: 13px;
   font-weight: 500;
 }
-.file {
+.oe-file {
   padding-left: 6px;
   color: var(--text-2);
   text-decoration: underline;
 }
-.name,
-.file {
+.oe-name,
+.oe-file {
   opacity: 0.6;
+}
+.oe-show {
+  display: block;
 }
 `;
 
@@ -157,25 +158,25 @@ export function defineTreeElement() {
           'div',
           {
             ref: (el) => (this.root = el),
-            className: 'root',
+            className: 'oe-root',
           },
           jsx('div', {
             ref: (el) => (this.overlay = el),
-            className: 'overlay',
+            className: 'oe-overlay',
           }),
           jsx(
             'div',
             {
               ref: (el) => (this.popup = el),
-              className: 'popup',
+              className: 'oe-popup',
             },
             jsx('button', {
               ref: (el) => (this.popupClose = el),
-              className: 'close',
+              className: 'oe-close',
               __html: close,
             }),
             jsx('div', {
-              className: 'body',
+              className: 'oe-body',
               ref: (el) => (this.popupBody = el),
             }),
           ),
@@ -183,21 +184,13 @@ export function defineTreeElement() {
       });
     }
 
-    connectedCallback() {
-      globalStyle(postcss`.oe-screen-lock {
-        overflow: hidden;
-      }`).mount();
-    }
-
     open = (el: HTMLElement) => {
       this.show = true;
-      applyStyle(this.root, {
-        display: 'block',
-      });
-      addClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent(resolveSource(el, true));
-
       this.enableClick();
+
+      addClass(this.root, 'oe-show');
+      addClass(getHtml(), 'oe-screen-lock');
 
       on('quickexit', this.close);
       on('click', this.exit, {
@@ -213,11 +206,10 @@ export function defineTreeElement() {
 
     close = () => {
       this.show = false;
-      applyStyle(this.root, {
-        display: null,
-      });
-      removeClass(getHtml(), 'oe-screen-lock');
       this.renderBodyContent();
+
+      removeClass(this.root, 'oe-show');
+      removeClass(getHtml(), 'oe-screen-lock');
 
       on('quickexit', this.close);
       off('click', this.exit, {
@@ -266,20 +258,20 @@ export function defineTreeElement() {
       const hasTree = source.tree.length > 0;
       const treeNodes = hasTree ? buildTree(source.tree) : ['>> not found 😭.'];
 
-      if (hasTree) removeClass(this.popup, 'error');
-      else addClass(this.popup, 'error');
+      if (hasTree) removeClass(this.popup, 'oe-error');
+      else addClass(this.popup, 'oe-error');
 
       append(
         this.popupBody,
         jsx(
           'div',
           {
-            className: 'title',
+            className: 'oe-title',
           },
           jsx(
             'span',
             {
-              className: 'el',
+              className: 'oe-el',
             },
             `${source.el} in `,
           ),
@@ -288,7 +280,7 @@ export function defineTreeElement() {
         jsx(
           'div',
           {
-            className: 'content tree',
+            className: 'oe-content oe-tree',
           },
           ...treeNodes,
         ),
@@ -306,12 +298,12 @@ export function defineTreeElement() {
         nodes = [
           startNode,
           jsx('div', {
-            className: 'line',
+            className: 'oe-line',
           }),
           jsx(
             'div',
             {
-              className: 'tree',
+              className: 'oe-tree',
             },
             ...nodes,
           ),
@@ -331,14 +323,14 @@ export function defineTreeElement() {
     return jsx(
       'span',
       {
-        className: 'tag',
+        className: 'oe-tag',
         title: withFile ? 'Click to open in your editor' : null,
         ...dataset,
       },
       jsx(
         'span',
         {
-          className: 'name',
+          className: 'oe-name',
           ...dataset,
         },
         withFile ? `<${name}>` : `<${name}/>`,
@@ -347,7 +339,7 @@ export function defineTreeElement() {
         ? jsx(
             'span',
             {
-              className: 'file',
+              className: 'oe-file',
               ...dataset,
             },
             `${file}:${line}:${column}`,
