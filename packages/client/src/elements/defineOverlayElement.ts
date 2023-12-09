@@ -1,5 +1,12 @@
 import { type RectBox, getRectBoxs } from '../utils/getRectBoxs';
-import { jsx, CSS_util, applyStyle, host } from '../utils/html';
+import {
+  jsx,
+  CSS_util,
+  applyStyle,
+  host,
+  addClass,
+  removeClass,
+} from '../utils/html';
 import { off, on } from '../utils/event';
 import { SafeAreaObserver } from '../utils/SafeAreaObserver';
 import { InternalElements, capOpts } from '../constants';
@@ -12,27 +19,30 @@ export interface HTMLOverlayElement extends HTMLElement {
 }
 
 const CSS = postcss`
-.position {
+.oe-position {
   position: fixed;
   z-index: var(--z-index-overlay);
   display: none;
   pointer-events: none;
   will-change: width, height, top, left;
 }
-.position div {
+.oe-position * {
   will-change: width, height, border;
 }
-.margin {
+.oe-margin {
   border: 0px solid var(--overlay-margin);
 }
-.border {
+.oe-border {
   border: 0px solid var(--overlay-border);
 }
-.padding {
+.oe-padding {
   border: 0px solid var(--overlay-padding);
 }
-.content {
+.oe-content {
   background: var(--overlay-content);
+}
+.oe-show {
+  display: block;
 }
 `;
 
@@ -56,29 +66,29 @@ export function defineOverlayElement() {
             'div',
             {
               ref: (el) => (this.position = el),
-              className: 'position',
+              className: 'oe-position',
             },
             jsx(
               'div',
               {
                 ref: (el) => (this.margin = el),
-                className: 'margin',
+                className: 'oe-margin',
               },
               jsx(
                 'div',
                 {
                   ref: (el) => (this.border = el),
-                  className: 'border',
+                  className: 'oe-border',
                 },
                 jsx(
                   'div',
                   {
                     ref: (el) => (this.padding = el),
-                    className: 'padding',
+                    className: 'oe-padding',
                   },
                   jsx('div', {
                     ref: (el) => (this.content = el),
-                    className: 'content',
+                    className: 'oe-content',
                   }),
                 ),
               ),
@@ -92,34 +102,34 @@ export function defineOverlayElement() {
     }
 
     open = () => {
-      applyStyle(this.position, {
-        display: 'block',
-      });
+      this.activeEl = undefined;
       this.tooltip.open();
 
-      SafeAreaObserver.observe(this._update);
-      on('scroll', this._update, capOpts);
-      on('resize', this._update, capOpts);
+      addClass(this.position, 'oe-show');
+
+      on('scroll', this.updateOverlay, capOpts);
+      on('resize', this.updateOverlay, capOpts);
+
+      SafeAreaObserver.observe(this.updateOverlay);
     };
 
     close = () => {
-      applyStyle(this.position, {
-        display: 'none',
-      });
       this.tooltip.close();
-      this.update();
 
-      SafeAreaObserver.unobserve(this._update);
-      off('scroll', this._update, capOpts);
-      off('resize', this._update, capOpts);
+      removeClass(this.position, 'oe-show');
+
+      off('scroll', this.updateOverlay, capOpts);
+      off('resize', this.updateOverlay, capOpts);
+
+      SafeAreaObserver.unobserve(this.updateOverlay);
     };
 
     update = (activeEl?: HTMLElement) => {
       this.activeEl = activeEl;
-      this._update();
+      this.updateOverlay();
     };
 
-    private _update = () => {
+    private updateOverlay = () => {
       const boxs = getRectBoxs(this.activeEl);
       this.updateBoxs(boxs);
       this.tooltip.update(this.activeEl, boxs.position);

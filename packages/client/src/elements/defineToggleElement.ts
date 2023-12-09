@@ -18,14 +18,14 @@ import { InternalElements, CACHE_POS_TOP_ID } from '../constants';
 export interface HTMLToggleElement extends HTMLElement {}
 
 const CSS = postcss`
-.root {
+.oe-root {
   position: fixed;
   right: 0px;
   z-index: var(--z-index-toggle);
   padding: 4px;
   font-size: 0px;
 }
-.overlay {
+.oe-overlay {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -33,7 +33,7 @@ const CSS = postcss`
   height: 100vh;
   display: none;
 }
-.button {
+.oe-button {
   color: var(--text);
   background: var(--fill);
   box-shadow: 0 0 1px var(--fill-2);
@@ -41,9 +41,20 @@ const CSS = postcss`
   outline: none;
   border-radius: 999px;
 }
-.active {
+.oe-active {
   color: var(--cyan);
   box-shadow: 0 0 30px 3px var(--cyan);
+}
+.oe-dnd {
+  cursor: ns-resize;
+}
+.oe-dnd .oe-overlay {
+  display: block;
+}
+.oe-dnd .oe-button {
+  transform: scale(1.1);
+  opacity: 0.8;
+  cursor: ns-resize;
 }
 `;
 
@@ -68,15 +79,15 @@ export function defineToggleElement() {
           'div',
           {
             ref: (el) => (this.root = el),
-            className: 'root',
+            className: 'oe-root',
           },
           jsx('div', {
             ref: (el) => (this.overlay = el),
-            className: 'overlay',
+            className: 'oe-overlay',
           }),
           jsx('button', {
             ref: (el) => (this.button = el),
-            className: 'button',
+            className: 'oe-button',
             __html: gps,
           }),
         ),
@@ -85,16 +96,16 @@ export function defineToggleElement() {
 
     attributeChangedCallback(_: never, __: never, newValue: string) {
       if (newValue === 'true') {
-        addClass(this.button, 'active');
+        addClass(this.button, 'oe-active');
       } else {
-        removeClass(this.button, 'active');
+        removeClass(this.button, 'oe-active');
       }
     }
 
     connectedCallback() {
       this.updatePosTop();
       this.updateSize();
-      SafeAreaObserver.observe(this.updatePosRight);
+
       on('resize', this.updatePosTop);
       on('resize', this.updateSize);
       on('longpress', this.startDnD, {
@@ -104,10 +115,11 @@ export function defineToggleElement() {
       on('click', this.dispatchToggle, {
         target: this.button,
       });
+
+      SafeAreaObserver.observe(this.updatePosRight);
     }
 
     disconnectedCallback() {
-      SafeAreaObserver.unobserve(this.updatePosRight);
       off('resize', this.updatePosTop);
       off('resize', this.updateSize);
       off('longpress', this.startDnD, {
@@ -117,21 +129,13 @@ export function defineToggleElement() {
       off('click', this.dispatchToggle, {
         target: this.button,
       });
+
+      SafeAreaObserver.unobserve(this.updatePosRight);
     }
 
     private startDnD = () => {
       this.dnding = true;
-      applyStyle(this.root, {
-        cursor: 'ns-resize',
-      });
-      applyStyle(this.button, {
-        cursor: 'ns-resize',
-        opacity: '0.8',
-        transform: 'scale(1.1)',
-      });
-      applyStyle(this.overlay, {
-        display: 'block',
-      });
+      addClass(this.root, 'oe-dnd');
       on('pointermove', this.changePosTop);
       on('pointerup', this.stopDnD);
     };
@@ -139,17 +143,7 @@ export function defineToggleElement() {
     private stopDnD = () => {
       // Modify when the click e is complete
       setTimeout(() => (this.dnding = false));
-      applyStyle(this.root, {
-        cursor: null,
-      });
-      applyStyle(this.button, {
-        cursor: null,
-        opacity: null,
-        transform: null,
-      });
-      applyStyle(this.overlay, {
-        display: null,
-      });
+      removeClass(this.root, 'oe-dnd');
       off('pointermove', this.changePosTop);
       off('pointerup', this.stopDnD);
     };
