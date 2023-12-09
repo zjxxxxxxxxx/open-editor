@@ -1,5 +1,26 @@
 # @open-editor/client
 
+## 0.6.2
+
+### Patch Changes
+
+- [#165](https://github.com/zjxxxxxxxxx/open-editor/pull/165) [`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fixed jsx syntax in plain js
+
+- [#167](https://github.com/zjxxxxxxxxx/open-editor/pull/167) [`74b451d`](https://github.com/zjxxxxxxxxx/open-editor/commit/74b451da3692e1180aebcef13b73f868366a5ba7) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Make screen unscrollable
+
+- [#172](https://github.com/zjxxxxxxxxx/open-editor/pull/172) [`60ae7cd`](https://github.com/zjxxxxxxxxx/open-editor/commit/60ae7cdd3c2befee5e1dcd5d27c34b3aeaf53bb8) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add custom event `quickexit`
+
+- [#166](https://github.com/zjxxxxxxxxx/open-editor/pull/166) [`a0dbec2`](https://github.com/zjxxxxxxxxx/open-editor/commit/a0dbec2db83a1dffad1a5f7b26dba282a994fda5) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix mobile events
+
+- [#163](https://github.com/zjxxxxxxxxx/open-editor/pull/163) [`86964b7`](https://github.com/zjxxxxxxxxx/open-editor/commit/86964b74a991de6b6bc58736de8b2dcc48d31331) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fixed `once` not taking effect on close tree
+
+- [#168](https://github.com/zjxxxxxxxxx/open-editor/pull/168) [`50b7949`](https://github.com/zjxxxxxxxxx/open-editor/commit/50b7949f00b6dc7017adb24cca7fef815f731008) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Press `esc` to exit the component tree
+
+- [#165](https://github.com/zjxxxxxxxxx/open-editor/pull/165) [`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Hide overlay when `pointercancel` fires
+
+- Updated dependencies []:
+  - @open-editor/shared@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @open-editor/vite
 
+## 0.6.2
+
+### Patch Changes
+
+- [#170](https://github.com/zjxxxxxxxxx/open-editor/pull/170) [`fb86772`](https://github.com/zjxxxxxxxxx/open-editor/commit/fb8677257c8bafdf2704a5c03315791d6b5aaf1c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Applies to `ssr`
+
+- Updated dependencies [[`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913), [`74b451d`](https://github.com/zjxxxxxxxxx/open-editor/commit/74b451da3692e1180aebcef13b73f868366a5ba7), [`60ae7cd`](https://github.com/zjxxxxxxxxx/open-editor/commit/60ae7cdd3c2befee5e1dcd5d27c34b3aeaf53bb8), [`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913), [`a0dbec2`](https://github.com/zjxxxxxxxxx/open-editor/commit/a0dbec2db83a1dffad1a5f7b26dba282a994fda5), [`86964b7`](https://github.com/zjxxxxxxxxx/open-editor/commit/86964b74a991de6b6bc58736de8b2dcc48d31331), [`50b7949`](https://github.com/zjxxxxxxxxx/open-editor/commit/50b7949f00b6dc7017adb24cca7fef815f731008), [`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913)]:
+  - @open-editor/client@0.6.2
+  - @open-editor/server@0.6.2
+  - @open-editor/shared@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes
