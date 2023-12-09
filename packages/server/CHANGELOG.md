@@ -1,5 +1,14 @@
 # @open-editor/server
 
+## 0.6.2
+
+### Patch Changes
+
+- [#165](https://github.com/zjxxxxxxxxx/open-editor/pull/165) [`1459589`](https://github.com/zjxxxxxxxxx/open-editor/commit/1459589c86017b84770680a1899c706c2e4f8913) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Requests without referrer are prohibited from opening the editor
+
+- Updated dependencies []:
+  - @open-editor/shared@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes
