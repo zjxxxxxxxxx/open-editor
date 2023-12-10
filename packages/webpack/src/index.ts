@@ -87,10 +87,13 @@ export default class OpenEditorPlugin {
   ): Promise<ReturnType<Callback>> {
     const client = createClient(import.meta.url);
     getServerPort(this.options).then((port) => {
-      client.generate({
-        ...this.options,
-        port,
-      });
+      client.generate(
+        {
+          ...this.options,
+          port,
+        },
+        true,
+      );
     });
     return callback(client.filename);
   }
