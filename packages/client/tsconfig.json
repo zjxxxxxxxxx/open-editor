@@ -1,6 +1,10 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "jsx": "react-jsx",
+    "paths": {
+      "react/jsx-runtime": ["./jsx/jsx-runtime.d.ts"]
+    },
     "lib": ["esnext", "DOM"]
   },
   "include": ["src", "global.d.ts"]

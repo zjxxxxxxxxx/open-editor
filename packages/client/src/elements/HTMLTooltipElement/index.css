@@ -1,0 +1,29 @@
+.oe-root {
+  position: fixed;
+  z-index: var(--z-index-tooltip);
+  padding: 6px 8px;
+  display: none;
+  padding: 12px 20px;
+  max-width: calc(100% - 56px);
+  color: var(--text);
+  visibility: hidden;
+  background: var(--fill-opt);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 1px var(--fill-2);
+  border-radius: 12px;
+  pointer-events: none;
+  will-change: visibility, top, left;
+}
+.oe-comp {
+  font-size: 14px;
+  font-weight: 500;
+}
+.oe-file {
+  color: var(--text-2);
+  text-decoration: underline;
+  word-wrap: break-word;
+}
+.oe-show {
+  display: inline-block;
+  visibility: hidden;
+}

@@ -1,0 +1,25 @@
+.oe-position {
+  position: fixed;
+  z-index: var(--z-index-overlay);
+  display: none;
+  pointer-events: none;
+  will-change: width, height, top, left;
+}
+.oe-position * {
+  will-change: width, height, border;
+}
+.oe-margin {
+  border: 0px solid var(--overlay-margin);
+}
+.oe-border {
+  border: 0px solid var(--overlay-border);
+}
+.oe-padding {
+  border: 0px solid var(--overlay-padding);
+}
+.oe-content {
+  background: var(--overlay-content);
+}
+.oe-show {
+  display: block;
+}
