@@ -60,16 +60,14 @@ function resetAttrs(
   >,
 ) {
   const { disabled, href } = attrs;
-
-  // Prevent click events from being blocked
-  swapAttr(el, disabled.from, disabled.to);
+  const { as, bs } = findTags(el);
 
   // Prevents the default jump
   // `e.preventDefault()` has no effect on relative paths
-  const a = findATag(el);
-  if (a) {
-    swapAttr(a, href.from, href.to);
-  }
+  as.forEach((a) => swapAttr(a, href.from, href.to));
+
+  // Prevent click events from being blocked
+  bs.forEach((b) => swapAttr(b, disabled.from, disabled.to));
 }
 
 function swapAttr(el: HTMLElement, from: string, to: string) {
@@ -82,12 +80,21 @@ function swapAttr(el: HTMLElement, from: string, to: string) {
   }
 }
 
-function findATag(el: HTMLElement | null) {
+function findTags(el: HTMLElement | null) {
+  const as: HTMLElement[] = [];
+  const bs: HTMLElement[] = [];
+
   while (el) {
     if (el.tagName === 'A') {
-      return el;
+      as.push(el);
+    } else if (el.tagName === 'BUTTON') {
+      bs.push(el);
     }
     el = el.parentElement;
   }
-  return null;
+
+  return {
+    as,
+    bs,
+  };
 }

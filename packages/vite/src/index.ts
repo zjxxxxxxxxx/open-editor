@@ -58,12 +58,15 @@ export default function openEditorPlugin(
   const VITE_CLIENT_PATH = '/vite/dist/client/client.mjs';
 
   const client = createClient(import.meta.url);
-  client.generate({
-    rootDir,
-    displayToggle,
-    colorMode,
-    once,
-  });
+  client.generate(
+    {
+      rootDir,
+      displayToggle,
+      colorMode,
+      once,
+    },
+    true,
+  );
 
   return {
     name: 'vite:open-editor',

@@ -5,7 +5,7 @@ const LightColors = postcss`
   --text: #000000;
   --text-2: #333333;
   --fill: #f6f7f8;
-  --fill-opt: #f6f7f888;
+  --fill-opt: #f6f7f877;
   --fill-2: #c6c7c8;
   --cyan: #2dd9da;
   --red: #ff335c;
@@ -18,7 +18,7 @@ const DarkColors = postcss`
   --text: #ffffff;
   --text-2: #cccccc;
   --fill: #292a2d;
-  --fill-opt: #292a2daa;
+  --fill-opt: #292a2d88;
   --fill-2: #595a5d;
   --cyan: #4df9fa;
   --red: #ff335c;

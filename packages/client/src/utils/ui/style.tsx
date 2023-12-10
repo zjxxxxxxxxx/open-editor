@@ -37,20 +37,9 @@ export function computedStyle(el: HTMLElement) {
 
 export function globalStyle(css: string) {
   const style = <style type="text/css">{css}</style>;
-  let isMounted = false;
   return {
-    mount() {
-      if (!isMounted) {
-        isMounted = true;
-        append(document.head, style);
-      }
-    },
-    unmount() {
-      if (isMounted) {
-        isMounted = false;
-        style.remove();
-      }
-    },
+    mount: () => !style.isConnected && append(document.head, style),
+    unmount: () => style.isConnected && style.remove(),
   };
 }
 

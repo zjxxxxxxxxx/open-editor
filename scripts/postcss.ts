@@ -1,12 +1,12 @@
-import type { Plugin as RollupPlugin } from 'rollup';
-import { traverse, types as t, Node } from '@babel/core';
+import { join } from 'path';
+import { existsSync, readFileSync } from 'fs';
+import { type Plugin as RollupPlugin } from 'rollup';
+import { traverse, types as t, type Node } from '@babel/core';
 import { parse } from '@babel/parser';
 import MagicString from 'magic-string';
 import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import minifySelectors from 'postcss-minify-selectors';
-import { join } from 'path';
-import { existsSync, readFileSync } from 'fs';
 
 const TAG_NAME = 'postcss';
 const NEWLINE_RE = /[\n\f\r]+/g;
@@ -29,13 +29,17 @@ export default function postssPlugin(options: Options): RollupPlugin {
     return `\`${css}\``;
   }
 
-  function isNodeName(node: Node & { name: any }, name: string) {
+  function isEqualName(node: Node & { name: any }, name: string) {
     return t.isJSXIdentifier(node.name) && node.name.name === name;
   }
 
   return {
     name: 'rollup:postcss',
+
     transform(code, id) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
+      const ctx = this;
+
       let s: MagicString | undefined;
 
       const ast = parse(code, {
@@ -52,18 +56,19 @@ export default function postssPlugin(options: Options): RollupPlugin {
             s.overwrite(node.start!, node.end!, process(raw));
           }
         },
+
         // <link rel="stylesheet" href="..."/>
         JSXOpeningElement(path) {
           const { node } = path;
 
-          if (isNodeName(node, 'link')) {
+          if (isEqualName(node, 'link')) {
             let rel = '';
             let href = '';
             node.attributes.forEach((attr) => {
               if (t.isJSXAttribute(attr) && t.isStringLiteral(attr.value)) {
-                if (isNodeName(attr, 'rel')) {
+                if (isEqualName(attr, 'rel')) {
                   rel = attr.value.value;
-                } else if (isNodeName(attr, 'href')) {
+                } else if (isEqualName(attr, 'href')) {
                   href = join(id, '../', attr.value.value);
                 }
               }
@@ -71,6 +76,8 @@ export default function postssPlugin(options: Options): RollupPlugin {
 
             if (rel === 'stylesheet' && existsSync(href)) {
               s ||= new MagicString(code);
+
+              ctx.addWatchFile(href);
 
               const raw = readFileSync(href, 'utf-8');
               s.overwrite(

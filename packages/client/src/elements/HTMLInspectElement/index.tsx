@@ -20,16 +20,24 @@ import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
-const overrideCSS = postcss`
+// mount global style
+globalStyle(postcss`
+.oe-screen-lock {
+  overflow: hidden;
+}
+.oe-loading * {
+  cursor: wait !important;
+}
+`).mount();
+
+const overrideStyle = globalStyle(postcss`
 * {
   cursor: default !important;
   user-select: none !important;
   touch-action: none !important;
   -webkit-touch-callout: none !important;
 }
-`;
-
-const overrideStyle = globalStyle(overrideCSS);
+`);
 
 export class HTMLInspectElementConstructor
   extends HTMLCustomElement<{
@@ -77,10 +85,6 @@ export class HTMLInspectElementConstructor
   }
 
   connectedCallback() {
-    globalStyle(
-      '.oe-screen-lock{overflow:hidden;}.oe-loading *{cursor:wait!important;}',
-    ).mount();
-
     on('keydown', this.onKeydown, capOpts);
     on('mousemove', this.savePointE, capOpts);
     onOpenEditorError(this.showErrorOverlay);

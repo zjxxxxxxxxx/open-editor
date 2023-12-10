@@ -11,7 +11,7 @@
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./client": "./dist/client.js"
+    "./client": "./dist/client.mjs"
   },
   "files": [
     "dist"

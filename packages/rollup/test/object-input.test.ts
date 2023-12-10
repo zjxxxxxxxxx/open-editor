@@ -31,7 +31,7 @@ describe('string-input', async () => {
     expect((<OutputChunk>output[2]).moduleIds).toEqual([
       resolve(sharedRoot, 'dist/index.mjs'),
       resolve(clientRoot, 'dist/index.mjs'),
-      resolve(clientRoot, 'dist/client.js'),
+      resolve(clientRoot, 'dist/client.mjs'),
     ]);
   });
 });
