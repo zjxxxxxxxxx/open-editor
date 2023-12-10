@@ -1,4 +1,4 @@
-import { getDOMRect, computedStyle } from './html';
+import { getDOMRect, computedStyle } from './ui';
 import { isValidElement } from './isValidElement';
 
 export interface RectBox {

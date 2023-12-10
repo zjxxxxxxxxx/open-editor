@@ -1,5 +1,4 @@
 import { append } from './dom';
-import { jsx } from './jsx';
 
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 
@@ -32,15 +31,12 @@ export function computedStyle(el: HTMLElement) {
     let value = style.getPropertyValue(property);
     // @ts-ignore
     if (toNumber) value = CSS_util.pv(value) || 0;
-    return <ReturnValue>value;
+    return value as ReturnValue;
   };
 }
 
 export function globalStyle(css: string) {
-  const style = jsx('style', {
-    type: 'text/css',
-    __html: css,
-  });
+  const style = <style type="text/css">{css}</style>;
   let isMounted = false;
   return {
     mount() {

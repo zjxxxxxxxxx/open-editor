@@ -1,4 +1,4 @@
-import { applyAttrs } from './html';
+import { applyAttrs } from './ui';
 import { isValidElement } from './isValidElement';
 
 let holdEl: HTMLElement | null = null;

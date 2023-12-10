@@ -1,3 +1,4 @@
+import { Fragment } from '../../../jsx/jsx-runtime';
 import { computedStyle } from './style';
 
 export function getHtml() {
@@ -26,8 +27,16 @@ export function getDOMRect(target: HTMLElement): Omit<DOMRect, 'toJSON'> {
   return domRect;
 }
 
-export function append(parent: Node, ...children: Node[]) {
+export function append(
+  parent: HTMLElement | ShadowRoot,
+  ...children: HTMLElement[]
+) {
   for (const child of children) {
-    parent.appendChild(child);
+    if (child.tagName === Fragment) {
+      // @ts-ignore
+      append(parent, ...child.children);
+    } else {
+      parent.appendChild(child);
+    }
   }
 }

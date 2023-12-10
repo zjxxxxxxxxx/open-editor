@@ -1,0 +1,106 @@
+import { type RectBox, getRectBoxs } from '../../utils/getRectBoxs';
+import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
+import { off, on } from '../../utils/event';
+import { SafeAreaObserver } from '../../utils/SafeAreaObserver';
+import { InternalElements, capOpts } from '../../constants';
+import { HTMLCustomElement } from '../HTMLCustomElement';
+
+export class HTMLOverlayElementConstructor
+  extends HTMLCustomElement<{
+    position: HTMLElement;
+    margin: HTMLElement;
+    border: HTMLElement;
+    padding: HTMLElement;
+    content: HTMLElement;
+    tooltip: HTMLTooltipElement;
+    activeEl: HTMLElement | null;
+  }>
+  implements HTMLOverlayElement
+{
+  host() {
+    return (
+      <>
+        <link rel="stylesheet" href="./index.css" />
+        <div className="oe-position" ref={(el) => (this.state.position = el)}>
+          <div className="oe-margin" ref={(el) => (this.state.margin = el)}>
+            <div className="oe-border" ref={(el) => (this.state.border = el)}>
+              <div
+                className="oe-padding"
+                ref={(el) => (this.state.padding = el)}
+              >
+                <div
+                  className="oe-content"
+                  ref={(el) => (this.state.content = el)}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <InternalElements.HTML_TOOLTIP_ELEMENT
+          ref={(el) => (this.state.tooltip = el as HTMLTooltipElement)}
+        />
+      </>
+    );
+  }
+
+  connectedCallback() {}
+  disconnectedCallback() {}
+
+  open = () => {
+    this.state.activeEl = null;
+    this.state.tooltip.open();
+
+    addClass(this.state.position, 'oe-show');
+
+    on('scroll', this.updateOverlay, capOpts);
+    on('resize', this.updateOverlay, capOpts);
+
+    SafeAreaObserver.observe(this.updateOverlay);
+  };
+
+  close = () => {
+    this.state.tooltip.close();
+
+    removeClass(this.state.position, 'oe-show');
+
+    off('scroll', this.updateOverlay, capOpts);
+    off('resize', this.updateOverlay, capOpts);
+
+    SafeAreaObserver.unobserve(this.updateOverlay);
+  };
+
+  update = (el: HTMLElement | null) => {
+    this.state.activeEl = el;
+    this.updateOverlay();
+  };
+
+  private updateOverlay = () => {
+    const boxs = getRectBoxs(this.state.activeEl);
+    this.updateBoxs(boxs);
+    this.state.tooltip.update(this.state.activeEl, boxs.position);
+  };
+
+  private updateBoxs(boxs: Record<string, RectBox>) {
+    applyStyle(this.state.position, {
+      width: CSS_util.px(boxs.position.width),
+      height: CSS_util.px(boxs.position.height),
+      top: CSS_util.px(boxs.position.top),
+      left: CSS_util.px(boxs.position.left),
+    });
+    applyRectBox(this.state.margin, boxs.margin);
+    applyRectBox(this.state.border, boxs.border);
+    applyRectBox(this.state.padding, boxs.padding);
+    applyRectBox(this.state.content, boxs.content);
+  }
+}
+
+function applyRectBox(el: HTMLElement, box: RectBox) {
+  applyStyle(el, {
+    width: CSS_util.px(box.width),
+    height: CSS_util.px(box.height),
+    borderTopWidth: CSS_util.px(box.top),
+    borderRightWidth: CSS_util.px(box.right),
+    borderBottomWidth: CSS_util.px(box.bottom),
+    borderLeftWidth: CSS_util.px(box.left),
+  });
+}
