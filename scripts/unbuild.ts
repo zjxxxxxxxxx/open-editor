@@ -1,4 +1,4 @@
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { OutputOptions, RollupOptions } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
@@ -6,7 +6,6 @@ import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
 import postcss from './postcss';
-import html from './html';
 import { clientRoot, readjson } from './utils';
 
 const __DEV__ = '__DEV__' in process.env;
@@ -81,9 +80,6 @@ function buildBundles(
               postcss({
                 sourcemap: __DEV__,
               }),
-              html({
-                sourcemap: __DEV__,
-              }),
             ]
           : []),
         nodeResolve(),
@@ -92,6 +88,7 @@ function buildBundles(
           target: __TARGET__,
           minifySyntax: !__DEV__,
           minifyWhitespace: !__DEV__,
+          jsxImportSource: join(clientRoot, './jsx'),
         }),
       ],
     };

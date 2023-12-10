@@ -1,6 +1,6 @@
 import { CLIENT } from '../constants';
 import { on, off } from './event';
-import { computedStyle, globalStyle } from './html';
+import { computedStyle, globalStyle } from './ui';
 
 export interface SafeAreaValue {
   top: number;

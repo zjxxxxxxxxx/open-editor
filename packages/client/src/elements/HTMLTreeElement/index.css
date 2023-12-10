@@ -1,0 +1,110 @@
+.oe-root {
+  display: none;
+  touch-action: none;
+}
+.oe-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-tree);
+  width: 100vw;
+  height: 100vh;
+  backdrop-filter: blur(10px);
+}
+.oe-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: var(--z-index-tree);
+  transform: translate(-50%, -50%);
+  color: var(--text);
+  background: var(--fill-opt);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 1px var(--fill-2);
+  border-radius: 14px;
+}
+.oe-close {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 8px;
+  width: 32px;
+  height: 32px;
+  color: var(--text);
+  background: transparent;
+  border: none;
+  border-radius: 99px;
+}
+.oe-close:hover {
+  backdrop-filter: contrast(0.5);
+}
+.oe-body {
+  padding: 16px 24px;
+  overflow: hidden;
+}
+.oe-error,
+.oe-error * {
+  color: var(--red);
+}
+.oe-error .oe-close:hover {
+  background: var(--red-light);
+}
+.oe-content {
+  --w: calc(100vw - 96px);
+  --h: calc(100vh - 148px);
+
+  min-width: 220px;
+  max-width: min(var(--w), 500px);
+  max-height: min(var(--h), 600px);
+  white-space: nowrap;
+  overflow: auto;
+  scrollbar-width: none;
+}
+.oe-content::-webkit-scrollbar {
+  display: none;
+}
+.oe-title {
+  padding: 0 32px 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+.oe-el {
+  font-size: 14px;
+}
+.oe-tree {
+  position: relative;
+  padding-left: 10px;
+}
+.oe-line {
+  position: absolute;
+  left: 11px;
+  top: 22px;
+  opacity: 0.2;
+  width: 1px;
+  height: calc(100% - 44px);
+  background: var(--text);
+}
+.oe-tag {
+  margin: 2px 0;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.6;
+}
+.oe-tag[data-file]:hover,
+.oe-tag[data-file]:hover ~ .oe-tag {
+  opacity: 1;
+}
+.oe-tag[data-file]:hover ~ .oe-line {
+  opacity: 0.6;
+}
+.oe-file {
+  padding-left: 6px;
+  color: var(--text-2);
+  font-size: 12px;
+  font-weight: 300;
+  text-decoration: underline;
+  pointer-events: none;
+}
+.oe-show {
+  display: block;
+}

@@ -1,0 +1,38 @@
+.oe-root {
+  position: fixed;
+  right: 0px;
+  z-index: var(--z-index-toggle);
+  padding: 4px;
+  font-size: 0px;
+}
+.oe-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  display: none;
+}
+.oe-button {
+  color: var(--text);
+  background: var(--fill);
+  box-shadow: 0 0 1px var(--fill-2);
+  border: none;
+  outline: none;
+  border-radius: 999px;
+}
+.oe-active {
+  color: var(--cyan);
+  box-shadow: 0 0 30px 3px var(--cyan);
+}
+.oe-dnd {
+  cursor: ns-resize;
+}
+.oe-dnd .oe-overlay {
+  display: block;
+}
+.oe-dnd .oe-button {
+  transform: scale(1.1);
+  opacity: 0.8;
+  cursor: ns-resize;
+}
