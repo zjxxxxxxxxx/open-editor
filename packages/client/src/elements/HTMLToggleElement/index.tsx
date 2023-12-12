@@ -1,3 +1,4 @@
+import { clamp } from '../../utils/util';
 import {
   getHtml,
   CSS_util,
@@ -13,26 +14,28 @@ import {
 import { CACHE_POS_TOP_ID } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
-export class HTMLToggleElementConstructor
-  extends HTMLCustomElement<{
-    root: HTMLElement;
-    button: HTMLElement;
-    dnding: boolean;
-    isTouchScreen: boolean;
-  }>
-  implements HTMLToggleElement
-{
+export class HTMLToggleElement extends HTMLCustomElement<{
+  root: HTMLElement;
+  button: HTMLElement;
+  dnding: boolean;
+  isTouchScreen: boolean;
+}> {
   static get observedAttributes() {
     return ['active'];
   }
 
-  host() {
+  override host() {
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
         <div className="oe-root" ref={(el) => (this.state.root = el)}>
           <div className="oe-overlay" />
-          <button className="oe-button" ref={(el) => (this.state.button = el)}>
+          <button
+            className="oe-button"
+            ref={(el) => (this.state.button = el)}
+            onClick={this.dispatchChange}
+            onLongPress={this.startDnD}
+          >
             <svg
               viewBox="0 0 1024 1024"
               width="100%"
@@ -48,42 +51,28 @@ export class HTMLToggleElementConstructor
     );
   }
 
-  attributeChangedCallback(_: never, __: never, newValue: string) {
-    if (newValue === 'true') {
-      addClass(this.state.button, 'oe-active');
-    } else {
-      removeClass(this.state.button, 'oe-active');
+  override attrChanged(name: string, newValue: any) {
+    switch (name) {
+      case 'active':
+        if (newValue) {
+          addClass(this.state.button, 'oe-active');
+        } else {
+          removeClass(this.state.button, 'oe-active');
+        }
     }
   }
 
-  connectedCallback() {
+  override mounted() {
     this.updatePosTop();
     this.updateSize();
-
     on('resize', this.updatePosTop);
     on('resize', this.updateSize);
-    on('longpress', this.startDnD, {
-      target: this.state.button,
-      wait: 200,
-    });
-    on('click', this.dispatchToggle, {
-      target: this.state.button,
-    });
-
     SafeAreaObserver.observe(this.updatePosRight);
   }
 
-  disconnectedCallback() {
+  override unmount() {
     off('resize', this.updatePosTop);
     off('resize', this.updateSize);
-    off('longpress', this.startDnD, {
-      target: this.state.button,
-      wait: 200,
-    });
-    off('click', this.dispatchToggle, {
-      target: this.state.button,
-    });
-
     SafeAreaObserver.unobserve(this.updatePosRight);
   }
 
@@ -103,7 +92,7 @@ export class HTMLToggleElementConstructor
   };
 
   private changePosTop = (e: PointerEvent) => {
-    setCachePosTop(e.clientY);
+    localStorage[CACHE_POS_TOP_ID] = e.clientY;
     this.updatePosTop();
   };
 
@@ -134,30 +123,24 @@ export class HTMLToggleElementConstructor
     const { clientHeight: winH } = getHtml();
     const { offsetHeight: toggleH } = this.state.root;
     const { top, bottom } = SafeAreaObserver.value;
-    const cachePosY = getCachePosTop();
-    const minY = top;
-    const maxY = winH - toggleH - bottom;
-    const nextPosY = Math.min(Math.max(cachePosY - toggleH / 2, minY), maxY);
+    const cachePosY = +localStorage[CACHE_POS_TOP_ID] || 0;
+    const safePosY = clamp(
+      cachePosY - toggleH / 2,
+      top,
+      winH - toggleH - bottom,
+    );
     applyStyle(this.state.root, {
-      top: CSS_util.px(nextPosY),
+      top: CSS_util.px(safePosY),
     });
   };
 
-  private dispatchToggle = () => {
+  private dispatchChange = () => {
     // Let the button lose focus to prevent the click event from being accidentally triggered by pressing the Enter key or the Space bar.
     this.state.button.blur();
 
     // Prevents the click event from being triggered by the end of the drag
     if (!this.state.dnding) {
-      this.dispatchEvent(new CustomEvent('toggle'));
+      this.dispatchEvent(new CustomEvent('change'));
     }
   };
-}
-
-function getCachePosTop() {
-  return +localStorage[CACHE_POS_TOP_ID] || 0;
-}
-
-function setCachePosTop(posY: number) {
-  return (localStorage[CACHE_POS_TOP_ID] = posY);
 }

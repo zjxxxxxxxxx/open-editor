@@ -3,14 +3,12 @@ import { resolvePath } from './resolve';
 
 const clientId = '@open-editor/client/client';
 const syncTemplate = <const>`
-'use client';
 import { setupClient } from './index';
 if (typeof window !== 'undefined') {
   setupClient(__OPTIONS__)
 }
 `;
 const asyncTemplate = <const>` 
-'use client';
 if (typeof window !== 'undefined') {
   import('./index').then(({ setupClient }) => {
     setupClient(__OPTIONS__)

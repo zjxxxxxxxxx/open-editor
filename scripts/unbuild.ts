@@ -1,5 +1,5 @@
 import { join, resolve } from 'node:path';
-import { OutputOptions, RollupOptions } from 'rollup';
+import { type OutputOptions, type RollupOptions } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import esbuild from 'rollup-plugin-esbuild';

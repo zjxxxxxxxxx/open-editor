@@ -95,7 +95,7 @@ function getAnchor<T = any>(
   const { isValidNext, getSource, getNext } = opts;
 
   let inst = debug.value;
-  let el = debug.originalEl as HTMLElement & Record<string, any>;
+  let el = debug.originalEl as HTMLElement & AnyObject;
   let __source: string | null | undefined;
 
   // find the first el with __source

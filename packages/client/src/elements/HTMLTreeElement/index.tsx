@@ -1,38 +1,40 @@
 import { isStr } from '@open-editor/shared';
-import { append, addClass, removeClass, getHtml } from '../../utils/ui';
+import { addClass, removeClass, getHtml, resetChildren } from '../../utils/ui';
 import { off, on } from '../../utils/event';
 import { openEditor } from '../../utils/openEditor';
-import {
-  type SourceCode,
-  type SourceCodeMeta,
-  resolveSource,
-} from '../../resolve';
+import { type SourceCodeMeta, resolveSource } from '../../resolve';
 import { getOptions } from '../../options';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
-export class HTMLTreeElementConstructor
-  extends HTMLCustomElement<{
-    root: HTMLElement;
-    overlay: HTMLElement;
-    popup: HTMLElement;
-    popupClose: HTMLElement;
-    popupBody: HTMLElement;
-    clickable: boolean;
-  }>
-  implements HTMLTreeElement
-{
+export class HTMLTreeElement extends HTMLCustomElement<{
+  root: HTMLElement;
+  overlay: HTMLElement;
+  popup: HTMLElement;
+  popupClose: HTMLElement;
+  popupBody: HTMLElement;
+  clickable: boolean;
+}> {
   show = false;
 
-  host() {
+  override host() {
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="oe-root" ref={(el) => (this.state.root = el)}>
-          <div className="oe-overlay" ref={(el) => (this.state.overlay = el)} />
+        <div
+          className="oe-root"
+          ref={(el) => (this.state.root = el)}
+          onQuickExit={this.close}
+        >
+          <div
+            className="oe-overlay"
+            ref={(el) => (this.state.overlay = el)}
+            onClick={this.exit}
+          />
           <div className="oe-popup" ref={(el) => (this.state.popup = el)}>
             <button
               className="oe-close"
               ref={(el) => (this.state.popupClose = el)}
+              onClick={this.exit}
             >
               <svg
                 viewBox="0 0 1024 1024"
@@ -46,53 +48,30 @@ export class HTMLTreeElementConstructor
             <div
               className="oe-body"
               ref={(el) => (this.state.popupBody = el)}
-            />
+              onClick={this.openEditor}
+            >
+              {/* tree element insert here */}
+            </div>
           </div>
         </div>
       </>
     );
   }
 
-  connectedCallback() {}
-  disconnectedCallback() {}
-
   open = (el: HTMLElement) => {
     this.show = true;
-    this.renderBodyContent(resolveSource(el, true));
+    this.renderBodyContent(el);
     this.enableClick();
 
     addClass(this.state.root, 'oe-show');
     addClass(getHtml(), 'oe-screen-lock');
-
-    on('quickexit', this.close);
-    on('click', this.exit, {
-      target: this.state.overlay,
-    });
-    on('click', this.exit, {
-      target: this.state.popupClose,
-    });
-    on('click', this.openEditor, {
-      target: this.state.popupBody,
-    });
   };
 
   close = () => {
     this.show = false;
-    this.renderBodyContent();
 
     removeClass(this.state.root, 'oe-show');
     removeClass(getHtml(), 'oe-screen-lock');
-
-    off('quickexit', this.close);
-    off('click', this.exit, {
-      target: this.state.overlay,
-    });
-    off('click', this.exit, {
-      target: this.state.popupClose,
-    });
-    off('click', this.openEditor, {
-      target: this.state.popupBody,
-    });
   };
 
   // Prevent the display of the component tree by long press, which accidentally triggers the click event
@@ -111,7 +90,7 @@ export class HTMLTreeElementConstructor
     }
   };
 
-  private openEditor = async (e: PointerEvent) => {
+  private openEditor = async (e: MouseEvent) => {
     const el = e.target as HTMLElement;
     const source = el.dataset as unknown as SourceCodeMeta;
     if (this.state.clickable && isStr(source.file)) {
@@ -126,19 +105,10 @@ export class HTMLTreeElementConstructor
     }
   };
 
-  private renderBodyContent(source?: SourceCode) {
-    // empty
-    if (!source) {
-      return (this.state.popupBody.innerHTML = '');
-    }
-
+  private renderBodyContent(el: HTMLElement) {
+    const source = resolveSource(el, true);
     const hasTree = source.tree.length > 0;
-
-    if (hasTree) removeClass(this.state.popup, 'oe-error');
-    else addClass(this.state.popup, 'oe-error');
-
-    append(
-      this.state.popupBody,
+    const content = (
       <>
         <div className="oe-title">
           <span className="oe-el">{source.el} in </span>
@@ -147,8 +117,15 @@ export class HTMLTreeElementConstructor
         <div className="oe-content oe-tree">
           {hasTree ? buildTree(source.tree) : '>> not found 😭.'}
         </div>
-      </>,
+      </>
     );
+
+    if (hasTree) {
+      removeClass(this.state.popup, 'oe-error');
+    } else {
+      addClass(this.state.popup, 'oe-error');
+    }
+    resetChildren(this.state.popupBody, content);
   }
 }
 
