@@ -1,9 +1,36 @@
+declare type Letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[number];
+
+declare type EventKey<K extends string> = K extends `on${infer F}${infer _}`
+  ? F extends Letter
+    ? true
+    : false
+  : false;
+
+declare type EventType<K extends string> = K extends `on${infer F}`
+  ? Lowercase<F>
+  : never;
+
+declare type Event<K extends string> = HTMLElementEventMap[EventType<K>];
+
+declare type CustomNode =
+  | HTMLElement
+  | string
+  | number
+  | false
+  | null
+  | undefined;
+
 declare type CustomProperty<P> = {
   [K in keyof P]: K extends 'children'
-    ? (HTMLElement | string | number | false | null | undefined)[]
+    ? CustomNode[]
     : K extends 'ref'
     ? (el: HTMLElement) => void
+    : EventKey<K> extends true
+    ? (e: Event<K>) => void
     : P[K];
+} & {
+  onLongPress?(e: PointerEvent): void;
+  onQuickExit?(e: PointerEvent): void;
 };
 
 declare type CustomPropertyElements<ES> = {

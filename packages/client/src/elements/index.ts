@@ -1,29 +1,26 @@
 import { InternalElements } from '../constants';
-import { HTMLInspectElementConstructor } from './HTMLInspectElement';
-import { HTMLOverlayElementConstructor } from './HTMLOverlayElement';
-import { HTMLToggleElementConstructor } from './HTMLToggleElement';
-import { HTMLTooltipElementConstructor } from './HTMLTooltipElement';
-import { HTMLTreeElementConstructor } from './HTMLTreeElement';
+import { HTMLInspectElement } from './HTMLInspectElement';
+import { HTMLOverlayElement } from './HTMLOverlayElement';
+import { HTMLToggleElement } from './HTMLToggleElement';
+import { HTMLTooltipElement } from './HTMLTooltipElement';
+import { HTMLTreeElement } from './HTMLTreeElement';
 
 export function defineElements() {
   customElements.define(
     InternalElements.HTML_INSPECT_ELEMENT,
-    HTMLInspectElementConstructor,
+    HTMLInspectElement,
   );
   customElements.define(
     InternalElements.HTML_OVERLAY_ELEMENT,
-    HTMLOverlayElementConstructor,
+    HTMLOverlayElement,
   );
   customElements.define(
     InternalElements.HTML_TOGGLE_ELEMENT,
-    HTMLToggleElementConstructor,
+    HTMLToggleElement,
   );
   customElements.define(
     InternalElements.HTML_TOOLTIP_ELEMENT,
-    HTMLTooltipElementConstructor,
+    HTMLTooltipElement,
   );
-  customElements.define(
-    InternalElements.HTML_TREE_ELEMENT,
-    HTMLTreeElementConstructor,
-  );
+  customElements.define(InternalElements.HTML_TREE_ELEMENT, HTMLTreeElement);
 }

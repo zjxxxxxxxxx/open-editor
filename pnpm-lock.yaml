@@ -107,8 +107,8 @@ importers:
         specifier: ^5.3.1
         version: 5.3.1(rollup@3.28.1)(typescript@5.2.2)
       rollup-plugin-esbuild:
-        specifier: ^5.0.0
-        version: 5.0.0(esbuild@0.19.2)(rollup@3.28.1)
+        specifier: ^6.0.0
+        version: 6.0.0(esbuild@0.19.2)(rollup@3.28.1)
       simple-git-hooks:
         specifier: ^2.9.0
         version: 2.9.0
@@ -285,7 +285,7 @@ importers:
         version: link:../../packages/rollup
       '@rollup/plugin-babel':
         specifier: ^6.0.3
-        version: 6.0.3(@babel/core@7.22.10)(rollup@3.28.1)
+        version: 6.0.3(@babel/core@7.22.10)(@types/babel__core@7.20.2)(rollup@3.28.1)
       '@rollup/plugin-commonjs':
         specifier: ^25.0.4
         version: 25.0.4(rollup@3.28.1)
@@ -315,7 +315,7 @@ importers:
         version: 2.2.0
       unplugin-vue-source:
         specifier: latest
-        version: 0.0.1
+        version: 0.0.3(rollup@3.28.1)
 
   playground/vite-react:
     dependencies:
@@ -362,7 +362,7 @@ importers:
         version: 5.2.2
       unplugin-vue-source:
         specifier: latest
-        version: 0.0.1
+        version: 0.0.3(rollup@3.28.1)
       vite:
         specifier: ^4.4.5
         version: 4.4.7(@types/node@20.5.6)
@@ -420,7 +420,7 @@ importers:
         version: 4.5.5
       unplugin-vue-source:
         specifier: latest
-        version: 0.0.1
+        version: 0.0.3(rollup@3.28.1)
 
 packages:
   /@aashutoshrathi/word-wrap@1.2.6:
@@ -4409,6 +4409,7 @@ packages:
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [linux]
+    libc: [glibc]
     requiresBuild: true
     dev: false
     optional: true
@@ -4421,6 +4422,7 @@ packages:
     engines: { node: '>= 10' }
     cpu: [arm64]
     os: [linux]
+    libc: [musl]
     requiresBuild: true
     dev: false
     optional: true
@@ -4433,6 +4435,7 @@ packages:
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [linux]
+    libc: [glibc]
     requiresBuild: true
     dev: false
     optional: true
@@ -4445,6 +4448,7 @@ packages:
     engines: { node: '>= 10' }
     cpu: [x64]
     os: [linux]
+    libc: [musl]
     requiresBuild: true
     dev: false
     optional: true
@@ -4565,28 +4569,6 @@ packages:
       rollup: 3.28.1
     dev: true
 
-  /@rollup/plugin-babel@6.0.3(@babel/core@7.22.10)(rollup@3.28.1):
-    resolution:
-      {
-        integrity: sha512-fKImZKppa1A/gX73eg4JGo+8kQr/q1HBQaCGKECZ0v4YBBv3lFqi14+7xyApECzvkLTHCifx+7ntcrvtBIRcpg==,
-      }
-    engines: { node: '>=14.0.0' }
-    peerDependencies:
-      '@babel/core': ^7.0.0
-      '@types/babel__core': ^7.1.9
-      rollup: ^1.20.0||^2.0.0||^3.0.0
-    peerDependenciesMeta:
-      '@types/babel__core':
-        optional: true
-      rollup:
-        optional: true
-    dependencies:
-      '@babel/core': 7.22.10
-      '@babel/helper-module-imports': 7.22.5
-      '@rollup/pluginutils': 5.0.4(rollup@3.28.1)
-      rollup: 3.28.1
-    dev: true
-
   /@rollup/plugin-commonjs@25.0.4(rollup@3.28.1):
     resolution:
       {
@@ -4671,6 +4653,24 @@ packages:
     engines: { node: '>=14.0.0' }
     peerDependencies:
       rollup: ^1.20.0||^2.0.0||^3.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
+    dependencies:
+      '@types/estree': 1.0.1
+      estree-walker: 2.0.2
+      picomatch: 2.3.1
+      rollup: 3.28.1
+    dev: true
+
+  /@rollup/pluginutils@5.1.0(rollup@3.28.1):
+    resolution:
+      {
+        integrity: sha512-XTIWOPPcpvyKI6L1NHo0lFlCyznUEyPmPY1mc3KpPVDYulHSTvyeLNVW00QTLIAFNhR3kYnJTQHeGqU4M3n09g==,
+      }
+    engines: { node: '>=14.0.0' }
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
     peerDependenciesMeta:
       rollup:
         optional: true
@@ -9186,6 +9186,13 @@ packages:
     resolution:
       {
         integrity: sha512-vZK7T0N2CBmBOixhmjdqx2gWVbFZ4DXZ/NyRMZVlJXPa7CyFS+/a4QQsDGDQy9ZfEzxFuNEsMLeQJnKP2p5/JA==,
+      }
+    dev: true
+
+  /es-module-lexer@1.4.1:
+    resolution:
+      {
+        integrity: sha512-cXLGjP0c4T3flZJKQSuziYoq7MlT+rnvfZjfp7h+I7K9BNX54kP9nyWvdbwjQ4u1iWbOL4u96fgeZLToQlZC7w==,
       }
     dev: true
 
@@ -15647,22 +15654,21 @@ packages:
       '@babel/code-frame': 7.22.13
     dev: true
 
-  /rollup-plugin-esbuild@5.0.0(esbuild@0.19.2)(rollup@3.28.1):
+  /rollup-plugin-esbuild@6.0.0(esbuild@0.19.2)(rollup@3.28.1):
     resolution:
       {
-        integrity: sha512-1cRIOHAPh8WQgdQQyyvFdeOdxuiyk+zB5zJ5+YOwrZP4cJ0MT3Fs48pQxrZeyZHcn+klFherytILVfE4aYrneg==,
+        integrity: sha512-I4QN5DV8l0+Sb2fFhfBeEM/o0V4Rzxel0I0oxi7J2Jd3ehwWnhUXMPyc1++/lsRMmxrmOcgYtYPwvey1NzwaTA==,
       }
-    engines: { node: '>=14.18.0', npm: '>=8.0.0' }
+    engines: { node: '>=14.18.0' }
     peerDependencies:
-      esbuild: '>=0.10.1'
+      esbuild: '>=0.18.0'
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0
     dependencies:
       '@rollup/pluginutils': 5.0.4(rollup@3.28.1)
       debug: 4.3.4
-      es-module-lexer: 1.3.0
+      es-module-lexer: 1.4.1
       esbuild: 0.19.2
       joycon: 3.1.1
-      jsonc-parser: 3.2.0
       rollup: 3.28.1
     transitivePeerDependencies:
       - supports-color
@@ -17635,10 +17641,10 @@ packages:
       }
     engines: { node: '>= 0.8' }
 
-  /unplugin-vue-source@0.0.1:
+  /unplugin-vue-source@0.0.3(rollup@3.28.1):
     resolution:
       {
-        integrity: sha512-8KNHn8hICzI9YFJ0b0T6K1y/pj2TdiAdmYeAFNL1Yi7QptjrXjex4vCr893ynttA4eOvS1alD6VmDF+W4x8gjg==,
+        integrity: sha512-THNRZDQUvOtenfB7fI7hkhIWez6x68J9y40BcNWLFA+XPoo2X5Z0U0rPVoD99N1a/Uq+f6TjPqhhhNDeKW5YHQ==,
       }
     engines: { node: '>=14' }
     dependencies:
@@ -17646,10 +17652,12 @@ packages:
       '@babel/parser': 7.22.16
       '@babel/plugin-syntax-jsx': 7.22.5(@babel/core@7.22.11)
       '@babel/plugin-syntax-typescript': 7.22.5(@babel/core@7.22.11)
+      '@rollup/pluginutils': 5.1.0(rollup@3.28.1)
       '@vue/compiler-dom': 3.3.4
       magic-string: 0.30.5
       unplugin: 1.4.0
     transitivePeerDependencies:
+      - rollup
       - supports-color
     dev: true
 

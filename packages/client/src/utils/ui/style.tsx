@@ -1,4 +1,4 @@
-import { append } from './dom';
+import { appendChild } from './dom';
 
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
 
@@ -38,7 +38,7 @@ export function computedStyle(el: HTMLElement) {
 export function globalStyle(css: string) {
   const style = <style type="text/css">{css}</style>;
   return {
-    mount: () => !style.isConnected && append(document.head, style),
+    mount: () => !style.isConnected && appendChild(document.head, style),
     unmount: () => style.isConnected && style.remove(),
   };
 }

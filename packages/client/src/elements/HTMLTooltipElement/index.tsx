@@ -15,16 +15,13 @@ import { HTMLCustomElement } from '../HTMLCustomElement';
 
 const offset = 6;
 
-export class HTMLTooltipElementConstructor
-  extends HTMLCustomElement<{
-    root: HTMLElement;
-    el: HTMLElement;
-    comp: HTMLElement;
-    file: HTMLElement;
-  }>
-  implements HTMLTooltipElement
-{
-  host() {
+export class HTMLTooltipElement extends HTMLCustomElement<{
+  root: HTMLElement;
+  el: HTMLElement;
+  comp: HTMLElement;
+  file: HTMLElement;
+}> {
+  override host() {
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
@@ -36,9 +33,6 @@ export class HTMLTooltipElementConstructor
       </>
     );
   }
-
-  connectedCallback() {}
-  disconnectedCallback() {}
 
   open = () => {
     addClass(this.state.root, 'oe-show');
@@ -87,21 +81,20 @@ export class HTMLTooltipElementConstructor
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
     const { value: safe } = SafeAreaObserver;
 
-    const topArea = box.top > rootH + offset * 2 + safe.top;
-    const posTop = clamp(
-      topArea ? box.top - rootH - offset : box.bottom + offset,
+    const onTopArea = box.top > rootH + offset * 2 + safe.top;
+    const top = clamp(
+      onTopArea ? box.top - rootH - offset : box.bottom + offset,
       offset + safe.top,
       winH - rootH - offset - safe.bottom,
     );
-    const posLeft = clamp(
+    const left = clamp(
       box.left,
       offset + safe.left,
       winW - rootW - offset - safe.right,
     );
-
     applyStyle(this.state.root, {
-      top: CSS_util.px(posTop),
-      left: CSS_util.px(posLeft),
+      top: CSS_util.px(top),
+      left: CSS_util.px(left),
     });
   }
 }

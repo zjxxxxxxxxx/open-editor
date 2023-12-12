@@ -1,54 +1,68 @@
-const Fragment = '__FRAGMENT__';
+import { on } from '../src/utils/event';
 
-const svgTag = ['svg', 'path'];
+const FRAGMENT_TYPE = 'INTERNAL_VIRTUAL_FRAGMENT';
 
-function jsx(type, props, ...children) {
-  const { ref, className, style, children: _children, ...attrs } = props;
-  if (typeof _children !== 'undefined') {
-    children = children.concat(_children);
-  }
+const svgNS = 'http://www.w3.org/2000/svg';
+const svgTypes = {
+  svg: true,
+  path: true,
+};
 
-  const el = svgTag.includes(type)
-    ? document.createElementNS('http://www.w3.org/2000/svg', type)
+function jsx(type, props) {
+  const { ref, className, style, children, ...attrs } = props;
+
+  const el = svgTypes[type]
+    ? document.createElementNS(svgNS, type)
     : document.createElement(type);
 
-  appendChildren(el, children);
+  if (children != null) {
+    appendChildren(el, Array.isArray(children) ? children : [children]);
+  }
 
-  if (type !== Fragment) {
-    if (className) {
-      el.classList.add(...className.split(' '));
-    }
-    if (style) {
-      Object.assign(el.style, style);
-    }
-    for (const property of Object.keys(attrs)) {
-      const attr = attrs[property];
-      if (attr != null) {
-        el.setAttribute(property, String(attr));
+  if (type !== FRAGMENT_TYPE) {
+    if (className) el.className = className;
+    if (style) Object.assign(el.style, style);
+    for (const prop of Object.keys(attrs)) {
+      const val = attrs[prop];
+      if (val != null) {
+        if (isOn(prop)) {
+          on(typed(prop), val, { target: el });
+        } else {
+          el.setAttribute(prop, val);
+        }
       }
     }
-    ref?.(el);
+    if (ref) ref(el);
   }
 
   return el;
 }
 
+const onRE = /^on([A-Z])/;
+function isOn(val) {
+  return onRE.test(val);
+}
+function typed(val) {
+  return val.replace(onRE, (_, c) => c).toLowerCase();
+}
+
+const textRE = /(string|number)/;
 function appendChildren(el, children) {
   for (const child of children) {
-    if (Array.isArray(child)) {
-      appendChildren(el, child);
-    } else if (typeof child === 'string' || typeof child === 'number') {
-      el.append(document.createTextNode(child));
-    } else if (child instanceof Element) {
-      if (child.tagName === Fragment) {
+    if (child instanceof Element) {
+      if (child.tagName === FRAGMENT_TYPE) {
         appendChildren(el, Array.from(child.children));
       } else {
-        el.append(child);
+        el.appendChild(child);
       }
-    } else {
-      el.append(child);
+    } else if (Array.isArray(child)) {
+      appendChildren(el, child);
+    } else if (textRE.test(typeof child)) {
+      el.appendChild(document.createTextNode(child));
+    } else if (child) {
+      el.appendChild(child);
     }
   }
 }
 
-export { jsx, jsx as jsxs, Fragment };
+export { jsx, jsx as jsxs, FRAGMENT_TYPE as Fragment };
