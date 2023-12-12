@@ -1,4 +1,4 @@
-import { omit } from '../util';
+import { on, off } from '.';
 
 /******** CustomEvent ********/
 
@@ -11,7 +11,7 @@ export interface CustomEventListenerOptions extends EventListenerOptions {
 export type AddCustomEventListenerOptions<
   AddCustomEventListenerUserOptions extends AnyObject,
 > = CustomEventListenerOptions &
-  AddEventListenerOptions &
+  Omit<AddEventListenerOptions, 'passive'> &
   AddCustomEventListenerUserOptions;
 
 export type CustomEventListener = (e: PointerEvent) => void;
@@ -32,7 +32,7 @@ export type SetupListenerListenerOptions<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
 > = Omit<
   AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>,
-  'once'
+  'once' | 'signal'
 >;
 
 export type SetupListenerListener = (e: PointerEvent) => void;
@@ -62,24 +62,27 @@ export function createCustomEvent<
     cb: CustomEventListener,
     opts: AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>,
   ) {
-    const { target, once } = opts;
-    const caches = targetMap.get(target) || [];
+    const { once, signal, ...addOpts } = opts;
+    const caches = targetMap.get(addOpts.target) || [];
     const index = caches.findIndex((cache) => isSameListener(cache, cb, opts));
     if (index === -1) {
-      const stop = setupListener(
-        (e) => {
-          if (once) removeEventListener(cb, opts);
-          const evt = new PointerEvent(type, e);
-          Object.defineProperty(evt, 'target', {
-            value: e.target,
-            enumerable: true,
-          });
-          cb(evt);
-        },
-        omit(opts, 'once'),
-      );
+      const remove = () => {
+        if (signal) off('abort', remove, { target: signal });
+        removeEventListener(cb, opts);
+      };
+      if (signal) on('abort', remove, { target: signal });
+      const stop = setupListener((e) => {
+        if (signal?.aborted) return;
+        if (once) remove();
+        const evt = new PointerEvent(type, e);
+        Object.defineProperty(evt, 'target', {
+          value: e.target,
+          enumerable: true,
+        });
+        cb(evt);
+      }, addOpts);
       const nextCaches = [...caches, { cb, opts, stop }];
-      targetMap.set(target, nextCaches);
+      targetMap.set(addOpts.target, nextCaches);
     }
   }
 
@@ -87,13 +90,13 @@ export function createCustomEvent<
     cb: CustomEventListener,
     opts: CustomEventListenerOptions,
   ) {
-    const { target } = opts;
-    const caches = targetMap.get(target) || [];
+    const caches = targetMap.get(opts.target) || [];
     const index = caches.findIndex((cache) => isSameListener(cache, cb, opts));
     if (index !== -1) {
       const nextCaches = [...caches];
+      caches[index].stop();
       nextCaches.splice(index, 1);
-      targetMap.set(target, nextCaches);
+      targetMap.set(opts.target, nextCaches);
     }
   }
 
@@ -110,5 +113,3 @@ export function createCustomEvent<
     removeEventListener,
   };
 }
-
-window.removeEventListener;

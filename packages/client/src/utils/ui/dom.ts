@@ -5,14 +5,14 @@ export function getHtml() {
   return document.documentElement;
 }
 
-export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
-  for (const property of Object.keys(attrs)) {
-    const attr = attrs[property];
+export function applyAttrs(el: HTMLElement, attrs: AnyObject) {
+  for (const prop of Object.keys(attrs)) {
+    const val = attrs[prop];
     // support '' | 0 | false
-    if (attr != null) {
-      el.setAttribute(property, String(attr));
+    if (val != null) {
+      el.setAttribute(prop, val);
     } else {
-      el.removeAttribute(property);
+      el.removeAttribute(prop);
     }
   }
 }
@@ -27,16 +27,26 @@ export function getDOMRect(target: HTMLElement): Omit<DOMRect, 'toJSON'> {
   return domRect;
 }
 
-export function append(
-  parent: HTMLElement | ShadowRoot,
+export function appendChild(
+  el: HTMLElement | ShadowRoot,
   ...children: HTMLElement[]
 ) {
   for (const child of children) {
     if (child.tagName === Fragment) {
       // @ts-ignore
-      append(parent, ...child.children);
+      appendChild(el, ...child.children);
     } else {
-      parent.appendChild(child);
+      el.appendChild(child);
     }
   }
+}
+
+export function resetChildren(
+  el: HTMLElement | ShadowRoot,
+  ...children: HTMLElement[]
+) {
+  while (el.firstChild) {
+    el.removeChild(el.firstChild);
+  }
+  appendChild(el, ...children);
 }

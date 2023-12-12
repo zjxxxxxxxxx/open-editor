@@ -5,19 +5,16 @@ import { SafeAreaObserver } from '../../utils/SafeAreaObserver';
 import { InternalElements, capOpts } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
-export class HTMLOverlayElementConstructor
-  extends HTMLCustomElement<{
-    position: HTMLElement;
-    margin: HTMLElement;
-    border: HTMLElement;
-    padding: HTMLElement;
-    content: HTMLElement;
-    tooltip: HTMLTooltipElement;
-    activeEl: HTMLElement | null;
-  }>
-  implements HTMLOverlayElement
-{
-  host() {
+export class HTMLOverlayElement extends HTMLCustomElement<{
+  position: HTMLElement;
+  margin: HTMLElement;
+  border: HTMLElement;
+  padding: HTMLElement;
+  content: HTMLElement;
+  tooltip: HTMLTooltipElement;
+  activeEl: HTMLElement | null;
+}> {
+  override host() {
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
@@ -43,29 +40,21 @@ export class HTMLOverlayElementConstructor
     );
   }
 
-  connectedCallback() {}
-  disconnectedCallback() {}
-
   open = () => {
     this.state.activeEl = null;
     this.state.tooltip.open();
-
     addClass(this.state.position, 'oe-show');
-
+    // Captures scrolling of all elements
     on('scroll', this.updateOverlay, capOpts);
-    on('resize', this.updateOverlay, capOpts);
-
+    on('resize', this.updateOverlay);
     SafeAreaObserver.observe(this.updateOverlay);
   };
 
   close = () => {
     this.state.tooltip.close();
-
     removeClass(this.state.position, 'oe-show');
-
     off('scroll', this.updateOverlay, capOpts);
-    off('resize', this.updateOverlay, capOpts);
-
+    off('resize', this.updateOverlay);
     SafeAreaObserver.unobserve(this.updateOverlay);
   };
 

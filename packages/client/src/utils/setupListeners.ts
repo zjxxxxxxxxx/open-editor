@@ -15,6 +15,35 @@ export interface SetupListenersOptions {
   onExitInspect(): void;
 }
 
+const events = [
+  // mouse
+  'mousedown',
+  'mouseenter',
+  'mouseleave',
+  'mousemove',
+  'mouseout',
+  'mouseover',
+  'mouseup',
+  // touch
+  'touchstart',
+  'touchend',
+  'touchcancel',
+  'touchmove',
+  // pointer
+  'pointercancel',
+  'pointerdown',
+  'pointerenter',
+  'pointerleave',
+  'pointermove',
+  'pointerout',
+  'pointerover',
+  'pointerup',
+  // reset
+  'dbclick',
+  'submit',
+  'reset',
+];
+
 export function setupListeners(opts: SetupListenersOptions) {
   const onChangeElement = cleanHoldElementHOC(opts.onChangeElement);
   const onOpenEditor = cleanHoldElementHOC(opts.onOpenEditor);
@@ -22,7 +51,6 @@ export function setupListeners(opts: SetupListenersOptions) {
   const onExitInspect = cleanHoldElementHOC(opts.onExitInspect);
 
   const { once } = getOptions();
-  const events = getSilentEvents();
 
   function setupEventListeners() {
     events.forEach((event) => on(event, onSilent, capOpts));
@@ -77,8 +105,6 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   function onInspect(e: PointerEvent) {
-    onSilent(e);
-
     const el = <HTMLElement>e.target;
     if (checkHoldElement(el)) {
       if (once) onExitInspect();
@@ -105,35 +131,4 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   return setupEventListeners();
-}
-
-function getSilentEvents() {
-  return [
-    // mouse
-    'mousedown',
-    'mouseenter',
-    'mouseleave',
-    'mousemove',
-    'mouseout',
-    'mouseover',
-    'mouseup',
-    // touch
-    'touchstart',
-    'touchend',
-    'touchcancel',
-    'touchmove',
-    // pointer
-    'pointercancel',
-    'pointerdown',
-    'pointerenter',
-    'pointerleave',
-    'pointermove',
-    'pointerout',
-    'pointerover',
-    'pointerup',
-    // reset
-    'dbclick',
-    'submit',
-    'reset',
-  ];
 }

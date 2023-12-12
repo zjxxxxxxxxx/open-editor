@@ -40,7 +40,8 @@ export default function postssPlugin(options: Options): RollupPlugin {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const ctx = this;
 
-      let s: MagicString | undefined;
+      let s: MagicString;
+      const setupS = () => (s ||= new MagicString(code));
 
       const ast = parse(code, {
         sourceType: 'unambiguous',
@@ -50,14 +51,14 @@ export default function postssPlugin(options: Options): RollupPlugin {
         // postcss`...`
         TaggedTemplateExpression({ node }) {
           if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
-            s ||= new MagicString(code);
+            setupS();
 
             const { raw } = node.quasi.quasis[0].value;
             s.overwrite(node.start!, node.end!, process(raw));
           }
         },
 
-        // <link rel="stylesheet" href="..."/>
+        // <link rel="stylesheet" href="..." />
         JSXOpeningElement(path) {
           const { node } = path;
 
@@ -75,9 +76,7 @@ export default function postssPlugin(options: Options): RollupPlugin {
             });
 
             if (rel === 'stylesheet' && existsSync(href)) {
-              s ||= new MagicString(code);
-
-              ctx.addWatchFile(href);
+              setupS();
 
               const raw = readFileSync(href, 'utf-8');
               s.overwrite(
@@ -85,15 +84,19 @@ export default function postssPlugin(options: Options): RollupPlugin {
                 node.end!,
                 `<style type="text/css">{${process(raw)}}</style>`,
               );
+              ctx.addWatchFile(href);
             }
           }
         },
       });
 
-      return {
-        code: s?.toString(),
-        map: options.sourcemap ? s?.generateMap() : null,
-      };
+      // @ts-ignore
+      if (s) {
+        return {
+          code: s.toString(),
+          map: options.sourcemap ? s.generateMap() : null,
+        };
+      }
     },
   };
 }

@@ -1,7 +1,7 @@
 import {
   applyAttrs,
   globalStyle,
-  append,
+  appendChild,
   addClass,
   removeClass,
   getHtml,
@@ -15,7 +15,7 @@ import {
   openEditor,
 } from '../../utils/openEditor';
 import { getColorMode } from '../../utils/getColorMode';
-import { InternalElements, capOpts } from '../../constants';
+import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
@@ -39,16 +39,13 @@ const overrideStyle = globalStyle(postcss`
 }
 `);
 
-export class HTMLInspectElementConstructor
-  extends HTMLCustomElement<{
-    overlay: HTMLOverlayElement;
-    tree: HTMLTreeElement;
-    toggle?: HTMLToggleElement;
-    pointE: PointerEvent;
-    active: boolean;
-  }>
-  implements HTMLInspectElement
-{
+export class HTMLInspectElement extends HTMLCustomElement<{
+  overlay: HTMLOverlayElement;
+  tree: HTMLTreeElement;
+  toggle?: HTMLToggleElement;
+  pointE: PointerEvent;
+  active: boolean;
+}> {
   private get active() {
     return this.state.active;
   }
@@ -62,7 +59,7 @@ export class HTMLInspectElementConstructor
     }
   }
 
-  host() {
+  override host() {
     const opts = getOptions();
 
     return (
@@ -78,36 +75,24 @@ export class HTMLInspectElementConstructor
         {opts.displayToggle && (
           <InternalElements.HTML_TOGGLE_ELEMENT
             ref={(el) => (this.state.toggle = el)}
+            onChange={this.toggleActiveEffect}
           />
         )}
       </>
     );
   }
 
-  connectedCallback() {
-    on('keydown', this.onKeydown, capOpts);
-    on('mousemove', this.savePointE, capOpts);
+  override mounted() {
+    on('keydown', this.onKeydown);
+    on('mousemove', this.savePointE);
     onOpenEditorError(this.showErrorOverlay);
-
-    if (this.state.toggle) {
-      on('toggle', this.toggleActiveEffect, {
-        target: this.state.toggle,
-      });
-    }
   }
 
-  disconnectedCallback() {
-    off('keydown', this.onKeydown, capOpts);
-    off('mousemove', this.savePointE, capOpts);
-    offOpenEditorError(this.showErrorOverlay);
-
-    if (this.state.toggle) {
-      off('toggle', this.toggleActiveEffect, {
-        target: this.state.toggle,
-      });
-    }
-
+  override unmount() {
     this.cleanHandlers();
+    off('keydown', this.onKeydown);
+    off('mousemove', this.savePointE);
+    offOpenEditorError(this.showErrorOverlay);
   }
 
   private savePointE = (e: PointerEvent) => {
@@ -196,6 +181,6 @@ export class HTMLInspectElementConstructor
     on('finish', () => errorOverlay.remove(), {
       target: ani,
     });
-    append(this.shadowRoot, errorOverlay);
+    appendChild(this.shadowRoot, errorOverlay);
   };
 }
