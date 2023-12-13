@@ -64,7 +64,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     on('longpress', onInspect, capOpts);
     on('quickexit', onExitInspect, capOpts);
 
-    return () => {
+    return function cleanEventListeners() {
       events.forEach((event) => off(event, onSilent, capOpts));
 
       off('click', onInspect, { ...capOpts, target: document });
@@ -105,6 +105,8 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   function onInspect(e: PointerEvent) {
+    onSilent(e);
+
     const el = <HTMLElement>e.target;
     if (checkHoldElement(el)) {
       if (once) onExitInspect();

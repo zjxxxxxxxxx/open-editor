@@ -1,4 +1,31 @@
-declare type Letter = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[number];
+declare type Letter = [
+  'A',
+  'B',
+  'C',
+  'D',
+  'E',
+  'F',
+  'G',
+  'H',
+  'I',
+  'J',
+  'K',
+  'L',
+  'M',
+  'N',
+  'O',
+  'P',
+  'Q',
+  'R',
+  'S',
+  'T',
+  'U',
+  'V',
+  'W',
+  'X',
+  'Y',
+  'Z',
+][number];
 
 declare type EventKey<K extends string> = K extends `on${infer F}${infer _}`
   ? F extends Letter

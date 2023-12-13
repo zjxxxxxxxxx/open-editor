@@ -34,7 +34,7 @@ function ensureLazyResolver() {
       }
       return false;
     },
-    getOwner(inst) {
+    getNext(inst) {
       return getEl(inst)?._owner;
     },
     getSource(inst) {

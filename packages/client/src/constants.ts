@@ -6,8 +6,6 @@ export const InternalElements = <const>{
   HTML_TREE_ELEMENT: 'oe-tree',
 };
 
-export const CLIENT = typeof window !== 'undefined';
-
 export const capOpts = {
   capture: true,
 };

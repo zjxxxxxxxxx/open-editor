@@ -156,7 +156,8 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         console.error(Error('@open-editor/client: file not found.'));
         return this.showErrorOverlay();
       }
-      await openEditor(meta, (e) => this.dispatchEvent(e));
+      const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
+      await openEditor(meta, dispatch);
     } finally {
       removeClass(getHtml(), 'oe-loading');
     }
@@ -178,9 +179,8 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         easing: 'ease-out',
       },
     );
-    on('finish', () => errorOverlay.remove(), {
-      target: ani,
-    });
+    const remove = () => errorOverlay.remove();
+    on('finish', remove, { target: ani });
     appendChild(this.shadowRoot, errorOverlay);
   };
 }

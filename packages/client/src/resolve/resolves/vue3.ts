@@ -17,15 +17,8 @@ function ensureLazyResolver() {
     isValid(inst) {
       return Boolean(inst);
     },
-    isValidNext(inst) {
-      return Boolean(inst.parent);
-    },
-    getNext(inst) {
-      return inst.parent;
-    },
-    getSource(inst) {
-      return <string>inst.props.__source;
-    },
+    getNext,
+    getSource,
     getFile(inst) {
       return <string>inst.type.__file;
     },
@@ -33,4 +26,17 @@ function ensureLazyResolver() {
       return inst.type.name || inst.type.__name;
     },
   }));
+
+  function getSource(inst: any) {
+    while (inst) {
+      if (inst.props.__source) {
+        return inst.props.__source;
+      }
+      inst = getNext(inst);
+    }
+  }
+
+  function getNext(inst: any) {
+    return inst.parent;
+  }
 }
