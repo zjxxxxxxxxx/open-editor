@@ -17,11 +17,11 @@
   --overlay-padding: #93c47d8c;
   --overlay-content: #6fa7dca8;
 
-  --z-index-overlay: 1000000;
-  --z-index-toggle: 1000002;
-  --z-index-tooltip: 1000003;
-  --z-index-tree: 1000003;
-  --z-index-error-overlay: 1000004;
+  --z-index-overlay: 2147483643;
+  --z-index-toggle: 2147483644;
+  --z-index-tooltip: 2147483645;
+  --z-index-tree: 2147483646;
+  --z-index-error-overlay: 2147483647;
 }
 .oe-error-overlay {
   position: fixed;

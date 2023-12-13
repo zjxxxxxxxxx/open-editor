@@ -20,15 +20,8 @@ function ensureLazyResolver() {
     isValid(inst) {
       return Boolean(inst?.$vnode);
     },
-    isValidNext(inst) {
-      return Boolean(inst.$parent?.$vnode);
-    },
-    getNext(inst) {
-      return inst.$parent;
-    },
-    getSource(inst) {
-      return inst.$props?.__source;
-    },
+    getNext,
+    getSource,
     getFile(inst) {
       return getCtor(inst).__file || getCtor(inst).options?.__file;
     },
@@ -39,5 +32,18 @@ function ensureLazyResolver() {
 
   function getCtor(inst: any) {
     return inst.$vnode.componentOptions.Ctor;
+  }
+
+  function getSource(inst: any) {
+    while (inst) {
+      if (inst.$props?.__source) {
+        return inst.$props?.__source;
+      }
+      inst = getNext(inst);
+    }
+  }
+
+  function getNext(inst: any) {
+    return inst.$parent;
   }
 }

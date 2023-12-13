@@ -8,7 +8,7 @@ const listeners: Listener[] = [];
 
 export function openEditor(
   source: SourceCodeMeta,
-  dispatchEvent: (e: CustomEvent<URL>) => boolean,
+  dispatch: (e: CustomEvent<URL>) => boolean,
 ) {
   const { protocol, hostname, port } = window.location;
   const { file, line = 1, column = 1 } = source;
@@ -30,7 +30,7 @@ export function openEditor(
 
   // Dispatches a synthetic event event to target and returns true if either event's cancelable
   // attribute value is false or its preventDefault() method was not invoked, and false otherwise.
-  if (dispatchEvent(e)) {
+  if (dispatch(e)) {
     return fetch(openURL)
       .then((res) => {
         if (res.status !== 200) {
@@ -39,12 +39,12 @@ export function openEditor(
       })
       .catch((err) => {
         listeners.forEach((listener) => listener(e));
-
-        throw new OpenEditorError(
+        const error = new OpenEditorError(
           '@open-editor/client: open fail.',
           openURL,
           err,
         );
+        return Promise.reject(error);
       });
   }
 }
