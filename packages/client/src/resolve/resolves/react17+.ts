@@ -29,7 +29,7 @@ function ensureLazyResolver() {
       }
       return false;
     },
-    getOwner(fiber) {
+    getNext(fiber) {
       return fiber?._debugOwner;
     },
     getSource(fiber) {

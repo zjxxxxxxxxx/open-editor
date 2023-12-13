@@ -3,13 +3,13 @@ import { isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
   isValid(current?: T | null): boolean;
-  getOwner(current?: T | null): T | null | undefined;
+  getNext(current?: T | null): T | null | undefined;
   getSource(current?: T | null): any;
   getName(current?: T | null): string | undefined;
 }
 
 export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
-  const { isValid, getOwner, getSource, getName } = opts;
+  const { isValid, getNext, getSource, getName } = opts;
 
   return function reactResolver(
     cur: T | null | undefined,
@@ -17,17 +17,17 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
     deep: boolean,
   ) {
     while (cur) {
-      let owner = getOwner(cur);
+      let next = getNext(cur);
 
       const source = getSource(cur);
       if (isValidFileName(source?.fileName)) {
-        while (!isValid(owner)) {
-          if (!owner) return;
-          owner = getOwner(owner);
+        while (!isValid(next)) {
+          if (!next) return;
+          next = getNext(next);
         }
 
         tree.push({
-          name: getName(owner!),
+          name: getName(next!),
           file: source.fileName,
           line: source.lineNumber,
           column: source.columnNumber,
@@ -36,7 +36,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
         if (!deep) return;
       }
 
-      cur = owner;
+      cur = next;
     }
   };
 }

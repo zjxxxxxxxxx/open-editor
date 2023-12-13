@@ -19,7 +19,7 @@
   transform: translate(-50%, -50%);
   color: var(--text);
   background: var(--fill-opt);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(30px);
   box-shadow: 0 0 1px var(--fill-2);
   border-radius: 14px;
 }
@@ -90,11 +90,11 @@
   font-weight: 500;
   opacity: 0.6;
 }
-.oe-tag[data-file]:hover,
-.oe-tag[data-file]:hover ~ .oe-tag {
+.oe-tag[title]:hover,
+.oe-tag[title]:hover ~ .oe-tag {
   opacity: 1;
 }
-.oe-tag[data-file]:hover ~ .oe-line {
+.oe-tag[title]:hover ~ .oe-line {
   opacity: 0.6;
 }
 .oe-file {
