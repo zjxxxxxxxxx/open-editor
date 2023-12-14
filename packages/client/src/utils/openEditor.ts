@@ -61,8 +61,8 @@ export function offOpenEditorError(listener: Listener) {
 }
 
 class OpenEditorError extends Error {
-  openURL: URL;
-  response?: Response;
+  openURL: URL = undefined as unknown as URL;
+  response?: Response = undefined;
   constructor(message: string, openURL: URL, response?: Response) {
     super(message);
     this.openURL = openURL;
