@@ -17,8 +17,8 @@ export function resolveVue2(
 let resolver: ReturnType<typeof createVueResolver<any>>;
 function ensureLazyResolver() {
   return (resolver ||= createVueResolver({
-    isValid(inst) {
-      return Boolean(inst?.$vnode);
+    isValid(inst): inst is any {
+      return !!inst?.$vnode;
     },
     getNext,
     getSource,
