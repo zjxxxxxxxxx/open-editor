@@ -64,17 +64,16 @@ export default class OpenEditorPlugin {
         }).apply(compiler);
       });
     } else {
-      compiler.options.module.rules.push({
-        test: /\.mjs$/,
-        type: 'javascript/auto',
-        include: /open-editor/,
-      });
-
       const entry = compiler.options.entry;
       compiler.options.entry = () =>
         this.resolveClient((clientEntry) => {
           return this.injectClient(entry, clientEntry);
         });
+      compiler.options.module.rules.push({
+        test: /\.mjs$/,
+        type: 'javascript/auto',
+        include: /open-editor/,
+      });
       compiler.hooks.entryOption.call(
         compiler.options.context!,
         compiler.options.entry,

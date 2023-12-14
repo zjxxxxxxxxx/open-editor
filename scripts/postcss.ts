@@ -17,8 +17,9 @@ export interface Options {
   sourcemap?: boolean;
 }
 
+let processor: postcss.Processor;
 export default function postssPlugin(options: Options): RollupPlugin {
-  const processor = postcss(autoprefixer(), <postcss.Plugin>minifySelectors());
+  processor ||= postcss(autoprefixer(), <postcss.Plugin>minifySelectors());
 
   function process(raw: string) {
     const css = processor

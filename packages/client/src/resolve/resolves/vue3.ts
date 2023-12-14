@@ -14,8 +14,8 @@ export function resolveVue3(
 let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
 function ensureLazyResolver() {
   return (resolver ||= createVueResolver({
-    isValid(inst) {
-      return Boolean(inst);
+    isValid(inst): inst is any {
+      return !!inst;
     },
     getNext,
     getSource,

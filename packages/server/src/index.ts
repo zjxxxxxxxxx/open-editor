@@ -1,8 +1,5 @@
-import { setupServer, Options } from './setupServer';
-import {
+export { type Options, setupServer } from './setupServer';
+export {
+  type OpenEditorMiddlewareOptions,
   openEditorMiddleware,
-  OpenEditorMiddlewareOptions,
 } from './openEditorMiddleware';
-
-export type { Options, OpenEditorMiddlewareOptions };
-export { setupServer, openEditorMiddleware };

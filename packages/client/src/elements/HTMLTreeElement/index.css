@@ -17,10 +17,10 @@
   left: 50%;
   z-index: var(--z-index-tree);
   transform: translate(-50%, -50%);
-  color: var(--text);
-  background: var(--fill-opt);
-  backdrop-filter: blur(30px);
-  box-shadow: 0 0 1px var(--fill-2);
+  color: var(--text-color);
+  background: var(--bg-color-opt);
+  backdrop-filter: var(--filter-c) blur(40px);
+  box-shadow: 0 0 1px var(--bg-color2);
   border-radius: 14px;
 }
 .oe-close {
@@ -30,7 +30,7 @@
   padding: 8px;
   width: 32px;
   height: 32px;
-  color: var(--text);
+  color: var(--text-color);
   background: transparent;
   border: none;
   border-radius: 99px;
@@ -82,7 +82,7 @@
   opacity: 0.2;
   width: 1px;
   height: calc(100% - 44px);
-  background: var(--text);
+  background: var(--text-color);
 }
 .oe-tag {
   margin: 2px 0;
@@ -99,7 +99,7 @@
 }
 .oe-file {
   padding-left: 6px;
-  color: var(--text-2);
+  color: var(--text-color2);
   font-size: 12px;
   font-weight: 300;
   text-decoration: underline;
