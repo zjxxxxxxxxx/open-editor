@@ -5,11 +5,11 @@
   display: none;
   padding: 12px 20px;
   max-width: calc(100% - 56px);
-  color: var(--text);
+  color: var(--text-color);
   visibility: hidden;
-  background: var(--fill-opt);
-  backdrop-filter: blur(30px);
-  box-shadow: 0 0 1px var(--fill-2);
+  background: var(--bg-color-opt);
+  backdrop-filter: var(--filter-c) blur(20px);
+  box-shadow: 0 0 1px var(--bg-color2);
   border-radius: 12px;
   pointer-events: none;
   will-change: visibility, top, left;
@@ -19,7 +19,7 @@
   font-weight: 500;
 }
 .oe-file {
-  color: var(--text-2);
+  color: var(--text-color2);
   text-decoration: underline;
   word-wrap: break-word;
 }

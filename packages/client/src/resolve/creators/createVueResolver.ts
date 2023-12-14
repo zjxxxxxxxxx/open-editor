@@ -25,17 +25,17 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
     while (isValid(inst)) {
       const file = getFile(inst);
       if (isValidFileName(file)) {
-        const parsedFile = parseVueSource(file);
+        const parsedFile = parseSource(file);
         if (source) {
-          const parsedSource = parseVueSource(source);
+          const parsedSource = parseSource(source);
           if (parsedSource.file === parsedFile.file) {
             push(inst, parsedSource, () => (source = getSource(inst)));
+            if (!deep) return;
           }
         } else {
           push(inst, parsedFile);
+          if (!deep) return;
         }
-
-        if (!deep) return;
       }
 
       inst = getNext(inst);
@@ -65,7 +65,7 @@ function getAnchor<T = any>(
   return [debug.value, getSource(debug.value)];
 }
 
-function parseVueSource(source: string) {
+function parseSource(source: string) {
   const [file, line = 1, column = 1] = source.split(':', 3);
   return {
     file: ensureFileName(file),

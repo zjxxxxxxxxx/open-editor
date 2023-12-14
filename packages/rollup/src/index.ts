@@ -1,4 +1,4 @@
-import type { Plugin } from 'rollup';
+import { type Plugin } from 'rollup';
 import { resolve } from 'node:path';
 import { createClient, isDev } from '@open-editor/shared/node';
 import { isObj, isStr } from '@open-editor/shared';
