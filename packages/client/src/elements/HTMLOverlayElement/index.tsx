@@ -1,8 +1,6 @@
 import { type RectBox, getRectBoxs } from '../../utils/getRectBoxs';
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
-import { off, on } from '../../utils/event';
-import { SafeAreaObserver } from '../../utils/SafeAreaObserver';
-import { InternalElements, capOpts } from '../../constants';
+import { InternalElements } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
@@ -13,6 +11,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   content: HTMLElement;
   tooltip: HTMLTooltipElement;
   activeEl: HTMLElement | null;
+  observing: boolean;
 }> {
   override host() {
     return (
@@ -44,23 +43,39 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.state.activeEl = null;
     this.state.tooltip.open();
     addClass(this.state.position, 'oe-show');
-    // Captures scrolling of all elements
-    on('scroll', this.updateOverlay, capOpts);
-    on('resize', this.updateOverlay);
-    SafeAreaObserver.observe(this.updateOverlay);
+    this.startObserver();
   };
 
   close = () => {
     this.state.tooltip.close();
     removeClass(this.state.position, 'oe-show');
-    off('scroll', this.updateOverlay, capOpts);
-    off('resize', this.updateOverlay);
-    SafeAreaObserver.unobserve(this.updateOverlay);
+    this.stopObserver();
   };
 
   update = (el: HTMLElement | null) => {
     this.state.activeEl = el;
     this.updateOverlay();
+  };
+
+  private startObserver() {
+    this.state.observing = true;
+    this.observe();
+  }
+
+  private stopObserver() {
+    this.state.observing = false;
+  }
+
+  private observe = () => {
+    if (this.state.observing) {
+      if (this.state.activeEl) {
+        if (!this.state.activeEl.isConnected) {
+          this.state.activeEl = null;
+        }
+        this.updateOverlay();
+      }
+      requestAnimationFrame(this.observe);
+    }
   };
 
   private updateOverlay = () => {

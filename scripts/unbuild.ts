@@ -89,6 +89,9 @@ function buildBundles(
           minifySyntax: !__DEV__,
           minifyWhitespace: !__DEV__,
           jsxImportSource: join(clientRoot, './jsx'),
+          supported: {
+            'class-field': true,
+          },
         }),
       ],
     };
