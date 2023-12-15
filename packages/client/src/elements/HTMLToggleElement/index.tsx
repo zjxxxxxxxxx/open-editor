@@ -18,7 +18,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   root: HTMLElement;
   button: HTMLElement;
   dnding: boolean;
-  isTouchScreen: boolean;
+  touchable: boolean;
 }> {
   static get observedAttributes() {
     return ['active'];
@@ -97,19 +97,19 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   };
 
   private updateSize = () => {
-    if (
-      this.state.isTouchScreen !==
-      (this.state.isTouchScreen =
-        Boolean(navigator.maxTouchPoints) || 'ontouchstart' in window)
-    ) {
+    const prev = this.state.touchable;
+    const next =
+      'maxTouchPoints' in navigator
+        ? navigator.maxTouchPoints > 0
+        : 'ontouchstart' in window;
+    if (prev !== next) {
       // Display larger button on the touch screen
-      const pad = CSS_util.px(this.state.isTouchScreen ? 3 : 2);
-      const size = CSS_util.px(this.state.isTouchScreen ? 34 : 24);
-      applyStyle(this.state.button, {
-        padding: pad,
-        width: size,
-        height: size,
-      });
+      if (next) {
+        addClass(this.state.root, 'touch');
+      } else {
+        removeClass(this.state.root, 'touch');
+      }
+      this.state.touchable = next;
     }
   };
 

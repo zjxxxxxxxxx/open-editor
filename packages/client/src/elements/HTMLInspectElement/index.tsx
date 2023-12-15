@@ -114,7 +114,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   };
 
   private setupHandlers() {
-    if (!this.active && !this.state.tree.show) {
+    if (!this.active && !this.state.tree.isOpen) {
       this.active = true;
       this.state.overlay.open();
       this.cleanListeners = setupListeners({
@@ -139,7 +139,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   private cleanListeners!: () => void;
 
   private cleanHandlers = () => {
-    if (this.active && !this.state.tree.show) {
+    if (this.active && !this.state.tree.isOpen) {
       this.active = false;
       this.state.overlay.close();
       this.cleanListeners();
@@ -153,7 +153,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       addClass(getHtml(), 'oe-loading');
       const { meta } = resolveSource(el);
       if (!meta) {
-        console.error(Error('@open-editor/client: file not found.'));
+        console.error('@open-editor/client: file not found.');
         return this.showErrorOverlay();
       }
       const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);

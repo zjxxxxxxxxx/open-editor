@@ -22,9 +22,9 @@ export interface Options {
   /**
    * set UI color mode
    *
-   * @default 'auto'
+   * @default 'system'
    */
-  colorMode?: 'auto' | 'light' | 'dark';
+  colorMode?: 'system' | 'light' | 'dark';
 
   /**
    * exit the check after opening the editor or component tree
@@ -59,7 +59,7 @@ export default function openEditorPlugin(
   const include = new Set<string>();
 
   return {
-    name: 'open-editor',
+    name: 'rollup:open-editor',
 
     options({ input }) {
       if (input) {

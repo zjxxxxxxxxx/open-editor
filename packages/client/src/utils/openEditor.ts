@@ -2,11 +2,11 @@ import { ServerApis } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../resolve';
 import { getOptions } from '../options';
 
-type Listener = (e: CustomEvent<URL>) => void;
+type Listener = (err: any) => void;
 
 const listeners: Listener[] = [];
 
-export function openEditor(
+export async function openEditor(
   source: SourceCodeMeta,
   dispatch: (e: CustomEvent<URL>) => boolean,
 ) {
@@ -33,18 +33,12 @@ export function openEditor(
   if (dispatch(e)) {
     return fetch(openURL)
       .then((res) => {
-        if (res.status !== 200) {
-          return Promise.reject(res);
-        }
+        if (!res.ok) return Promise.reject(res);
       })
       .catch((err) => {
-        listeners.forEach((listener) => listener(e));
-        const error = new OpenEditorError(
-          '@open-editor/client: open fail.',
-          openURL,
-          err,
-        );
-        return Promise.reject(error);
+        console.error('@open-editor/client: open fail.');
+        listeners.forEach((listener) => listener(err));
+        return Promise.reject(err);
       });
   }
 }
@@ -57,15 +51,5 @@ export function offOpenEditorError(listener: Listener) {
   const index = listeners.indexOf(listener);
   if (index !== -1) {
     listeners.splice(index, 1);
-  }
-}
-
-class OpenEditorError extends Error {
-  openURL: URL = undefined as unknown as URL;
-  response?: Response = undefined;
-  constructor(message: string, openURL: URL, response?: Response) {
-    super(message);
-    this.openURL = openURL;
-    this.response = response;
   }
 }

@@ -4,13 +4,13 @@ const LightColors = postcss`
 :host {
   --text-color: #000000;
   --text-color2: #222222;
-  --bg-color: #fffffe;
-  --bg-color-opt: #fffffe88;
-  --bg-color2: #bfbfbe;
+  --bg-color: #feffff;
+  --bg-color-opt: #feffff88;
+  --bg-color2: #bebfbf;
   --cyan: #2dd9da;
   --red: #ff335c;
   --red-light: #ff335c33;
-  --filter-c: contrast(0.9);
+  --filter: contrast(0.95) blur(20px);
 }
 `;
 
@@ -22,20 +22,18 @@ const DarkColors = postcss`
   --bg-color-opt: #292a2d88;
   --bg-color2: #696a6d;
   --cyan: #4df9fa;
-  --red: #ff335c;
-  --red-light: #ff335c33;
-  --filter-c: contrast(0.8);
+  --filter: contrast(0.8) blur(20px);
 }
 `;
 
 export function getColorMode() {
   const { colorMode } = getOptions();
-
-  if (colorMode === 'light') {
-    return LightColors;
-  } else if (colorMode === 'dark') {
-    return DarkColors;
-  } else {
-    return `${LightColors}@media(prefers-color-scheme:dark){${DarkColors}}`;
+  switch (colorMode) {
+    case 'light':
+      return LightColors;
+    case 'dark':
+      return DarkColors;
+    default:
+      return `${LightColors}@media(prefers-color-scheme:dark){${DarkColors}}`;
   }
 }

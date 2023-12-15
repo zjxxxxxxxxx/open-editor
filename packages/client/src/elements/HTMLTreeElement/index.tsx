@@ -13,7 +13,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   popupBody: HTMLElement;
   clickable: boolean;
 }> {
-  show = false;
+  isOpen = false;
 
   override host() {
     return (
@@ -54,17 +54,15 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   }
 
   open = (el: HTMLElement) => {
-    this.show = true;
+    this.isOpen = true;
     this.renderTree(el);
     this.enableClick();
-
     addClass(this.state.root, 'oe-show');
     addClass(getHtml(), 'oe-screen-lock');
   };
 
   close = () => {
-    this.show = false;
-
+    this.isOpen = false;
     removeClass(this.state.root, 'oe-show');
     removeClass(getHtml(), 'oe-screen-lock');
   };
@@ -78,7 +76,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
           <span className="oe-el">{source.el} in </span>
           {`<ComponentTree>`}
         </div>
-        <div className="oe-content oe-tree">
+        <div className="oe-content">
           {hasTree ? this.buildTree(source.tree) : '>> not found 😭.'}
         </div>
       </>
@@ -92,35 +90,27 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   }
 
   private buildTree(tree: SourceCodeMeta[]) {
-    let nodes: HTMLElement = this.createOpenTag(tree.shift()!);
-
-    while (tree.length) {
-      const meta = tree.shift()!;
-      nodes = (
-        <>
-          {this.createOpenTag(meta)}
-          <div className="oe-line"></div>
-          <div className="oe-tree">{nodes}</div>
-          <p className="oe-tag">{`<${meta.name}>`}</p>
-        </>
-      );
-    }
-
-    return nodes;
-  }
-
-  private createOpenTag(meta: SourceCodeMeta) {
+    const meta = tree.pop()!;
+    const tagName = `<${meta.name}>`;
+    const fileName = `${meta.file}:${meta.line}:${meta.column}`;
     return (
-      <p
-        className="oe-tag"
-        title="Click to open in your editor"
-        onClick={() => this.openEditor(meta)}
-      >
-        {`<${meta.name}>`}
-        <span className="oe-file">
-          {meta.file}:{meta.line}:{meta.column}
-        </span>
-      </p>
+      <div className="oe-tree">
+        <p
+          className="oe-tag"
+          title="Click to open in your editor"
+          onClick={() => this.openEditor(meta)}
+        >
+          {tagName}
+          <span className="oe-file">{fileName}</span>
+        </p>
+        {tree.length > 0 && (
+          <>
+            <div className="oe-line" />
+            {this.buildTree(tree)}
+            <p className="oe-tag">{tagName}</p>
+          </>
+        )}
+      </div>
     );
   }
 

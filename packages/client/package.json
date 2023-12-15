@@ -36,6 +36,7 @@
     "@open-editor/shared": "workspace:*"
   },
   "devDependencies": {
+    "@types/react": "^18.2.45",
     "@types/react-reconciler": "^0.28.2",
     "@vue/runtime-core": "^3.3.4"
   }

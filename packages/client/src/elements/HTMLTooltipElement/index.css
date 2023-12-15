@@ -8,7 +8,7 @@
   color: var(--text-color);
   visibility: hidden;
   background: var(--bg-color-opt);
-  backdrop-filter: var(--filter-c) blur(20px);
+  backdrop-filter: var(--filter);
   box-shadow: 0 0 1px var(--bg-color2);
   border-radius: 12px;
   pointer-events: none;
