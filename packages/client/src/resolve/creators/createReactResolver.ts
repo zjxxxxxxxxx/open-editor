@@ -17,25 +17,21 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
     deep: boolean,
   ) {
     while (cur) {
-      let next = getNext(cur);
-
       const source = getSource(cur);
+      let next = getNext(cur);
       if (isValidFileName(source?.fileName)) {
         while (!isValid(next)) {
           if (!next) return;
           next = getNext(next);
         }
-
         tree.push({
           name: getName(next!),
           file: source.fileName,
           line: source.lineNumber,
           column: source.columnNumber,
         });
-
         if (!deep) return;
       }
-
       cur = next;
     }
   };
