@@ -14,9 +14,9 @@ export interface Options {
   /**
    * set UI color mode
    *
-   * @default 'auto'
+   * @default 'system'
    */
-  colorMode?: 'auto' | 'light' | 'dark';
+  colorMode?: 'system' | 'light' | 'dark';
 
   /**
    * exit the check after opening the editor or component tree
@@ -41,7 +41,7 @@ export function setOptions(
   opts = {
     ...userOpts,
     displayToggle: userOpts.displayToggle ?? true,
-    colorMode: userOpts.colorMode ?? 'auto',
+    colorMode: userOpts.colorMode ?? 'system',
     once: userOpts.once ?? true,
   };
 }

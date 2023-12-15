@@ -128,6 +128,9 @@ importers:
         specifier: workspace:*
         version: link:../shared
     devDependencies:
+      '@types/react':
+        specifier: ^18.2.45
+        version: 18.2.45
       '@types/react-reconciler':
         specifier: ^0.28.2
         version: 0.28.2
@@ -5036,7 +5039,7 @@ packages:
         integrity: sha512-8tu6lHzEgYPlfDf/J6GOQdIc+gs+S2yAqlby3zTsB3SP2svlqTYe5fwZNtZyfactP74ShooP2vvi1BOp9ZemWw==,
       }
     dependencies:
-      '@types/react': 18.2.21
+      '@types/react': 18.2.45
     dev: true
 
   /@types/react@15.6.0:
@@ -5055,6 +5058,17 @@ packages:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
       csstype: 3.1.2
+
+  /@types/react@18.2.45:
+    resolution:
+      {
+        integrity: sha512-TtAxCNrlrBp8GoeEp1npd5g+d/OejJHFxS3OWmrPBMFaVQMSN0OFySozJio5BHxTuTeug00AVXVAjfDSfk+lUg==,
+      }
+    dependencies:
+      '@types/prop-types': 15.7.5
+      '@types/scheduler': 0.16.3
+      csstype: 3.1.2
+    dev: true
 
   /@types/resolve@1.20.2:
     resolution:
@@ -6081,7 +6095,7 @@ packages:
       '@vue/compiler-core': 3.3.4
       '@vue/shared': 3.3.4
       estree-walker: 2.0.2
-      magic-string: 0.30.3
+      magic-string: 0.30.5
 
   /@vue/reactivity@3.3.4:
     resolution:
@@ -12376,7 +12390,6 @@ packages:
     engines: { node: '>=12' }
     dependencies:
       '@jridgewell/sourcemap-codec': 1.4.15
-    dev: true
 
   /make-dir@2.1.0:
     resolution:

@@ -21,9 +21,9 @@ export interface Options {
   /**
    * set UI color mode
    *
-   * @default 'auto'
+   * @default 'system'
    */
-  colorMode?: 'auto' | 'light' | 'dark';
+  colorMode?: 'system' | 'light' | 'dark';
 
   /**
    * exit the check after opening the editor or component tree

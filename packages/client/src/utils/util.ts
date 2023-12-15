@@ -17,7 +17,7 @@ const upperFirstRE = /^[a-z]/;
 const upperCaseRE = /[./\-_]+([a-z])/g;
 export function upperCase(str: string, upperFirst?: boolean) {
   if (upperFirst) {
-    str = str.replace(upperFirstRE, (char) => char.toUpperCase());
+    str = str.replace(upperFirstRE, (c) => c.toUpperCase());
   }
-  return str.replace(upperCaseRE, (_, char) => char.toUpperCase());
+  return str.replace(upperCaseRE, (_, c) => c.toUpperCase());
 }

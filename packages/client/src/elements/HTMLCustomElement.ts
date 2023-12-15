@@ -3,8 +3,8 @@ import { resetChildren } from '../utils/ui';
 export abstract class HTMLCustomElement<
   State extends AnyObject = AnyObject,
 > extends HTMLElement {
-  readonly shadowRoot: ShadowRoot = undefined as unknown as ShadowRoot;
-  protected readonly state: State = undefined as unknown as State;
+  declare readonly shadowRoot: ShadowRoot;
+  protected declare readonly state: State;
 
   public constructor(state: Partial<State> = {}) {
     super();

@@ -65,16 +65,18 @@ function getAnchor<T = any>(
   return [debug.value, getSource(debug.value)];
 }
 
+const splitRE = /:(?=\d)/;
 function parseSource(source: string) {
-  const [file, line = 1, column = 1] = source.split(':', 3);
+  const [f, l = 1, c = 1] = source.split(splitRE)!;
   return {
-    file: ensureFileName(file),
-    line: Number(line),
-    column: Number(column),
+    file: ensureFileName(f),
+    line: Number(l),
+    column: Number(c),
   };
 }
 
-const nameRE = /([^/.]+)\.[^.]+$/;
+const nameRE = /([^/]+)\.[^.]+$/;
 function getNameByFile(file = '') {
-  return file.match(nameRE)?.[1];
+  const [, n] = file.match(nameRE)!;
+  return n;
 }
