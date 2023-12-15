@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.6.3
+
+### Patch Changes
+
+- [#179](https://github.com/zjxxxxxxxxx/open-editor/pull/179) [`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add option `dynamicImport`
+
 ## 0.6.2
 
 ## 0.6.1
