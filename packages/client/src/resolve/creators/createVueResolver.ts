@@ -18,10 +18,8 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
     deep: boolean,
   ) {
     const { isValid, getNext, getSource, getFile, getName } = opts;
-
     const fileSet = new Set<string>();
     let [inst, source] = getAnchor(debug, getSource);
-
     while (isValid(inst)) {
       const file = getFile(inst);
       if (isValidFileName(file)) {
@@ -37,16 +35,15 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
           if (!deep) return;
         }
       }
-
       inst = getNext(inst);
     }
 
-    function push(inst: any, source: any, done?: () => void) {
-      if (!fileSet.has(source.file)) {
-        fileSet.add(source.file);
+    function push(inst: any, meta: any, done?: () => void) {
+      if (!fileSet.has(meta.file)) {
+        fileSet.add(meta.file);
         tree.push({
-          name: getName(inst) ?? getNameByFile(source.file),
-          ...source,
+          name: getName(inst) ?? getNameByFile(meta.file),
+          ...meta,
         });
         done?.();
       }

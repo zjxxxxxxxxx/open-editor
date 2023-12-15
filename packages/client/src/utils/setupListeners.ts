@@ -99,7 +99,10 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   function onLeaveScreen(e: PointerEvent) {
     // On PC devices, focus is lost when the mouse leaves the browser window
-    if (e.pointerType === 'mouse' && e.relatedTarget == null) {
+    if (
+      e.pointerType === 'mouse' &&
+      !isValidElement(<HTMLElement>e.relatedTarget)
+    ) {
       onChangeElement((activeEl = null));
     }
   }
