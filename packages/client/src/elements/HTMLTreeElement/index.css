@@ -19,7 +19,7 @@
   transform: translate(-50%, -50%);
   color: var(--text-color);
   background: var(--bg-color-opt);
-  backdrop-filter: var(--filter-c) blur(40px);
+  backdrop-filter: var(--filter);
   box-shadow: 0 0 1px var(--bg-color2);
   border-radius: 14px;
 }
@@ -62,6 +62,9 @@
 }
 .oe-content::-webkit-scrollbar {
   display: none;
+}
+.oe-content > .oe-tree {
+  margin-left: -10px;
 }
 .oe-title {
   padding: 0 16px 14px 0;

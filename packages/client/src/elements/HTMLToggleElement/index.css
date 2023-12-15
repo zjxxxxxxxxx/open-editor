@@ -2,7 +2,7 @@
   position: fixed;
   right: 0px;
   z-index: var(--z-index-toggle);
-  padding: 4px;
+  padding: 6px;
   font-size: 0px;
 }
 .oe-overlay {
@@ -14,6 +14,9 @@
   display: none;
 }
 .oe-button {
+  padding: 2px;
+  width: 24px;
+  height: 24px;
   color: var(--text-color);
   background: var(--bg-color);
   box-shadow: 0 0 1px var(--bg-color2);
@@ -21,10 +24,19 @@
   outline: none;
   border-radius: 999px;
   transition: all 0.1s;
+  -webkit-tap-highlight-color: transparent;
 }
 .oe-active {
   color: var(--cyan);
   box-shadow: 0 0 30px 3px var(--cyan);
+}
+.touch {
+  padding: 8px;
+}
+.touch .oe-button {
+  padding: 4px;
+  width: 34px;
+  height: 34px;
 }
 .oe-dnd {
   cursor: ns-resize;

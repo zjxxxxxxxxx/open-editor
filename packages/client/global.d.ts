@@ -19,7 +19,7 @@ declare interface HTMLTooltipElement extends HTMLElement {
 }
 
 declare interface HTMLTreeElement extends HTMLElement {
-  show: boolean;
+  isOpen: boolean;
   open(el: HTMLElement): void;
   close(): void;
 }
