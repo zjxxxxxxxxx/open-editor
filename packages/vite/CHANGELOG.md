@@ -1,5 +1,18 @@
 # @open-editor/vite
 
+## 0.6.3
+
+### Patch Changes
+
+- [#179](https://github.com/zjxxxxxxxxx/open-editor/pull/179) [`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Dynamic import of `client`
+
+- [#184](https://github.com/zjxxxxxxxxx/open-editor/pull/184) [`b0092d5`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0092d59f1efd819b6f8787c49832bf5ecc48864) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Change `colorMode` default value to 'system'
+
+- Updated dependencies [[`2f363d5`](https://github.com/zjxxxxxxxxx/open-editor/commit/2f363d5a96a3a23df00e6e62ec22c4a61ec2bb85), [`4f35ca1`](https://github.com/zjxxxxxxxxx/open-editor/commit/4f35ca183e4ec9d16a128a7a82f152ac964d475b), [`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb), [`973d108`](https://github.com/zjxxxxxxxxx/open-editor/commit/973d1088c26479f8d19d1cc82649c9da33093890), [`f5f1f4e`](https://github.com/zjxxxxxxxxx/open-editor/commit/f5f1f4e497785d72ef5f21eed7ab7ffd5a4bbb56), [`b0092d5`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0092d59f1efd819b6f8787c49832bf5ecc48864), [`fd3a9bc`](https://github.com/zjxxxxxxxxx/open-editor/commit/fd3a9bc75fb1942b98eb6cb1ad19894ca0db442a), [`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb), [`1210b5d`](https://github.com/zjxxxxxxxxx/open-editor/commit/1210b5dd75b34611002452285739ab3fb9c1b3d8)]:
+  - @open-editor/client@0.6.3
+  - @open-editor/shared@0.6.3
+  - @open-editor/server@0.6.3
+
 ## 0.6.2
 
 ### Patch Changes

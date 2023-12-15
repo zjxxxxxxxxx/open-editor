@@ -1,5 +1,28 @@
 # @open-editor/client
 
+## 0.6.3
+
+### Patch Changes
+
+- [#174](https://github.com/zjxxxxxxxxx/open-editor/pull/174) [`2f363d5`](https://github.com/zjxxxxxxxxx/open-editor/commit/2f363d5a96a3a23df00e6e62ec22c4a61ec2bb85) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Unconnected elements are invalid
+
+- [#177](https://github.com/zjxxxxxxxxx/open-editor/pull/177) [`4f35ca1`](https://github.com/zjxxxxxxxxx/open-editor/commit/4f35ca183e4ec9d16a128a7a82f152ac964d475b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Convert component name to camel case
+
+- [#183](https://github.com/zjxxxxxxxxx/open-editor/pull/183) [`973d108`](https://github.com/zjxxxxxxxxx/open-editor/commit/973d1088c26479f8d19d1cc82649c9da33093890) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Update `overlay` in real time
+
+- [#185](https://github.com/zjxxxxxxxxx/open-editor/pull/185) [`f5f1f4e`](https://github.com/zjxxxxxxxxx/open-editor/commit/f5f1f4e497785d72ef5f21eed7ab7ffd5a4bbb56) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Clear inspect when mouse enters `iframe`
+
+- [#184](https://github.com/zjxxxxxxxxx/open-editor/pull/184) [`b0092d5`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0092d59f1efd819b6f8787c49832bf5ecc48864) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Change `colorMode` default value to 'system'
+
+- [#176](https://github.com/zjxxxxxxxxx/open-editor/pull/176) [`fd3a9bc`](https://github.com/zjxxxxxxxxx/open-editor/commit/fd3a9bc75fb1942b98eb6cb1ad19894ca0db442a) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add wait effect
+
+- [#179](https://github.com/zjxxxxxxxxx/open-editor/pull/179) [`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Process all ancestor elements of the holding element
+
+- [#181](https://github.com/zjxxxxxxxxx/open-editor/pull/181) [`1210b5d`](https://github.com/zjxxxxxxxxx/open-editor/commit/1210b5dd75b34611002452285739ab3fb9c1b3d8) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Improve the accuracy of finding `vue` components
+
+- Updated dependencies [[`009a899`](https://github.com/zjxxxxxxxxx/open-editor/commit/009a899597ac0a432e4a414b2d5d5f2e154019cb)]:
+  - @open-editor/shared@0.6.3
+
 ## 0.6.2
 
 ### Patch Changes
