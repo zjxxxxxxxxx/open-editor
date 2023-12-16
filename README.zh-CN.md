@@ -17,9 +17,9 @@
 </p>
 </br>
 
-一个用于快速查找源代码的 web 调试工具。
+一个用于快速查找源代码的 web 开发调试工具。
 
-不论您是一个`React`开发者， 还是一个`Vue`开发者，又或者是一个`React`、`Vue`双料开发者，这款开发工具都可以帮助到您。它能够帮您省去大量查找代码的时间，使您能够更加专心的写代码。无论在`React`还是`Vue`中，它都能够达到完全相同的效果。
+不论您是一个`React`开发者， 还是一个`Vue`开发者，又或者是一个`React`、`Vue`双料开发者，这款开发工具都可以帮助到您。它能够帮您省去大量查找代码的时间，使您能够更加专心的编写代码。无论在`React`还是`Vue`中，它都能够达到完全相同的效果。
 
 ![image](./public/demo.gif)
 
@@ -118,6 +118,26 @@ npm run dev
 再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的切换按钮即可退出检查器。
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
+
+## `openeditor` 事件
+
+可以通过订阅 `openeditor` 事件改变打开编辑器的默认行为。
+
+### 阻止默认行为
+
+```ts
+window.addEventListener('openeditor', (e) => {
+  e.preventDefault();
+});
+```
+
+### 重定向 `URL`
+
+```ts
+window.addEventListener('openeditor', (e) => {
+  (e as CustomEvent<URL>).detail.hostname = '127.0.0.1';
+});
+```
 
 ## 安装包
 

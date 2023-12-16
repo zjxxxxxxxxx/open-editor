@@ -17,7 +17,7 @@
 </p>
 </br>
 
-A web debug tool for fast find source code.
+A web devtools for fast find source code.
 
 Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` developer, this development tool can help you. It can save you a lot of time looking for code, allowing you to focus more on writing code. Whether in `React` or `Vue`, it can achieve exactly the same effect.
 
@@ -118,6 +118,26 @@ Then click on the tree node to automatically open the source code file in the co
 Click again (shortcut key 1: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱 right-click) the switch button in the upper right corner of the browser to exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
+
+## `openeditor` event
+
+The default behavior of opening an editor can be changed by subscribing to the `openeditor` event.
+
+### Prevent default behavior
+
+```ts
+window.addEventListener('openeditor', (e) => {
+  e.preventDefault();
+});
+```
+
+### Redirect `URL`
+
+```ts
+window.addEventListener('openeditor', (e) => {
+  (e as CustomEvent<URL>).detail.hostname = '127.0.0.1';
+});
+```
 
 ## Packages
 
