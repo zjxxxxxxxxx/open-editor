@@ -16,10 +16,12 @@ function setupListener(
     on('keydown', trigger, omit(opts, 'target'));
     on('contextmenu', trigger, opts);
 
-    return function clean() {
-      off('keydown', trigger, omit(opts, 'target'));
-      off('contextmenu', trigger, opts);
-    };
+    return clean;
+  }
+
+  function clean() {
+    off('keydown', trigger, omit(opts, 'target'));
+    off('contextmenu', trigger, opts);
   }
 
   function trigger(e: PointerEvent) {

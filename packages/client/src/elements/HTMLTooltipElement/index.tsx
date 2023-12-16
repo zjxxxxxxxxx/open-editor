@@ -21,6 +21,13 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
   comp: HTMLElement;
   file: HTMLElement;
 }> {
+  constructor() {
+    super();
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.update = this.update.bind(this);
+  }
+
   override host() {
     return (
       <>
@@ -34,15 +41,15 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     );
   }
 
-  open = () => {
+  open() {
     addClass(this.state.root, 'oe-show');
-  };
+  }
 
-  close = () => {
+  close() {
     removeClass(this.state.root, 'oe-show');
-  };
+  }
 
-  update = (el: HTMLElement | null, box: RectBox) => {
+  update(el: HTMLElement | null, box: RectBox) {
     // before hidden
     applyStyle(this.state.root, {
       visibility: 'hidden',
@@ -62,7 +69,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
         visibility: 'visible',
       });
     }
-  };
+  }
 
   private updateText(source: SourceCode) {
     const { el, meta } = source;

@@ -26,10 +26,11 @@ export function setupHoldElement(e: Event) {
 }
 
 export function cleanHoldElementHOC<T extends (...args: any[]) => any>(fn: T) {
-  return function wrapped(...args: Parameters<T>): ReturnType<T> {
+  function wrapped(...args: Parameters<T>): ReturnType<T> {
     cleanHoldElement();
     return fn(...args);
-  };
+  }
+  return wrapped;
 }
 
 function cleanHoldElement() {

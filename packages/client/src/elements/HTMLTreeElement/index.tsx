@@ -13,7 +13,15 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   popupBody: HTMLElement;
   clickable: boolean;
 }> {
-  isOpen = false;
+  declare isOpen: boolean;
+
+  constructor() {
+    super();
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.enableClick = this.enableClick.bind(this);
+    this.exit = this.exit.bind(this);
+  }
 
   override host() {
     return (
@@ -53,19 +61,19 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     );
   }
 
-  open = (el: HTMLElement) => {
+  open(el: HTMLElement) {
     this.isOpen = true;
     this.renderTree(el);
     this.enableClick();
     addClass(this.state.root, 'oe-show');
     addClass(getHtml(), 'oe-screen-lock');
-  };
+  }
 
-  close = () => {
+  close() {
     this.isOpen = false;
     removeClass(this.state.root, 'oe-show');
     removeClass(getHtml(), 'oe-screen-lock');
-  };
+  }
 
   private renderTree(el: HTMLElement) {
     const source = resolveSource(el, true);
@@ -93,12 +101,13 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const meta = tree.pop()!;
     const tagName = `<${meta.name}>`;
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
+    const onOpenEditor = () => this.openEditor(meta);
     return (
       <div className="oe-tree">
         <p
           className="oe-tag"
           title="Click to open in your editor"
-          onClick={() => this.openEditor(meta)}
+          onClick={onOpenEditor}
         >
           {tagName}
           <span className="oe-file">{fileName}</span>
@@ -115,20 +124,20 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   }
 
   // Prevent the display of the component tree by long press, which accidentally triggers the click event
-  private enableClick = () => {
+  private enableClick() {
     this.state.clickable = false;
     const enable = () => {
       this.state.clickable = true;
       off('pointerdown', enable);
     };
     on('pointerdown', enable);
-  };
+  }
 
-  private exit = () => {
+  private exit() {
     if (this.state.clickable) {
       this.close();
     }
-  };
+  }
 
   private async openEditor(meta: SourceCodeMeta) {
     if (this.state.clickable) {

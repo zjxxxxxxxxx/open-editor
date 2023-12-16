@@ -46,12 +46,21 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   pointE: PointerEvent;
   active: boolean;
 }> {
+  constructor() {
+    super();
+    this.savePointE = this.savePointE.bind(this);
+    this.onKeydown = this.onKeydown.bind(this);
+    this.toggleActiveEffect = this.toggleActiveEffect.bind(this);
+    this.cleanHandlers = this.cleanHandlers.bind(this);
+    this.openEditor = this.openEditor.bind(this);
+    this.showErrorOverlay = this.showErrorOverlay.bind(this);
+  }
+
   private get active() {
     return this.state.active;
   }
   private set active(value) {
     this.state.active = value;
-
     if (this.state.toggle) {
       applyAttrs(this.state.toggle, {
         active: value,
@@ -61,7 +70,6 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
   override host() {
     const opts = getOptions();
-
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
@@ -95,23 +103,23 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     offOpenEditorError(this.showErrorOverlay);
   }
 
-  private savePointE = (e: PointerEvent) => {
+  private savePointE(e: PointerEvent) {
     this.state.pointE = e;
-  };
+  }
 
-  private onKeydown = (e: KeyboardEvent) => {
+  private onKeydown(e: KeyboardEvent) {
     if (e.altKey && e.metaKey && e.code === 'KeyO') {
       this.toggleActiveEffect();
     }
-  };
+  }
 
-  private toggleActiveEffect = () => {
+  private toggleActiveEffect() {
     if (!this.active) {
       this.setupHandlers();
     } else {
       this.cleanHandlers();
     }
-  };
+  }
 
   private setupHandlers() {
     if (!this.active && !this.state.tree.isOpen) {
@@ -136,9 +144,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     }
   }
 
-  private cleanListeners!: () => void;
+  private declare cleanListeners: () => void;
 
-  private cleanHandlers = () => {
+  private cleanHandlers() {
     if (this.active && !this.state.tree.isOpen) {
       this.active = false;
       this.state.overlay.close();
@@ -146,9 +154,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
       overrideStyle.unmount();
     }
-  };
+  }
 
-  private openEditor = async (el: HTMLElement) => {
+  private async openEditor(el: HTMLElement) {
     try {
       addClass(getHtml(), 'oe-loading');
       const { meta } = resolveSource(el);
@@ -161,9 +169,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     } finally {
       removeClass(getHtml(), 'oe-loading');
     }
-  };
+  }
 
-  private showErrorOverlay = () => {
+  private showErrorOverlay() {
     const errorOverlay = <div className="oe-error-overlay" />;
     const ani = errorOverlay.animate(
       [
@@ -182,5 +190,5 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     const remove = () => errorOverlay.remove();
     on('finish', remove, { target: ani });
     appendChild(this.shadowRoot, errorOverlay);
-  };
+  }
 }

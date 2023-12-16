@@ -24,6 +24,17 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     return ['active'];
   }
 
+  constructor() {
+    super();
+    this.startDnD = this.startDnD.bind(this);
+    this.stopDnD = this.stopDnD.bind(this);
+    this.changePosTop = this.changePosTop.bind(this);
+    this.updateSize = this.updateSize.bind(this);
+    this.updatePosRight = this.updatePosRight.bind(this);
+    this.updatePosTop = this.updatePosTop.bind(this);
+    this.dispatchChange = this.dispatchChange.bind(this);
+  }
+
   override host() {
     return (
       <>
@@ -76,27 +87,27 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     SafeAreaObserver.unobserve(this.updatePosRight);
   }
 
-  private startDnD = () => {
+  private startDnD() {
     this.state.dnding = true;
     addClass(this.state.root, 'oe-dnd');
     on('pointermove', this.changePosTop);
     on('pointerup', this.stopDnD);
-  };
+  }
 
-  private stopDnD = () => {
+  private stopDnD() {
     // Modify when the click e is complete
     setTimeout(() => (this.state.dnding = false));
     removeClass(this.state.root, 'oe-dnd');
     off('pointermove', this.changePosTop);
     off('pointerup', this.stopDnD);
-  };
+  }
 
-  private changePosTop = (e: PointerEvent) => {
+  private changePosTop(e: PointerEvent) {
     localStorage[CACHE_POS_TOP_ID] = e.clientY;
     this.updatePosTop();
-  };
+  }
 
-  private updateSize = () => {
+  private updateSize() {
     const prev = this.state.touchable;
     const next =
       'maxTouchPoints' in navigator
@@ -111,15 +122,15 @@ export class HTMLToggleElement extends HTMLCustomElement<{
       }
       this.state.touchable = next;
     }
-  };
+  }
 
-  private updatePosRight = (value: SafeAreaValue) => {
+  private updatePosRight(value: SafeAreaValue) {
     applyStyle(this.state.root, {
       right: CSS_util.px(value.right),
     });
-  };
+  }
 
-  private updatePosTop = () => {
+  private updatePosTop() {
     const { clientHeight: winH } = getHtml();
     const { offsetHeight: toggleH } = this.state.root;
     const { top, bottom } = SafeAreaObserver.value;
@@ -132,15 +143,14 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     applyStyle(this.state.root, {
       top: CSS_util.px(safePosY),
     });
-  };
+  }
 
-  private dispatchChange = () => {
+  private dispatchChange() {
     // Let the button lose focus to prevent the click event from being accidentally triggered by pressing the Enter key or the Space bar.
     this.state.button.blur();
-
     // Prevents the click event from being triggered by the end of the drag
     if (!this.state.dnding) {
       this.dispatchEvent(new CustomEvent('change'));
     }
-  };
+  }
 }
