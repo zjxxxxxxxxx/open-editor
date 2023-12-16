@@ -64,17 +64,19 @@ export function setupListeners(opts: SetupListenersOptions) {
     on('longpress', onInspect, capOpts);
     on('quickexit', onExitInspect, capOpts);
 
-    return function cleanEventListeners() {
-      events.forEach((event) => off(event, onSilent, capOpts));
+    return cleanEventListeners;
+  }
 
-      off('click', onInspect, { ...capOpts, target: document });
-      off('pointerdown', setupHoldElement, capOpts);
-      off('pointermove', onActiveElement, capOpts);
-      off('pointerover', onEnterScreen, capOpts);
-      off('pointerout', onLeaveScreen, capOpts);
-      off('longpress', onInspect, capOpts);
-      off('quickexit', onExitInspect, capOpts);
-    };
+  function cleanEventListeners() {
+    events.forEach((event) => off(event, onSilent, capOpts));
+
+    off('click', onInspect, { ...capOpts, target: document });
+    off('pointerdown', setupHoldElement, capOpts);
+    off('pointermove', onActiveElement, capOpts);
+    off('pointerover', onEnterScreen, capOpts);
+    off('pointerout', onLeaveScreen, capOpts);
+    off('longpress', onInspect, capOpts);
+    off('quickexit', onExitInspect, capOpts);
   }
 
   let activeEl: HTMLElement | null;

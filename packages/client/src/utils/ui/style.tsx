@@ -20,7 +20,7 @@ export function applyStyle(
 
 export function computedStyle(el: HTMLElement) {
   const style = window.getComputedStyle(el, null);
-  return function get<
+  function get<
     ToNumber extends boolean = true,
     ReturnValue = ToNumber extends true ? number : string,
   >(
@@ -32,14 +32,19 @@ export function computedStyle(el: HTMLElement) {
     // @ts-ignore
     if (toNumber) value = CSS_util.pv(value) || 0;
     return value as ReturnValue;
-  };
+  }
+  return get;
 }
 
 export function globalStyle(css: string) {
   const style = <style type="text/css">{css}</style>;
   return {
-    mount: () => !style.isConnected && appendChild(document.head, style),
-    unmount: () => style.isConnected && style.remove(),
+    mount() {
+      !style.isConnected && appendChild(document.head, style);
+    },
+    unmount() {
+      style.isConnected && style.remove();
+    },
   };
 }
 
