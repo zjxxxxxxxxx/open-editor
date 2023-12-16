@@ -13,6 +13,15 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   activeEl: HTMLElement | null;
   observing: boolean;
 }> {
+  constructor() {
+    super();
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this.update = this.update.bind(this);
+    this.observe = this.observe.bind(this);
+    this.updateOverlay = this.updateOverlay.bind(this);
+  }
+
   override host() {
     return (
       <>
@@ -39,23 +48,23 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     );
   }
 
-  open = () => {
+  open() {
     this.state.activeEl = null;
     this.state.tooltip.open();
     addClass(this.state.position, 'oe-show');
     this.startObserver();
-  };
+  }
 
-  close = () => {
+  close() {
     this.state.tooltip.close();
     removeClass(this.state.position, 'oe-show');
     this.stopObserver();
-  };
+  }
 
-  update = (el: HTMLElement | null) => {
+  update(el: HTMLElement | null) {
     this.state.activeEl = el;
     this.updateOverlay();
-  };
+  }
 
   private startObserver() {
     this.state.observing = true;
@@ -66,7 +75,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.state.observing = false;
   }
 
-  private observe = () => {
+  private observe() {
     if (this.state.observing) {
       if (this.state.activeEl) {
         if (!this.state.activeEl.isConnected) {
@@ -76,13 +85,13 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
       }
       requestAnimationFrame(this.observe);
     }
-  };
+  }
 
-  private updateOverlay = () => {
+  private updateOverlay() {
     const boxs = getRectBoxs(this.state.activeEl);
     this.updateBoxs(boxs);
     this.state.tooltip.update(this.state.activeEl, boxs.position);
-  };
+  }
 
   private updateBoxs(boxs: Record<string, RectBox>) {
     applyStyle(this.state.position, {
@@ -91,20 +100,20 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
       top: CSS_util.px(boxs.position.top),
       left: CSS_util.px(boxs.position.left),
     });
-    applyRectBox(this.state.margin, boxs.margin);
-    applyRectBox(this.state.border, boxs.border);
-    applyRectBox(this.state.padding, boxs.padding);
-    applyRectBox(this.state.content, boxs.content);
+    this.applyRectBox(this.state.margin, boxs.margin);
+    this.applyRectBox(this.state.border, boxs.border);
+    this.applyRectBox(this.state.padding, boxs.padding);
+    this.applyRectBox(this.state.content, boxs.content);
   }
-}
 
-function applyRectBox(el: HTMLElement, box: RectBox) {
-  applyStyle(el, {
-    width: CSS_util.px(box.width),
-    height: CSS_util.px(box.height),
-    borderTopWidth: CSS_util.px(box.top),
-    borderRightWidth: CSS_util.px(box.right),
-    borderBottomWidth: CSS_util.px(box.bottom),
-    borderLeftWidth: CSS_util.px(box.left),
-  });
+  private applyRectBox(el: HTMLElement, box: RectBox) {
+    applyStyle(el, {
+      width: CSS_util.px(box.width),
+      height: CSS_util.px(box.height),
+      borderTopWidth: CSS_util.px(box.top),
+      borderRightWidth: CSS_util.px(box.right),
+      borderBottomWidth: CSS_util.px(box.bottom),
+      borderLeftWidth: CSS_util.px(box.left),
+    });
+  }
 }

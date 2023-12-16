@@ -21,12 +21,14 @@ function setupListener(
     on('pointerup', stop, opts);
     on('pointercancel', stop, opts);
 
-    return function clean() {
-      off('pointerdown', start, opts);
-      off('pointermove', stop, opts);
-      off('pointerup', stop, opts);
-      off('pointercancel', stop, opts);
-    };
+    return clean;
+  }
+
+  function clean() {
+    off('pointerdown', start, opts);
+    off('pointermove', stop, opts);
+    off('pointerup', stop, opts);
+    off('pointercancel', stop, opts);
   }
 
   let waitTimer: number | null = null;

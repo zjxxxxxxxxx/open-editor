@@ -12,7 +12,7 @@ interface VueResolverOptions<T = any> {
 }
 
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
-  return function vueResolver(
+  function vueResolver(
     debug: ResolveDebug<T>,
     tree: Partial<SourceCodeMeta>[],
     deep: boolean,
@@ -27,7 +27,8 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
         if (source) {
           const parsedSource = parseSource(source);
           if (parsedSource.file === parsedFile.file) {
-            push(inst, parsedSource, () => (source = getSource(inst)));
+            const nextSource = () => (source = getSource(inst));
+            push(inst, parsedSource, nextSource);
             if (!deep) return;
           }
         } else {
@@ -48,7 +49,9 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
         done?.();
       }
     }
-  };
+  }
+
+  return vueResolver;
 }
 
 function getAnchor<T = any>(

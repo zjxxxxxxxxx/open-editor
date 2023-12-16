@@ -11,7 +11,7 @@ export interface ReactResolverOptions<T = any> {
 export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
   const { isValid, getNext, getSource, getName } = opts;
 
-  return function reactResolver(
+  function reactResolver(
     cur: T | null | undefined,
     tree: Partial<SourceCodeMeta>[],
     deep: boolean,
@@ -34,5 +34,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
       }
       cur = next;
     }
-  };
+  }
+
+  return reactResolver;
 }
