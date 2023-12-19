@@ -8,9 +8,10 @@ export interface Options {
    * @default process.cwd()
    */
   rootDir?: string;
-
   /**
    * custom openEditor handler
+   *
+   * @default 'launch-editor'
    */
   onOpenEditor?(file: string): void;
 }

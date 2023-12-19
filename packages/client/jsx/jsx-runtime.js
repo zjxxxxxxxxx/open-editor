@@ -16,7 +16,7 @@ function jsx(type, props) {
     : document.createElement(type);
 
   if (children != null) {
-    appendChildren(el, Array.isArray(children) ? children : [children]);
+    appendChildren(el, toArray(children));
   }
 
   if (type !== FRAGMENT_TYPE) {
@@ -38,12 +38,14 @@ function jsx(type, props) {
   return el;
 }
 
+const toArray = [].concat.bind([]);
+
 const onRE = /^on([A-Z])/;
 function isOn(val) {
   return onRE.test(val);
 }
 function typed(val) {
-  return val.replace(onRE, (_, c) => c).toLowerCase();
+  return val.replace(onRE, '$1').toLowerCase();
 }
 
 const textRE = /(string|number)/;

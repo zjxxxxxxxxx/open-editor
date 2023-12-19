@@ -53,10 +53,10 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 > The example uses [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) as a reference. In other cases, the only choice is different, and the usage is exactly the same.
 
-First you need to install the plugin.
+First you need to install the plugin into the project.
 
 ```bash
-npm -D i @open-editor/vite
+npm i @open-editor/vite -D
 ```
 
 Then add the plugin to the build configuration.
@@ -80,8 +80,6 @@ export default defineConfig({
   ],
 });
 ```
-
-That concludes the code section.
 
 ### Enable inspector
 
@@ -162,3 +160,4 @@ window.addEventListener('openeditor', (e) => {
 
 - [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
 - [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
+- [launch-editor](https://github.com/yyx990803/launch-editor)

@@ -15,7 +15,7 @@ import {
   openEditor,
 } from '../../utils/openEditor';
 import { getColorMode } from '../../utils/getColorMode';
-import { InternalElements } from '../../constants';
+import { InternalElements, capOpts } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
@@ -92,14 +92,15 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
   override mounted() {
     on('keydown', this.onKeydown);
-    on('mousemove', this.savePointE);
+    // Capture mouse position to prevent `stopPropagation`
+    on('mousemove', this.savePointE, capOpts);
     onOpenEditorError(this.showErrorOverlay);
   }
 
   override unmount() {
     this.cleanHandlers();
     off('keydown', this.onKeydown);
-    off('mousemove', this.savePointE);
+    off('mousemove', this.savePointE, capOpts);
     offOpenEditorError(this.showErrorOverlay);
   }
 

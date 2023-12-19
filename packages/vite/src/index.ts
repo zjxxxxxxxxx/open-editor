@@ -11,30 +11,28 @@ export interface Options {
    * @default process.cwd()
    */
   rootDir?: string;
-
   /**
    * render the toggle into the browser
    *
    * @default true
    */
   displayToggle?: boolean;
-
   /**
    * set UI color mode
    *
    * @default 'system'
    */
   colorMode?: 'system' | 'light' | 'dark';
-
   /**
    * exit the check after opening the editor or component tree
    *
    * @default true
    */
   once?: boolean;
-
   /**
    * custom openEditor handler
+   *
+   * @default 'launch-editor'
    */
   onOpenEditor?(file: string): void;
 }

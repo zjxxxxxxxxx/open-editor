@@ -53,13 +53,13 @@
 
 > 示例以 [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) 作为参考，其他情况下只是选择不同而已，使用方式是完全一致的。
 
-首先需要把插件安装一下。
+首先需要将插件安装到项目中。
 
 ```bash
-npm -D i @open-editor/vite
+npm i @open-editor/vite -D
 ```
 
-然后把插件添加到编译配置中。
+然后将插件添加到编译配置中。
 
 ```ts
 // vite.config.ts
@@ -80,8 +80,6 @@ export default defineConfig({
   ],
 });
 ```
-
-到这里代码部分就已经介绍完了。
 
 ### 启用检查器
 
@@ -162,3 +160,4 @@ window.addEventListener('openeditor', (e) => {
 
 - [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
 - [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
+- [launch-editor](https://github.com/yyx990803/launch-editor)
