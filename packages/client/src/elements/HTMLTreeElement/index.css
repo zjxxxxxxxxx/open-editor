@@ -9,6 +9,7 @@
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
+  background: var(--bg-color2-opt);
   backdrop-filter: blur(10px);
 }
 .oe-popup {
@@ -21,7 +22,7 @@
   background: var(--bg-color-opt);
   backdrop-filter: var(--filter);
   box-shadow: 0 0 1px var(--bg-color2);
-  border-radius: 14px;
+  border-radius: 16px;
 }
 .oe-close {
   position: absolute;

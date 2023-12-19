@@ -5,7 +5,7 @@ import { isValidElement } from './isValidElement';
 import {
   checkHoldElement,
   setupHoldElement,
-  cleanHoldElementHOC,
+  withCleanHoldElement,
 } from './holdElement';
 
 export interface SetupListenersOptions {
@@ -45,10 +45,10 @@ const events = [
 ];
 
 export function setupListeners(opts: SetupListenersOptions) {
-  const onChangeElement = cleanHoldElementHOC(opts.onChangeElement);
-  const onOpenEditor = cleanHoldElementHOC(opts.onOpenEditor);
-  const onOpenTree = cleanHoldElementHOC(opts.onOpenTree);
-  const onExitInspect = cleanHoldElementHOC(opts.onExitInspect);
+  const onChangeElement = withCleanHoldElement(opts.onChangeElement);
+  const onOpenEditor = withCleanHoldElement(opts.onOpenEditor);
+  const onOpenTree = withCleanHoldElement(opts.onOpenTree);
+  const onExitInspect = withCleanHoldElement(opts.onExitInspect);
 
   const { once } = getOptions();
 

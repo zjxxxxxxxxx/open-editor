@@ -59,6 +59,8 @@ interface Options {
   once?: boolean;
   /**
    * custom openEditor handler
+   *
+   * @default 'launch-editor'
    */
   onOpenEditor?(file: string): void;
 }
