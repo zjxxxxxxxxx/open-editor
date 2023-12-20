@@ -1,34 +1,11 @@
-declare type Letter = [
-  'A',
-  'B',
-  'C',
-  'D',
-  'E',
-  'F',
-  'G',
-  'H',
-  'I',
-  'J',
-  'K',
-  'L',
-  'M',
-  'N',
-  'O',
-  'P',
-  'Q',
-  'R',
-  'S',
-  'T',
-  'U',
-  'V',
-  'W',
-  'X',
-  'Y',
-  'Z',
-][number];
+declare type UnionCharacter<T extends string> = T extends `${infer F}${infer R}`
+  ? F | UnionCharacter<R>
+  : never;
+
+declare type UppercaseLetter = UnionCharacter<'ABCDEFGHIJKLMNOPQRSTUVWXYZ'>;
 
 declare type EventKey<K extends string> = K extends `on${infer F}${infer _}`
-  ? F extends Letter
+  ? F extends UppercaseLetter
     ? true
     : false
   : false;
@@ -37,7 +14,7 @@ declare type EventType<K extends string> = K extends `on${infer F}`
   ? Lowercase<F>
   : never;
 
-declare type Event<K extends string> = HTMLElementEventMap[EventType<K>];
+declare type NativeEvent<K extends string> = HTMLElementEventMap[EventType<K>];
 
 declare type CustomNode =
   | HTMLElement
@@ -53,7 +30,7 @@ declare type CustomProperty<P> = {
     : K extends 'ref'
     ? (el: HTMLElement) => void
     : EventKey<K> extends true
-    ? (e: Event<K>) => void
+    ? (e: NativeEvent<K>) => void
     : P[K];
 } & {
   onLongPress?(e: PointerEvent): void;

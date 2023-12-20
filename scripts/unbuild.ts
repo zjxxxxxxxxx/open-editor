@@ -29,12 +29,15 @@ export default function buildConfigs() {
       output,
     ])
   );
-
-  return builds.flatMap(([input, output]) => buildConfig(input, output));
+  return <RollupOptions[]>(
+    builds.flatMap(([input, output]) => buildConfig(input, output))
+  );
 }
 
 function buildConfig(input: string, output: BuildOutput) {
-  return [buildBundles(input, output), buildDTS(input, output)].filter(Boolean);
+  return <RollupOptions[]>(
+    [buildBundles(input, output), buildDTS(input, output)].filter(Boolean)
+  );
 }
 
 function buildBundles(

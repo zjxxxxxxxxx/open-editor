@@ -73,9 +73,9 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
 
   private updateText(source: SourceCode) {
     const { el, meta } = source;
-    this.state.el.innerText = `${el} in `;
-    this.state.comp.innerText = `<${meta!.name}>`;
-    this.state.file.innerText = `${meta!.file}:${meta!.line}:${meta!.column}`;
+    this.state.el.textContent = `${el} in `;
+    this.state.comp.textContent = `<${meta!.name}>`;
+    this.state.file.textContent = `${meta!.file}:${meta!.line}:${meta!.column}`;
   }
 
   private updatePosition(box: RectBox) {

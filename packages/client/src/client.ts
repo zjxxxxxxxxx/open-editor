@@ -1,2 +1,3 @@
+import { sendErrMsg } from './utils/errorMessage';
 // compile time generation
-throw Error('@open-editor/client: require a restart.');
+sendErrMsg('require a restart', 'throw');

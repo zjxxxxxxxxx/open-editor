@@ -10,37 +10,10 @@ main();
 
 async function main() {
   try {
-    let { playground, script } = minimist(process.argv.slice(1));
-
-    if (!playground) {
-      const playgrounds = readdirSync(resolve('playground'));
-      ({ playground } = await enquirer.prompt<{
-        playground: string;
-      }>({
-        type: 'select',
-        name: 'playground',
-        message: 'Please select playground',
-        choices: playgrounds,
-      }));
-    }
-
-    if (!script) {
-      const { scripts } = await import(
-        resolve('playground', playground, 'package.json')
-      );
-      ({ script } = await enquirer.prompt<{
-        script: string;
-      }>({
-        type: 'select',
-        name: 'script',
-        message: 'Please select script',
-        choices: Object.entries(scripts).map(([name, content]) => ({
-          name: name,
-          value: name,
-          message: `${(name + ':').padEnd(9)}${content}`,
-        })),
-      }));
-    }
+    const {
+      playground = await selectPlayground(),
+      script = await selectScript(playground),
+    } = minimist(process.argv.slice(1));
 
     consola.info(`Run ${playground}:${script}`);
     exec(`pnpm --filter @playground/${playground} ${script}`);
@@ -48,4 +21,36 @@ async function main() {
     consola.error('exit');
     process.exit();
   }
+}
+
+async function selectPlayground() {
+  const playgrounds = readdirSync(resolve('playground'));
+  const { playground } = await enquirer.prompt<{
+    playground: string;
+  }>({
+    type: 'select',
+    name: 'playground',
+    message: 'Please select playground',
+    choices: playgrounds,
+  });
+  return playground;
+}
+
+async function selectScript(playground: string) {
+  const { scripts } = await import(
+    resolve('playground', playground, 'package.json')
+  );
+  const { script } = await enquirer.prompt<{
+    script: string;
+  }>({
+    type: 'select',
+    name: 'script',
+    message: 'Please select script',
+    choices: Object.entries(scripts).map(([name, content]) => ({
+      name: name,
+      value: name,
+      message: `${(name + ':').padEnd(9)}${content}`,
+    })),
+  });
+  return script;
 }
