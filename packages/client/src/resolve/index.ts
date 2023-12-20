@@ -45,7 +45,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
 
 export function normalizeMeta(meta: Partial<SourceCodeMeta>) {
   return {
-    name: meta.name ? upperCase(meta.name, true) : 'Anonymous',
+    name: meta.name ? upperCase(meta.name) : 'Anonymous',
     file: ensureFileName(meta.file!),
     line: meta.line || 1,
     column: meta.column || 1,

@@ -15,6 +15,7 @@ import {
   openEditor,
 } from '../../utils/openEditor';
 import { getColorMode } from '../../utils/getColorMode';
+import { sendErrMsg } from '../../utils/errorMessage';
 import { InternalElements, capOpts } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
@@ -162,8 +163,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       addClass(getHtml(), 'oe-loading');
       const { meta } = resolveSource(el);
       if (!meta) {
-        console.error('@open-editor/client: file not found.');
-        return this.showErrorOverlay();
+        sendErrMsg('file not found');
+        this.showErrorOverlay();
+        return;
       }
       const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
       await openEditor(meta, dispatch);

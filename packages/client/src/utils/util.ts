@@ -13,11 +13,7 @@ export function omit<T extends AnyObject, K extends keyof T>(
   return newVal;
 }
 
-const upperFirstRE = /^[a-z]/;
-const upperCaseRE = /[./\-_]+([a-z])/g;
-export function upperCase(str: string, upperFirst?: boolean) {
-  if (upperFirst) {
-    str = str.replace(upperFirstRE, (c) => c.toUpperCase());
-  }
-  return str.replace(upperCaseRE, (_, c) => c.toUpperCase());
+const upperCaseRE = /((?=^)|([./\-_]+))([a-z])/g;
+export function upperCase(str: string) {
+  return str.replace(upperCaseRE, (...s) => s[3].toUpperCase());
 }

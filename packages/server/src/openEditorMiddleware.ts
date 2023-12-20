@@ -42,13 +42,13 @@ export function openEditorMiddleware(
       return;
     }
 
-    res.setHeader('Content-Type', 'application/javascript;charset=UTF-8');
-    res.end(readFileSync(filename, 'utf-8'));
-
     if (req.headers.referer) {
       const { line = 1, column = 1 } = query;
       onOpenEditor(`${filename}:${line}:${column}`);
     }
+
+    res.setHeader('Content-Type', 'application/javascript;charset=UTF-8');
+    res.end(readFileSync(filename, 'utf-8'));
   };
 }
 

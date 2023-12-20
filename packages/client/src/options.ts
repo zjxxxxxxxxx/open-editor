@@ -1,30 +1,28 @@
+import { sendErrMsg } from './utils/errorMessage';
+
 export interface Options {
   /**
    * source rootDir path
    */
   rootDir: string;
-
   /**
    * render the toggle into the browser
    *
    * @default true
    */
   displayToggle?: boolean;
-
   /**
    * set UI color mode
    *
    * @default 'system'
    */
   colorMode?: 'system' | 'light' | 'dark';
-
   /**
    * exit the check after opening the editor or component tree
    *
    * @default true
    */
   once?: boolean;
-
   /**
    * internal server port
    *
@@ -48,7 +46,7 @@ export function setOptions(
 
 export function getOptions() {
   if (!opts) {
-    throw Error('@open-editor/client: options missing.');
+    sendErrMsg('options missing', 'throw');
   }
   return opts;
 }
