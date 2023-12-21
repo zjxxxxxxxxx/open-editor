@@ -89,8 +89,8 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   private updateOverlay() {
     const boxs = getRectBoxs(this.state.activeEl);
-    this.updateBoxs(boxs);
     this.state.tooltip.update(this.state.activeEl, boxs.position);
+    this.updateBoxs(boxs);
   }
 
   private updateBoxs(boxs: Record<string, RectBox>) {
