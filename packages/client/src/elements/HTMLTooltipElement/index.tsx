@@ -13,11 +13,11 @@ import { isValidElement } from '../../utils/isValidElement';
 import { type SourceCode, resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
-const offset = 6;
+const OFFSET = 6;
 
 export class HTMLTooltipElement extends HTMLCustomElement<{
   root: HTMLElement;
-  el: HTMLElement;
+  tag: HTMLElement;
   comp: HTMLElement;
   file: HTMLElement;
 }> {
@@ -33,9 +33,17 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
       <>
         <link rel="stylesheet" href="./index.css" />
         <div className="oe-root" ref={(el) => (this.state.root = el)}>
-          <span ref={(el) => (this.state.el = el)} />
-          <span className="oe-comp" ref={(el) => (this.state.comp = el)} />
-          <div className="oe-file" ref={(el) => (this.state.file = el)} />
+          <div className="oe-content">
+            <span className="oe-tag" ref={(el) => (this.state.tag = el)}>
+              {/* el textContent */}
+            </span>
+            <span className="oe-comp" ref={(el) => (this.state.comp = el)}>
+              {/* comp textContent */}
+            </span>
+            <span className="oe-file" ref={(el) => (this.state.file = el)}>
+              {/* file textContent */}
+            </span>
+          </div>
         </div>
       </>
     );
@@ -53,8 +61,8 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     // before hidden
     applyStyle(this.state.root, {
       visibility: 'hidden',
-      top: CSS_util.px(offset),
-      left: CSS_util.px(offset),
+      top: CSS_util.px(OFFSET),
+      left: CSS_util.px(OFFSET),
     });
 
     if (!isValidElement(el)) return;
@@ -73,7 +81,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
 
   private updateText(source: SourceCode) {
     const { el, meta } = source;
-    this.state.el.textContent = `${el} in `;
+    this.state.tag.textContent = `${el} in `;
     this.state.comp.textContent = `<${meta!.name}>`;
     this.state.file.textContent = `${meta!.file}:${meta!.line}:${meta!.column}`;
   }
@@ -87,18 +95,18 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     } = getHtml();
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
     const { value: safe } = SafeAreaObserver;
-
-    const onTopArea = box.top > rootH + offset * 2 + safe.top;
+    const onTopArea = box.top > rootH + safe.top + OFFSET * 2;
     const top = clamp(
-      onTopArea ? box.top - rootH - offset : box.bottom + offset,
-      offset + safe.top,
-      winH - rootH - offset - safe.bottom,
+      onTopArea ? box.top - rootH - OFFSET : box.bottom + OFFSET,
+      safe.top + OFFSET,
+      winH - rootH - safe.bottom - OFFSET,
     );
     const left = clamp(
       box.left,
-      offset + safe.left,
-      winW - rootW - offset - safe.right,
+      safe.left + OFFSET,
+      winW - rootW - safe.right - OFFSET,
     );
+
     applyStyle(this.state.root, {
       top: CSS_util.px(top),
       left: CSS_util.px(left),

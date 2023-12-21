@@ -9,8 +9,7 @@
   z-index: var(--z-index-tree);
   width: 100vw;
   height: 100vh;
-  background: var(--bg-color2-opt);
-  backdrop-filter: blur(10px);
+  backdrop-filter: var(--filter);
 }
 .oe-popup {
   position: fixed;
@@ -20,8 +19,7 @@
   transform: translate(-50%, -50%);
   color: var(--text-color);
   background: var(--bg-color-opt);
-  backdrop-filter: var(--filter);
-  box-shadow: 0 0 1px var(--bg-color2);
+  box-shadow: var(--shadow);
   border-radius: 16px;
 }
 .oe-close {
@@ -72,8 +70,9 @@
   font-size: 18px;
   font-weight: 500;
 }
-.oe-el {
+.oe-tag {
   font-size: 14px;
+  font-weight: 400;
 }
 .oe-tree {
   position: relative;
@@ -88,25 +87,26 @@
   height: calc(100% - 44px);
   background: var(--text-color);
 }
-.oe-tag {
+.oe-node {
   margin: 2px 0;
   font-size: 13px;
   font-weight: 500;
+  color: var(--text-color);
   opacity: 0.6;
 }
-.oe-tag[title]:hover,
-.oe-tag[title]:hover ~ .oe-tag {
+.oe-node[title]:hover,
+.oe-node[title]:hover ~ .oe-node {
   opacity: 1;
 }
-.oe-tag[title]:hover ~ .oe-line {
+.oe-node[title]:hover ~ .oe-line {
   opacity: 0.6;
 }
 .oe-file {
   padding-left: 6px;
-  color: var(--text-color2);
   font-size: 12px;
-  font-weight: 300;
+  font-weight: 400;
   text-decoration: underline;
+  color: var(--text-color2);
   pointer-events: none;
 }
 .oe-show {

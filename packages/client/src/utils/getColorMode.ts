@@ -5,12 +5,9 @@ const LightColors = postcss`
   --text-color: #000000;
   --text-color2: #222222;
   --bg-color: #feffff;
-  --bg-color-opt: #feffff88;
+  --bg-color-opt: #feffffcc;
   --bg-color2: #bebfbf;
   --cyan: #2dd9da;
-  --red: #ff335c;
-  --red-light: #ff335c33;
-  --filter: contrast(0.95) blur(20px);
 }
 `;
 
@@ -18,11 +15,10 @@ const DarkColors = postcss`
 :host {
   --text-color: #ffffff;
   --text-color2: #dddddd;
-  --bg-color: #292a2d;
-  --bg-color-opt: #292a2d88;
-  --bg-color2: #696a6d;
+  --bg-color: #2c2c2e;
+  --bg-color-opt: #2c2c2ecc;
+  --bg-color2: #6c6c6e;
   --cyan: #4df9fa;
-  --filter: contrast(0.8) blur(20px);
 }
 `;
 

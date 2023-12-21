@@ -81,7 +81,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const content = (
       <>
         <div className="oe-title">
-          <span className="oe-el">{source.el} in </span>
+          <span className="oe-tag">{source.el} in </span>
           {`<ComponentTree>`}
         </div>
         <div className="oe-content">
@@ -104,19 +104,19 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const onOpenEditor = () => this.openEditor(meta);
     return (
       <div className="oe-tree">
-        <p
-          className="oe-tag"
+        <div
+          className="oe-node"
           title="Click to open in your editor"
           onClick={onOpenEditor}
         >
           {tagName}
           <span className="oe-file">{fileName}</span>
-        </p>
+        </div>
         {tree.length > 0 && (
           <>
             <div className="oe-line" />
             {this.buildTree(tree)}
-            <p className="oe-tag">{tagName}</p>
+            <div className="oe-node">{tagName}</div>
           </>
         )}
       </div>
