@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/webpack",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "A webpack plugin for fast find source code.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

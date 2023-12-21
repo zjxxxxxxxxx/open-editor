@@ -1,5 +1,14 @@
 # @open-editor/vite
 
+## 0.6.4
+
+### Patch Changes
+
+- Updated dependencies [[`4163aca`](https://github.com/zjxxxxxxxxx/open-editor/commit/4163aca8a25abf967be72c263dd71d36fa4cda1d), [`529f234`](https://github.com/zjxxxxxxxxx/open-editor/commit/529f2342170e090386b9ec01ffc8d0e3adb060d5)]:
+  - @open-editor/client@0.6.4
+  - @open-editor/server@0.6.4
+  - @open-editor/shared@0.6.4
+
 ## 0.6.3
 
 ### Patch Changes
