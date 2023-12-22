@@ -8,7 +8,7 @@ export function omit<T extends AnyObject, K extends keyof T>(
 ): Omit<T, K> {
   const newVal = { ...val };
   for (const key of keys) {
-    if (key in val) delete newVal[key];
+    if (hasOwnProperty(val, key)) delete newVal[key];
   }
   return newVal;
 }
@@ -16,4 +16,11 @@ export function omit<T extends AnyObject, K extends keyof T>(
 const upperCaseRE = /((?=^)|([./\-_]+))([a-z])/g;
 export function upperCase(str: string) {
   return str.replace(upperCaseRE, (...s) => s[3].toUpperCase());
+}
+
+export function hasOwnProperty<Obj extends object, Prop extends PropertyKey>(
+  obj: Partial<Obj>,
+  prop: Prop,
+): obj is Obj & Record<Prop, Prop extends keyof Obj ? Obj[Prop] : any> {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
 }

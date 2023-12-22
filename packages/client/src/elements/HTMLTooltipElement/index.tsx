@@ -7,9 +7,10 @@ import {
   applyStyle,
   addClass,
   removeClass,
+  checkVisibility,
+  checkValidElement,
 } from '../../utils/ui';
 import { SafeAreaObserver } from '../../utils/SafeAreaObserver';
-import { isValidElement } from '../../utils/isValidElement';
 import { type SourceCode, resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
@@ -65,7 +66,8 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
       left: CSS_util.px(OFFSET),
     });
 
-    if (!isValidElement(el)) return;
+    // When encountering an invalid element or an invisible element, hide it
+    if (!checkValidElement(el) || !checkVisibility(el)) return;
 
     const source = resolveSource(el);
     if (source.meta) {

@@ -1,15 +1,14 @@
-import { applyAttrs } from './ui';
-import { isValidElement } from './isValidElement';
+import { applyAttrs, checkValidElement } from './ui';
 
-let holdEl: HTMLElement | null = null;
+let clickedEl: HTMLElement | null = null;
 
-export function checkHoldElement(el: HTMLElement) {
-  return el === holdEl;
+export function checkClickedElement(el: HTMLElement) {
+  return el === clickedEl;
 }
 
-export function setupHoldElement(e: Event) {
+export function setupClickedElementAttrs(e: Event) {
   const el = <HTMLElement>e.target;
-  if (isValidElement(el)) {
+  if (checkValidElement(el)) {
     resetAttrs(el, {
       disabled: {
         from: 'disabled',
@@ -21,21 +20,13 @@ export function setupHoldElement(e: Event) {
       },
     });
 
-    holdEl = el;
+    clickedEl = el;
   }
 }
 
-export function withCleanHoldElement<T extends (...args: any[]) => any>(fn: T) {
-  function wrapped(...args: Parameters<T>): ReturnType<T> {
-    cleanHoldElement();
-    return fn(...args);
-  }
-  return wrapped;
-}
-
-function cleanHoldElement() {
-  if (holdEl) {
-    resetAttrs(holdEl, {
+export function cleanClickedElementAttrs() {
+  if (clickedEl) {
+    resetAttrs(clickedEl, {
       disabled: {
         from: '__disabled__',
         to: 'disabled',
@@ -46,7 +37,7 @@ function cleanHoldElement() {
       },
     });
 
-    holdEl = null;
+    clickedEl = null;
   }
 }
 
