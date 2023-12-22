@@ -1,4 +1,5 @@
 import { isFn } from '@open-editor/shared';
+import { hasOwnProperty } from '../../utils/util';
 import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createReactResolver } from '../creators/createReactResolver';
@@ -9,7 +10,7 @@ export function resolveReact15Plus(
   tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
-  if (inst && '_debugOwner' in inst) {
+  if (inst && hasOwnProperty<any, any>(inst, '_debugOwner')) {
     resolveByFiber(inst, tree, deep);
   } else {
     resolveByInstance(inst, tree, deep);

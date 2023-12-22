@@ -1,5 +1,9 @@
-import { getDOMRect, computedStyle } from './ui';
-import { isValidElement } from './isValidElement';
+import {
+  getDOMRect,
+  computedStyle,
+  checkVisibility,
+  checkValidElement,
+} from './ui';
 
 export interface RectBox {
   width: number;
@@ -28,7 +32,8 @@ export const emptyRectBoxs = {
 };
 
 export function getRectBoxs(el: HTMLElement | null): Record<string, RectBox> {
-  if (!isValidElement(el)) return emptyRectBoxs;
+  // When an invalid element or invisible element is encountered, empty is returned.
+  if (!checkValidElement(el) || !checkVisibility(el)) return emptyRectBoxs;
 
   const {
     // border + padding + content

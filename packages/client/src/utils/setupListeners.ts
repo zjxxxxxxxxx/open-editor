@@ -1,12 +1,12 @@
 import { capOpts } from '../constants';
 import { getOptions } from '../options';
 import { off, on } from './event';
-import { isValidElement } from './isValidElement';
+import { checkValidElement, checkVisibility } from './ui';
 import {
-  checkHoldElement,
-  setupHoldElement,
-  withCleanHoldElement,
-} from './holdElement';
+  checkClickedElement,
+  setupClickedElementAttrs,
+  cleanClickedElementAttrs,
+} from './clickedElement';
 
 export interface SetupListenersOptions {
   onChangeElement(el: HTMLElement | null): void;
@@ -45,19 +45,21 @@ const events = [
 ];
 
 export function setupListeners(opts: SetupListenersOptions) {
-  const onChangeElement = withCleanHoldElement(opts.onChangeElement);
-  const onOpenEditor = withCleanHoldElement(opts.onOpenEditor);
-  const onOpenTree = withCleanHoldElement(opts.onOpenTree);
-  const onExitInspect = withCleanHoldElement(opts.onExitInspect);
+  const onChangeElement = withEventFn(opts.onChangeElement);
+  const onOpenEditor = withEventFn(opts.onOpenEditor);
+  const onOpenTree = withEventFn(opts.onOpenTree);
+  const onExitInspect = withEventFn(opts.onExitInspect);
 
   const { once } = getOptions();
+
+  let activeEl: HTMLElement | null;
 
   function setupEventListeners() {
     events.forEach((event) => on(event, onSilent, capOpts));
 
     // The click event on the window does not run, but the click event on the document does.
     on('click', onInspect, { ...capOpts, target: document });
-    on('pointerdown', setupHoldElement, capOpts);
+    on('pointerdown', setupClickedElementAttrs, capOpts);
     on('pointermove', onActiveElement, capOpts);
     on('pointerover', onEnterScreen, capOpts);
     on('pointerout', onLeaveScreen, capOpts);
@@ -71,7 +73,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     events.forEach((event) => off(event, onSilent, capOpts));
 
     off('click', onInspect, { ...capOpts, target: document });
-    off('pointerdown', setupHoldElement, capOpts);
+    off('pointerdown', setupClickedElementAttrs, capOpts);
     off('pointermove', onActiveElement, capOpts);
     off('pointerover', onEnterScreen, capOpts);
     off('pointerout', onLeaveScreen, capOpts);
@@ -79,7 +81,6 @@ export function setupListeners(opts: SetupListenersOptions) {
     off('quickexit', onExitInspect, capOpts);
   }
 
-  let activeEl: HTMLElement | null;
   function onActiveElement(e: PointerEvent) {
     const el = <HTMLElement>(
       (e.pointerType === 'touch'
@@ -87,7 +88,7 @@ export function setupListeners(opts: SetupListenersOptions) {
         : e.target)
     );
     if (el !== activeEl) {
-      activeEl = isValidElement(el) ? el : null;
+      activeEl = checkValidElement(el) ? el : null;
       onChangeElement(activeEl);
     }
   }
@@ -103,7 +104,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     // On PC devices, focus is lost when the mouse leaves the browser window
     if (
       e.pointerType === 'mouse' &&
-      !isValidElement(<HTMLElement>e.relatedTarget)
+      !checkValidElement(<HTMLElement>e.relatedTarget)
     ) {
       onChangeElement((activeEl = null));
     }
@@ -113,29 +114,39 @@ export function setupListeners(opts: SetupListenersOptions) {
     onSilent(e);
 
     const el = <HTMLElement>e.target;
-    if (checkHoldElement(el)) {
+    if (checkClickedElement(el)) {
+      const targetEl = activeEl && checkVisibility(activeEl) ? activeEl : el;
       if (once) onExitInspect();
+      onChangeElement(null);
       if (e.metaKey || e.type === 'longpress') {
-        onChangeElement((activeEl = null));
-        onOpenTree(el);
+        onOpenTree(targetEl);
       } else {
-        onOpenEditor(el);
+        onOpenEditor(targetEl);
       }
-    }
-  }
-
-  function onSilent(e: Event) {
-    const el = <HTMLElement>e.target;
-    if (isValidElement(el)) {
-      // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
-      // Only need to handle touch events, excluding other events such as pointer
-      // See https://www.chromestatus.com/feature/5093566007214080.
-      if (!e.type.startsWith('touch')) {
-        e.preventDefault();
-      }
-      e.stopPropagation();
+      activeEl = null;
     }
   }
 
   return setupEventListeners();
+}
+
+function withEventFn<T extends (...args: any[]) => any>(fn: T) {
+  function wrappedEventFn(...args: Parameters<T>): ReturnType<T> {
+    cleanClickedElementAttrs();
+    return fn(...args);
+  }
+  return wrappedEventFn;
+}
+
+function onSilent(e: Event) {
+  const el = <HTMLElement>e.target;
+  if (checkValidElement(el)) {
+    // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
+    // Only need to handle touch events, excluding other events such as pointer
+    // See https://www.chromestatus.com/feature/5093566007214080.
+    if (!e.type.startsWith('touch')) {
+      e.preventDefault();
+    }
+    e.stopPropagation();
+  }
 }

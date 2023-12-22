@@ -37,11 +37,15 @@ export async function openEditor(
         if (!res.ok) return Promise.reject(res);
       })
       .catch((err) => {
-        sendErrMsg('open fail');
-        listeners.forEach((listener) => listener(err));
+        emitOpenEditorError(err);
         return Promise.reject(err);
       });
   }
+}
+
+export function emitOpenEditorError(err: any) {
+  sendErrMsg('open fail');
+  listeners.forEach((listener) => listener(err));
 }
 
 export function onOpenEditorError(listener: Listener) {
