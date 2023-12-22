@@ -20,18 +20,16 @@ export function applyStyle(
 
 export function computedStyle(el: HTMLElement) {
   const style = window.getComputedStyle(el, null);
-  function get<
-    ToNumber extends boolean = true,
-    ReturnValue = ToNumber extends true ? number : string,
-  >(
-    property: string,
-    // @ts-ignore
-    toNumber: ToNumber = true,
-  ) {
+  // @ts-ignore
+  function get(property: string): number;
+  function get(property: string, toNumber: boolean): number | string;
+  function get(property: string, toNumber: true): number;
+  function get(property: string, toNumber: false): string;
+  function get(property: any, toNumber = true) {
     let value = style.getPropertyValue(property);
     // @ts-ignore
     if (toNumber) value = CSS_util.pv(value) || 0;
-    return value as ReturnValue;
+    return value;
   }
   return get;
 }

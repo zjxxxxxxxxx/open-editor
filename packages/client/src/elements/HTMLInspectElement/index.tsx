@@ -5,9 +5,9 @@ import {
   addClass,
   removeClass,
   getHtml,
+  checkValidElement,
 } from '../../utils/ui';
 import { off, on } from '../../utils/event';
-import { isValidElement } from '../../utils/isValidElement';
 import { setupListeners } from '../../utils/setupListeners';
 import {
   offOpenEditorError,
@@ -137,7 +137,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       if (this.state.pointE) {
         const { x, y } = this.state.pointE;
         const initEl = document.elementFromPoint(x, y) as HTMLElement;
-        if (isValidElement(initEl)) {
+        if (checkValidElement(initEl)) {
           this.state.overlay.update(initEl);
         }
       }

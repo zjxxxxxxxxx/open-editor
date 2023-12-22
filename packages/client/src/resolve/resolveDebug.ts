@@ -1,4 +1,5 @@
-import { isValidElement } from '../utils/isValidElement';
+import { hasOwnProperty } from '../utils/util';
+import { checkValidElement } from '../utils/ui';
 
 export type ResolveDebug<T = any> = {
   el: HTMLElement;
@@ -18,7 +19,7 @@ export const vue2Key = '__vue__';
 
 // support parsing single project multiple frameworks
 export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
-  while (isValidElement(el)) {
+  while (checkValidElement(el)) {
     const key = findKey(el);
     if (key) {
       const value = (<any>el)[key];
@@ -30,23 +31,23 @@ export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
 
 function findKey(el: HTMLElement) {
   // vue3+
-  if (vue3Key in el) {
+  if (hasOwnProperty(el, vue3Key)) {
     return vue3Key;
   }
   // vue2+
-  else if (vue2Key in el) {
+  else if (hasOwnProperty(el, vue2Key)) {
     return vue2Key;
   }
 
   // react17+
   react17PlusKey ||= startsWith(el, react17PlusKeyStarts);
-  if (react17PlusKey && react17PlusKey in el) {
+  if (react17PlusKey && hasOwnProperty(el, react17PlusKey)) {
     return react17PlusKey;
   }
 
   // react15+
   react15PlusKey ||= startsWith(el, react15PlusKeyStarts);
-  if (react15PlusKey && react15PlusKey in el) {
+  if (react15PlusKey && hasOwnProperty(el, react15PlusKey)) {
     return react15PlusKey;
   }
 }

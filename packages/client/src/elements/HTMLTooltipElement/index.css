@@ -14,6 +14,7 @@
 .oe-content {
   padding: 12px 20px;
   background: var(--bg-color-opt);
+  backdrop-filter: var(--filter);
 }
 .oe-tag {
   color: var(--text-color);

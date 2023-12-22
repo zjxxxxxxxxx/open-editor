@@ -19,6 +19,7 @@
   transform: translate(-50%, -50%);
   color: var(--text-color);
   background: var(--bg-color-opt);
+  backdrop-filter: var(--filter);
   box-shadow: var(--shadow);
   border-radius: 16px;
 }
