@@ -1,6 +1,6 @@
-import { getOptions } from '../options';
-import { off, on } from './event';
-import { checkValidElement } from './ui';
+import { getOptions } from '../../options';
+import { off, on } from '../../utils/event';
+import { checkValidElement } from '../../utils/ui';
 import {
   checkClickedElement,
   setupClickedElementAttrs,

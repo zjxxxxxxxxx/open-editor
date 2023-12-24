@@ -66,13 +66,13 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     this.renderTree(el);
     this.enableClick();
     addClass(this.state.root, 'oe-show');
-    addClass(getHtml(), 'oe-screen-lock');
+    addClass(getHtml(), 'oe-lock-screen');
   }
 
   close() {
     this.isOpen = false;
     removeClass(this.state.root, 'oe-show');
-    removeClass(getHtml(), 'oe-screen-lock');
+    removeClass(getHtml(), 'oe-lock-screen');
   }
 
   private renderTree(el: HTMLElement) {
