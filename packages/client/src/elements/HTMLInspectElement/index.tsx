@@ -16,7 +16,7 @@ import {
 } from '../../utils/openEditor';
 import { getColorMode } from '../../utils/getColorMode';
 import { sendErrMsg } from '../../utils/errorMessage';
-import { InternalElements, capOpts } from '../../constants';
+import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
@@ -94,14 +94,18 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   override mounted() {
     on('keydown', this.onKeydown);
     // Capture mouse position to prevent `stopPropagation`
-    on('mousemove', this.savePointE, capOpts);
+    on('mousemove', this.savePointE, {
+      capture: true,
+    });
     onOpenEditorError(this.showErrorOverlay);
   }
 
   override unmount() {
     this.cleanHandlers();
     off('keydown', this.onKeydown);
-    off('mousemove', this.savePointE, capOpts);
+    off('mousemove', this.savePointE, {
+      capture: true,
+    });
     offOpenEditorError(this.showErrorOverlay);
   }
 
@@ -124,7 +128,17 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   }
 
   private setupHandlers() {
-    if (!this.active && !this.state.tree.isOpen) {
+    if (
+      !this.active &&
+      !this.state.tree.isOpen &&
+      this.dispatchEvent(
+        new CustomEvent('enableinspector', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        }),
+      )
+    ) {
       this.active = true;
       this.state.overlay.open();
       this.cleanListeners = setupListeners({
@@ -133,6 +147,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         onOpenEditor: this.openEditor,
         onExitInspect: this.cleanHandlers,
       });
+      overrideStyle.mount();
 
       if (this.state.pointE) {
         const { x, y } = this.state.pointE;
@@ -142,19 +157,50 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         }
       }
 
-      overrideStyle.mount();
+      const opts = getOptions();
+      if (opts.disableHoverCSS) {
+        document.querySelectorAll('style').forEach((item) => {
+          if (item.textContent) {
+            item.textContent = item.textContent.replace(
+              /:hover/g,
+              '__disabled_hover__',
+            );
+          }
+        });
+      }
     }
   }
 
   private declare cleanListeners: () => void;
 
   private cleanHandlers() {
-    if (this.active && !this.state.tree.isOpen) {
+    if (
+      this.active &&
+      !this.state.tree.isOpen &&
+      this.dispatchEvent(
+        new CustomEvent('exitinspector', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        }),
+      )
+    ) {
       this.active = false;
       this.state.overlay.close();
       this.cleanListeners();
-
       overrideStyle.unmount();
+
+      const opts = getOptions();
+      if (opts.disableHoverCSS) {
+        document.querySelectorAll('style').forEach((item) => {
+          if (item.textContent) {
+            item.textContent = item.textContent.replace(
+              /__disabled_hover__/g,
+              ':hover',
+            );
+          }
+        });
+      }
     }
   }
 

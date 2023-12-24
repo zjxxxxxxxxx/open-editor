@@ -24,6 +24,12 @@ export interface Options {
    */
   colorMode?: 'system' | 'light' | 'dark';
   /**
+   * Disable hover effect from CSS when inspector is enabled
+   *
+   * @default false
+   */
+  disableHoverCSS?: boolean;
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true
@@ -49,6 +55,7 @@ export default function openEditorPlugin(
     rootDir = process.cwd(),
     displayToggle,
     colorMode,
+    disableHoverCSS,
     once,
     onOpenEditor,
   } = options;
@@ -61,6 +68,7 @@ export default function openEditorPlugin(
       rootDir,
       displayToggle,
       colorMode,
+      disableHoverCSS,
       once,
     },
     true,

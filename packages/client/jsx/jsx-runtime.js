@@ -25,8 +25,8 @@ function jsx(type, props) {
     for (const prop of Object.keys(attrs)) {
       const val = attrs[prop];
       if (val != null) {
-        if (isOn(prop)) {
-          on(typed(prop), val, { target: el });
+        if (isEventType(prop)) {
+          on(toNativeType(prop), val, { target: el });
         } else {
           el.setAttribute(prop, val);
         }
@@ -40,12 +40,13 @@ function jsx(type, props) {
 
 const toArray = [].concat.bind([]);
 
-const onRE = /^on([A-Z])/;
-function isOn(val) {
-  return onRE.test(val);
+const eventRE = /^on[A-Z]/;
+function isEventType(val) {
+  return eventRE.test(val);
 }
-function typed(val) {
-  return val.replace(onRE, '$1').toLowerCase();
+
+function toNativeType(val) {
+  return val.substr(2).toLowerCase();
 }
 
 const textRE = /(string|number)/;

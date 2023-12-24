@@ -1,7 +1,6 @@
-import { capOpts } from '../constants';
 import { getOptions } from '../options';
 import { off, on } from './event';
-import { checkValidElement, checkVisibility } from './ui';
+import { checkValidElement } from './ui';
 import {
   checkClickedElement,
   setupClickedElementAttrs,
@@ -55,30 +54,60 @@ export function setupListeners(opts: SetupListenersOptions) {
   let activeEl: HTMLElement | null;
 
   function setupEventListeners() {
-    events.forEach((event) => on(event, onSilent, capOpts));
+    events.forEach((event) => on(event, onSilent, { capture: true }));
 
     // The click event on the window does not run, but the click event on the document does.
-    on('click', onInspect, { ...capOpts, target: document });
-    on('pointerdown', setupClickedElementAttrs, capOpts);
-    on('pointermove', onActiveElement, capOpts);
-    on('pointerover', onEnterScreen, capOpts);
-    on('pointerout', onLeaveScreen, capOpts);
-    on('longpress', onInspect, capOpts);
-    on('quickexit', onExitInspect, capOpts);
+    on('click', onInspect, {
+      capture: true,
+      target: document,
+    });
+    on('pointerdown', setupClickedElementAttrs, {
+      capture: true,
+    });
+    on('pointermove', onActiveElement, {
+      capture: true,
+    });
+    on('pointerover', onEnterScreen, {
+      capture: true,
+    });
+    on('pointerout', onLeaveScreen, {
+      capture: true,
+    });
+    on('longpress', onInspect, {
+      capture: true,
+    });
+    on('quickexit', onExitInspect, {
+      capture: true,
+    });
 
     return cleanEventListeners;
   }
 
   function cleanEventListeners() {
-    events.forEach((event) => off(event, onSilent, capOpts));
+    events.forEach((event) => off(event, onSilent, { capture: true }));
 
-    off('click', onInspect, { ...capOpts, target: document });
-    off('pointerdown', setupClickedElementAttrs, capOpts);
-    off('pointermove', onActiveElement, capOpts);
-    off('pointerover', onEnterScreen, capOpts);
-    off('pointerout', onLeaveScreen, capOpts);
-    off('longpress', onInspect, capOpts);
-    off('quickexit', onExitInspect, capOpts);
+    off('click', onInspect, {
+      capture: true,
+      target: document,
+    });
+    off('pointerdown', setupClickedElementAttrs, {
+      capture: true,
+    });
+    off('pointermove', onActiveElement, {
+      capture: true,
+    });
+    off('pointerover', onEnterScreen, {
+      capture: true,
+    });
+    off('pointerout', onLeaveScreen, {
+      capture: true,
+    });
+    off('longpress', onInspect, {
+      capture: true,
+    });
+    off('quickexit', onExitInspect, {
+      capture: true,
+    });
   }
 
   function onActiveElement(e: PointerEvent) {
@@ -115,7 +144,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
     const el = <HTMLElement>e.target;
     if (checkClickedElement(el)) {
-      const targetEl = activeEl && checkVisibility(activeEl) ? activeEl : el;
+      const targetEl = activeEl?.isConnected ? activeEl : el;
       if (once) onExitInspect();
       onChangeElement(null);
       if (e.metaKey || e.type === 'longpress') {

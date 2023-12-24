@@ -18,6 +18,12 @@ export interface Options {
    */
   colorMode?: 'system' | 'light' | 'dark';
   /**
+   * Disable hover effect from CSS when inspector is enabled
+   *
+   * @default false
+   */
+  disableHoverCSS?: boolean;
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true
@@ -40,6 +46,7 @@ export function setOptions(
     ...userOpts,
     displayToggle: userOpts.displayToggle ?? true,
     colorMode: userOpts.colorMode ?? 'system',
+    disableHoverCSS: userOpts.disableHoverCSS ?? false,
     once: userOpts.once ?? true,
   };
 }
