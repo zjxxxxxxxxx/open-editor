@@ -63,7 +63,6 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   update(el: HTMLElement | null) {
     this.state.activeEl = el;
-    this.updateOverlay();
   }
 
   private startObserver() {
@@ -77,12 +76,10 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   private observe() {
     if (this.state.observing) {
-      if (this.state.activeEl) {
-        if (!this.state.activeEl.isConnected) {
-          this.state.activeEl = null;
-        }
-        this.updateOverlay();
+      if (this.state.activeEl?.isConnected === false) {
+        this.state.activeEl = null;
       }
+      this.updateOverlay();
       requestAnimationFrame(this.observe);
     }
   }
