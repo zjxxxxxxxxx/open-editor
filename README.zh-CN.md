@@ -117,6 +117,46 @@ npm run dev
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
 
+## `enableinspector` 事件
+
+可以通过订阅 `enableinspector` 事件改变启用检查器的默认行为。
+
+### 阻止默认行为
+
+```ts
+window.addEventListener('enableinspector', (e) => {
+  e.preventDefault();
+});
+```
+
+### 添加额外的处理程序
+
+```ts
+window.addEventListener('enableinspector', (e) => {
+  console.log('enable inspector');
+});
+```
+
+## `exitinspector` 事件
+
+可以通过订阅 `exitinspector` 事件改变退出检查器的默认行为。
+
+### 阻止默认行为
+
+```ts
+window.addEventListener('exitinspector', (e) => {
+  e.preventDefault();
+});
+```
+
+### 添加额外的处理程序
+
+```ts
+window.addEventListener('exitinspector', (e) => {
+  console.log('exit inspector');
+});
+```
+
 ## `openeditor` 事件
 
 可以通过订阅 `openeditor` 事件改变打开编辑器的默认行为。

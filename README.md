@@ -41,13 +41,13 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 > Requires React version 15+.
 
-`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plug-in for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
+`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
 
 ### Vue
 
 > Requires Vue version 2+.
 
-`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plug-in is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
+`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plugin is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
 
 ### Use plugin
 
@@ -116,6 +116,46 @@ Then click on the tree node to automatically open the source code file in the co
 Click again (shortcut key 1: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱 right-click) the switch button in the upper right corner of the browser to exit the inspector.
 
 <img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
+
+## `enableinspector` event
+
+The default behavior of enable inspector can be changed by subscribing to the `enableinspector` event.
+
+### Prevent default behavior
+
+```ts
+window.addEventListener('enableinspector', (e) => {
+  e.preventDefault();
+});
+```
+
+### Add additional handler
+
+```ts
+window.addEventListener('enableinspector', (e) => {
+  console.log('enable inspector');
+});
+```
+
+## `exitinspector` event
+
+The default behavior of exit inspector can be changed by subscribing to the `exitinspector` event.
+
+### Prevent default behavior
+
+```ts
+window.addEventListener('exitinspector', (e) => {
+  e.preventDefault();
+});
+```
+
+### Add additional handler
+
+```ts
+window.addEventListener('exitinspector', (e) => {
+  console.log('exit inspector');
+});
+```
 
 ## `openeditor` event
 

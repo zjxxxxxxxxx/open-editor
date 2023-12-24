@@ -6,8 +6,4 @@ export const InternalElements = <const>{
   HTML_TREE_ELEMENT: 'oe-tree',
 };
 
-export const capOpts = {
-  capture: true,
-};
-
 export const CACHE_POS_TOP_ID = '__oe_pt__';
