@@ -1,4 +1,4 @@
-import { applyAttrs, checkValidElement } from './ui';
+import { applyAttrs, checkValidElement } from '../../utils/ui';
 
 let clickedEl: HTMLElement | null = null;
 

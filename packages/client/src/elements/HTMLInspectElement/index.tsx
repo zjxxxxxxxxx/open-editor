@@ -1,6 +1,5 @@
 import {
   applyAttrs,
-  globalStyle,
   appendChild,
   addClass,
   removeClass,
@@ -8,37 +7,20 @@ import {
   checkValidElement,
 } from '../../utils/ui';
 import { off, on } from '../../utils/event';
-import { setupListeners } from '../../utils/setupListeners';
 import {
   offOpenEditorError,
   onOpenEditorError,
   openEditor,
 } from '../../utils/openEditor';
-import { getColorMode } from '../../utils/getColorMode';
 import { sendErrMsg } from '../../utils/errorMessage';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
-
-// mount global style
-globalStyle(postcss`
-.oe-screen-lock {
-  overflow: hidden;
-}
-.oe-loading * {
-  cursor: wait !important;
-}
-`).mount();
-
-const overrideStyle = globalStyle(postcss`
-* {
-  cursor: default !important;
-  user-select: none !important;
-  touch-action: none !important;
-  -webkit-touch-callout: none !important;
-}
-`);
+import { getColorMode } from './getColorMode';
+import { setupListeners } from './setupListeners';
+import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
+import { effectStyle, overrideStyle } from './globalStyles';
 
 export class HTMLInspectElement extends HTMLCustomElement<{
   overlay: HTMLOverlayElement;
@@ -55,6 +37,8 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     this.cleanHandlers = this.cleanHandlers.bind(this);
     this.openEditor = this.openEditor.bind(this);
     this.showErrorOverlay = this.showErrorOverlay.bind(this);
+
+    effectStyle.mount();
   }
 
   private get active() {
@@ -128,17 +112,12 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   }
 
   private setupHandlers() {
-    if (
-      !this.active &&
-      !this.state.tree.isOpen &&
-      this.dispatchEvent(
-        new CustomEvent('enableinspector', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-        }),
-      )
-    ) {
+    const e = new CustomEvent('enableinspector', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    if (!this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
       this.active = true;
       this.state.overlay.open();
       this.cleanListeners = setupListeners({
@@ -148,6 +127,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         onExitInspect: this.cleanHandlers,
       });
       overrideStyle.mount();
+      disableHoverCSS();
 
       if (this.state.pointE) {
         const { x, y } = this.state.pointE;
@@ -156,51 +136,23 @@ export class HTMLInspectElement extends HTMLCustomElement<{
           this.state.overlay.update(initEl);
         }
       }
-
-      const opts = getOptions();
-      if (opts.disableHoverCSS) {
-        document.querySelectorAll('style').forEach((item) => {
-          if (item.textContent) {
-            item.textContent = item.textContent.replace(
-              /:hover/g,
-              '__disabled_hover__',
-            );
-          }
-        });
-      }
     }
   }
 
   private declare cleanListeners: () => void;
 
   private cleanHandlers() {
-    if (
-      this.active &&
-      !this.state.tree.isOpen &&
-      this.dispatchEvent(
-        new CustomEvent('exitinspector', {
-          bubbles: true,
-          cancelable: true,
-          composed: true,
-        }),
-      )
-    ) {
+    const e = new CustomEvent('exitinspector', {
+      bubbles: true,
+      cancelable: true,
+      composed: true,
+    });
+    if (this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
       this.active = false;
       this.state.overlay.close();
       this.cleanListeners();
       overrideStyle.unmount();
-
-      const opts = getOptions();
-      if (opts.disableHoverCSS) {
-        document.querySelectorAll('style').forEach((item) => {
-          if (item.textContent) {
-            item.textContent = item.textContent.replace(
-              /__disabled_hover__/g,
-              ':hover',
-            );
-          }
-        });
-      }
+      enableHoverCSS();
     }
   }
 
