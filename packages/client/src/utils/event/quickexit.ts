@@ -2,11 +2,11 @@ import { omit } from '../util';
 import {
   type SetupListenerListener,
   type SetupListenerListenerOptions,
-  createCustomEvent,
+  createCustomEventHandler,
 } from './create';
 import { off, on } from '.';
 
-export default createCustomEvent('quickexit', setupListener);
+export default createCustomEventHandler('quickexit', setupListener);
 
 function setupListener(
   listener: SetupListenerListener,

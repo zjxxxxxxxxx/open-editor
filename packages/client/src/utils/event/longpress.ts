@@ -1,11 +1,11 @@
 import {
   type SetupListenerListener,
   type SetupListenerListenerOptions,
-  createCustomEvent,
+  createCustomEventHandler,
 } from './create';
 import { off, on } from '.';
 
-export default createCustomEvent('longpress', setupListener);
+export default createCustomEventHandler('longpress', setupListener);
 
 function setupListener(
   listener: SetupListenerListener,

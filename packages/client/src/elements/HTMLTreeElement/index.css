@@ -36,7 +36,7 @@
   border-radius: 99px;
 }
 .oe-close:hover {
-  backdrop-filter: contrast(0.5);
+  backdrop-filter: invert(50%);
 }
 .oe-body {
   padding: 20px 28px;
