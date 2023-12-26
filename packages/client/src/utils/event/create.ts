@@ -1,7 +1,6 @@
 import { on, off } from '.';
 
 /******** CustomEvent ********/
-
 export type Target = HTMLElement | Window;
 
 export interface CustomEventListenerOptions extends EventListenerOptions {
@@ -23,11 +22,9 @@ export interface CustomEventCache<
   opts: AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>;
   stop: () => void;
 }
-
 /******** CustomEvent ********/
 
 /******** SetupListener ********/
-
 export type SetupListenerListenerOptions<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
 > = Omit<
@@ -44,10 +41,15 @@ export type SetupListener<AddCustomEventListenerUserOptions extends AnyObject> =
   ) => SetupListenerCleanListener;
 
 export type SetupListenerCleanListener = () => void;
-
 /******** SetupListener ********/
 
-export function createCustomEvent<
+/**
+ * Create a custom event handler
+ *
+ * @param type event type
+ * @param setupListener setup event listener
+ */
+export function createCustomEventHandler<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
 >(
   type: string,

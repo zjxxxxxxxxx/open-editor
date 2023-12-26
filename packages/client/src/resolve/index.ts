@@ -1,4 +1,4 @@
-import { upperCase } from '../utils/util';
+import { camelCase } from '../utils/util';
 import { ensureFileName } from './util';
 import { resolveDebug } from './resolveDebug';
 import { resolveReact17Plus } from './resolves/react17+';
@@ -45,7 +45,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
 
 export function normalizeMeta(meta: Partial<SourceCodeMeta>) {
   return {
-    name: meta.name ? upperCase(meta.name) : 'Anonymous',
+    name: meta.name ? camelCase(meta.name) : 'Anonymous',
     file: ensureFileName(meta.file!),
     line: meta.line || 1,
     column: meta.column || 1,
