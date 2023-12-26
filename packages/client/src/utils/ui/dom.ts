@@ -2,8 +2,15 @@ import { Fragment } from '../../../jsx/jsx-runtime';
 import { InternalElements } from '../../constants';
 import { computedStyle } from './style';
 
-const validNames: string[] = [
-  ...Object.values(InternalElements),
+const internals: string[] = Object.values(InternalElements);
+export function checkInternalElement(
+  el: HTMLElement | null,
+): el is HTMLElement {
+  return el != null && internals.includes(el.localName);
+}
+
+const invalids: string[] = [
+  ...internals,
   // The `html` check is triggered when the mouse leaves the browser,
   // and filtering is needed to ignore this unexpected check.
   'html',
@@ -11,7 +18,7 @@ const validNames: string[] = [
   'iframe',
 ];
 export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
-  return el != null && el.isConnected && !validNames.includes(el.localName);
+  return el != null && el.isConnected && !invalids.includes(el.localName);
 }
 
 export function getHtml() {

@@ -13,9 +13,9 @@ export function omit<T extends AnyObject, K extends keyof T>(
   return newVal;
 }
 
-const upperCaseRE = /((?=^)|([./\-_]+))([a-z])/g;
-export function upperCase(str: string) {
-  return str.replace(upperCaseRE, (...s) => s[3].toUpperCase());
+const camelCaseRE = /(?:(?=^)|(?:[./\-_]+))([a-z])/g;
+export function camelCase(str: string) {
+  return str.replace(camelCaseRE, (...$) => $[1].toUpperCase());
 }
 
 export function hasOwnProperty<Obj extends object, Prop extends PropertyKey>(

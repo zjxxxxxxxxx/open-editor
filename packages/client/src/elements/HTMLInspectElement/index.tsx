@@ -129,6 +129,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       overrideStyle.mount();
       disableHoverCSS();
 
+      // @ts-ignore
+      document.activeElement?.blur();
+
       if (this.state.pointE) {
         const { x, y } = this.state.pointE;
         const initEl = document.elementFromPoint(x, y) as HTMLElement;
