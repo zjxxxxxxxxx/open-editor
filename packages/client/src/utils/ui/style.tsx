@@ -7,7 +7,7 @@ export const CSS_util = {
     return `${value}px`;
   },
   pv(value: string) {
-    return parseInt(value, 10);
+    return Number.parseFloat(value);
   },
 };
 

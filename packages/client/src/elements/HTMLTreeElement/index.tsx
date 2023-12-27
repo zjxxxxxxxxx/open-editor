@@ -1,4 +1,9 @@
-import { addClass, removeClass, getHtml, resetChildren } from '../../utils/ui';
+import {
+  addClass,
+  removeClass,
+  getHtml,
+  replaceChildren,
+} from '../../utils/ui';
 import { off, on } from '../../utils/event';
 import { openEditor } from '../../utils/openEditor';
 import { type SourceCodeMeta, resolveSource } from '../../resolve';
@@ -94,7 +99,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     } else {
       addClass(this.state.popup, 'oe-error');
     }
-    resetChildren(this.state.popupBody, content);
+    replaceChildren(this.state.popupBody, content);
   }
 
   private buildTree(tree: SourceCodeMeta[]) {
