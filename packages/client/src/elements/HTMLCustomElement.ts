@@ -1,4 +1,4 @@
-import { resetChildren } from '../utils/ui';
+import { replaceChildren } from '../utils/ui';
 
 export abstract class HTMLCustomElement<
   State extends AnyObject = AnyObject,
@@ -23,7 +23,7 @@ export abstract class HTMLCustomElement<
   }
 
   public connectedCallback() {
-    resetChildren(this.shadowRoot, this.host());
+    replaceChildren(this.shadowRoot, this.host());
     this.mounted?.();
   }
 
