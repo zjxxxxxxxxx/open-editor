@@ -32,6 +32,11 @@
 
 .card {
   padding: 2em;
+  zoom: 2;
+}
+
+.card > div {
+  zoom: 0.5;
 }
 
 .read-the-docs {

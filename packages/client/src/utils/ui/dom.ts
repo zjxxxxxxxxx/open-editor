@@ -27,7 +27,13 @@ export function getHtml() {
 
 export function getDOMRect(target: HTMLElement): Omit<DOMRect, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
-  const zoom = computedStyle(target)('zoom');
+
+  let zoom = 1;
+  while (target) {
+    zoom *= computedStyle(target)('zoom');
+    target = target.parentElement!;
+  }
+
   // In browsers that do not support zoom, zoom is always empty.
   if (zoom !== 0 && zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
@@ -61,13 +67,15 @@ export function appendChild(
   }
 }
 
-export function resetChildren(
+export function replaceChildren(
   el: HTMLElement | ShadowRoot,
   ...children: HTMLElement[]
 ) {
-  if (el.replaceChildren) {
-    return el.replaceChildren(...children);
-  }
+  // Unable to handle automatic elimination of Fragment element.
+  // if (el.replaceChildren) {
+  //   return el.replaceChildren(...children);
+  // }
+
   while (el.firstChild) {
     el.removeChild(el.firstChild);
   }

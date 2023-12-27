@@ -1,3 +1,7 @@
+:host {
+  --w: min(calc(100vw - 96px), 500px);
+  --h: min(calc(100vh - 148px), 600px);
+}
 .oe-root {
   display: none;
   touch-action: none;
@@ -50,12 +54,9 @@
   background: var(--red-light);
 }
 .oe-content {
-  --w: calc(100vw - 96px);
-  --h: calc(100vh - 148px);
-
   min-width: 220px;
-  max-width: min(var(--w), 500px);
-  max-height: min(var(--h), 600px);
+  max-width: var(--w);
+  max-height: var(--h);
   white-space: nowrap;
   overflow: auto;
   scrollbar-width: none;
@@ -67,6 +68,9 @@
   margin-left: -10px;
 }
 .oe-title {
+  min-width: 220px;
+  max-width: var(--w);
+  max-height: var(--h);
   padding: 0 16px 14px 0;
   font-size: 18px;
   font-weight: 500;

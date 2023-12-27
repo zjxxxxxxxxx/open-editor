@@ -1,6 +1,6 @@
 import { getOptions } from '../../options';
 import { off, on } from '../../utils/event';
-import { checkInternalElement, checkValidElement } from '../../utils/ui';
+import { checkValidElement } from '../../utils/ui';
 import {
   checkClickedElement,
   setupClickedElementAttrs,
@@ -177,9 +177,9 @@ function withEventFn<T extends (...args: any[]) => any>(fn: T) {
 }
 
 function onSilent(e: Event) {
-  // It is expected that no operation will be performed on the event when target or relatedTarget is an internal element.
+  // No action is expected on the event when target or relatedTarget is an invalid element.
   const el: HTMLElement = (<any>e).relatedTarget ?? e.target;
-  if (!checkInternalElement(el)) {
+  if (checkValidElement(el)) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // Only need to handle touch events, excluding other events such as pointer
     // See https://www.chromestatus.com/feature/5093566007214080.
