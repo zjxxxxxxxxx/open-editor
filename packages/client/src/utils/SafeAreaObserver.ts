@@ -55,7 +55,7 @@ const style = globalStyle(postcss`
   --sail: env(safe-area-inset-left);
 }
 `);
-export function updateValue() {
+function updateValue() {
   style.mount();
   const get = computedStyle(document.body);
   value = {

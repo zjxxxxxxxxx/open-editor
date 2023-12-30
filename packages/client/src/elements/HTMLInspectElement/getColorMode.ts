@@ -16,7 +16,7 @@ const DarkColors = postcss`
   --text-color: #ffffff;
   --text-color2: #dddddd;
   --bg-color: #2c2c2e;
-  --bg-color-opt: #2c2c2ecc;
+  --bg-color-opt: #2c2c2ed9;
   --bg-color2: #6c6c6e;
   --cyan: #4df9fa;
 }

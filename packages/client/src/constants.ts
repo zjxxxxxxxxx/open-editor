@@ -6,4 +6,4 @@ export const InternalElements = <const>{
   HTML_TREE_ELEMENT: 'oe-tree',
 };
 
-export const CACHE_POS_TOP_ID = '__oe_pt__';
+export const CACHE_POS_TOP_ID = '__oe_pt';

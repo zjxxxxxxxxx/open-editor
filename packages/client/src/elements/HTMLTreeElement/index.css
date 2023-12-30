@@ -1,6 +1,7 @@
 :host {
+  --min-w: 280px;
   --w: min(calc(100vw - 96px), 500px);
-  --h: min(calc(100vh - 148px), 600px);
+  --h: min(calc(100vh - 148px), 300px);
 }
 .oe-root {
   display: none;
@@ -53,8 +54,19 @@
 .oe-error .oe-close:hover {
   background: var(--red-light);
 }
+.oe-title {
+  min-width: var(--min-w);
+  max-width: var(--w);
+  padding: 0 12px 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+.oe-tag {
+  font-size: 14px;
+  font-weight: 400;
+}
 .oe-content {
-  min-width: 220px;
+  min-width: var(--min-w);
   max-width: var(--w);
   max-height: var(--h);
   white-space: nowrap;
@@ -66,18 +78,6 @@
 }
 .oe-content > .oe-tree {
   margin-left: -10px;
-}
-.oe-title {
-  min-width: 220px;
-  max-width: var(--w);
-  max-height: var(--h);
-  padding: 0 16px 14px 0;
-  font-size: 18px;
-  font-weight: 500;
-}
-.oe-tag {
-  font-size: 14px;
-  font-weight: 400;
 }
 .oe-tree {
   position: relative;
