@@ -1,5 +1,24 @@
 # @open-editor/client
 
+## 0.7.0
+
+### Minor Changes
+
+- [#195](https://github.com/zjxxxxxxxxx/open-editor/pull/195) [`7498bef`](https://github.com/zjxxxxxxxxx/open-editor/commit/7498bef0faec440bd0830c10e4b2a53a2a440bd4) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `disableHoverCSS` option
+
+- [#195](https://github.com/zjxxxxxxxxx/open-editor/pull/195) [`7498bef`](https://github.com/zjxxxxxxxxx/open-editor/commit/7498bef0faec440bd0830c10e4b2a53a2a440bd4) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `enableinspector` and `exitinspector` event
+
+### Patch Changes
+
+- [#198](https://github.com/zjxxxxxxxxx/open-editor/pull/198) [`b59dc15`](https://github.com/zjxxxxxxxxx/open-editor/commit/b59dc157266bc5a3bafbb7f7aa5aadc991c3f694) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fixed the issue where `overlay` is in the wrong position when the parent element contains `zoom`
+
+- [#192](https://github.com/zjxxxxxxxxx/open-editor/pull/192) [`a007a77`](https://github.com/zjxxxxxxxxx/open-editor/commit/a007a77592acfa89d524ce487bebd7ffce4bad66) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Hide `overlay` when the element is invisible
+
+- [#197](https://github.com/zjxxxxxxxxx/open-editor/pull/197) [`f139653`](https://github.com/zjxxxxxxxxx/open-editor/commit/f139653f36601d655cecccd105d68effd98843cc) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fixed relatedTarget being an internal element causing the event to fail silently
+
+- Updated dependencies []:
+  - @open-editor/shared@0.7.0
+
 ## 0.6.4
 
 ### Patch Changes
