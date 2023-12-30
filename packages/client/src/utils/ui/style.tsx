@@ -19,7 +19,7 @@ export function applyStyle(
 }
 
 export function computedStyle(el: HTMLElement) {
-  const style = window.getComputedStyle(el, null);
+  const style = getComputedStyle(el, null);
   // @ts-ignore
   function get(property: string): number;
   function get(property: string, toNumber: boolean): number | string;
