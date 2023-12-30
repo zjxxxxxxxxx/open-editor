@@ -12,13 +12,21 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   tooltip: HTMLTooltipElement;
   activeEl: HTMLElement | null;
   observing: boolean;
+  frameDuration: number;
+  frameLastTime: number;
 }> {
   constructor() {
-    super();
+    super({
+      // After testing, it was concluded that setting the frame interval to 15 milliseconds
+      // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
+      frameDuration: 15,
+      frameLastTime: performance.now(),
+    });
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.update = this.update.bind(this);
     this.observe = this.observe.bind(this);
+    this.checkNextFrame = this.checkNextFrame.bind(this);
     this.updateOverlay = this.updateOverlay.bind(this);
   }
 
@@ -76,12 +84,27 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   private observe() {
     if (this.state.observing) {
-      if (this.state.activeEl?.isConnected === false) {
-        this.state.activeEl = null;
+      if (this.checkNextFrame()) {
+        if (this.state.activeEl?.isConnected === false) {
+          this.state.activeEl = null;
+        }
+        this.updateOverlay();
       }
-      this.updateOverlay();
       requestAnimationFrame(this.observe);
     }
+  }
+
+  /**
+   * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
+   */
+  private checkNextFrame() {
+    const currentTime = performance.now();
+    const nextFrame =
+      currentTime - this.state.frameLastTime > this.state.frameDuration;
+    if (nextFrame) {
+      this.state.frameLastTime = currentTime;
+    }
+    return nextFrame;
   }
 
   private updateOverlay() {

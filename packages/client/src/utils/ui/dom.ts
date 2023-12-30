@@ -2,23 +2,27 @@ import { Fragment } from '../../../jsx/jsx-runtime';
 import { InternalElements } from '../../constants';
 import { computedStyle } from './style';
 
-const internals: string[] = Object.values(InternalElements);
+const internals = Object.values(InternalElements).map((internal) =>
+  internal.toUpperCase(),
+);
 export function checkInternalElement(
   el: HTMLElement | null,
 ): el is HTMLElement {
-  return el != null && internals.includes(el.localName);
+  return el != null && internals.includes(el.nodeName);
 }
 
-const invalids: string[] = [
+const invalids = [
   ...internals,
+  // In Firefox, when the mouse leaves the visual area, the event target is `HTMLDocument`.
+  '#document',
   // The `html` check is triggered when the mouse leaves the browser,
   // and filtering is needed to ignore this unexpected check.
-  'html',
+  'HTML',
   // `iframe` should be left to the internal inspector.
-  'iframe',
+  'IFRAME',
 ];
 export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
-  return el != null && el.isConnected && !invalids.includes(el.localName);
+  return el != null && el.isConnected && !invalids.includes(el.nodeName);
 }
 
 export function getHtml() {

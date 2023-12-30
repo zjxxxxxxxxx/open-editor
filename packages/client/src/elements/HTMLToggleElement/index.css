@@ -44,7 +44,7 @@
   display: block;
 }
 .oe-dnd .oe-button {
-  transform: scale(1.1);
+  transform: scale(1.2);
   opacity: 0.8;
   cursor: ns-resize;
 }

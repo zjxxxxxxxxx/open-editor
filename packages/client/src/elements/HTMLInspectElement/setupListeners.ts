@@ -178,8 +178,10 @@ function withEventFn<T extends (...args: any[]) => any>(fn: T) {
 
 function onSilent(e: Event) {
   // No action is expected on the event when target or relatedTarget is an invalid element.
-  const el: HTMLElement = (<any>e).relatedTarget ?? e.target;
-  if (checkValidElement(el)) {
+  if (
+    checkValidElement((<any>e).target) ||
+    checkValidElement((<any>e).relatedTarget)
+  ) {
     // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
     // Only need to handle touch events, excluding other events such as pointer
     // See https://www.chromestatus.com/feature/5093566007214080.

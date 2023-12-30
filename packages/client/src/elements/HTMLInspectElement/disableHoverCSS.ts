@@ -1,29 +1,37 @@
 import { getOptions } from '../../options';
 
 const DISABLE_RE = /:hover/g;
-const ENABLE_RE = /\[__hover__\]/g;
+const DISABLE_TOKEN = ':__hover';
 
-const DISABLE_TOKEN = '[__hover__]';
+const ENABLE_RE = /:__hover/g;
 const ENABLE_TOKEN = ':hover';
 
 export function disableHoverCSS() {
-  forEachCSS((css) => css.replace(DISABLE_RE, DISABLE_TOKEN));
+  visitCSS((css) => css.replace(DISABLE_RE, DISABLE_TOKEN));
 }
 
 export function enableHoverCSS() {
-  forEachCSS((css) => css.replace(ENABLE_RE, ENABLE_TOKEN));
+  visitCSS((css) => css.replace(ENABLE_RE, ENABLE_TOKEN));
 }
 
-function forEachCSS(transform: (css: string) => void) {
+function visitCSS(visitor: (css: string) => string) {
   const opts = getOptions();
   if (opts.disableHoverCSS) {
-    // @ts-ignore
-    for (const style of document.querySelectorAll('style')) {
-      requestAnimationFrame(() => {
+    const styles = Array.from(document.querySelectorAll('style'));
+    const frameWork = requestAnimationFrame;
+    const perFrame = 10;
+    let frameTime = performance.now();
+    function transformHoverCSS() {
+      while (performance.now() - frameTime < perFrame) {
+        if (!styles.length) return;
+        const style = styles.pop()!;
         if (style.textContent) {
-          style.textContent = transform(style.textContent);
+          style.textContent = visitor(style.textContent);
         }
-      });
+      }
+      frameTime = performance.now();
+      frameWork(transformHoverCSS);
     }
+    frameWork(transformHoverCSS);
   }
 }

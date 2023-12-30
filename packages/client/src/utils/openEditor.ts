@@ -11,7 +11,7 @@ export async function openEditor(
   source: SourceCodeMeta,
   dispatch: (e: CustomEvent<URL>) => boolean,
 ) {
-  const { protocol, hostname, port } = window.location;
+  const { protocol, hostname, port } = location;
   const { file, line = 1, column = 1 } = source;
   const { port: customPort } = getOptions();
 
