@@ -1,5 +1,18 @@
 # @open-editor/webpack
 
+## 0.7.0
+
+### Minor Changes
+
+- [#195](https://github.com/zjxxxxxxxxx/open-editor/pull/195) [`7498bef`](https://github.com/zjxxxxxxxxx/open-editor/commit/7498bef0faec440bd0830c10e4b2a53a2a440bd4) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `disableHoverCSS` option
+
+### Patch Changes
+
+- Updated dependencies [[`b59dc15`](https://github.com/zjxxxxxxxxx/open-editor/commit/b59dc157266bc5a3bafbb7f7aa5aadc991c3f694), [`7498bef`](https://github.com/zjxxxxxxxxx/open-editor/commit/7498bef0faec440bd0830c10e4b2a53a2a440bd4), [`7498bef`](https://github.com/zjxxxxxxxxx/open-editor/commit/7498bef0faec440bd0830c10e4b2a53a2a440bd4), [`a007a77`](https://github.com/zjxxxxxxxxx/open-editor/commit/a007a77592acfa89d524ce487bebd7ffce4bad66), [`f139653`](https://github.com/zjxxxxxxxxx/open-editor/commit/f139653f36601d655cecccd105d68effd98843cc)]:
+  - @open-editor/client@0.7.0
+  - @open-editor/server@0.7.0
+  - @open-editor/shared@0.7.0
+
 ## 0.6.4
 
 ### Patch Changes
