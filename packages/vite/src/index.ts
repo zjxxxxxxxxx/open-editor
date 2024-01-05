@@ -60,7 +60,7 @@ export default function openEditorPlugin(
     onOpenEditor,
   } = options;
 
-  const VITE_CLIENT_PATH = '/vite/dist/client/client.mjs';
+  const VITE_CLIENT_PATH = '/vite/dist/client/client.js';
 
   const client = createClient(import.meta.url);
   client.generate(
