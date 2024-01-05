@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.7.1
+
+### Patch Changes
+
+- [#201](https://github.com/zjxxxxxxxxx/open-editor/pull/201) [`e2cd5a4`](https://github.com/zjxxxxxxxxx/open-editor/commit/e2cd5a4e943a181c2ac699763d43724214226253) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix the failure to import the entry file in `webpack` of `cjs`
+
+- Updated dependencies [[`e2cd5a4`](https://github.com/zjxxxxxxxxx/open-editor/commit/e2cd5a4e943a181c2ac699763d43724214226253)]:
+  - @open-editor/client@0.7.1
+  - @open-editor/shared@0.7.1
+  - @open-editor/server@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes
