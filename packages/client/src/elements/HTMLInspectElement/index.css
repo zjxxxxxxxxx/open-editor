@@ -2,7 +2,7 @@
   --red: #ff335c;
   --red-light: #ff335c33;
   --shadow: 0 0 1px var(--bg-color2);
-  --filter: saturate(1.2) blur(12px);
+  --filter: blur(12px);
 
   --overlay-margin: #f6b26ba8;
   --overlay-border: #ffe599a8;

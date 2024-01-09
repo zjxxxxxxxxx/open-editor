@@ -49,21 +49,20 @@ function toNativeType(val) {
   return val.substr(2).toLowerCase();
 }
 
-const textRE = /(string|number)/;
 function appendChildren(el, children) {
   for (const child of children) {
-    if (child instanceof Element) {
-      if (child.tagName === FRAGMENT_TYPE) {
-        appendChildren(el, Array.from(child.children));
+    if (child) {
+      if (child instanceof Element) {
+        if (child.tagName === FRAGMENT_TYPE) {
+          appendChildren(el, Array.from(child.children));
+        } else {
+          el.appendChild(child);
+        }
+      } else if (Array.isArray(child)) {
+        appendChildren(el, child);
       } else {
-        el.appendChild(child);
+        el.appendChild(document.createTextNode(child));
       }
-    } else if (Array.isArray(child)) {
-      appendChildren(el, child);
-    } else if (textRE.test(typeof child)) {
-      el.appendChild(document.createTextNode(child));
-    } else if (child) {
-      el.appendChild(child);
     }
   }
 }

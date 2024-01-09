@@ -12,11 +12,11 @@ export function setupClickedElementAttrs(e: Event) {
     resetAttrs(el, {
       disabled: {
         from: 'disabled',
-        to: '__disabled',
+        to: '__oe_disabled',
       },
       href: {
         from: 'href',
-        to: '__href',
+        to: '__oe_href',
       },
     });
 
@@ -28,11 +28,11 @@ export function cleanClickedElementAttrs() {
   if (clickedEl) {
     resetAttrs(clickedEl, {
       disabled: {
-        from: '__disabled',
+        from: '__oe_disabled',
         to: 'disabled',
       },
       href: {
-        from: '__href',
+        from: '__oe_href',
         to: 'href',
       },
     });

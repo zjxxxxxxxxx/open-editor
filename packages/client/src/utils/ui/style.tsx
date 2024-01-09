@@ -38,10 +38,11 @@ export function globalStyle(css: string) {
   const style = <style type="text/css">{css}</style>;
   return {
     mount() {
-      !style.isConnected && appendChild(document.head, style);
+      // Insert into `body` to override the same styles that may have been set
+      if (!style.isConnected) appendChild(document.body, style);
     },
     unmount() {
-      style.isConnected && style.remove();
+      if (style.isConnected) style.remove();
     },
   };
 }
