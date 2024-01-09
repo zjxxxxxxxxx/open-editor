@@ -116,9 +116,9 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     if (prev !== next) {
       // Display larger button on the touch screen
       if (next) {
-        addClass(this.state.root, 'touch');
+        addClass(this.state.root, 'oe-touch');
       } else {
-        removeClass(this.state.root, 'touch');
+        removeClass(this.state.root, 'oe-touch');
       }
       this.state.touchable = next;
     }

@@ -29,10 +29,10 @@
   color: var(--cyan);
   box-shadow: 0 0 30px 6px var(--cyan);
 }
-.touch {
+.oe-touch {
   padding: 8px;
 }
-.touch .oe-button {
+.oe-touch .oe-button {
   padding: 3px;
   width: 34px;
   height: 34px;
