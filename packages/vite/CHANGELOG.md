@@ -1,5 +1,14 @@
 # @open-editor/vite
 
+## 0.7.2
+
+### Patch Changes
+
+- Updated dependencies [[`e2cd5a4`](https://github.com/zjxxxxxxxxx/open-editor/commit/e2cd5a4e943a181c2ac699763d43724214226253)]:
+  - @open-editor/client@0.7.2
+  - @open-editor/shared@0.7.2
+  - @open-editor/server@0.7.2
+
 ## 0.7.0
 
 ### Minor Changes
