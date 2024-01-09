@@ -1,9 +1,9 @@
 import { getOptions } from '../../options';
 
 const DISABLE_RE = /:hover/g;
-const DISABLE_TOKEN = ':__hover';
+const DISABLE_TOKEN = '.__oe_hover';
 
-const ENABLE_RE = /:__hover/g;
+const ENABLE_RE = /\.__oe_hover/g;
 const ENABLE_TOKEN = ':hover';
 
 export function disableHoverCSS() {

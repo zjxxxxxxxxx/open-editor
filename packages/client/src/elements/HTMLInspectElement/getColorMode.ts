@@ -5,7 +5,7 @@ const LightColors = postcss`
   --text-color: #000000;
   --text-color2: #222222;
   --bg-color: #feffff;
-  --bg-color-opt: #feffffcc;
+  --bg-color-opt: #feffffd9;
   --bg-color2: #bebfbf;
   --cyan: #2dd9da;
 }
