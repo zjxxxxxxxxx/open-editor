@@ -1,3 +1,4 @@
+import { createNextFrameChecker } from '../../utils/createNextFrameChecker';
 import { getOptions } from '../../options';
 
 const DISABLE_RE = /:hover/g;
@@ -18,20 +19,16 @@ function visitCSS(visitor: (css: string) => string) {
   const opts = getOptions();
   if (opts.disableHoverCSS) {
     const styles = Array.from(document.querySelectorAll('style'));
-    const frameWork = requestAnimationFrame;
-    const perFrame = 10;
-    let frameTime = performance.now();
-    function transformHoverCSS() {
-      while (performance.now() - frameTime < perFrame) {
-        if (!styles.length) return;
-        const style = styles.pop()!;
+    const checkNextFrame = createNextFrameChecker(10);
+    requestAnimationFrame(function transformHoverCSS() {
+      while (!checkNextFrame()) {
+        const style = styles.pop();
+        if (!style) return;
         if (style.textContent) {
           style.textContent = visitor(style.textContent);
         }
       }
-      frameTime = performance.now();
-      frameWork(transformHoverCSS);
-    }
-    frameWork(transformHoverCSS);
+      requestAnimationFrame(transformHoverCSS);
+    });
   }
 }

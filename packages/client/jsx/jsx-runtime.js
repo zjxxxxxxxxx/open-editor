@@ -51,18 +51,17 @@ function toNativeType(val) {
 
 function appendChildren(el, children) {
   for (const child of children) {
-    if (child) {
-      if (child instanceof Element) {
-        if (child.tagName === FRAGMENT_TYPE) {
-          appendChildren(el, Array.from(child.children));
-        } else {
-          el.appendChild(child);
-        }
-      } else if (Array.isArray(child)) {
-        appendChildren(el, child);
+    if (!child) continue;
+    if (child instanceof Element) {
+      if (child.tagName === FRAGMENT_TYPE) {
+        appendChildren(el, Array.from(child.children));
       } else {
-        el.appendChild(document.createTextNode(child));
+        el.appendChild(child);
       }
+    } else if (Array.isArray(child)) {
+      appendChildren(el, child);
+    } else {
+      el.appendChild(document.createTextNode(child));
     }
   }
 }

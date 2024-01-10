@@ -3,7 +3,7 @@ import {
   computedStyle,
   checkVisibility,
   checkValidElement,
-} from './ui';
+} from '../../utils/ui';
 
 export interface RectBox {
   width: number;

@@ -1,7 +1,9 @@
-import { type RectBox, getRectBoxs } from '../../utils/getRectBoxs';
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
+import { createNextFrameChecker } from '../../utils/createNextFrameChecker';
 import { InternalElements } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
+import { type RectBox, getRectBoxs } from './getRectBoxs';
+import { createIdle } from './createIdle';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
   position: HTMLElement;
@@ -12,21 +14,27 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   tooltip: HTMLTooltipElement;
   activeEl: HTMLElement | null;
   observing: boolean;
-  frameDuration: number;
-  frameLastTime: number;
 }> {
+  /**
+   * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
+   */
+  declare checkNextFrame: ReturnType<typeof createNextFrameChecker>;
+
+  declare idle: ReturnType<typeof createIdle>;
+
   constructor() {
-    super({
-      // After testing, it was concluded that setting the frame interval to 15 milliseconds
-      // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
-      frameDuration: 15,
-      frameLastTime: performance.now(),
-    });
+    super();
+
+    // After testing, it was concluded that setting the frame interval to 15 milliseconds
+    // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
+    this.checkNextFrame = createNextFrameChecker(15);
+
+    this.idle = createIdle(300);
+
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.update = this.update.bind(this);
     this.observe = this.observe.bind(this);
-    this.checkNextFrame = this.checkNextFrame.bind(this);
     this.updateOverlay = this.updateOverlay.bind(this);
   }
 
@@ -59,12 +67,14 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   open() {
     this.state.activeEl = null;
     this.state.tooltip.open();
+    this.idle.start();
     addClass(this.state.position, 'oe-show');
     this.startObserver();
   }
 
   close() {
     this.state.tooltip.close();
+    this.idle.stop();
     removeClass(this.state.position, 'oe-show');
     this.stopObserver();
   }
@@ -84,7 +94,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   private observe() {
     if (this.state.observing) {
-      if (this.checkNextFrame()) {
+      if (!this.idle.value && this.checkNextFrame()) {
         if (this.state.activeEl?.isConnected === false) {
           this.state.activeEl = null;
         }
@@ -94,20 +104,8 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     }
   }
 
-  /**
-   * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
-   */
-  private checkNextFrame() {
-    const currentTime = performance.now();
-    const nextFrame =
-      currentTime - this.state.frameLastTime > this.state.frameDuration;
-    if (nextFrame) {
-      this.state.frameLastTime = currentTime;
-    }
-    return nextFrame;
-  }
-
   private updateOverlay() {
+    console.log('rendering');
     const boxs = getRectBoxs(this.state.activeEl);
     this.state.tooltip.update(this.state.activeEl, boxs.position);
     this.updateBoxs(boxs);
