@@ -46,8 +46,8 @@ export interface Options {
  * development only
  */
 export default class OpenEditorPlugin {
-  options: Options;
-  compiler!: webpack.Compiler;
+  declare options: Options;
+  declare compiler: webpack.Compiler;
 
   constructor(options: Options = {}) {
     this.options = {
