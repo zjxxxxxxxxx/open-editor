@@ -1,4 +1,4 @@
-import { type RectBox } from '../../utils/getRectBoxs';
+import { type RectBox } from '../HTMLOverlayElement/getRectBoxs';
 import { clamp } from '../../utils/util';
 import {
   getDOMRect,
