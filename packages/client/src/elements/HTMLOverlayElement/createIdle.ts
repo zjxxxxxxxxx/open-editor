@@ -1,3 +1,4 @@
+import { getOptions } from '../../options';
 import { on, off } from '../../utils/event';
 
 const events = [
@@ -10,6 +11,7 @@ const events = [
 ];
 
 export function createIdle(duration: number) {
+  const { realtimeRender } = getOptions();
   let idle = false;
   let timer: number | null = null;
 
@@ -31,12 +33,16 @@ export function createIdle(duration: number) {
       return idle;
     },
     start() {
-      idle = false;
-      events.forEach((event) => on(event, onEvent, { capture: true }));
+      if (!realtimeRender) {
+        idle = false;
+        events.forEach((event) => on(event, onEvent, { capture: true }));
+      }
     },
     stop() {
-      idle = true;
-      events.forEach((event) => off(event, onEvent, { capture: true }));
+      if (!realtimeRender) {
+        idle = true;
+        events.forEach((event) => off(event, onEvent, { capture: true }));
+      }
     },
   };
 }

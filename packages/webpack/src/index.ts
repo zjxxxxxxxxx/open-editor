@@ -29,6 +29,12 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
+   * Track animations and page re-rendering
+   *
+   * @default false
+   */
+  realtimeRender?: boolean;
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true
@@ -46,8 +52,8 @@ export interface Options {
  * development only
  */
 export default class OpenEditorPlugin {
-  declare options: Options;
-  declare compiler: webpack.Compiler;
+  private declare options: Options;
+  private declare compiler: webpack.Compiler;
 
   constructor(options: Options = {}) {
     this.options = {
