@@ -58,6 +58,12 @@ interface Options {
    */
   disableHoverCSS?: boolean;
   /**
+   * Track animations and page re-rendering
+   *
+   * @default false
+   */
+  realtimeRender?: boolean;
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true
