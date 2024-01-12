@@ -58,11 +58,11 @@ interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * Track animations and page re-rendering
+   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
    *
    * @default false
    */
-  realtimeRender?: boolean;
+  realtimeFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *
@@ -77,3 +77,10 @@ interface Options {
   onOpenEditor?(file: string): void;
 }
 ```
+
+## Playgrounds
+
+| Source code                                                                                | Online trial                                                                                        |
+| ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) |
+| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)     | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)   |

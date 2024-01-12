@@ -11,7 +11,7 @@ const events = [
 ];
 
 export function createIdle(duration: number) {
-  const { realtimeRender } = getOptions();
+  const { realtimeFrame } = getOptions();
   let idle = false;
   let timer: number | null = null;
 
@@ -33,13 +33,13 @@ export function createIdle(duration: number) {
       return idle;
     },
     start() {
-      if (!realtimeRender) {
+      if (!realtimeFrame) {
         idle = false;
         events.forEach((event) => on(event, onEvent, { capture: true }));
       }
     },
     stop() {
-      if (!realtimeRender) {
+      if (!realtimeFrame) {
         idle = true;
         events.forEach((event) => off(event, onEvent, { capture: true }));
       }

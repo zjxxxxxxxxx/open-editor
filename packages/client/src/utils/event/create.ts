@@ -96,8 +96,8 @@ export function createCustomEventHandler<
     const index = caches.findIndex((cache) => isSameListener(cache, cb, opts));
     if (index !== -1) {
       const nextCaches = [...caches];
-      caches[index].stop();
-      nextCaches.splice(index, 1);
+      const [removedCache] = nextCaches.splice(index, 1);
+      removedCache.stop();
       targetMap.set(opts.target, nextCaches);
     }
   }
