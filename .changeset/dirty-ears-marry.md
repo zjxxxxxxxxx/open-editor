@@ -5,4 +5,4 @@
 '@open-editor/vite': patch
 ---
 
-Add `realtimeRender` option
+Add `realtimeFrame` option

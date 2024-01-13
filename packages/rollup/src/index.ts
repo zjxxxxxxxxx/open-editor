@@ -30,11 +30,11 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * Track animations and page re-rendering
+   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
    *
    * @default false
    */
-  realtimeRender?: boolean;
+  realtimeFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *
@@ -63,7 +63,7 @@ export default function openEditorPlugin(
     colorMode,
     once,
     disableHoverCSS,
-    realtimeRender,
+    realtimeFrame,
     onOpenEditor,
   } = options;
 
@@ -100,7 +100,7 @@ export default function openEditorPlugin(
         colorMode,
         once,
         disableHoverCSS,
-        realtimeRender,
+        realtimeFrame,
       });
     },
     transform(code, id) {
