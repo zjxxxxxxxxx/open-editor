@@ -18,9 +18,9 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   /**
    * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
    */
-  declare checkNextFrame: ReturnType<typeof createNextFrameChecker>;
+  private declare checkNextFrame: ReturnType<typeof createNextFrameChecker>;
 
-  declare idle: ReturnType<typeof createIdle>;
+  private declare idle: ReturnType<typeof createIdle>;
 
   constructor() {
     super();

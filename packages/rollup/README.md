@@ -58,11 +58,11 @@ interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * Track animations and page re-rendering
+   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
    *
    * @default false
    */
-  realtimeRender?: boolean;
+  realtimeFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *
@@ -77,3 +77,10 @@ interface Options {
   onOpenEditor?(file: string): void;
 }
 ```
+
+## Playgrounds
+
+| Source code                                                                                        | Online trial                                                                                            |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| [`rollup/react15`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-react15) |
+| [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)    |
