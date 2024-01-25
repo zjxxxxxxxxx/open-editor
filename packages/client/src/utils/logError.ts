@@ -1,4 +1,4 @@
-export function sendErrMsg(msg: string, logLevel: 'log' | 'throw' = 'log') {
+export function logError(msg: string, logLevel: 'log' | 'throw' = 'log') {
   const s = errMsg(msg);
   if (logLevel === 'throw') {
     throw Error(s);

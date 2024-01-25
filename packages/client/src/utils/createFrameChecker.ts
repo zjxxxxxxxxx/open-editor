@@ -4,7 +4,7 @@
  * @param frameDuration
  * @returns checkNextFrame()
  */
-export function createNextFrameChecker(frameDuration: number) {
+export function createFrameChecker(frameDuration: number) {
   let frameLastTime = performance.now();
   return function checkNextFrame() {
     const currentTime = performance.now();

@@ -12,7 +12,7 @@ import {
   onOpenEditorError,
   openEditor,
 } from '../../utils/openEditor';
-import { sendErrMsg } from '../../utils/errorMessage';
+import { logError } from '../../utils/logError';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
@@ -31,6 +31,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 }> {
   constructor() {
     super();
+
     this.savePointE = this.savePointE.bind(this);
     this.onKeydown = this.onKeydown.bind(this);
     this.toggleActiveEffect = this.toggleActiveEffect.bind(this);
@@ -46,6 +47,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   }
   private set active(value) {
     this.state.active = value;
+
     if (this.state.toggle) {
       applyAttrs(this.state.toggle, {
         active: value,
@@ -81,15 +83,18 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     on('mousemove', this.savePointE, {
       capture: true,
     });
+
     onOpenEditorError(this.showErrorOverlay);
   }
 
   override unmount() {
     this.cleanHandlers();
+
     off('keydown', this.onKeydown);
     off('mousemove', this.savePointE, {
       capture: true,
     });
+
     offOpenEditorError(this.showErrorOverlay);
   }
 
@@ -121,12 +126,15 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       this.active = true;
       this.state.overlay.open();
       this.cleanListeners = setupListeners({
-        onChangeElement: this.state.overlay.update,
+        onActive: this.state.overlay.update,
         onOpenTree: this.state.tree.open,
         onOpenEditor: this.openEditor,
         onExitInspect: this.cleanHandlers,
       });
+
+      // Override the default mouse style and touch feedback
       overrideStyle.mount();
+
       disableHoverCSS();
 
       // @ts-ignore
@@ -154,7 +162,9 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       this.active = false;
       this.state.overlay.close();
       this.cleanListeners();
+
       overrideStyle.unmount();
+
       enableHoverCSS();
     }
   }
@@ -164,10 +174,11 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       addClass(getHtml(), 'oe-loading');
       const { meta } = resolveSource(el);
       if (!meta) {
-        sendErrMsg('file not found');
+        logError('file not found');
         this.showErrorOverlay();
         return;
       }
+
       const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
       await openEditor(meta, dispatch);
     } finally {
@@ -191,8 +202,10 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         easing: 'ease-out',
       },
     );
+
     const remove = () => errorOverlay.remove();
     on('finish', remove, { target: ani });
+
     appendChild(this.shadowRoot, errorOverlay);
   }
 }
