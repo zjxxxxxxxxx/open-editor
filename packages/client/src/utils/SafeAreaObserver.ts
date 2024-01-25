@@ -10,10 +10,21 @@ export interface SafeAreaValue {
 
 export type SafeAreaListener = (value: SafeAreaValue) => void;
 
+const variableStyle = globalStyle(postcss`
+:root {
+  --oe-sait: env(safe-area-inset-top);
+  --oe-sair: env(safe-area-inset-right);
+  --oe-saib: env(safe-area-inset-bottom);
+  --oe-sail: env(safe-area-inset-left);
+}
+`);
+
 const listeners: SafeAreaListener[] = [];
 const isEmptyListeners = () => listeners.length === 0;
 
 let value: SafeAreaValue;
+// init
+updateValue();
 
 export class SafeAreaObserver {
   static get value() {
@@ -47,25 +58,14 @@ function detectionScreen() {
   }
 }
 
-const style = globalStyle(postcss`
-:root {
-  --sait: env(safe-area-inset-top);
-  --sair: env(safe-area-inset-right);
-  --saib: env(safe-area-inset-bottom);
-  --sail: env(safe-area-inset-left);
-}
-`);
 function updateValue() {
-  style.mount();
+  variableStyle.mount();
   const get = computedStyle(document.body);
   value = {
-    top: get('--sait'),
-    right: get('--sair'),
-    bottom: get('--saib'),
-    left: get('--sail'),
+    top: get('--oe-sait'),
+    right: get('--oe-sair'),
+    bottom: get('--oe-saib'),
+    left: get('--oe-sail'),
   };
-  style.unmount();
+  variableStyle.unmount();
 }
-
-// init
-updateValue();

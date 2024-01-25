@@ -1,3 +1,3 @@
-import { sendErrMsg } from './utils/errorMessage';
+import { logError } from './utils/logError';
 // compile time generation
-sendErrMsg('require a restart', 'throw');
+logError('require a restart', 'throw');

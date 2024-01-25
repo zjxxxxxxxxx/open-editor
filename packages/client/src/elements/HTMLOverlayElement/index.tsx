@@ -1,5 +1,5 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
-import { createNextFrameChecker } from '../../utils/createNextFrameChecker';
+import { createFrameChecker } from '../../utils/createFrameChecker';
 import { InternalElements } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 import { type RectBox, getRectBoxs } from './getRectBoxs';
@@ -18,7 +18,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   /**
    * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
    */
-  private declare checkNextFrame: ReturnType<typeof createNextFrameChecker>;
+  private declare checkNextFrame: ReturnType<typeof createFrameChecker>;
 
   private declare idle: ReturnType<typeof createIdle>;
 
@@ -27,7 +27,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
     // After testing, it was concluded that setting the frame interval to 15 milliseconds
     // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
-    this.checkNextFrame = createNextFrameChecker(15);
+    this.checkNextFrame = createFrameChecker(15);
 
     this.idle = createIdle(300);
 
@@ -68,15 +68,17 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.state.activeEl = null;
     this.state.tooltip.open();
     this.idle.start();
-    addClass(this.state.position, 'oe-show');
     this.startObserver();
+
+    addClass(this.state.position, 'oe-show');
   }
 
   close() {
     this.state.tooltip.close();
     this.idle.stop();
-    removeClass(this.state.position, 'oe-show');
     this.stopObserver();
+
+    removeClass(this.state.position, 'oe-show');
   }
 
   update(el: HTMLElement | null) {

@@ -76,30 +76,37 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   override mounted() {
     this.updatePosTop();
     this.updateSize();
+
     on('resize', this.updatePosTop);
     on('resize', this.updateSize);
+
     SafeAreaObserver.observe(this.updatePosRight);
   }
 
   override unmount() {
     off('resize', this.updatePosTop);
     off('resize', this.updateSize);
+
     SafeAreaObserver.unobserve(this.updatePosRight);
   }
 
   private startDnD() {
     this.state.dnding = true;
-    addClass(this.state.root, 'oe-dnd');
+
     on('pointermove', this.changePosTop);
     on('pointerup', this.stopDnD);
+
+    addClass(this.state.root, 'oe-dnd');
   }
 
   private stopDnD() {
     // Modify when the click e is complete
     setTimeout(() => (this.state.dnding = false));
-    removeClass(this.state.root, 'oe-dnd');
+
     off('pointermove', this.changePosTop);
     off('pointerup', this.stopDnD);
+
+    removeClass(this.state.root, 'oe-dnd');
   }
 
   private changePosTop(e: PointerEvent) {
@@ -134,12 +141,14 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     const { clientHeight: winH } = getHtml();
     const { offsetHeight: toggleH } = this.state.root;
     const { top, bottom } = SafeAreaObserver.value;
+
     const cachePosY = +localStorage[CACHE_POS_TOP_ID] || 0;
     const safePosY = clamp(
       cachePosY - toggleH / 2,
       top,
       winH - toggleH - bottom,
     );
+
     applyStyle(this.state.root, {
       top: CSS_util.px(safePosY),
     });

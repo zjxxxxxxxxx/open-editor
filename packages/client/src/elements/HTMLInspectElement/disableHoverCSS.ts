@@ -1,4 +1,4 @@
-import { createNextFrameChecker } from '../../utils/createNextFrameChecker';
+import { createFrameChecker } from '../../utils/createFrameChecker';
 import { getOptions } from '../../options';
 
 const DISABLE_RE = /:hover/g;
@@ -19,7 +19,7 @@ function visitCSS(visitor: (css: string) => string) {
   const opts = getOptions();
   if (opts.disableHoverCSS) {
     const styles = Array.from(document.querySelectorAll('style'));
-    const checkNextFrame = createNextFrameChecker(10);
+    const checkNextFrame = createFrameChecker(10);
     requestAnimationFrame(function transformHoverCSS() {
       while (!checkNextFrame()) {
         const style = styles.pop();

@@ -22,7 +22,6 @@ export interface CustomEventCache<
   opts: AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>;
   stop: () => void;
 }
-/******** CustomEvent ********/
 
 /******** SetupListener ********/
 export type SetupListenerListenerOptions<
@@ -41,7 +40,6 @@ export type SetupListener<AddCustomEventListenerUserOptions extends AnyObject> =
   ) => SetupListenerCleanListener;
 
 export type SetupListenerCleanListener = () => void;
-/******** SetupListener ********/
 
 /**
  * Create a custom event handler

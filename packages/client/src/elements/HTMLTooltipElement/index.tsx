@@ -24,6 +24,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
 }> {
   constructor() {
     super();
+
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.update = this.update.bind(this);
@@ -97,6 +98,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     } = getHtml();
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
     const { value: safe } = SafeAreaObserver;
+
     const onTopArea = box.top > rootH + safe.top + OFFSET * 2;
     const top = clamp(
       onTopArea ? box.top - rootH - OFFSET : box.bottom + OFFSET,

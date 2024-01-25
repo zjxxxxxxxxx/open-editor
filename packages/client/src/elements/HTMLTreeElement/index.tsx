@@ -22,6 +22,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
 
   constructor() {
     super();
+
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
     this.enableClick = this.enableClick.bind(this);
@@ -68,14 +69,17 @@ export class HTMLTreeElement extends HTMLCustomElement<{
 
   open(el: HTMLElement) {
     this.isOpen = true;
+
     this.renderTree(el);
     this.enableClick();
+
     addClass(this.state.root, 'oe-show');
     addClass(getHtml(), 'oe-lock-screen');
   }
 
   close() {
     this.isOpen = false;
+
     removeClass(this.state.root, 'oe-show');
     removeClass(getHtml(), 'oe-lock-screen');
   }
@@ -94,11 +98,13 @@ export class HTMLTreeElement extends HTMLCustomElement<{
         </div>
       </>
     );
+
     if (hasTree) {
       removeClass(this.state.popup, 'oe-error');
     } else {
       addClass(this.state.popup, 'oe-error');
     }
+
     replaceChildren(this.state.popupBody, content);
   }
 
@@ -106,13 +112,13 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const meta = tree.pop()!;
     const tagName = `<${meta.name}>`;
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
-    const onOpenEditor = () => this.openEditor(meta);
+
     return (
       <div className="oe-tree">
         <div
           className="oe-node"
           title="Click to open in your editor"
-          onClick={onOpenEditor}
+          onClick={() => this.openEditor(meta)}
         >
           {tagName}
           <span className="oe-file">{fileName}</span>
@@ -131,10 +137,12 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   // Prevent the display of the component tree by long press, which accidentally triggers the click event
   private enableClick() {
     this.state.clickable = false;
+
     const enable = () => {
       this.state.clickable = true;
       off('pointerdown', enable);
     };
+
     on('pointerdown', enable);
   }
 
@@ -148,8 +156,10 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     if (this.state.clickable) {
       try {
         addClass(getHtml(), 'oe-loading');
+
         const { once } = getOptions();
         if (once) this.close();
+
         const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
         await openEditor(meta, dispatch);
       } finally {

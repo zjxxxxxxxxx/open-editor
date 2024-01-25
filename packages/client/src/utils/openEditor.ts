@@ -1,7 +1,7 @@
 import { ServerApis } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../resolve';
 import { getOptions } from '../options';
-import { sendErrMsg } from './errorMessage';
+import { logError } from './logError';
 
 type Listener = (err: any) => void;
 
@@ -44,7 +44,7 @@ export async function openEditor(
 }
 
 export function emitOpenEditorError(err: any) {
-  sendErrMsg('open fail');
+  logError('open fail');
   listeners.forEach((listener) => listener(err));
 }
 

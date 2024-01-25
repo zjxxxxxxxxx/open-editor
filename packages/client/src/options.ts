@@ -1,4 +1,4 @@
-import { sendErrMsg } from './utils/errorMessage';
+import { logError } from './utils/logError';
 
 export interface Options {
   /**
@@ -59,7 +59,7 @@ export function setOptions(
 
 export function getOptions() {
   if (!opts) {
-    sendErrMsg('options missing', 'throw');
+    logError('options missing', 'throw');
   }
   return opts;
 }
