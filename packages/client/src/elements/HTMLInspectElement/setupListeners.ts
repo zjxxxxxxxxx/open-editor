@@ -8,7 +8,7 @@ import {
 } from './clickedElement';
 
 export interface SetupListenersOptions {
-  onChangeElement(el: HTMLElement | null): void;
+  onActive(el: HTMLElement | null): void;
   onOpenEditor(el: HTMLElement): void;
   onOpenTree(el: HTMLElement): void;
   onExitInspect(): void;
@@ -37,7 +37,7 @@ const events = [
   'pointerout',
   'pointerover',
   'pointerup',
-  // reset
+  // others
   'dbclick',
   'submit',
   'reset',
@@ -45,7 +45,7 @@ const events = [
 ];
 
 export function setupListeners(opts: SetupListenersOptions) {
-  const onChangeElement = withEventFn(opts.onChangeElement);
+  const onActive = withEventFn(opts.onActive);
   const onOpenEditor = withEventFn(opts.onOpenEditor);
   const onOpenTree = withEventFn(opts.onOpenTree);
   const onExitInspect = withEventFn(opts.onExitInspect);
@@ -127,7 +127,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     );
     if (el !== activeEl) {
       activeEl = checkValidElement(el) ? el : null;
-      onChangeElement(activeEl);
+      onActive(activeEl);
     }
   }
 
@@ -144,7 +144,7 @@ export function setupListeners(opts: SetupListenersOptions) {
       e.pointerType === 'mouse' &&
       !checkValidElement(<HTMLElement>e.relatedTarget)
     ) {
-      onChangeElement((activeEl = null));
+      onActive((activeEl = null));
     }
   }
 
@@ -155,13 +155,14 @@ export function setupListeners(opts: SetupListenersOptions) {
     if (checkClickedElement(el)) {
       const targetEl = activeEl?.isConnected ? activeEl : el;
       if (once) onExitInspect();
-      onChangeElement(null);
+
+      onActive((activeEl = null));
+
       if (e.metaKey || e.type === 'longpress') {
         onOpenTree(targetEl);
       } else {
         onOpenEditor(targetEl);
       }
-      activeEl = null;
     }
   }
 
