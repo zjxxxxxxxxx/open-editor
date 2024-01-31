@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/client",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "internal utils shared across @open-editor packages",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
