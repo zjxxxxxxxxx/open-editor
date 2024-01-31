@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.7.3
+
+### Patch Changes
+
+- [#207](https://github.com/zjxxxxxxxxx/open-editor/pull/207) [`988490d`](https://github.com/zjxxxxxxxxx/open-editor/commit/988490de214491dedaa18df9df07a2fde50f5e66) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `realtimeFrame` option
+
+- Updated dependencies []:
+  - @open-editor/shared@0.7.3
+
 ## 0.7.2
 
 ### Patch Changes
