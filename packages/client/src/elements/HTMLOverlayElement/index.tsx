@@ -42,15 +42,15 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="oe-position" ref={(el) => (this.state.position = el)}>
-          <div className="oe-margin" ref={(el) => (this.state.margin = el)}>
-            <div className="oe-border" ref={(el) => (this.state.border = el)}>
+        <div className="o-e-position" ref={(el) => (this.state.position = el)}>
+          <div className="o-e-margin" ref={(el) => (this.state.margin = el)}>
+            <div className="o-e-border" ref={(el) => (this.state.border = el)}>
               <div
-                className="oe-padding"
+                className="o-e-padding"
                 ref={(el) => (this.state.padding = el)}
               >
                 <div
-                  className="oe-content"
+                  className="o-e-content"
                   ref={(el) => (this.state.content = el)}
                 />
               </div>
@@ -70,7 +70,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.idle.start();
     this.startObserver();
 
-    addClass(this.state.position, 'oe-show');
+    addClass(this.state.position, 'o-e-show');
   }
 
   close() {
@@ -78,7 +78,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.idle.stop();
     this.stopObserver();
 
-    removeClass(this.state.position, 'oe-show');
+    removeClass(this.state.position, 'o-e-show');
   }
 
   update(el: HTMLElement | null) {

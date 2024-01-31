@@ -1,9 +1,9 @@
 export const InternalElements = <const>{
-  HTML_INSPECT_ELEMENT: 'oe-inspect',
-  HTML_OVERLAY_ELEMENT: 'oe-overlay',
-  HTML_TOOLTIP_ELEMENT: 'oe-tooltip',
-  HTML_TOGGLE_ELEMENT: 'oe-toggle',
-  HTML_TREE_ELEMENT: 'oe-tree',
+  HTML_INSPECT_ELEMENT: 'o-e-inspect',
+  HTML_OVERLAY_ELEMENT: 'o-e-overlay',
+  HTML_TOOLTIP_ELEMENT: 'o-e-tooltip',
+  HTML_TOGGLE_ELEMENT: 'o-e-toggle',
+  HTML_TREE_ELEMENT: 'o-e-tree',
 };
 
-export const CACHE_POS_TOP_ID = '__oe_pt';
+export const CACHE_POS_TOP_ID = 'o-e-pt';

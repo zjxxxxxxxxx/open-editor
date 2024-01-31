@@ -1,25 +1,25 @@
-.oe-position {
+.o-e-position {
   position: fixed;
   z-index: var(--z-index-overlay);
   display: none;
   pointer-events: none;
   will-change: width, height, top, left;
 }
-.oe-position * {
+.o-e-position * {
   will-change: width, height, border;
 }
-.oe-margin {
+.o-e-margin {
   border: 0px solid var(--overlay-margin);
 }
-.oe-border {
+.o-e-border {
   border: 0px solid var(--overlay-border);
 }
-.oe-padding {
+.o-e-padding {
   border: 0px solid var(--overlay-padding);
 }
-.oe-content {
+.o-e-content {
   background: var(--overlay-content);
 }
-.oe-show {
+.o-e-show {
   display: block;
 }

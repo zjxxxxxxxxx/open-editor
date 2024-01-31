@@ -12,10 +12,10 @@ export type SafeAreaListener = (value: SafeAreaValue) => void;
 
 const variableStyle = globalStyle(postcss`
 :root {
-  --oe-sait: env(safe-area-inset-top);
-  --oe-sair: env(safe-area-inset-right);
-  --oe-saib: env(safe-area-inset-bottom);
-  --oe-sail: env(safe-area-inset-left);
+  --o-e-sait: env(safe-area-inset-top);
+  --o-e-sair: env(safe-area-inset-right);
+  --o-e-saib: env(safe-area-inset-bottom);
+  --o-e-sail: env(safe-area-inset-left);
 }
 `);
 
@@ -62,10 +62,10 @@ function updateValue() {
   variableStyle.mount();
   const get = computedStyle(document.body);
   value = {
-    top: get('--oe-sait'),
-    right: get('--oe-sair'),
-    bottom: get('--oe-saib'),
-    left: get('--oe-sail'),
+    top: get('--o-e-sait'),
+    right: get('--o-e-sair'),
+    bottom: get('--o-e-saib'),
+    left: get('--o-e-sail'),
   };
   variableStyle.unmount();
 }
