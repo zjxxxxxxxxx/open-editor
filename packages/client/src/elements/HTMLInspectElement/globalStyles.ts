@@ -10,10 +10,10 @@ export const overrideStyle = globalStyle(postcss`
 `);
 
 export const effectStyle = globalStyle(postcss`
-.oe-lock-screen {
+.o-e-lock-screen {
   overflow: hidden !important;
 }
-.oe-loading * {
+.o-e-loading * {
   cursor: wait !important;
 }
 `);
