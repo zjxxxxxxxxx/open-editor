@@ -39,10 +39,10 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="oe-root" ref={(el) => (this.state.root = el)}>
-          <div className="oe-overlay" />
+        <div className="o-e-root" ref={(el) => (this.state.root = el)}>
+          <div className="o-e-overlay" />
           <button
-            className="oe-button"
+            className="o-e-button"
             ref={(el) => (this.state.button = el)}
             onClick={this.dispatchChange}
             onLongPress={this.startDnD}
@@ -66,9 +66,9 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     switch (name) {
       case 'active':
         if (newValue) {
-          addClass(this.state.button, 'oe-active');
+          addClass(this.state.button, 'o-e-active');
         } else {
-          removeClass(this.state.button, 'oe-active');
+          removeClass(this.state.button, 'o-e-active');
         }
     }
   }
@@ -96,7 +96,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     on('pointermove', this.changePosTop);
     on('pointerup', this.stopDnD);
 
-    addClass(this.state.root, 'oe-dnd');
+    addClass(this.state.root, 'o-e-dnd');
   }
 
   private stopDnD() {
@@ -106,7 +106,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     off('pointermove', this.changePosTop);
     off('pointerup', this.stopDnD);
 
-    removeClass(this.state.root, 'oe-dnd');
+    removeClass(this.state.root, 'o-e-dnd');
   }
 
   private changePosTop(e: PointerEvent) {
@@ -123,9 +123,9 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     if (prev !== next) {
       // Display larger button on the touch screen
       if (next) {
-        addClass(this.state.root, 'oe-touch');
+        addClass(this.state.root, 'o-e-touch');
       } else {
-        removeClass(this.state.root, 'oe-touch');
+        removeClass(this.state.root, 'o-e-touch');
       }
       this.state.touchable = next;
     }

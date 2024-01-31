@@ -42,23 +42,23 @@ declare type CustomPropertyElements<ES> = {
 };
 
 declare interface InternalCustomElements {
-  'oe-inspect': React.DetailedHTMLProps<
+  'o-e-inspect': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLInspectElement>,
     HTMLInspectElement
   >;
-  'oe-overlay': React.DetailedHTMLProps<
+  'o-e-overlay': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLOverlayElement>,
     HTMLOverlayElement
   >;
-  'oe-tooltip': React.DetailedHTMLProps<
+  'o-e-tooltip': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLTooltipElement>,
     HTMLTooltipElement
   >;
-  'oe-toggle': React.DetailedHTMLProps<
+  'o-e-toggle': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLToggleElement>,
     HTMLToggleElement
   >;
-  'oe-tree': React.DetailedHTMLProps<
+  'o-e-tree': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLTreeElement>,
     HTMLTreeElement
   >;

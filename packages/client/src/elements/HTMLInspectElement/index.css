@@ -37,7 +37,7 @@
   -webkit-touch-callout: none;
   -webkit-tap-highlight-color: transparent;
 }
-.oe-error-overlay {
+.o-e-error-overlay {
   position: fixed;
   top: 0;
   left: 0;

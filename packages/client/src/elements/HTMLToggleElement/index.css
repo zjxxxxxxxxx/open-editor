@@ -1,11 +1,11 @@
-.oe-root {
+.o-e-root {
   position: fixed;
   right: 0px;
   z-index: var(--z-index-toggle);
   padding: 6px;
   font-size: 0px;
 }
-.oe-overlay {
+.o-e-overlay {
   position: fixed;
   top: 0px;
   left: 0px;
@@ -13,7 +13,7 @@
   height: 100vh;
   display: none;
 }
-.oe-button {
+.o-e-button {
   padding: 2px;
   width: 24px;
   height: 24px;
@@ -25,25 +25,25 @@
   border-radius: 999px;
   transition: all 0.1s;
 }
-.oe-active {
+.o-e-active {
   color: var(--cyan);
   box-shadow: 0 0 30px 6px var(--cyan);
 }
-.oe-touch {
+.o-e-touch {
   padding: 8px;
 }
-.oe-touch .oe-button {
+.o-e-touch .o-e-button {
   padding: 3px;
   width: 34px;
   height: 34px;
 }
-.oe-dnd {
+.o-e-dnd {
   cursor: ns-resize;
 }
-.oe-dnd .oe-overlay {
+.o-e-dnd .o-e-overlay {
   display: block;
 }
-.oe-dnd .oe-button {
+.o-e-dnd .o-e-button {
   transform: scale(1.2);
   opacity: 0.8;
   cursor: ns-resize;

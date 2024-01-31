@@ -2,9 +2,9 @@ import { createFrameChecker } from '../../utils/createFrameChecker';
 import { getOptions } from '../../options';
 
 const DISABLE_RE = /:hover/g;
-const DISABLE_TOKEN = '.__oe_hover';
+const DISABLE_TOKEN = '.o-e-hover';
 
-const ENABLE_RE = /\.__oe_hover/g;
+const ENABLE_RE = /\.o-e-hover/g;
 const ENABLE_TOKEN = ':hover';
 
 export function disableHoverCSS() {
