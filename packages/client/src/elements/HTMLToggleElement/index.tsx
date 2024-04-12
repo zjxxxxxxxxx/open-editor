@@ -115,19 +115,18 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   }
 
   private updateSize() {
-    const prev = this.state.touchable;
-    const next =
+    const touchable =
       'maxTouchPoints' in navigator
         ? navigator.maxTouchPoints > 0
         : 'ontouchstart' in window;
-    if (prev !== next) {
+    if (this.state.touchable !== touchable) {
       // Display larger button on the touch screen
-      if (next) {
+      if (touchable) {
         addClass(this.state.root, 'o-e-touch');
       } else {
         removeClass(this.state.root, 'o-e-touch');
       }
-      this.state.touchable = next;
+      this.state.touchable = touchable;
     }
   }
 

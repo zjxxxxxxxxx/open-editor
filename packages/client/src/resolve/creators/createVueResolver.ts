@@ -18,36 +18,54 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
     deep: boolean,
   ) {
     const { isValid, getNext, getSource, getFile, getName } = opts;
-    const fileSet = new Set<string>();
+    const record = new Set<string>();
     let [inst, source] = getAnchor(debug, getSource);
+
     while (isValid(inst)) {
       const file = getFile(inst);
       if (isValidFileName(file)) {
-        const parsedFile = parsePath(file);
         if (source) {
-          const parsedSource = parsePath(source);
-          if (parsedSource.file === parsedFile.file) {
-            const nextSource = () => (source = getSource(inst));
-            push(inst, parsedSource, nextSource);
-            if (!deep) return;
-          }
+          if (resolveBySource(file)) return;
         } else {
-          push(inst, parsedFile);
-          if (!deep) return;
+          if (resolveByFile(file)) return;
         }
       }
+
       inst = getNext(inst);
     }
 
-    function push(inst: any, meta: any, done?: () => void) {
-      if (!fileSet.has(meta.file)) {
-        fileSet.add(meta.file);
-        tree.push({
-          name: getName(inst) ?? getNameByFile(meta.file),
-          ...meta,
-        });
-        done?.();
+    function resolveBySource(file: string) {
+      const parsedSource = parsePath(source);
+      const parsedFile = parsePath(file);
+
+      if (parsedSource.file === parsedFile.file) {
+        if (!record.has(parsedSource.file)) {
+          push(inst, parsedSource);
+          source = getSource(inst);
+        }
+        if (!deep) {
+          return true;
+        }
       }
+    }
+
+    function resolveByFile(file: string) {
+      const parsedFile = parsePath(file);
+
+      if (!record.has(parsedFile.file)) {
+        push(inst, parsedFile);
+      }
+      if (!deep) {
+        return true;
+      }
+    }
+
+    function push(inst: any, meta: any) {
+      record.add(meta.file);
+      tree.push({
+        name: getName(inst) ?? getNameByFile(meta.file),
+        ...meta,
+      });
     }
   }
 
