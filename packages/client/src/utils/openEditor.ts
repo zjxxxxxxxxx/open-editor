@@ -2,10 +2,9 @@ import { ServerApis } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../resolve';
 import { getOptions } from '../options';
 import { logError } from './logError';
+import { mitt } from './mitt';
 
-type Listener = (err: any) => void;
-
-const listeners: Listener[] = [];
+export const emitter = mitt<(err: any) => void>();
 
 export async function openEditor(
   source: SourceCodeMeta,
@@ -37,24 +36,13 @@ export async function openEditor(
         if (!res.ok) return Promise.reject(res);
       })
       .catch((err) => {
-        emitOpenEditorError(err);
+        logError('open fail');
+        emitter.emit(err);
         return Promise.reject(err);
       });
   }
 }
 
-export function emitOpenEditorError(err: any) {
-  logError('open fail');
-  listeners.forEach((listener) => listener(err));
-}
+export const onOpenEditorError = emitter.on;
 
-export function onOpenEditorError(listener: Listener) {
-  listeners.push(listener);
-}
-
-export function offOpenEditorError(listener: Listener) {
-  const index = listeners.indexOf(listener);
-  if (index !== -1) {
-    listeners.splice(index, 1);
-  }
-}
+export const offOpenEditorError = emitter.off;

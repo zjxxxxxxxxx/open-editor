@@ -1,5 +1,6 @@
+import { mitt } from './mitt';
 import { on, off } from './event';
-import { computedStyle, globalStyle } from './ui';
+import { computedStyle, createGlobalStyle } from './ui';
 
 export interface SafeAreaValue {
   top: number;
@@ -10,7 +11,9 @@ export interface SafeAreaValue {
 
 export type SafeAreaListener = (value: SafeAreaValue) => void;
 
-const variableStyle = globalStyle(postcss`
+export const emitter = mitt<SafeAreaListener>();
+
+const variableStyle = createGlobalStyle(postcss`
 :root {
   --o-e-sait: env(safe-area-inset-top);
   --o-e-sair: env(safe-area-inset-right);
@@ -18,9 +21,6 @@ const variableStyle = globalStyle(postcss`
   --o-e-sail: env(safe-area-inset-left);
 }
 `);
-
-const listeners: SafeAreaListener[] = [];
-const isEmptyListeners = () => listeners.length === 0;
 
 let value: SafeAreaValue;
 // init
@@ -31,19 +31,16 @@ export class SafeAreaObserver {
     return value;
   }
   static observe(listener: SafeAreaListener) {
-    if (isEmptyListeners()) {
+    if (emitter.empty) {
       on('resize', detectionScreen);
     }
-    listeners.push(listener);
+    emitter.on(listener);
     // Execute immediately to ensure the initial value
     listener(value);
   }
   static unobserve(listener: SafeAreaListener) {
-    const index = listeners.indexOf(listener);
-    if (index !== -1) {
-      listeners.splice(index, 1);
-    }
-    if (isEmptyListeners()) {
+    emitter.off(listener);
+    if (emitter.empty) {
       off('resize', detectionScreen);
     }
   }
@@ -54,7 +51,7 @@ function detectionScreen() {
   const { outerWidth: w, outerHeight: h } = window;
   if (portrait !== (portrait = w < h)) {
     updateValue();
-    listeners.forEach((listener) => listener(value));
+    emitter.emit(value);
   }
 }
 

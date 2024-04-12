@@ -1,6 +1,6 @@
-import { globalStyle } from '../../utils/ui';
+import { createGlobalStyle } from '../../utils/ui';
 
-export const overrideStyle = globalStyle(postcss`
+export const overrideStyle = createGlobalStyle(postcss`
 * {
   cursor: default !important;
   user-select: none !important;
@@ -9,7 +9,7 @@ export const overrideStyle = globalStyle(postcss`
 }
 `);
 
-export const effectStyle = globalStyle(postcss`
+export const effectStyle = createGlobalStyle(postcss`
 .o-e-lock-screen {
   overflow: hidden !important;
 }

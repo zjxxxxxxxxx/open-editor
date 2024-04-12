@@ -1,9 +1,10 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
 import { createFrameChecker } from '../../utils/createFrameChecker';
 import { InternalElements } from '../../constants';
+import { getOptions } from '../../options';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 import { type RectBox, getRectBoxs } from './getRectBoxs';
-import { createIdle } from './createIdle';
+import { createIdleObserver } from './createIdleObserver';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
   position: HTMLElement;
@@ -20,7 +21,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
    */
   private declare checkNextFrame: ReturnType<typeof createFrameChecker>;
 
-  private declare idle: ReturnType<typeof createIdle>;
+  private declare idleObserver: ReturnType<typeof createIdleObserver>;
 
   constructor() {
     super();
@@ -29,7 +30,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
     this.checkNextFrame = createFrameChecker(15);
 
-    this.idle = createIdle(300);
+    this.idleObserver = createIdleObserver(300);
 
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
@@ -65,18 +66,28 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   }
 
   open() {
+    const { realtimeFrame } = getOptions();
+
     this.state.activeEl = null;
     this.state.tooltip.open();
-    this.idle.start();
     this.startObserver();
+
+    if (realtimeFrame) {
+      this.idleObserver.start();
+    }
 
     addClass(this.state.position, 'o-e-show');
   }
 
   close() {
+    const { realtimeFrame } = getOptions();
+
     this.state.tooltip.close();
-    this.idle.stop();
     this.stopObserver();
+
+    if (realtimeFrame) {
+      this.idleObserver.stop();
+    }
 
     removeClass(this.state.position, 'o-e-show');
   }
@@ -96,7 +107,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   private observe() {
     if (this.state.observing) {
-      if (!this.idle.value && this.checkNextFrame()) {
+      if (!this.idleObserver.isIdle && this.checkNextFrame()) {
         if (this.state.activeEl?.isConnected === false) {
           this.state.activeEl = null;
         }

@@ -34,7 +34,7 @@ export function computedStyle(el: HTMLElement) {
   return get;
 }
 
-export function globalStyle(css: string) {
+export function createGlobalStyle(css: string) {
   const style = <style type="text/css">{css}</style>;
   return {
     mount() {
