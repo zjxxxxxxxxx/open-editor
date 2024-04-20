@@ -1,5 +1,16 @@
 # @open-editor/vite
 
+## 0.7.4
+
+### Patch Changes
+
+- [#215](https://github.com/zjxxxxxxxxx/open-editor/pull/215) [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Change `realtimeFrame` to `retainFrame`
+
+- Updated dependencies [[`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358), [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358), [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358), [`2990fc3`](https://github.com/zjxxxxxxxxx/open-editor/commit/2990fc376d58fb23caa7b937c81e6eeb84338df4), [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358)]:
+  - @open-editor/shared@0.7.4
+  - @open-editor/client@0.7.4
+  - @open-editor/server@0.7.4
+
 ## 0.7.3
 
 ### Patch Changes
