@@ -1,15 +1,15 @@
-import { on, off } from '../../utils/event';
+import { on, off } from './event';
 
 const events = [
   'pointerup',
   'pointermove',
   'pointerdown',
-  'longpress',
   'resize',
   'keydown',
   'wheel',
-  'scroll',
 ];
+
+export type IdleObserver = ReturnType<typeof createIdleObserver>;
 
 export function createIdleObserver(duration: number) {
   let isIdle = false;
@@ -28,6 +28,10 @@ export function createIdleObserver(duration: number) {
     }, duration) as unknown as number;
   }
 
+  function visibilityChange() {
+    isIdle = document.hidden;
+  }
+
   return {
     get isIdle() {
       return isIdle;
@@ -39,6 +43,9 @@ export function createIdleObserver(duration: number) {
           capture: true,
         });
       });
+      on('visibilitychange', visibilityChange, {
+        target: document,
+      });
     },
     stop() {
       isIdle = true;
@@ -46,6 +53,9 @@ export function createIdleObserver(duration: number) {
         off(event, detect, {
           capture: true,
         });
+      });
+      off('visibilitychange', visibilityChange, {
+        target: document,
       });
     },
   };

@@ -29,11 +29,11 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
+   * The inspector remains rendered when the browser is idle
    *
-   * @default false
+   * @default true
    */
-  realtimeFrame?: boolean;
+  retainFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *

@@ -1,7 +1,7 @@
 export function mitt<T extends (...args: any[]) => void>() {
   const fns = new Set<T>();
   return {
-    get empty() {
+    get isEmpty() {
       return fns.size === 0;
     },
     on(fn: T) {

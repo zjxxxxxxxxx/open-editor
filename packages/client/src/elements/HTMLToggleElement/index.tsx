@@ -1,4 +1,4 @@
-import { clamp } from '../../utils/util';
+import { clamp } from '@open-editor/shared';
 import {
   getHtml,
   CSS_util,

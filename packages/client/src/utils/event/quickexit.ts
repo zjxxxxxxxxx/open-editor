@@ -1,4 +1,4 @@
-import { omit } from '../util';
+import { omit } from '@open-editor/shared';
 import {
   type SetupListenerListener,
   type SetupListenerListenerOptions,
