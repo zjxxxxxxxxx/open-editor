@@ -1,5 +1,20 @@
 # @open-editor/client
 
+## 0.7.4
+
+### Patch Changes
+
+- [#215](https://github.com/zjxxxxxxxxx/open-editor/pull/215) [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Activate default element after `disableHoverCSS`
+
+- [#215](https://github.com/zjxxxxxxxxx/open-editor/pull/215) [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Change `realtimeFrame` to `retainFrame`
+
+- [#213](https://github.com/zjxxxxxxxxx/open-editor/pull/213) [`2990fc3`](https://github.com/zjxxxxxxxxx/open-editor/commit/2990fc376d58fb23caa7b937c81e6eeb84338df4) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `mitt`
+
+- [#215](https://github.com/zjxxxxxxxxx/open-editor/pull/215) [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fixed an issue where some elements would not respond when clicked after being disabled
+
+- Updated dependencies [[`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358)]:
+  - @open-editor/shared@0.7.4
+
 ## 0.7.3
 
 ### Patch Changes

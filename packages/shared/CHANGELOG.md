@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.7.4
+
+### Patch Changes
+
+- [#215](https://github.com/zjxxxxxxxxx/open-editor/pull/215) [`b0d748e`](https://github.com/zjxxxxxxxxx/open-editor/commit/b0d748e4875f9994aff3123f2d3127e54bb33358) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Several new tool functions have been added
+
 ## 0.7.3
 
 ## 0.7.2
