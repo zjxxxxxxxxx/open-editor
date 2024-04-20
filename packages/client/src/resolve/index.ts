@@ -1,4 +1,4 @@
-import { camelCase } from '../utils/util';
+import { camelCase } from '@open-editor/shared';
 import { ensureFileName } from './util';
 import { resolveDebug } from './resolveDebug';
 import { resolveReact17Plus } from './resolves/react17+';

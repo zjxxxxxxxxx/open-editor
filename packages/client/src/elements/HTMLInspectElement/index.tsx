@@ -12,15 +12,15 @@ import {
   onOpenEditorError,
   openEditor,
 } from '../../utils/openEditor';
+import { effectStyle, overrideStyle } from '../../utils/globalStyles';
 import { logError } from '../../utils/logError';
+import { getColorMode } from '../../utils/getColorMode';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
 import { HTMLCustomElement } from '../HTMLCustomElement';
-import { getColorMode } from './getColorMode';
 import { setupListeners } from './setupListeners';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
-import { effectStyle, overrideStyle } from './globalStyles';
 
 export class HTMLInspectElement extends HTMLCustomElement<{
   overlay: HTMLOverlayElement;
@@ -36,6 +36,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     this.onKeydown = this.onKeydown.bind(this);
     this.toggleActiveEffect = this.toggleActiveEffect.bind(this);
     this.cleanHandlers = this.cleanHandlers.bind(this);
+    this.activeDefaultElement = this.activeDefaultElement.bind(this);
     this.openEditor = this.openEditor.bind(this);
     this.showErrorOverlay = this.showErrorOverlay.bind(this);
 
@@ -116,7 +117,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     }
   }
 
-  private setupHandlers() {
+  private async setupHandlers() {
     const e = new CustomEvent('enableinspector', {
       bubbles: true,
       cancelable: true,
@@ -135,24 +136,18 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       // Override the default mouse style and touch feedback
       overrideStyle.mount();
 
-      disableHoverCSS();
-
-      // @ts-ignore
-      document.activeElement?.blur();
-
-      if (this.state.pointE) {
-        const { x, y } = this.state.pointE;
-        const initEl = document.elementFromPoint(x, y) as HTMLElement;
-        if (checkValidElement(initEl)) {
-          this.state.overlay.update(initEl);
-        }
+      const { disableHoverCSS: isDisabled } = getOptions();
+      if (isDisabled) {
+        await disableHoverCSS();
       }
+
+      this.activeDefaultElement();
     }
   }
 
   private declare cleanListeners: () => void;
 
-  private cleanHandlers() {
+  private async cleanHandlers() {
     const e = new CustomEvent('exitinspector', {
       bubbles: true,
       cancelable: true,
@@ -165,7 +160,23 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
       overrideStyle.unmount();
 
-      enableHoverCSS();
+      const { disableHoverCSS: isDisabled } = getOptions();
+      if (isDisabled) {
+        enableHoverCSS();
+      }
+    }
+  }
+
+  private activeDefaultElement() {
+    // @ts-ignore
+    document.activeElement?.blur();
+
+    if (this.state.pointE) {
+      const { x, y } = this.state.pointE;
+      const initEl = document.elementFromPoint(x, y) as HTMLElement;
+      if (checkValidElement(initEl)) {
+        this.state.overlay.update(initEl);
+      }
     }
   }
 

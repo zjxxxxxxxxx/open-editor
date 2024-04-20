@@ -5,7 +5,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
-import postcss from './postcss';
+import css from './css';
 import { clientRoot, readjson } from './utils';
 
 const __DEV__ = '__DEV__' in process.env;
@@ -80,7 +80,7 @@ function buildBundles(
       plugins: [
         ...(isClient
           ? [
-              postcss({
+              css({
                 sourcemap: __DEV__,
               }),
             ]

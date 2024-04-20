@@ -1,3 +1,1 @@
-declare function postcss(
-  template: readonly string[] | ArrayLike<string>,
-): string;
+declare function css(template: readonly string[] | ArrayLike<string>): string;

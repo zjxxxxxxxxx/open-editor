@@ -8,7 +8,7 @@ import postcss from 'postcss';
 import autoprefixer from 'autoprefixer';
 import minifySelectors from 'postcss-minify-selectors';
 
-const TAG_NAME = 'postcss';
+const TAG_NAME = 'css';
 const NEWLINE_RE = /[\n\f\r]+/g;
 const BEFORE_SPACES_RE = /\s+([{};:!])/g;
 const AFTER_SPACES_RE = /([{};:,])\s+/g;
@@ -18,7 +18,7 @@ export interface Options {
 }
 
 let processor: postcss.Processor;
-export default function postssPlugin(options: Options): RollupPlugin {
+export default function cssPlugin(options: Options): RollupPlugin {
   processor ||= postcss(autoprefixer(), <postcss.Plugin>minifySelectors());
 
   function process(raw: string) {
@@ -35,7 +35,7 @@ export default function postssPlugin(options: Options): RollupPlugin {
   }
 
   return {
-    name: 'rollup:postcss',
+    name: 'rollup:css',
 
     transform(code, id) {
       // eslint-disable-next-line @typescript-eslint/no-this-alias
@@ -49,7 +49,7 @@ export default function postssPlugin(options: Options): RollupPlugin {
         plugins: id.endsWith('x') ? ['jsx', 'typescript'] : ['typescript'],
       });
       traverse(ast, {
-        // postcss`...`
+        // css`...`
         TaggedTemplateExpression({ node }) {
           if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
             setupS();

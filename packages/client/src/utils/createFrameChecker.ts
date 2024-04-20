@@ -1,8 +1,7 @@
+export type FrameChecker = ReturnType<typeof createFrameChecker>;
+
 /**
  * Create a frame checker
- *
- * @param frameDuration
- * @returns checkNextFrame()
  */
 export function createFrameChecker(frameDuration: number) {
   let frameLastTime = performance.now();

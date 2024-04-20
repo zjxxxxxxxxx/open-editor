@@ -1,10 +1,16 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
-import { createFrameChecker } from '../../utils/createFrameChecker';
+import {
+  type FrameChecker,
+  createFrameChecker,
+} from '../../utils/createFrameChecker';
+import {
+  type IdleObserver,
+  createIdleObserver,
+} from '../../utils/createIdleObserver';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 import { type RectBox, getRectBoxs } from './getRectBoxs';
-import { createIdleObserver } from './createIdleObserver';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
   position: HTMLElement;
@@ -19,9 +25,9 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   /**
    * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
    */
-  private declare checkNextFrame: ReturnType<typeof createFrameChecker>;
+  private declare checkNextFrame: FrameChecker;
 
-  private declare idleObserver: ReturnType<typeof createIdleObserver>;
+  private declare idleObserver: IdleObserver;
 
   constructor() {
     super();
@@ -66,13 +72,12 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   }
 
   open() {
-    const { realtimeFrame } = getOptions();
-
     this.state.activeEl = null;
     this.state.tooltip.open();
     this.startObserver();
 
-    if (realtimeFrame) {
+    const { retainFrame } = getOptions();
+    if (!retainFrame) {
       this.idleObserver.start();
     }
 
@@ -80,12 +85,11 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   }
 
   close() {
-    const { realtimeFrame } = getOptions();
-
     this.state.tooltip.close();
     this.stopObserver();
 
-    if (realtimeFrame) {
+    const { retainFrame } = getOptions();
+    if (!retainFrame) {
       this.idleObserver.stop();
     }
 

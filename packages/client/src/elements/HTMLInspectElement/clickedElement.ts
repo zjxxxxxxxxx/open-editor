@@ -52,14 +52,14 @@ function resetAttrs(
   >,
 ) {
   const { disabled, href } = attrs;
-  const { as, bs } = findTags(el);
+  const { hs, ds } = findTags(el);
 
   // Prevents the default jump
   // `e.preventDefault()` has no effect on relative paths
-  as.forEach((a) => swapAttr(a, href.from, href.to));
+  hs.forEach((h) => swapAttr(h, href.from, href.to));
 
   // Prevent click events from being blocked
-  bs.forEach((b) => swapAttr(b, disabled.from, disabled.to));
+  ds.forEach((d) => swapAttr(d, disabled.from, disabled.to));
 }
 
 function swapAttr(el: HTMLElement, from: string, to: string) {
@@ -72,21 +72,23 @@ function swapAttr(el: HTMLElement, from: string, to: string) {
   }
 }
 
+const dTagRE = /^(button|fieldset|optgroup|option|select|textarea|input)$/;
+
 function findTags(el: HTMLElement | null) {
-  const as: HTMLElement[] = [];
-  const bs: HTMLElement[] = [];
+  const hs: HTMLElement[] = [];
+  const ds: HTMLElement[] = [];
 
   while (el) {
-    if (el.tagName === 'A') {
-      as.push(el);
-    } else if (el.tagName === 'BUTTON') {
-      bs.push(el);
+    if (el.localName === 'a') {
+      hs.push(el);
+    } else if (dTagRE.test(el.localName)) {
+      ds.push(el);
     }
     el = el.parentElement;
   }
 
   return {
-    as,
-    bs,
+    hs,
+    ds,
   };
 }

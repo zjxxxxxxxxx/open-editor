@@ -13,14 +13,15 @@ export type SafeAreaListener = (value: SafeAreaValue) => void;
 
 export const emitter = mitt<SafeAreaListener>();
 
-const variableStyle = createGlobalStyle(postcss`
-:root {
-  --o-e-sait: env(safe-area-inset-top);
-  --o-e-sair: env(safe-area-inset-right);
-  --o-e-saib: env(safe-area-inset-bottom);
-  --o-e-sail: env(safe-area-inset-left);
-}
-`);
+const variablesCSS = css`
+  :root {
+    --o-e-sait: env(safe-area-inset-top);
+    --o-e-sair: env(safe-area-inset-right);
+    --o-e-saib: env(safe-area-inset-bottom);
+    --o-e-sail: env(safe-area-inset-left);
+  }
+`;
+const variablesStyle = createGlobalStyle(variablesCSS);
 
 let value: SafeAreaValue;
 // init
@@ -31,7 +32,7 @@ export class SafeAreaObserver {
     return value;
   }
   static observe(listener: SafeAreaListener) {
-    if (emitter.empty) {
+    if (emitter.isEmpty) {
       on('resize', detectionScreen);
     }
     emitter.on(listener);
@@ -40,7 +41,7 @@ export class SafeAreaObserver {
   }
   static unobserve(listener: SafeAreaListener) {
     emitter.off(listener);
-    if (emitter.empty) {
+    if (emitter.isEmpty) {
       off('resize', detectionScreen);
     }
   }
@@ -56,7 +57,7 @@ function detectionScreen() {
 }
 
 function updateValue() {
-  variableStyle.mount();
+  variablesStyle.mount();
   const get = computedStyle(document.body);
   value = {
     top: get('--o-e-sait'),
@@ -64,5 +65,5 @@ function updateValue() {
     bottom: get('--o-e-saib'),
     left: get('--o-e-sail'),
   };
-  variableStyle.unmount();
+  variablesStyle.unmount();
 }
