@@ -30,11 +30,11 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
+   * The inspector remains rendered when the browser is idle
    *
-   * @default false
+   * @default true
    */
-  realtimeFrame?: boolean;
+  retainFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *
@@ -57,27 +57,15 @@ export default function openEditorPlugin(
 ): Plugin | undefined {
   if (!isDev()) return;
 
-  const {
-    rootDir = process.cwd(),
-    displayToggle,
-    colorMode,
-    disableHoverCSS,
-    realtimeFrame,
-    once,
-    onOpenEditor,
-  } = options;
+  const { rootDir = process.cwd(), onOpenEditor } = options;
 
   const VITE_CLIENT_PATH = '/vite/dist/client/client.mjs';
 
   const client = createClient(import.meta.url);
   client.generate(
     {
+      ...options,
       rootDir,
-      displayToggle,
-      colorMode,
-      disableHoverCSS,
-      realtimeFrame,
-      once,
     },
     true,
   );

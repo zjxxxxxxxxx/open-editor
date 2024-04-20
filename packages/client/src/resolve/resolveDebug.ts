@@ -1,4 +1,4 @@
-import { hasOwnProperty } from '../utils/util';
+import { hasOwnProperty } from '@open-editor/shared';
 import { checkValidElement } from '../utils/ui';
 
 export type ResolveDebug<T = any> = {

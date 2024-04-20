@@ -1,5 +1,4 @@
-import { isFn } from '@open-editor/shared';
-import { hasOwnProperty } from '../../utils/util';
+import { isFn, hasOwnProperty } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createReactResolver } from '../creators/createReactResolver';

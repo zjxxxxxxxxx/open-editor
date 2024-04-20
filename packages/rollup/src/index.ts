@@ -30,11 +30,11 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * The inspector `overlay` synchronizes the UI every frame in real time, even if the browser is idle at that time.
+   * The inspector remains rendered when the browser is idle
    *
-   * @default false
+   * @default true
    */
-  realtimeFrame?: boolean;
+  retainFrame?: boolean;
   /**
    * exit the check after opening the editor or component tree
    *
@@ -57,15 +57,7 @@ export default function openEditorPlugin(
 ): Plugin | undefined {
   if (!isDev()) return;
 
-  const {
-    rootDir = process.cwd(),
-    displayToggle,
-    colorMode,
-    once,
-    disableHoverCSS,
-    realtimeFrame,
-    onOpenEditor,
-  } = options;
+  const { rootDir = process.cwd(), onOpenEditor } = options;
 
   const client = createClient(import.meta.url);
   const include = new Set<string>();
@@ -94,13 +86,9 @@ export default function openEditorPlugin(
         onOpenEditor,
       });
       client.generate({
+        ...options,
         port,
         rootDir,
-        displayToggle,
-        colorMode,
-        once,
-        disableHoverCSS,
-        realtimeFrame,
       });
     },
     transform(code, id) {

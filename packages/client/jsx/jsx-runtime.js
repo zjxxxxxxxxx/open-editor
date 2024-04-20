@@ -15,10 +15,6 @@ function jsx(type, props) {
     ? document.createElementNS(svgNS, type)
     : document.createElement(type);
 
-  if (children != null) {
-    appendChildren(el, toArray(children));
-  }
-
   if (type !== FRAGMENT_TYPE) {
     if (className) el.className = className;
     if (style) Object.assign(el.style, style);
@@ -35,10 +31,12 @@ function jsx(type, props) {
     if (ref) ref(el);
   }
 
+  if (children != null) {
+    appendChildren(el, Array.isArray(children) ? children : [children]);
+  }
+
   return el;
 }
-
-const toArray = [].concat.bind([]);
 
 const eventRE = /^on[A-Z]/;
 function isEventType(val) {
@@ -51,7 +49,6 @@ function toNativeType(val) {
 
 function appendChildren(el, children) {
   for (const child of children) {
-    if (!child) continue;
     if (child instanceof Element) {
       if (child.tagName === FRAGMENT_TYPE) {
         appendChildren(el, Array.from(child.children));
@@ -60,7 +57,7 @@ function appendChildren(el, children) {
       }
     } else if (Array.isArray(child)) {
       appendChildren(el, child);
-    } else {
+    } else if (child) {
       el.appendChild(document.createTextNode(child));
     }
   }

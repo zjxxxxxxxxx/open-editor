@@ -1,5 +1,5 @@
+import { clamp } from '@open-editor/shared';
 import { type RectBox } from '../HTMLOverlayElement/getRectBoxs';
-import { clamp } from '../../utils/util';
 import {
   getDOMRect,
   getHtml,
