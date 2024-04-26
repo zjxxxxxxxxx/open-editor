@@ -7,5 +7,5 @@
     },
     "lib": ["esnext", "DOM"]
   },
-  "include": ["src", "global.d.ts"]
+  "include": ["src", "global.d.ts", "../../global.d.ts"]
 }
