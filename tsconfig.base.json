@@ -11,7 +11,8 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noImplicitAny": false
   },
   "exclude": ["node_modules"]
 }

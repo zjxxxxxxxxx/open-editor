@@ -20,7 +20,6 @@ describe('string-input', async () => {
     expect(output[0].moduleIds).toEqual([
       resolve(sharedRoot, 'dist/index.mjs'),
       resolve(clientRoot, 'dist/index.mjs'),
-      resolve(clientRoot, 'dist/client.js'),
       joinURLToPath(import.meta.url, 'app.js'),
     ]);
   });

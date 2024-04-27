@@ -1,6 +1,5 @@
 import type webpack from 'webpack';
-import { createClient, isDev } from '@open-editor/shared/node';
-import { isFn, isObj } from '@open-editor/shared';
+import { isDev, resolvePath } from '@open-editor/shared/node';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -48,17 +47,34 @@ export interface Options {
   onOpenEditor?(file: string): void;
 }
 
+const PLUGIN_NAME = 'OpenEditorPlugin';
+
 /**
  * development only
  */
 export default class OpenEditorPlugin {
-  private declare options: Options;
+  private declare options: Options & { port?: number };
   private declare compiler: webpack.Compiler;
+  private declare entries: string[];
+  private declare entryRE: RegExp;
+  private declare matchEntryRE: RegExp;
+  private declare beforeSlashRE: RegExp;
+  private declare nodeModuleRE: RegExp;
+  private declare fileNameRE: RegExp;
 
   constructor(options: Options = {}) {
+    const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } =
+      options;
+
+    this.matchEntryRE = /([^.]*)(.[tj]sx?)?$/;
+    this.beforeSlashRE = /^\/+/;
+    this.nodeModuleRE = /node_modules/;
+    this.fileNameRE = /\.[jt]sx?$/;
+    this.entries = [];
     this.options = {
       ...options,
-      rootDir: options.rootDir ?? process.cwd(),
+      rootDir,
+      onOpenEditor,
     };
   }
 
@@ -66,76 +82,93 @@ export default class OpenEditorPlugin {
     if (!isDev()) return;
 
     this.compiler = compiler;
+    this.setPort();
+    this.addRules();
+    this.addEntry();
+  }
 
-    if (compiler.webpack?.version.startsWith('5')) {
-      this.resolveClient((clientEntry) => {
-        new compiler.webpack.EntryPlugin(compiler.context, clientEntry, {
-          name: undefined,
-        }).apply(compiler);
+  setPort() {
+    setupPortPromise(this.options);
+
+    this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
+      const port = await getPortPromise(this.options);
+      this.options = {
+        ...this.options,
+        port,
+      };
+    });
+  }
+
+  addRules() {
+    this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
+      this.compiler.options.module.rules.unshift({
+        test: this.fileNameRE,
+        exclude: this.nodeModuleRE,
+        use: ({ resource }: AnyObject) => {
+          if (resource && this.entryRE.test(resource)) {
+            return {
+              options: this.options,
+              loader: resolvePath('./transform', import.meta.url),
+            };
+          }
+          return [];
+        },
       });
-    } else {
-      const entry = compiler.options.entry;
-      compiler.options.entry = () =>
-        this.resolveClient((clientEntry) => {
-          return this.injectClient(entry, clientEntry);
-        });
-      compiler.options.module.rules.push({
+      this.compiler.options.module.rules.unshift({
         test: /\.mjs$/,
         type: 'javascript/auto',
         include: /open-editor/,
       });
-      compiler.hooks.entryOption.call(
-        compiler.options.context!,
-        compiler.options.entry,
+    });
+  }
+
+  addEntry() {
+    this.compiler.hooks.thisCompilation.tap(
+      PLUGIN_NAME,
+      async (compilation) => {
+        compilation.hooks.addEntry.tap(
+          PLUGIN_NAME,
+          ({ userRequest }: AnyObject, { name }) => {
+            if (name && !this.nodeModuleRE.test(userRequest)) {
+              const entry = this.ensureEntry(userRequest, name);
+              this.setEntry(entry);
+            }
+          },
+        );
+      },
+    );
+  }
+
+  ensureEntry(userRequest: string, name: string) {
+    if (this.fileNameRE.test(userRequest)) {
+      return (
+        userRequest
+          .replace(this.compiler.context, '')
+          .split('?')[0]
+          .match(this.matchEntryRE)?.[1] || name
       );
     }
+    return name;
   }
 
-  async resolveClient<Callback extends (clientEntry: string) => any>(
-    callback: Callback,
-  ): Promise<ReturnType<Callback>> {
-    const client = createClient(import.meta.url);
-    const port = await getServerPort(this.options);
-    client.generate(
-      {
-        ...this.options,
-        port,
-      },
-      true,
-    );
-    return callback(client.filename);
-  }
-
-  injectClient(entry: webpack.EntryNormalized, clientEntry: string): any {
-    if (isFn(entry)) {
-      return Promise.resolve(entry()).then((originalEntry) => {
-        return this.injectClient(originalEntry, clientEntry);
-      });
+  setEntry(raw: string) {
+    const entry = `/${raw.replace(this.beforeSlashRE, '')}`;
+    if (!this.entries.includes(entry)) {
+      this.entries.push(entry);
+      this.entryRE = new RegExp(`(${this.entries.join('|')})(\\.[jt]sx?)?$`);
     }
-
-    if (!entry || !isObj(entry)) {
-      entry = [].concat(entry) as unknown as webpack.EntryNormalized;
-    }
-
-    if (Array.isArray(entry)) {
-      return [...entry, clientEntry];
-    }
-
-    return Object.fromEntries(
-      Object.entries(entry).map(([key, entry]) => [
-        key,
-        this.injectClient(entry, clientEntry),
-      ]),
-    );
   }
 }
 
 // because many scaffolding tools rewrite the devServer part, it is impossible to add
 // middleware, so it has to start another server to handle the client side request.
-let port: Promise<number>;
-function getServerPort(options: {
-  rootDir?: string;
-  onOpenEditor?(file: string): void;
-}) {
-  return (port ||= setupServer(options));
+const portPromiseCache: AnyObject<Promise<number>> = {};
+function setupPortPromise(opts: Options) {
+  portPromiseCache[cacheKey(opts)] ||= setupServer(opts);
+}
+function getPortPromise(opts: Options) {
+  return portPromiseCache[cacheKey(opts)];
+}
+function cacheKey(opts: Options) {
+  return `${opts.rootDir}${opts.onOpenEditor}`;
 }
