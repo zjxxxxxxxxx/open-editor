@@ -1,5 +1,6 @@
 import type webpack from 'webpack';
 import { isDev, resolvePath } from '@open-editor/shared/node';
+import { isArr, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -126,8 +127,25 @@ export default class OpenEditorPlugin {
     });
   }
 
-  setEntry({ request }: AnyObject, { name }: webpack.EntryOptions) {
-    if (name && !this.nodeModuleRE.test(request)) {
+  setEntry(
+    dep: webpack.Dependency & AnyObject,
+    opts?: webpack.EntryOptions | string,
+  ) {
+    const { request, dependencies } = dep;
+    const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
+
+    if (!name) return;
+
+    // webpack4 MultiEntryDependency
+    if (isArr(dependencies)) {
+      dependencies.forEach((subDep) => {
+        this.setEntry(subDep, name);
+      });
+
+      return;
+    }
+
+    if (!this.nodeModuleRE.test(request)) {
       const entry = this.ensureEntry(request, name);
       if (!this.entries.includes(entry)) {
         this.entries.push(entry);
@@ -138,7 +156,7 @@ export default class OpenEditorPlugin {
 
   ensureEntry(request: string, name: string) {
     const [baseRequest] = request.split('?');
-    const entry = this.fileNameRE.test(request)
+    const entry = this.fileNameRE.test(baseRequest)
       ? baseRequest
           .replace(this.compiler.context, '')
           .match(this.fileNameRE)![1]
