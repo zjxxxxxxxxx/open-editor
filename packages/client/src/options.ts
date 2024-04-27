@@ -20,7 +20,7 @@ export interface Options {
   /**
    * Disable hover effect from CSS when inspector is enabled
    *
-   * @default false
+   * @default true
    */
   disableHoverCSS?: boolean;
   /**
@@ -52,7 +52,7 @@ export function setOptions(
     ...userOpts,
     displayToggle: userOpts.displayToggle ?? true,
     colorMode: userOpts.colorMode ?? 'system',
-    disableHoverCSS: userOpts.disableHoverCSS ?? false,
+    disableHoverCSS: userOpts.disableHoverCSS ?? true,
     retainFrame: userOpts.retainFrame ?? true,
     once: userOpts.once ?? true,
   };

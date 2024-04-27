@@ -1,3 +1,4 @@
+import { CLIENT } from '../../constants';
 import { appendChild } from './dom';
 
 type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
@@ -35,6 +36,8 @@ export function computedStyle(el: HTMLElement) {
 }
 
 export function createGlobalStyle(css: string) {
+  if (!CLIENT) return { mount() {}, unmount() {} };
+
   const style = <style type="text/css">{css}</style>;
   return {
     mount() {

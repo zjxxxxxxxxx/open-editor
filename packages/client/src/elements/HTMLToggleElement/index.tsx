@@ -26,6 +26,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
 
   constructor() {
     super();
+
     this.startDnD = this.startDnD.bind(this);
     this.stopDnD = this.stopDnD.bind(this);
     this.changePosTop = this.changePosTop.bind(this);

@@ -24,7 +24,7 @@ export interface Options {
   /**
    * Disable hover effect from CSS when inspector is enabled
    *
-   * @default false
+   * @default true
    */
   disableHoverCSS?: boolean;
   /**
@@ -48,6 +48,7 @@ export interface Options {
 }
 
 const PLUGIN_NAME = 'OpenEditorPlugin';
+const LOADER_PATH = resolvePath('./transform', import.meta.url);
 
 /**
  * development only
@@ -57,7 +58,6 @@ export default class OpenEditorPlugin {
   private declare compiler: webpack.Compiler;
   private declare entries: string[];
   private declare entryRE: RegExp;
-  private declare matchEntryRE: RegExp;
   private declare beforeSlashRE: RegExp;
   private declare nodeModuleRE: RegExp;
   private declare fileNameRE: RegExp;
@@ -65,17 +65,16 @@ export default class OpenEditorPlugin {
   constructor(options: Options = {}) {
     const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } =
       options;
-
-    this.matchEntryRE = /([^.]*)(.[tj]sx?)?$/;
-    this.beforeSlashRE = /^\/+/;
-    this.nodeModuleRE = /node_modules/;
-    this.fileNameRE = /\.[jt]sx?$/;
-    this.entries = [];
     this.options = {
       ...options,
       rootDir,
       onOpenEditor,
     };
+    this.entries = [];
+    this.beforeSlashRE = /^\/+/;
+    this.nodeModuleRE = /node_modules/;
+    this.fileNameRE = /([^.]*)\.[tj]sx?$/;
+    this.setEntry = this.setEntry.bind(this);
   }
 
   apply(compiler: webpack.Compiler) {
@@ -88,9 +87,8 @@ export default class OpenEditorPlugin {
   }
 
   setPort() {
-    setupPortPromise(this.options);
-
     this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
+      setupPortPromise(this.options);
       const port = await getPortPromise(this.options);
       this.options = {
         ...this.options,
@@ -108,7 +106,7 @@ export default class OpenEditorPlugin {
           if (resource && this.entryRE.test(resource)) {
             return {
               options: this.options,
-              loader: resolvePath('./transform', import.meta.url),
+              loader: LOADER_PATH,
             };
           }
           return [];
@@ -123,40 +121,30 @@ export default class OpenEditorPlugin {
   }
 
   addEntry() {
-    this.compiler.hooks.thisCompilation.tap(
-      PLUGIN_NAME,
-      async (compilation) => {
-        compilation.hooks.addEntry.tap(
-          PLUGIN_NAME,
-          ({ userRequest }: AnyObject, { name }) => {
-            if (name && !this.nodeModuleRE.test(userRequest)) {
-              const entry = this.ensureEntry(userRequest, name);
-              this.setEntry(entry);
-            }
-          },
-        );
-      },
-    );
+    this.compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
+      compilation.hooks.addEntry.tap(PLUGIN_NAME, this.setEntry);
+    });
   }
 
-  ensureEntry(userRequest: string, name: string) {
-    if (this.fileNameRE.test(userRequest)) {
-      return (
-        userRequest
+  setEntry({ request }: AnyObject, { name }: webpack.EntryOptions) {
+    if (name && !this.nodeModuleRE.test(request)) {
+      const entry = this.ensureEntry(request, name);
+      if (!this.entries.includes(entry)) {
+        this.entries.push(entry);
+        this.entryRE = new RegExp(`(${this.entries.join('|')})(\\.[jt]sx?)?$`);
+      }
+    }
+  }
+
+  ensureEntry(request: string, name: string) {
+    const [baseRequest] = request.split('?');
+    const entry = this.fileNameRE.test(request)
+      ? baseRequest
           .replace(this.compiler.context, '')
-          .split('?')[0]
-          .match(this.matchEntryRE)?.[1] || name
-      );
-    }
-    return name;
-  }
+          .match(this.fileNameRE)![1]
+      : name;
 
-  setEntry(raw: string) {
-    const entry = `/${raw.replace(this.beforeSlashRE, '')}`;
-    if (!this.entries.includes(entry)) {
-      this.entries.push(entry);
-      this.entryRE = new RegExp(`(${this.entries.join('|')})(\\.[jt]sx?)?$`);
-    }
+    return `/${entry.replace(this.beforeSlashRE, '')}`;
   }
 }
 

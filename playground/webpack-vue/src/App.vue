@@ -5,7 +5,7 @@ import Notes from './components/Notes.vue';
 
 <template>
   <div>
-    <a href="https://vitejs.dev" target="_blank">
+    <a href="https://webpack.js.org" target="_blank">
       <img src="/webpack.svg" class="logo" alt="Vite logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
@@ -29,6 +29,7 @@ import Notes from './components/Notes.vue';
 
 <style scoped>
 .logo {
+  width: 6em;
   height: 6em;
   padding: 1.5em;
   will-change: filter;

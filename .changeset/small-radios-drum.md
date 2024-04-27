@@ -1,5 +1,5 @@
 ---
-'@open-editor/shared': patch
+'@open-editor/shared': minor
 ---
 
-Add injectClient
+Add `injectClient`
