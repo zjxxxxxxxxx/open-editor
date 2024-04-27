@@ -1,5 +1,5 @@
 ---
-'@open-editor/client': patch
+'@open-editor/client': minor
 ---
 
 Remove client entry file

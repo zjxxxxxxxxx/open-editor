@@ -1,3 +1,4 @@
+import { CLIENT } from '../constants';
 import { mitt } from './mitt';
 import { on, off } from './event';
 import { computedStyle, createGlobalStyle } from './ui';
@@ -25,7 +26,9 @@ const variablesStyle = createGlobalStyle(variablesCSS);
 
 let value: SafeAreaValue;
 // init
-updateValue();
+if (CLIENT) {
+  updateValue();
+}
 
 export class SafeAreaObserver {
   static get value() {

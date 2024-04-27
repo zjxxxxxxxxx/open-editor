@@ -25,7 +25,7 @@ export interface Options {
   /**
    * Disable hover effect from CSS when inspector is enabled
    *
-   * @default false
+   * @default true
    */
   disableHoverCSS?: boolean;
   /**

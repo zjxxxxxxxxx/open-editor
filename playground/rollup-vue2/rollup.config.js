@@ -6,7 +6,7 @@ import image from '@rollup/plugin-image';
 import postcss from 'rollup-plugin-postcss';
 import VueSource from 'unplugin-vue-source/rollup';
 import vue from 'rollup-plugin-vue';
-import openEditor from '@open-editor/rollup';
+import OpenEditor from '@open-editor/rollup';
 import { liveServer } from 'rollup-plugin-live-server';
 
 const extensions = [
@@ -46,7 +46,7 @@ export default {
     }),
     postcss(),
     image(),
-    openEditor(),
+    OpenEditor(),
     liveServer({
       port: 3000,
       wait: 1000,

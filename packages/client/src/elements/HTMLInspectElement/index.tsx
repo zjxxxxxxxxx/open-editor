@@ -162,7 +162,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
       const { disableHoverCSS: isDisabled } = getOptions();
       if (isDisabled) {
-        enableHoverCSS();
+        await enableHoverCSS();
       }
     }
   }

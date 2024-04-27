@@ -15,21 +15,22 @@ export function enableHoverCSS() {
 }
 
 function visitCSS(visitor: (css: string) => string) {
+  const styles = Array.from(document.querySelectorAll('style'));
+  const checkNextFrame = createFrameChecker(10);
+
   return new Promise((resolve) => {
-    const styles = Array.from(document.querySelectorAll('style'));
-    const checkNextFrame = createFrameChecker(10);
-    requestAnimationFrame(function transformHoverCSS() {
+    (function transformHoverCSS() {
       while (!checkNextFrame()) {
-        const style = styles.pop();
-        if (style?.textContent) {
-          style.textContent = visitor(style.textContent);
+        if (styles.length) {
+          const style = styles.pop()!;
+          if (style.textContent) {
+            style.textContent = visitor(style.textContent);
+          }
+        } else {
+          resolve(null);
         }
       }
-      if (styles.length) {
-        requestAnimationFrame(transformHoverCSS);
-      } else {
-        resolve(null);
-      }
-    });
+      requestAnimationFrame(transformHoverCSS);
+    })();
   });
 }

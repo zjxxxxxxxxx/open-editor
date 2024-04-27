@@ -10,10 +10,10 @@ export default function App() {
         <title>Open Editor</title>
       </Head>
       <div>
-        <a href="https://rollupjs.org" target="_blank">
+        <a href="https://webpack.js.org" target="_blank">
           <img src="/webpack.svg" className="logo" alt="Webpack logo" />
         </a>
-        <a href="https://react.dev" target="_blank">
+        <a href="https://nextjs.org" target="_blank">
           <picture>
             <source
               media="(prefers-color-scheme: dark)"
@@ -34,7 +34,7 @@ export default function App() {
           />
         </a>
       </div>
-      <h1>Webpack + Next</h1>
+      <h1>Webpack + Nextjs</h1>
       <Tree />
       <div className="card">
         <Notes />

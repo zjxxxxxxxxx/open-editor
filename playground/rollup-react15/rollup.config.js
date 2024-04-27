@@ -5,7 +5,7 @@ import replace from '@rollup/plugin-replace';
 import postcss from 'rollup-plugin-postcss';
 import svg from 'rollup-plugin-svg';
 import { liveServer } from 'rollup-plugin-live-server';
-import openEditor from '@open-editor/rollup';
+import OpenEditor from '@open-editor/rollup';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
 
@@ -48,7 +48,7 @@ export default {
     svg({
       base64: true,
     }),
-    openEditor(),
+    OpenEditor(),
     liveServer({
       port: 3000,
       wait: 1000,

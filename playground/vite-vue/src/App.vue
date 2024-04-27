@@ -29,6 +29,7 @@ import Notes from './components/Notes.vue';
 
 <style scoped>
 .logo {
+  width: 6em;
   height: 6em;
   padding: 1.5em;
   will-change: filter;
