@@ -10,6 +10,11 @@
       "require": "./dist/index.js",
       "import": "./dist/index.mjs",
       "types": "./dist/index.d.ts"
+    },
+    "./transform": {
+      "require": "./dist/transform.js",
+      "import": "./dist/transform.mjs",
+      "types": "./dist/transform.d.ts"
     }
   },
   "files": [

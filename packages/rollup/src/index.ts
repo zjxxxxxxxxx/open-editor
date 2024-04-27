@@ -1,7 +1,7 @@
 import { type Plugin } from 'rollup';
 import { resolve } from 'node:path';
-import { createClient, isDev } from '@open-editor/shared/node';
-import { isObj, isStr } from '@open-editor/shared';
+import { isDev } from '@open-editor/shared/node';
+import { injectClient, isObj, isStr } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -58,13 +58,12 @@ export default function openEditorPlugin(
   if (!isDev()) return;
 
   const { rootDir = process.cwd(), onOpenEditor } = options;
-
-  const client = createClient(import.meta.url);
   const include = new Set<string>();
+
+  let port: number;
 
   return {
     name: 'rollup:open-editor',
-
     options({ input }) {
       if (input) {
         // 'a' => ['a']
@@ -81,19 +80,19 @@ export default function openEditorPlugin(
       }
     },
     async buildStart() {
-      const port = await getServerPort({
+      port = await getServerPort({
         rootDir,
         onOpenEditor,
-      });
-      client.generate({
-        ...options,
-        port,
-        rootDir,
       });
     },
     transform(code, id) {
       if (include.has(id)) {
-        return `import '${client.filename}';\n${code}`;
+        return injectClient(code, {
+          ...options,
+          rootDir,
+          port,
+          sync: true,
+        });
       }
     },
   };

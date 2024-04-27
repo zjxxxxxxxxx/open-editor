@@ -1,7 +1,5 @@
 /// <reference types="../../scripts/types.d.ts" />
 
-declare type AnyObject = Record<string, any>;
-
 declare interface HTMLInspectElement extends HTMLElement {}
 
 declare interface HTMLToggleElement extends HTMLElement {}
