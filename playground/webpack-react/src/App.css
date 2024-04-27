@@ -1,10 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 .logo {
   width: 6em;
   height: 6em;
@@ -13,7 +6,7 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #fa383eaa);
+  filter: drop-shadow(0 0 2em #1d78c1aa);
 }
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
@@ -29,15 +22,6 @@
 .open-editor {
   overflow: hidden;
   border-radius: 40px;
-}
-
-.card {
-  padding: 2em;
-  zoom: 2;
-}
-
-.card > div {
-  zoom: 0.5;
 }
 
 .read-the-docs {

@@ -1,13 +1,19 @@
 import { replaceChildren } from '../utils/ui';
+import { CLIENT } from '../constants';
+
+const BrowserHTMLElement = CLIENT
+  ? HTMLElement
+  : (class HTMLElement {} as typeof HTMLElement);
 
 export abstract class HTMLCustomElement<
   State extends AnyObject = AnyObject,
-> extends HTMLElement {
+> extends BrowserHTMLElement {
   declare readonly shadowRoot: ShadowRoot;
   protected declare readonly state: State;
 
   public constructor(state: Partial<State> = {}) {
     super();
+
     this.state = state as State;
     Object.defineProperty(this, 'shadowRoot', {
       value: this.attachShadow({ mode: 'closed' }),
