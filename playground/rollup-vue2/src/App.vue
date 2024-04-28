@@ -46,6 +46,8 @@ export default Vue.extend({
   width: 6em;
   height: 6em;
   padding: 1.5em;
+  overflow: hidden;
+  border-radius: 40px;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -62,10 +64,6 @@ export default Vue.extend({
   .logo.open-editor:hover {
     filter: drop-shadow(0 0 2em #ffffffaa);
   }
-}
-.open-editor {
-  overflow: hidden;
-  border-radius: 40px;
 }
 .read-the-docs {
   color: #888;

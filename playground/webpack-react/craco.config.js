@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 module.exports = {
   webpack: {
@@ -7,6 +8,7 @@ module.exports = {
     },
   },
   devServer: {
-    port: 3001,
+    port: 3000,
+    open: false,
   },
 };

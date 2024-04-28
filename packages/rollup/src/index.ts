@@ -49,6 +49,10 @@ export interface Options {
   onOpenEditor?(file: string): void;
 }
 
+// because many scaffolding tools rewrite the devServer part, it is impossible to add
+// middleware, so it has to start another server to handle the client side request.
+const portPromiseCache: AnyObject<Promise<number>> = {};
+
 /**
  * development only
  */
@@ -69,21 +73,22 @@ export default function openEditorPlugin(
         // 'a' => ['a']
         // ['a', 'b'] => ['a', 'b']
         // { app: 'a', bpp: 'b' } => ['a', 'b']
-        const entrys = isStr(input)
+        const entries = isStr(input)
           ? [input]
           : isObj(input)
           ? Object.values(input)
           : input;
-        for (const entry of entrys) {
+        for (const entry of entries) {
           include.add(resolve(entry));
         }
       }
     },
     async buildStart() {
-      port = await getServerPort({
+      const cacheKey = `${rootDir}${onOpenEditor}`;
+      port = await (portPromiseCache[cacheKey] ||= setupServer({
         rootDir,
         onOpenEditor,
-      });
+      }));
     },
     transform(code, id) {
       if (include.has(id)) {
@@ -91,17 +96,8 @@ export default function openEditorPlugin(
           ...options,
           rootDir,
           port,
-          sync: true,
         });
       }
     },
   };
-}
-
-let port: Promise<number>;
-function getServerPort(options: {
-  rootDir?: string;
-  onOpenEditor?(file: string): void;
-}) {
-  return (port ||= setupServer(options));
 }
