@@ -35,6 +35,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     this.savePointE = this.savePointE.bind(this);
     this.onKeydown = this.onKeydown.bind(this);
     this.toggleActiveEffect = this.toggleActiveEffect.bind(this);
+    this.setupHandlers = this.setupHandlers.bind(this);
     this.cleanHandlers = this.cleanHandlers.bind(this);
     this.activeDefaultElement = this.activeDefaultElement.bind(this);
     this.openEditor = this.openEditor.bind(this);
@@ -118,52 +119,56 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   }
 
   private async setupHandlers() {
-    const e = new CustomEvent('enableinspector', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-    });
-    if (!this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
-      this.active = true;
-      this.state.overlay.open();
-      this.cleanListeners = setupListeners({
-        onActive: this.state.overlay.update,
-        onOpenTree: this.state.tree.open,
-        onOpenEditor: this.openEditor,
-        onExitInspect: this.cleanHandlers,
+    try {
+      const e = new CustomEvent('enableinspector', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
       });
+      if (!this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
+        this.active = true;
+        this.state.overlay.open();
+        this.cleanListeners = setupListeners({
+          onActive: this.state.overlay.update,
+          onOpenTree: this.state.tree.open,
+          onOpenEditor: this.openEditor,
+          onExitInspect: this.cleanHandlers,
+        });
 
-      // Override the default mouse style and touch feedback
-      overrideStyle.mount();
+        // Override the default mouse style and touch feedback
+        overrideStyle.mount();
 
-      const { disableHoverCSS: isDisabled } = getOptions();
-      if (isDisabled) {
-        await disableHoverCSS();
+        const { disableHoverCSS: isDisabled } = getOptions();
+        if (isDisabled) await disableHoverCSS();
+
+        this.activeDefaultElement();
       }
-
-      this.activeDefaultElement();
+    } catch {
+      //
     }
   }
 
   private declare cleanListeners: () => void;
 
   private async cleanHandlers() {
-    const e = new CustomEvent('exitinspector', {
-      bubbles: true,
-      cancelable: true,
-      composed: true,
-    });
-    if (this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
-      this.active = false;
-      this.state.overlay.close();
-      this.cleanListeners();
+    try {
+      const e = new CustomEvent('exitinspector', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      if (this.active && !this.state.tree.isOpen && this.dispatchEvent(e)) {
+        this.active = false;
+        this.state.overlay.close();
+        this.cleanListeners();
 
-      overrideStyle.unmount();
+        overrideStyle.unmount();
 
-      const { disableHoverCSS: isDisabled } = getOptions();
-      if (isDisabled) {
-        await enableHoverCSS();
+        const { disableHoverCSS: isDisabled } = getOptions();
+        if (isDisabled) await enableHoverCSS();
       }
+    } catch {
+      //
     }
   }
 
