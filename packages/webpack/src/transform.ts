@@ -5,5 +5,7 @@ export default function transform(
   this: webpack.LoaderContext<AnyObject>,
   code: string,
 ) {
+  this.version++;
+  this.cacheable(false);
   return injectClient(code, <AnyObject>this.query);
 }

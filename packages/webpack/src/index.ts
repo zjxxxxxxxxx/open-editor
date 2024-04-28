@@ -51,6 +51,8 @@ export interface Options {
 const PLUGIN_NAME = 'OpenEditorPlugin';
 const LOADER_PATH = resolvePath('./transform', import.meta.url);
 
+const portPromiseCache: AnyObject<Promise<number>> = {};
+
 /**
  * development only
  */
@@ -82,19 +84,17 @@ export default class OpenEditorPlugin {
     if (!isDev()) return;
 
     this.compiler = compiler;
-    this.setPort();
+    this.setupServer();
     this.addRules();
     this.addEntry();
   }
 
-  setPort() {
+  setupServer() {
     this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
-      setupPortPromise(this.options);
-      const port = await getPortPromise(this.options);
-      this.options = {
-        ...this.options,
-        port,
-      };
+      const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
+      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer(
+        this.options,
+      ));
     });
   }
 
@@ -132,20 +132,18 @@ export default class OpenEditorPlugin {
     opts?: webpack.EntryOptions | string,
   ) {
     const { request, dependencies } = dep;
-    const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
-
-    if (!name) return;
 
     // webpack4 MultiEntryDependency
     if (isArr(dependencies)) {
-      dependencies.forEach((subDep) => {
-        this.setEntry(subDep, name);
+      dependencies.forEach((dep) => {
+        this.setEntry(dep, opts);
       });
 
       return;
     }
 
-    if (!this.nodeModuleRE.test(request)) {
+    const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
+    if (name && request && !this.nodeModuleRE.test(request)) {
       const entry = this.ensureEntry(request, name);
       if (!this.entries.includes(entry)) {
         this.entries.push(entry);
@@ -164,17 +162,4 @@ export default class OpenEditorPlugin {
 
     return `/${entry.replace(this.beforeSlashRE, '')}`;
   }
-}
-
-// because many scaffolding tools rewrite the devServer part, it is impossible to add
-// middleware, so it has to start another server to handle the client side request.
-const portPromiseCache: AnyObject<Promise<number>> = {};
-function setupPortPromise(opts: Options) {
-  portPromiseCache[cacheKey(opts)] ||= setupServer(opts);
-}
-function getPortPromise(opts: Options) {
-  return portPromiseCache[cacheKey(opts)];
-}
-function cacheKey(opts: Options) {
-  return `${opts.rootDir}${opts.onOpenEditor}`;
 }

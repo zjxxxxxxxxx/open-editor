@@ -9,6 +9,8 @@
   width: 6em;
   height: 6em;
   padding: 1.5em;
+  overflow: hidden;
+  border-radius: 40px;
   will-change: filter;
   transition: filter 300ms;
 }
@@ -16,7 +18,7 @@
   filter: drop-shadow(0 0 2em #646cffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #61dafb);
 }
 .logo.open-editor:hover {
   filter: drop-shadow(0 0 2em #000000aa);
@@ -25,10 +27,6 @@
   .logo.open-editor:hover {
     filter: drop-shadow(0 0 2em #ffffffaa);
   }
-}
-.open-editor {
-  overflow: hidden;
-  border-radius: 40px;
 }
 
 .card {
