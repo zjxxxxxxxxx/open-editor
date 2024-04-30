@@ -77,6 +77,8 @@ export default class OpenEditorPlugin {
     this.beforeSlashRE = /^\/+/;
     this.nodeModuleRE = /node_modules/;
     this.fileNameRE = /([^.]*)\.[cm]?[tj]sx?$/;
+    this.addEntry = this.addEntry.bind(this);
+    this.ensureEntry = this.ensureEntry.bind(this);
     this.setEntry = this.setEntry.bind(this);
   }
 
