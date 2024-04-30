@@ -1,6 +1,5 @@
 import type { ViteDevServer } from 'vite';
 import { ServerApis, injectClient } from '@open-editor/shared';
-import { isDev } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
 
 export interface Options {
@@ -54,12 +53,11 @@ const CLIENT_PATH = '/client.mjs';
  * development only
  */
 export default function OpenEditorPlugin(options: Options = {}) {
-  if (!isDev()) return;
-
   const { rootDir = process.cwd(), onOpenEditor } = options;
 
   return {
     name: 'OpenEditorPlugin',
+    apply: <const>'serve',
     configureServer(server: Pick<ViteDevServer, 'middlewares'>) {
       server.middlewares.use(
         ServerApis.OPEN_EDITOR,
