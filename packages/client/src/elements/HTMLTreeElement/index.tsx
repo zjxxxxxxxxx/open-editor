@@ -110,7 +110,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
 
   private buildTree(tree: SourceCodeMeta[]) {
     const meta = tree.pop()!;
-    const tagName = `<${meta.name}>`;
+    const tagName = '<' + meta.name + '>';
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
 
     return (
