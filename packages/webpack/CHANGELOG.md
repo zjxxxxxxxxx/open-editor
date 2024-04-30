@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.8.1
+
+### Patch Changes
+
+- [#224](https://github.com/zjxxxxxxxxx/open-editor/pull/224) [`168d6ceee9d876a2afdaa60cb039d026cf490cc3`](https://github.com/zjxxxxxxxxx/open-editor/commit/168d6ceee9d876a2afdaa60cb039d026cf490cc3) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix `this` missing issue
+
+- Updated dependencies []:
+  - @open-editor/client@0.8.1
+  - @open-editor/server@0.8.1
+  - @open-editor/shared@0.8.1
+
 ## 0.8.0
 
 ### Minor Changes
