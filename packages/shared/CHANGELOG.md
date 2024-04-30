@@ -1,5 +1,13 @@
 # @open-editor/shared
 
+## 0.8.0
+
+### Minor Changes
+
+- [#220](https://github.com/zjxxxxxxxxx/open-editor/pull/220) [`16283d792edbeb0dfc415bac3bddb7a9238f5ec5`](https://github.com/zjxxxxxxxxx/open-editor/commit/16283d792edbeb0dfc415bac3bddb7a9238f5ec5) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Type tools add support for generics
+
+- [#217](https://github.com/zjxxxxxxxxx/open-editor/pull/217) [`a123af8e4b220222137f7e430c998ad29d15c45e`](https://github.com/zjxxxxxxxxx/open-editor/commit/a123af8e4b220222137f7e430c998ad29d15c45e) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `injectClient`
+
 ## 0.7.4
 
 ### Patch Changes
