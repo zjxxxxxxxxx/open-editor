@@ -41,13 +41,13 @@
 
 > 需要 React 版本 15+。
 
-`open-editor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
+`OpenEditor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
 
 ### Vue
 
 > 需要 Vue 版本 2+。
 
-`open-editor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
+`OpenEditor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
 
 ### 使用插件
 
@@ -193,8 +193,11 @@ window.addEventListener('openeditor', (e) => {
 | [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)    |
 | [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)         | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)     |
 | [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)             | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)       |
-| [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-next)   |
+| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)           | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)      |
+| [`webpack/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-react)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-react)  |
+| [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nextjs) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nextjs) |
 | [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)    |
+| [`webpack/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nuxt)     | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nuxt)   |
 
 ## 致谢
 

@@ -76,7 +76,7 @@ export default class OpenEditorPlugin {
     this.entries = [];
     this.beforeSlashRE = /^\/+/;
     this.nodeModuleRE = /node_modules/;
-    this.fileNameRE = /([^.]*)\.[tj]sx?$/;
+    this.fileNameRE = /([^.]*)\.[cm]?[tj]sx?$/;
     this.setEntry = this.setEntry.bind(this);
   }
 
@@ -85,8 +85,8 @@ export default class OpenEditorPlugin {
 
     this.compiler = compiler;
     this.setupServer();
-    this.addRules();
-    this.addEntry();
+    this.setupRules();
+    this.setupEntry();
   }
 
   setupServer() {
@@ -98,11 +98,10 @@ export default class OpenEditorPlugin {
     });
   }
 
-  addRules() {
+  setupRules() {
     this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
-      this.compiler.options.module.rules.unshift({
+      this.compiler.options.module.rules.push({
         test: this.fileNameRE,
-        exclude: this.nodeModuleRE,
         use: ({ resource }: AnyObject) => {
           if (resource && this.entryRE.test(resource)) {
             return {
@@ -113,21 +112,22 @@ export default class OpenEditorPlugin {
           return [];
         },
       });
-      this.compiler.options.module.rules.unshift({
-        test: /\.mjs$/,
+      this.compiler.options.module.rules.push({
+        test: /node_modules\/@open-editor\//,
         type: 'javascript/auto',
-        include: /open-editor/,
       });
     });
   }
 
-  addEntry() {
+  setupEntry() {
+    const nuxtEntry = 'nuxt/dist/(client|app)/entry';
+    this.setEntry(nuxtEntry);
     this.compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
-      compilation.hooks.addEntry.tap(PLUGIN_NAME, this.setEntry);
+      compilation.hooks.addEntry.tap(PLUGIN_NAME, this.addEntry);
     });
   }
 
-  setEntry(
+  addEntry(
     dep: webpack.Dependency & AnyObject,
     opts?: webpack.EntryOptions | string,
   ) {
@@ -135,9 +135,7 @@ export default class OpenEditorPlugin {
 
     // webpack4 MultiEntryDependency
     if (isArr(dependencies)) {
-      dependencies.forEach((dep) => {
-        this.setEntry(dep, opts);
-      });
+      dependencies.forEach((dep) => this.addEntry(dep, opts));
 
       return;
     }
@@ -145,10 +143,7 @@ export default class OpenEditorPlugin {
     const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
     if (name && request && !this.nodeModuleRE.test(request)) {
       const entry = this.ensureEntry(request, name);
-      if (!this.entries.includes(entry)) {
-        this.entries.push(entry);
-        this.entryRE = new RegExp(`(${this.entries.join('|')})(\\.[jt]sx?)?$`);
-      }
+      this.setEntry(entry);
     }
   }
 
@@ -161,5 +156,12 @@ export default class OpenEditorPlugin {
       : name;
 
     return `/${entry.replace(this.beforeSlashRE, '')}`;
+  }
+
+  setEntry(entry: string) {
+    if (!this.entries.includes(entry)) {
+      this.entries.push(entry);
+      this.entryRE = new RegExp(`(${this.entries.join('|')})\\.[cm]?[jt]sx?$`);
+    }
   }
 }

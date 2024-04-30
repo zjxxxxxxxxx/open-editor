@@ -41,13 +41,13 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 > Requires React version 15+.
 
-`open-editor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
+`OpenEditor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
 
 ### Vue
 
 > Requires Vue version 2+.
 
-`open-editor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plugin is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
+`OpenEditor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plugin is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
 
 ### Use plugin
 
@@ -193,6 +193,7 @@ window.addEventListener('openeditor', (e) => {
 | [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/rollup-vue2)    |
 | [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)         | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react)     |
 | [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)             | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)       |
+| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)           | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)      |
 | [`webpack/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-react)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-react)  |
 | [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nextjs) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-nextjs) |
 | [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)       | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/webpack-vue)    |

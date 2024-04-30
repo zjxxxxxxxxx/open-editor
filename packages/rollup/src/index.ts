@@ -56,7 +56,7 @@ const portPromiseCache: AnyObject<Promise<number>> = {};
 /**
  * development only
  */
-export default function openEditorPlugin(
+export default function OpenEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
   if (!isDev()) return;
@@ -67,17 +67,17 @@ export default function openEditorPlugin(
   let port: number;
 
   return {
-    name: 'rollup:open-editor',
+    name: 'OpenEditorPlugin',
     options({ input }) {
       if (input) {
-        // 'a' => ['a']
-        // ['a', 'b'] => ['a', 'b']
-        // { app: 'a', bpp: 'b' } => ['a', 'b']
+        // 'a' => ['./a.js']
+        // ['./a.js', './b.js'] => ['./a.js', './b.js']
+        // { app: './a.js', bpp: './b.js' } => ['./a.js', './b.js']
         const entries = isStr(input)
           ? [input]
           : isObj(input)
-          ? Object.values(input)
-          : input;
+            ? Object.values(input)
+            : input;
         for (const entry of entries) {
           include.add(resolve(entry));
         }
