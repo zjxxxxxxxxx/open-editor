@@ -28,10 +28,10 @@ declare type CustomProperty<P> = {
   [K in keyof P]: K extends 'children'
     ? CustomNode[]
     : K extends 'ref'
-    ? (el: HTMLElement) => void
-    : EventKey<K> extends true
-    ? (e: NativeEvent<K>) => void
-    : P[K];
+      ? (el: HTMLElement) => void
+      : EventKey<K> extends true
+        ? (e: NativeEvent<K>) => void
+        : P[K];
 } & {
   onLongPress?(e: PointerEvent): void;
   onQuickExit?(e: PointerEvent): void;
