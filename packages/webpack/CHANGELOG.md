@@ -1,5 +1,26 @@
 # @open-editor/webpack
 
+## 0.8.0
+
+### Minor Changes
+
+- [#219](https://github.com/zjxxxxxxxxx/open-editor/pull/219) [`aa747413a9b0d9e7655cf6191b4277c8a3400fec`](https://github.com/zjxxxxxxxxx/open-editor/commit/aa747413a9b0d9e7655cf6191b4277c8a3400fec) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Option `disableHoverCSS` changed to true
+
+- [#217](https://github.com/zjxxxxxxxxx/open-editor/pull/217) [`a123af8e4b220222137f7e430c998ad29d15c45e`](https://github.com/zjxxxxxxxxx/open-editor/commit/a123af8e4b220222137f7e430c998ad29d15c45e) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Change method of inject client
+
+### Patch Changes
+
+- [#221](https://github.com/zjxxxxxxxxx/open-editor/pull/221) [`a42ac28dd11d7bede417e5f9d8595b6b9f2271ee`](https://github.com/zjxxxxxxxxx/open-editor/commit/a42ac28dd11d7bede417e5f9d8595b6b9f2271ee) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Prevent `loader` from being cached
+
+- [#222](https://github.com/zjxxxxxxxxx/open-editor/pull/222) [`93b3ebb7508c8a63b7888b1d45fc3477a8cbce43`](https://github.com/zjxxxxxxxxx/open-editor/commit/93b3ebb7508c8a63b7888b1d45fc3477a8cbce43) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Matches `nuxt` entry
+
+- [#220](https://github.com/zjxxxxxxxxx/open-editor/pull/220) [`16283d792edbeb0dfc415bac3bddb7a9238f5ec5`](https://github.com/zjxxxxxxxxx/open-editor/commit/16283d792edbeb0dfc415bac3bddb7a9238f5ec5) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Handling `MultiEntryDependency` of `webpack4`
+
+- Updated dependencies [[`16283d792edbeb0dfc415bac3bddb7a9238f5ec5`](https://github.com/zjxxxxxxxxx/open-editor/commit/16283d792edbeb0dfc415bac3bddb7a9238f5ec5), [`aa747413a9b0d9e7655cf6191b4277c8a3400fec`](https://github.com/zjxxxxxxxxx/open-editor/commit/aa747413a9b0d9e7655cf6191b4277c8a3400fec), [`a123af8e4b220222137f7e430c998ad29d15c45e`](https://github.com/zjxxxxxxxxx/open-editor/commit/a123af8e4b220222137f7e430c998ad29d15c45e), [`aa747413a9b0d9e7655cf6191b4277c8a3400fec`](https://github.com/zjxxxxxxxxx/open-editor/commit/aa747413a9b0d9e7655cf6191b4277c8a3400fec), [`a123af8e4b220222137f7e430c998ad29d15c45e`](https://github.com/zjxxxxxxxxx/open-editor/commit/a123af8e4b220222137f7e430c998ad29d15c45e), [`a42ac28dd11d7bede417e5f9d8595b6b9f2271ee`](https://github.com/zjxxxxxxxxx/open-editor/commit/a42ac28dd11d7bede417e5f9d8595b6b9f2271ee)]:
+  - @open-editor/shared@0.8.0
+  - @open-editor/client@0.8.0
+  - @open-editor/server@0.8.0
+
 ## 0.7.4
 
 ### Patch Changes
