@@ -20,7 +20,8 @@
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
     "versions": "run-s version:ci format",
     "version:ci": "changeset version",
-    "publish:ci": "changeset publish"
+    "publish:ci": "changeset publish",
+    "install:ci": "pnpm install --ignore-scripts"
   },
   "engines": {
     "node": ">=16.19.1"
@@ -31,8 +32,9 @@
     "rollup-plugin",
     "vite-plugin",
     "webpack-plugin",
-    "next-devtools",
+    "nextjs-devtools",
     "react-devtools",
+    "nuxt-devtools",
     "vue-devtools",
     "web-devtools",
     "devtools"

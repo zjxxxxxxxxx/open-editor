@@ -8,7 +8,7 @@ import Notes from './components/Notes.vue';
     <a href="https://webpack.js.org" target="_blank">
       <img src="/webpack.svg" class="logo" alt="Vite logo" />
     </a>
-    <a href="https://vuejs.org/" target="_blank">
+    <a href="https://vuejs.org" target="_blank">
       <img src="/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
     <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">

@@ -34,8 +34,9 @@
     "open-editor",
     "webpack-plugin",
     "vue-devtools",
+    "nuxt-devtools",
     "react-devtools",
-    "next-devtools",
+    "nextjs-devtools",
     "web-devtools",
     "devtools"
   ],

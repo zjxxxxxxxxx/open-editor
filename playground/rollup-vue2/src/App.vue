@@ -17,7 +17,7 @@ export default Vue.extend({
       <a href="https://rollupjs.org" target="_blank">
         <img src="../public/rollup.svg" class="logo" alt="Rollup logo" />
       </a>
-      <a href="https://vuejs.org/" target="_blank">
+      <a href="https://vuejs.org" target="_blank">
         <img src="../public/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
       <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">

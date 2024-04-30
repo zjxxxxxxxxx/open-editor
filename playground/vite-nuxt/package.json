@@ -1,0 +1,19 @@
+{
+  "name": "@playground/vite-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@open-editor/vite": "latest",
+    "nuxt": "3.9.0",
+    "unplugin-vue-source": "latest",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0"
+  }
+}

@@ -41,6 +41,7 @@ function visitCSS(visitor: (css: string) => string) {
           style.textContent = visitor(style.textContent);
         }
       }
+
       requestAnimationFrame(transformHoverCSS);
     })();
   });

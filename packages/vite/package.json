@@ -27,9 +27,10 @@
   },
   "keywords": [
     "open-editor",
-    "vue-devtools",
-    "react-devtools",
     "vite-plugin",
+    "vue-devtools",
+    "nuxt-devtools",
+    "react-devtools",
     "web-devtools",
     "devtools"
   ],

@@ -84,3 +84,4 @@ interface Options {
 | ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) |
 | [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)     | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)   |
+| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)  |
