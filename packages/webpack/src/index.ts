@@ -80,50 +80,19 @@ export default class OpenEditorPlugin {
     this.addEntry = this.addEntry.bind(this);
     this.ensureEntry = this.ensureEntry.bind(this);
     this.setEntry = this.setEntry.bind(this);
+    this.setEntry('nuxt/dist/(client|app)/entry');
   }
 
   apply(compiler: webpack.Compiler) {
     if (!isDev()) return;
 
     this.compiler = compiler;
-    this.setupServer();
-    this.setupRules();
     this.setupEntry();
-  }
-
-  setupServer() {
-    this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
-      const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
-      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer(
-        this.options,
-      ));
-    });
-  }
-
-  setupRules() {
-    this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
-      this.compiler.options.module.rules.push({
-        test: this.fileNameRE,
-        use: ({ resource }: AnyObject) => {
-          if (resource && this.entryRE.test(resource)) {
-            return {
-              options: this.options,
-              loader: LOADER_PATH,
-            };
-          }
-          return [];
-        },
-      });
-      this.compiler.options.module.rules.push({
-        test: /node_modules\/@open-editor\//,
-        type: 'javascript/auto',
-      });
-    });
+    this.setupRules();
+    this.setupServer();
   }
 
   setupEntry() {
-    const nuxtEntry = 'nuxt/dist/(client|app)/entry';
-    this.setEntry(nuxtEntry);
     this.compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
       compilation.hooks.addEntry.tap(PLUGIN_NAME, this.addEntry);
     });
@@ -165,5 +134,35 @@ export default class OpenEditorPlugin {
       this.entries.push(entry);
       this.entryRE = new RegExp(`(${this.entries.join('|')})\\.[cm]?[jt]sx?$`);
     }
+  }
+
+  setupRules() {
+    this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
+      this.compiler.options.module.rules.push({
+        test: this.fileNameRE,
+        use: ({ resource }: AnyObject) => {
+          if (resource && this.entryRE.test(resource)) {
+            return {
+              options: this.options,
+              loader: LOADER_PATH,
+            };
+          }
+          return [];
+        },
+      });
+      this.compiler.options.module.rules.push({
+        test: /node_modules\/@open-editor\//,
+        type: 'javascript/auto',
+      });
+    });
+  }
+
+  setupServer() {
+    this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
+      const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
+      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer(
+        this.options,
+      ));
+    });
   }
 }
