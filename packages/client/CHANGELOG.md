@@ -1,5 +1,12 @@
 # @open-editor/client
 
+## 0.8.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/shared@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes

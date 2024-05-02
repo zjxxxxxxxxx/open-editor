@@ -1,5 +1,16 @@
 # @open-editor/webpack
 
+## 0.8.2
+
+### Patch Changes
+
+- [#226](https://github.com/zjxxxxxxxxx/open-editor/pull/226) [`7aa81781cda2f7f4240db1d489afa04ba7a1165a`](https://github.com/zjxxxxxxxxx/open-editor/commit/7aa81781cda2f7f4240db1d489afa04ba7a1165a) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix initialization issue
+
+- Updated dependencies []:
+  - @open-editor/client@0.8.2
+  - @open-editor/server@0.8.2
+  - @open-editor/shared@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes
