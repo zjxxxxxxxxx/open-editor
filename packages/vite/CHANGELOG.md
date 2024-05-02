@@ -1,5 +1,14 @@
 # @open-editor/vite
 
+## 0.8.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/client@0.8.2
+  - @open-editor/server@0.8.2
+  - @open-editor/shared@0.8.2
+
 ## 0.8.1
 
 ### Patch Changes
