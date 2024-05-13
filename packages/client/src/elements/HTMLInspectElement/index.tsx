@@ -64,10 +64,10 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         <link rel="stylesheet" href="./index.css" />
         <style type="text/css">{getColorMode()}</style>
         <InternalElements.HTML_OVERLAY_ELEMENT
-          ref={(el) => (this.state.overlay = el as HTMLOverlayElement)}
+          ref={(el) => (this.state.overlay = el)}
         />
         <InternalElements.HTML_TREE_ELEMENT
-          ref={(el) => (this.state.tree = el as HTMLTreeElement)}
+          ref={(el) => (this.state.tree = el)}
         />
         {opts.displayToggle && (
           <InternalElements.HTML_TOGGLE_ELEMENT
