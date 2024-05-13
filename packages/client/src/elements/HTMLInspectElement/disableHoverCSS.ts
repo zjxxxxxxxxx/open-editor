@@ -17,32 +17,51 @@ export function enableHoverCSS() {
 let taskID = 0;
 
 function visitCSS(visitor: (css: string) => string) {
-  const styles = Array.from(document.querySelectorAll('style'));
   const checkNextFrame = createFrameChecker(1000 / 60);
-  const runId = ++taskID;
+  const runID = ++taskID;
+
+  const rules = Array.from(document.styleSheets).flatMap((sheet) => {
+    if (sheet.ownerNode instanceof HTMLLinkElement) {
+      return Array.from(sheet.cssRules);
+    }
+    return [];
+  });
+  const ruleLength = rules.length;
+
+  const styles = Array.from(document.querySelectorAll('style'));
+  const styleLength = styles.length;
+
+  let cssRuleIndex = 0;
+  let styleIndex = 0;
 
   return new Promise((resolve, reject) => {
     (function transformHoverCSS() {
       while (!checkNextFrame()) {
-        if (runId !== taskID) {
+        if (runID !== taskID) {
           reject(null);
 
           return;
         }
 
-        if (!styles.length) {
+        if (ruleLength && cssRuleIndex < ruleLength) {
+          const cssRule = rules[cssRuleIndex++];
+          replaceRule(cssRule.parentStyleSheet!, visitor(cssRule.cssText));
+        } else if (styleLength && styleIndex < styleLength) {
+          const style = styles[styleIndex++];
+          style.textContent = visitor(style.textContent!);
+        } else {
           resolve(null);
 
           return;
-        }
-
-        const style = styles.pop()!;
-        if (style.textContent) {
-          style.textContent = visitor(style.textContent);
         }
       }
 
       requestAnimationFrame(transformHoverCSS);
     })();
   });
+}
+
+function replaceRule(sheet: CSSStyleSheet, text: string) {
+  sheet.deleteRule(0);
+  sheet.insertRule(text, sheet.cssRules.length);
 }

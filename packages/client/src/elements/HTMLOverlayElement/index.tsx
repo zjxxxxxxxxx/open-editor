@@ -65,7 +65,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
           </div>
         </div>
         <InternalElements.HTML_TOOLTIP_ELEMENT
-          ref={(el) => (this.state.tooltip = el as HTMLTooltipElement)}
+          ref={(el) => (this.state.tooltip = el)}
         />
       </>
     );
