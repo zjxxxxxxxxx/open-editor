@@ -9,8 +9,16 @@ A rollup plugin for fast find source code.
 
 ## Install
 
+- plugin
+
 ```bash
-npm -D i @open-editor/rollup
+npm i @open-editor/rollup -D
+```
+
+- client
+
+```bash
+npm i @open-editor/client
 ```
 
 ## Usage

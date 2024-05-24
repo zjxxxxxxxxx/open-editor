@@ -40,8 +40,10 @@
     "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup#readme",
+  "peerDependencies": {
+    "@open-editor/client": "workspace:*"
+  },
   "dependencies": {
-    "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",
     "@open-editor/shared": "workspace:*"
   },

@@ -19,7 +19,4 @@ export default defineNuxtConfig({
   vite: {
     plugins: [OpenEditor(), VueSource({})],
   },
-  devtools: {
-    enabled: true,
-  },
 });

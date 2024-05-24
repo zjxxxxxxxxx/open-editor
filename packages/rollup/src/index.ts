@@ -1,5 +1,5 @@
-import { type Plugin } from 'rollup';
 import { resolve } from 'node:path';
+import { type Plugin } from 'rollup';
 import { isDev } from '@open-editor/shared/node';
 import { injectClient, isObj, isStr } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
@@ -61,7 +61,9 @@ export default function OpenEditorPlugin(
 ): Plugin | undefined {
   if (!isDev()) return;
 
-  const { rootDir = process.cwd(), onOpenEditor } = options;
+  const { onOpenEditor } = options;
+  const rootDir = options.rootDir ? resolve(options.rootDir) : process.cwd();
+
   const include = new Set<string>();
 
   let port: number;
@@ -70,9 +72,6 @@ export default function OpenEditorPlugin(
     name: 'OpenEditorPlugin',
     options({ input }) {
       if (input) {
-        // 'a' => ['./a.js']
-        // ['./a.js', './b.js'] => ['./a.js', './b.js']
-        // { app: './a.js', bpp: './b.js' } => ['./a.js', './b.js']
         const entries = isStr(input)
           ? [input]
           : isObj(input)

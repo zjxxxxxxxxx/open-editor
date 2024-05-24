@@ -9,8 +9,16 @@ A vite plugin for fast find source code.
 
 ## Install
 
+- plugin
+
 ```bash
-npm -D i @open-editor/vite
+npm i @open-editor/vite -D
+```
+
+- client
+
+```bash
+npm i @open-editor/client
 ```
 
 ## Usage
