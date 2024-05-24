@@ -55,8 +55,16 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 First you need to install the plugin into the project.
 
+- plugin
+
 ```bash
 npm i @open-editor/vite -D
+```
+
+- client
+
+```bash
+npm i @open-editor/client
 ```
 
 Then add the plugin to the build configuration.
