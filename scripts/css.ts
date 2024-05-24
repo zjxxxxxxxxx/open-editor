@@ -27,7 +27,7 @@ export default function cssPlugin(options: Options): RollupPlugin {
       .css.replace(NEWLINE_RE, '')
       .replace(BEFORE_SPACES_RE, '$1')
       .replace(AFTER_SPACES_RE, '$1');
-    return `\`${css}\``;
+    return `\`${css.trim()}\``;
   }
 
   function isEqualName(node: Node & { name: any }, name: string) {

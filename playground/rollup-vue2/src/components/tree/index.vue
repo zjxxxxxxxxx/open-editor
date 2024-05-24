@@ -11,5 +11,7 @@ export default Vue.extend({
 </script>
 
 <template>
-  <SubTree1 />
+  <div>
+    <SubTree1 />
+  </div>
 </template>

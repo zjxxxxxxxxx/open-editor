@@ -68,6 +68,6 @@ declare namespace _JSX {
   >;
 }
 
-declare const Fragment: string;
+declare const _Fragment: string;
 
-export { _JSX as JSX, Fragment };
+export { _JSX as JSX, _Fragment as Fragment };

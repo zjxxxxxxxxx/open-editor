@@ -1,6 +1,6 @@
+import { resolve } from 'node:path';
 import type webpack from 'webpack';
 import { isDev, resolvePath } from '@open-editor/shared/node';
-import { isArr, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -57,108 +57,50 @@ const portPromiseCache: AnyObject<Promise<number>> = {};
  * development only
  */
 export default class OpenEditorPlugin {
-  private declare options: Options & { port?: number };
-  private declare compiler: webpack.Compiler;
-  private declare entries: string[];
-  private declare entryRE: RegExp;
-  private declare beforeSlashRE: RegExp;
-  private declare nodeModuleRE: RegExp;
-  private declare fileNameRE: RegExp;
+  private declare options: Options & {
+    port?: number;
+  };
 
   constructor(options: Options = {}) {
     const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } =
       options;
     this.options = {
       ...options,
-      rootDir,
+      rootDir: resolve(rootDir),
       onOpenEditor,
     };
-    this.entries = [];
-    this.beforeSlashRE = /^\/+/;
-    this.nodeModuleRE = /node_modules/;
-    this.fileNameRE = /([^.]*)\.[cm]?[tj]sx?$/;
-    this.addEntry = this.addEntry.bind(this);
-    this.ensureEntry = this.ensureEntry.bind(this);
-    this.setEntry = this.setEntry.bind(this);
-    this.setEntry('nuxt/dist/(client|app)/entry');
   }
 
   apply(compiler: webpack.Compiler) {
     if (!isDev()) return;
 
-    this.compiler = compiler;
-    this.setupEntry();
-    this.setupRules();
-    this.setupServer();
-  }
+    compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
+      let resource: string;
 
-  setupEntry() {
-    this.compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
-      compilation.hooks.addEntry.tap(PLUGIN_NAME, this.addEntry);
-    });
-  }
+      compiler.options.module.rules.push({
+        test: /\.[cm]?[tj]sx?$/,
+        exclude: /\/(node_modules|.next|.nuxt)\//,
+        use: (opts: AnyObject) => {
+          if (resource ? resource === opts.resource : opts.resource) {
+            resource = opts.resource;
 
-  addEntry(
-    dep: webpack.Dependency & AnyObject,
-    opts?: webpack.EntryOptions | string,
-  ) {
-    const { request, dependencies } = dep;
-
-    // webpack4 MultiEntryDependency
-    if (isArr(dependencies)) {
-      dependencies.forEach((dep) => this.addEntry(dep, opts));
-
-      return;
-    }
-
-    const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
-    if (name && request && !this.nodeModuleRE.test(request)) {
-      const entry = this.ensureEntry(request, name);
-      this.setEntry(entry);
-    }
-  }
-
-  ensureEntry(request: string, name: string) {
-    const [baseRequest] = request.split('?');
-    const entry = this.fileNameRE.test(baseRequest)
-      ? baseRequest
-          .replace(this.compiler.context, '')
-          .match(this.fileNameRE)![1]
-      : name;
-
-    return `/${entry.replace(this.beforeSlashRE, '')}`;
-  }
-
-  setEntry(entry: string) {
-    if (!this.entries.includes(entry)) {
-      this.entries.push(entry);
-      this.entryRE = new RegExp(`(${this.entries.join('|')})\\.[cm]?[jt]sx?$`);
-    }
-  }
-
-  setupRules() {
-    this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
-      this.compiler.options.module.rules.push({
-        test: this.fileNameRE,
-        use: ({ resource }: AnyObject) => {
-          if (resource && this.entryRE.test(resource)) {
             return {
               options: this.options,
               loader: LOADER_PATH,
             };
           }
+
           return [];
         },
       });
-      this.compiler.options.module.rules.push({
-        test: /node_modules\/@open-editor\//,
+
+      compiler.options.module.rules.push({
+        test: /\/node_modules\/@open-editor\//,
         type: 'javascript/auto',
       });
     });
-  }
 
-  setupServer() {
-    this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
+    compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
       const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
       this.options.port = await (portPromiseCache[cacheKey] ||= setupServer(
         this.options,

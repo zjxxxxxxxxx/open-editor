@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import type { ViteDevServer } from 'vite';
 import { ServerApis, injectClient } from '@open-editor/shared';
 import { openEditorMiddleware } from '@open-editor/server';
@@ -53,7 +54,8 @@ const CLIENT_PATH = '/client.mjs';
  * development only
  */
 export default function OpenEditorPlugin(options: Options = {}) {
-  const { rootDir = process.cwd(), onOpenEditor } = options;
+  const { onOpenEditor } = options;
+  const rootDir = options.rootDir ? resolve(options.rootDir) : process.cwd();
 
   return {
     name: 'OpenEditorPlugin',

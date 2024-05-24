@@ -1,4 +1,5 @@
 import { createFrameChecker } from '../../utils/createFrameChecker';
+import { createAsyncTask } from '../../utils/createAsyncTask';
 
 const DISABLE_RE = /:hover/g;
 const DISABLE_TOKEN = '.o-e-hover';
@@ -18,6 +19,7 @@ let taskID = 0;
 
 function visitCSS(visitor: (css: string) => string) {
   const checkNextFrame = createFrameChecker(1000 / 60);
+  const asyncTask = createAsyncTask();
   const runID = ++taskID;
 
   const rules = Array.from(document.styleSheets).flatMap((sheet) => {
@@ -26,39 +28,39 @@ function visitCSS(visitor: (css: string) => string) {
     }
     return [];
   });
-  const ruleLength = rules.length;
+  const rulesLength = rules.length;
 
   const styles = Array.from(document.querySelectorAll('style'));
-  const styleLength = styles.length;
+  const stylesLength = styles.length;
 
-  let cssRuleIndex = 0;
+  let ruleIndex = 0;
   let styleIndex = 0;
 
-  return new Promise((resolve, reject) => {
-    (function transformHoverCSS() {
-      while (!checkNextFrame()) {
-        if (runID !== taskID) {
-          reject(null);
+  void (function transformHoverCSS() {
+    while (!checkNextFrame()) {
+      if (runID !== taskID) {
+        asyncTask.reject();
 
-          return;
-        }
-
-        if (ruleLength && cssRuleIndex < ruleLength) {
-          const cssRule = rules[cssRuleIndex++];
-          replaceRule(cssRule.parentStyleSheet!, visitor(cssRule.cssText));
-        } else if (styleLength && styleIndex < styleLength) {
-          const style = styles[styleIndex++];
-          style.textContent = visitor(style.textContent!);
-        } else {
-          resolve(null);
-
-          return;
-        }
+        return;
       }
 
-      requestAnimationFrame(transformHoverCSS);
-    })();
-  });
+      if (rulesLength && ruleIndex < rulesLength) {
+        const rule = rules[ruleIndex++];
+        replaceRule(rule.parentStyleSheet!, visitor(rule.cssText));
+      } else if (stylesLength && styleIndex < stylesLength) {
+        const style = styles[styleIndex++];
+        style.textContent = visitor(style.textContent!);
+      } else {
+        asyncTask.resolve(null);
+
+        return;
+      }
+    }
+
+    requestAnimationFrame(transformHoverCSS);
+  })();
+
+  return asyncTask;
 }
 
 function replaceRule(sheet: CSSStyleSheet, text: string) {
