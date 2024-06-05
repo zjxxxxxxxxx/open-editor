@@ -49,6 +49,20 @@ export interface Options {
    */
   once?: boolean;
   /**
+   * Internal server configuration
+   */
+  server?: {
+    /**
+     * enable https
+     *
+     * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+     */
+    https?: {
+      key: string;
+      cert: string;
+    };
+  };
+  /**
    * custom openEditor handler
    *
    * @default 'launch-editor'
@@ -165,9 +179,10 @@ export default class OpenEditorPlugin {
   setupServer() {
     this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
       const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
-      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer(
-        this.options,
-      ));
+      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer({
+        ...this.options,
+        ...(this.options.server ?? {}),
+      }));
     });
   }
 }
