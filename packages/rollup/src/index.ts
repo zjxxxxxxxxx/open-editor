@@ -50,6 +50,20 @@ export interface Options {
    */
   once?: boolean;
   /**
+   * Internal server configuration
+   */
+  server?: {
+    /**
+     * enable https
+     *
+     * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+     */
+    https?: {
+      key: string;
+      cert: string;
+    };
+  };
+  /**
    * custom openEditor handler
    *
    * @default 'launch-editor'
@@ -93,6 +107,7 @@ export default function OpenEditorPlugin(
     async buildStart() {
       const cacheKey = `${rootDir}${onOpenEditor}`;
       port = await (portPromiseCache[cacheKey] ||= setupServer({
+        ...(options.server ?? {}),
         rootDir,
         onOpenEditor,
       }));
