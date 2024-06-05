@@ -1,3 +1,4 @@
+import picomatch from 'picomatch';
 import { getOptions } from '../options';
 
 export function ensureFileName(fileName: string) {
@@ -8,7 +9,11 @@ export function ensureFileName(fileName: string) {
   return `/${fileName.replace(/^\//, '')}`;
 }
 
-const invalidRE = /(^\/home\/runner\/|\/node_modules\/)/;
+const invalidRE = /^\/home\/runner\//;
 export function isValidFileName(fileName?: string): fileName is string {
-  return fileName ? !invalidRE.test(fileName) : false;
+  const { ignoreComponents } = getOptions();
+  return fileName
+    ? !invalidRE.test(fileName) &&
+        !picomatch.isMatch(fileName, ignoreComponents)
+    : false;
 }

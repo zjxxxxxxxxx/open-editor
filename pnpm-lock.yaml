@@ -127,6 +127,9 @@ importers:
       '@open-editor/shared':
         specifier: workspace:*
         version: link:../shared
+      picomatch:
+        specifier: ^4.0.2
+        version: 4.0.2
     devDependencies:
       '@types/react':
         specifier: ^18.2.45
@@ -5079,6 +5082,7 @@ packages:
     dependencies:
       is-glob: 4.0.3
       micromatch: 4.0.5
+      napi-wasm: 1.1.0
     dev: false
     bundledDependencies:
       - napi-wasm
@@ -19543,6 +19547,13 @@ packages:
       - supports-color
     dev: true
 
+  /napi-wasm@1.1.0:
+    resolution:
+      {
+        integrity: sha512-lHwIAJbmLSjF9VDRm9GoVOy9AGp3aIvkjv+Kvz9h16QR3uSVYH78PNQUnT2U4X53mhlnV2M7wrhibQ3GHicDmg==,
+      }
+    dev: false
+
   /native-request@1.1.0:
     resolution:
       {
@@ -21098,6 +21109,14 @@ packages:
         integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==,
       }
     engines: { node: '>=8.6' }
+
+  /picomatch@4.0.2:
+    resolution:
+      {
+        integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==,
+      }
+    engines: { node: '>=12' }
+    dev: false
 
   /pidtree@0.3.1:
     resolution:
@@ -28172,7 +28191,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       hash-sum: 2.0.0
-      vue: 3.4.26(typescript@4.5.5)
+      vue: 3.4.26(typescript@5.2.2)
       watchpack: 2.4.1
       webpack: 5.91.0(esbuild@0.20.2)
     dev: true
