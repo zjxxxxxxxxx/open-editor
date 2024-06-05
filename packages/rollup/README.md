@@ -72,6 +72,14 @@ interface Options {
    */
   retainFrame?: boolean;
   /**
+   * Ignoring components in some directories, using glob pattern syntax for matching
+   *
+   * @see https://en.wikipedia.org/wiki/Glob_(programming)
+   *
+   * @default '\/node_modules\/**\/*'
+   */
+  ignoreComponents?: string | string[];
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true

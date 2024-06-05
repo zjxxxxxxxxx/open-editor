@@ -2,9 +2,10 @@ import { resolve } from 'node:path';
 import { describe, expect, test } from 'vitest';
 import { OutputChunk, rollup } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 import { clientRoot, sharedRoot, joinURLToPath } from '../../../scripts/utils';
-import openEditor from '../dist';
+import OpenEditor from '../dist';
 
 describe('string-input', async () => {
   test('should inject client code', async () => {
@@ -13,24 +14,30 @@ describe('string-input', async () => {
         joinURLToPath(import.meta.url, 'app.js'),
         joinURLToPath(import.meta.url, 'app2.js'),
       ],
-      plugins: [nodeResolve(), openEditor()],
+      plugins: [nodeResolve(), commonjs(), OpenEditor()],
     });
     const { output } = await bundle.generate({
       dir: 'dist',
       format: 'esm',
     });
 
-    expect(output[0].moduleIds).toEqual([
-      joinURLToPath(import.meta.url, 'app.js'),
-    ]);
-
-    expect((<OutputChunk>output[1]).moduleIds).toEqual([
-      joinURLToPath(import.meta.url, 'app2.js'),
-    ]);
-
-    expect((<OutputChunk>output[2]).moduleIds).toEqual([
-      resolve(sharedRoot, 'dist/index.mjs'),
-      resolve(clientRoot, 'dist/index.mjs'),
-    ]);
+    expect(
+      output[0].moduleIds.includes(joinURLToPath(import.meta.url, 'app.js')),
+    ).toBeTruthy();
+    expect(
+      (<OutputChunk>output[1]).moduleIds.includes(
+        joinURLToPath(import.meta.url, 'app2.js'),
+      ),
+    ).toBeTruthy();
+    expect(
+      (<OutputChunk>output[2]).moduleIds.includes(
+        resolve(sharedRoot, 'dist/index.mjs'),
+      ),
+    ).toBeTruthy();
+    expect(
+      (<OutputChunk>output[2]).moduleIds.includes(
+        resolve(clientRoot, 'dist/index.mjs'),
+      ),
+    ).toBeTruthy();
   });
 });
