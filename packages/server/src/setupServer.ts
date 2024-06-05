@@ -1,4 +1,6 @@
 import http from 'node:http';
+import https from 'node:https';
+import { readFileSync } from 'node:fs';
 import { createApp } from './createApp';
 
 export interface Options {
@@ -9,6 +11,15 @@ export interface Options {
    */
   rootDir?: string;
   /**
+   * enable https
+   *
+   * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+   */
+  https?: {
+    key: string;
+    cert: string;
+  };
+  /**
    * custom openEditor handler
    *
    * @default 'launch-editor'
@@ -17,12 +28,20 @@ export interface Options {
 }
 
 export function setupServer(options: Options = {}) {
-  const { rootDir } = options;
+  const { rootDir, https: httpsOpts } = options;
 
   const app = createApp({
     rootDir,
   });
-  const httpServer = http.createServer(app);
+  const httpServer = httpsOpts
+    ? https.createServer(
+        {
+          key: readFileSync(httpsOpts.key),
+          cert: readFileSync(httpsOpts.cert),
+        },
+        app,
+      )
+    : http.createServer(app);
   return startServer(httpServer);
 }
 
