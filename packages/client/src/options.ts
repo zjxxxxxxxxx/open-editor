@@ -30,6 +30,14 @@ export interface Options {
    */
   retainFrame?: boolean;
   /**
+   * Ignoring components in some directories, using glob pattern syntax for matching
+   *
+   * @see https://en.wikipedia.org/wiki/Glob_(programming)
+   *
+   * @default '\/node_modules\/**\/*'
+   */
+  ignoreComponents?: string | string[];
+  /**
    * exit the check after opening the editor or component tree
    *
    * @default true
@@ -54,6 +62,7 @@ export function setOptions(
     colorMode: userOpts.colorMode ?? 'system',
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
     retainFrame: userOpts.retainFrame ?? true,
+    ignoreComponents: userOpts.ignoreComponents ?? '/node_modules/**/*',
     once: userOpts.once ?? true,
   };
 }
