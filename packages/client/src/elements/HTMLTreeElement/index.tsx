@@ -34,18 +34,18 @@ export class HTMLTreeElement extends HTMLCustomElement<{
       <>
         <link rel="stylesheet" href="./index.css" />
         <div
-          className="o-e-root"
+          className="oe-root"
           ref={(el) => (this.state.root = el)}
           onQuickExit={this.close}
         >
           <div
-            className="o-e-overlay"
+            className="oe-overlay"
             ref={(el) => (this.state.overlay = el)}
             onClick={this.exit}
           />
-          <div className="o-e-popup" ref={(el) => (this.state.popup = el)}>
+          <div className="oe-popup" ref={(el) => (this.state.popup = el)}>
             <button
-              className="o-e-close"
+              className="oe-close"
               ref={(el) => (this.state.popupClose = el)}
               onClick={this.exit}
             >
@@ -58,7 +58,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
                 <path d="M569.02728271 509.40447998L877.59753418 817.97473145 820.57025146 872.40649414 512 563.83624268 198.23870849 882.78857422 141.21142578 823.16577148l313.76129151-318.95233154L146.40246582 195.64318847 203.42974854 141.21142578 512 449.78167724 820.57025146 141.21142578 877.59753418 200.83422852 569.02728271 509.40447998z" />
               </svg>
             </button>
-            <div className="o-e-body" ref={(el) => (this.state.popupBody = el)}>
+            <div className="oe-body" ref={(el) => (this.state.popupBody = el)}>
               {/* tree element insert here */}
             </div>
           </div>
@@ -73,15 +73,15 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     this.renderTree(el);
     this.enableClick();
 
-    addClass(this.state.root, 'o-e-show');
-    addClass(getHtml(), 'o-e-lock-screen');
+    addClass(this.state.root, 'oe-show');
+    addClass(getHtml(), 'oe-lock-screen');
   }
 
   close() {
     this.isOpen = false;
 
-    removeClass(this.state.root, 'o-e-show');
-    removeClass(getHtml(), 'o-e-lock-screen');
+    removeClass(this.state.root, 'oe-show');
+    removeClass(getHtml(), 'oe-lock-screen');
   }
 
   private renderTree(el: HTMLElement) {
@@ -89,20 +89,20 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const hasTree = source.tree.length > 0;
     const content = (
       <>
-        <div className="o-e-title">
-          <span className="o-e-tag">{source.el} in </span>
+        <div className="oe-title">
+          <span className="oe-tag">{source.el} in </span>
           {`<ComponentTree>`}
         </div>
-        <div className="o-e-content">
+        <div className="oe-content">
           {hasTree ? this.buildTree(source.tree) : '>> not found 😭.'}
         </div>
       </>
     );
 
     if (hasTree) {
-      removeClass(this.state.popup, 'o-e-error');
+      removeClass(this.state.popup, 'oe-error');
     } else {
-      addClass(this.state.popup, 'o-e-error');
+      addClass(this.state.popup, 'oe-error');
     }
 
     replaceChildren(this.state.popupBody, content);
@@ -114,20 +114,20 @@ export class HTMLTreeElement extends HTMLCustomElement<{
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
 
     return (
-      <div className="o-e-tree">
+      <div className="oe-tree">
         <div
-          className="o-e-node"
+          className="oe-node"
           title="Click to open in your editor"
           onClick={() => this.openEditor(meta)}
         >
           {tagName}
-          <span className="o-e-file">{fileName}</span>
+          <span className="oe-file">{fileName}</span>
         </div>
         {tree.length > 0 && (
           <>
-            <div className="o-e-line" />
+            <div className="oe-line" />
             {this.buildTree(tree)}
-            <div className="o-e-node">{tagName}</div>
+            <div className="oe-node">{tagName}</div>
           </>
         )}
       </div>
@@ -155,7 +155,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   private async openEditor(meta: SourceCodeMeta) {
     if (this.state.clickable) {
       try {
-        addClass(getHtml(), 'o-e-loading');
+        addClass(getHtml(), 'oe-loading');
 
         const { once } = getOptions();
         if (once) this.close();
@@ -163,7 +163,7 @@ export class HTMLTreeElement extends HTMLCustomElement<{
         const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
         await openEditor(meta, dispatch);
       } finally {
-        removeClass(getHtml(), 'o-e-loading');
+        removeClass(getHtml(), 'oe-loading');
       }
     }
   }

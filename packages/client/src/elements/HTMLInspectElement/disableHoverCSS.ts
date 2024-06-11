@@ -2,9 +2,9 @@ import { createFrameChecker } from '../../utils/createFrameChecker';
 import { createAsyncTask } from '../../utils/createAsyncTask';
 
 const DISABLE_RE = /:hover/g;
-const DISABLE_TOKEN = '.o-e-hover';
+const DISABLE_TOKEN = '::hover';
 
-const ENABLE_RE = /\.o-e-hover/g;
+const ENABLE_RE = /:+:hover/g;
 const ENABLE_TOKEN = ':hover';
 
 export function disableHoverCSS() {

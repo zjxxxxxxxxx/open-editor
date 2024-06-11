@@ -1,11 +1,14 @@
 const useStrictRE = /^['"]use strict['"];?/;
-export function injectClient(code: string, opts: AnyObject) {
+export function injectClient(code: string, userOpts: AnyObject) {
+  const { isCommonjs, ...opts } = userOpts;
   return (
-    (useStrictRE.test(code) ? '"use strict";' : '') +
-    'import { setupClient } from "@open-editor/client";' +
+    (useStrictRE.test(code) ? '"use strict";\n' : '') +
+    (isCommonjs
+      ? 'const { setupClient } = require("@open-editor/client");\n'
+      : 'import { setupClient } from "@open-editor/client";\n') +
     code.replace(useStrictRE, '') +
-    ';if(typeof window !== "undefined"){ setupClient(' +
+    '\nif(typeof window !== "undefined"){setupClient(' +
     JSON.stringify(opts) +
-    ')};'
+    ')};\n'
   );
 }

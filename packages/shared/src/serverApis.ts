@@ -1,3 +1,3 @@
 export const ServerApis = <const>{
-  OPEN_EDITOR: '/__open-editor__',
+  OPEN_EDITOR: '/__open_editor__',
 };

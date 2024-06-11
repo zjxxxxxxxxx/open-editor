@@ -40,10 +40,10 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="o-e-root" ref={(el) => (this.state.root = el)}>
-          <div className="o-e-overlay" />
+        <div className="oe-root" ref={(el) => (this.state.root = el)}>
+          <div className="oe-overlay" />
           <button
-            className="o-e-button"
+            className="oe-button"
             ref={(el) => (this.state.button = el)}
             onClick={this.dispatchChange}
             onLongPress={this.startDnD}
@@ -67,9 +67,9 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     switch (name) {
       case 'active':
         if (newValue) {
-          addClass(this.state.button, 'o-e-active');
+          addClass(this.state.button, 'oe-active');
         } else {
-          removeClass(this.state.button, 'o-e-active');
+          removeClass(this.state.button, 'oe-active');
         }
     }
   }
@@ -97,7 +97,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     on('pointermove', this.changePosTop);
     on('pointerup', this.stopDnD);
 
-    addClass(this.state.root, 'o-e-dnd');
+    addClass(this.state.root, 'oe-dnd');
   }
 
   private stopDnD() {
@@ -107,7 +107,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     off('pointermove', this.changePosTop);
     off('pointerup', this.stopDnD);
 
-    removeClass(this.state.root, 'o-e-dnd');
+    removeClass(this.state.root, 'oe-dnd');
   }
 
   private changePosTop(e: PointerEvent) {
@@ -123,9 +123,9 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     if (this.state.touchable !== touchable) {
       // Display larger button on the touch screen
       if (touchable) {
-        addClass(this.state.root, 'o-e-touch');
+        addClass(this.state.root, 'oe-touch');
       } else {
-        removeClass(this.state.root, 'o-e-touch');
+        removeClass(this.state.root, 'oe-touch');
       }
       this.state.touchable = touchable;
     }

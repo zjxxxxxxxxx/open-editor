@@ -17,6 +17,6 @@ export default defineNuxtConfig({
   },
   css: ['~/assets/style.css'],
   vite: {
-    plugins: [OpenEditor(), VueSource({})],
+    plugins: [OpenEditor(), VueSource()],
   },
 });

@@ -27,7 +27,7 @@ export default {
     format: 'esm',
   },
   plugins: [
-    VueSource({}),
+    VueSource(),
     vue({
       exposeFilename: true,
     }),

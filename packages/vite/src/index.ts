@@ -39,7 +39,7 @@ export interface Options {
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
-   * @default '\/node_modules\/**\/*'
+   * @default '\/**\/node_modules\/**\/*'
    */
   ignoreComponents?: string | string[];
   /**

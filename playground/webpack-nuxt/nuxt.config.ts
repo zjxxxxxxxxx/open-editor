@@ -18,6 +18,6 @@ export default defineNuxtConfig({
   css: ['~/assets/style.css'],
   builder: 'webpack',
   webpack: {
-    plugins: [new OpenEditorWebpackPlugin(), VueSource({})],
+    plugins: [new OpenEditorWebpackPlugin(), VueSource()],
   },
 });

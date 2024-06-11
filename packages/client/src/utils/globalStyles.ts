@@ -11,10 +11,10 @@ const overrideCSS = css`
 export const overrideStyle = createGlobalStyle(overrideCSS);
 
 const effectCSS = css`
-  .o-e-lock-screen {
+  .oe-lock-screen {
     overflow: hidden !important;
   }
-  .o-e-loading * {
+  .oe-loading * {
     cursor: wait !important;
   }
 `;

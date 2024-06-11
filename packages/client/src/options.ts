@@ -34,7 +34,7 @@ export interface Options {
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
-   * @default '\/node_modules\/**\/*'
+   * @default '\/**\/node_modules\/**\/*'
    */
   ignoreComponents?: string | string[];
   /**
@@ -62,7 +62,7 @@ export function setOptions(
     colorMode: userOpts.colorMode ?? 'system',
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
     retainFrame: userOpts.retainFrame ?? true,
-    ignoreComponents: userOpts.ignoreComponents ?? '/node_modules/**/*',
+    ignoreComponents: userOpts.ignoreComponents ?? '/**/node_modules/**/*',
     once: userOpts.once ?? true,
   };
 }

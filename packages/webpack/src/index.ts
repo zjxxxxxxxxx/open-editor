@@ -1,6 +1,5 @@
 import type webpack from 'webpack';
 import { isDev, resolvePath } from '@open-editor/shared/node';
-import { isArr, isObj } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -39,7 +38,7 @@ export interface Options {
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
-   * @default '\/node_modules\/**\/*'
+   * @default '\/**\/node_modules\/**\/*'
    */
   ignoreComponents?: string | string[];
   /**
@@ -73,20 +72,24 @@ export interface Options {
 const PLUGIN_NAME = 'OpenEditorPlugin';
 const LOADER_PATH = resolvePath('./transform', import.meta.url);
 
-const portPromiseCache: AnyObject<Promise<number>> = {};
+const REACT_15_PATH = 'react/react.js';
+const REACT_17_PATH = 'react/index.js';
+const VUE_2_PATH = 'vue/dist/vue.runtime.common.js';
+const VUE_2_ESM_PATH = 'vue/dist/vue.runtime.esm.js';
+const VUE_3_PATH = 'vue/index.js';
+const VUE_3_ESM_PATH = 'vue/dist/vue.runtime.esm-bundler.js';
 
-const beforeSlashRE = /^\/+/;
-const nodeModuleRE = /\/node_modules\//;
-const fileNameRE = /([^.]*)\.[cm]?[tj]sx?$/;
+const ENTRY_RE = RegExp(
+  `/node_modules/${[REACT_15_PATH, REACT_17_PATH, VUE_2_PATH, VUE_2_ESM_PATH, VUE_3_PATH, VUE_3_ESM_PATH].join('|')}$`,
+);
+
+const portPromiseCache: AnyObject<Promise<number>> = {};
 
 /**
  * development only
  */
 export default class OpenEditorPlugin {
   private declare options: Options & { port?: number };
-  private declare compiler: webpack.Compiler;
-  private declare entries: string[];
-  private declare entryRE: RegExp;
 
   constructor(options: Options = {}) {
     const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } =
@@ -96,88 +99,40 @@ export default class OpenEditorPlugin {
       rootDir,
       onOpenEditor,
     };
-    this.entries = [];
-    this.setEntry('nuxt/dist/(client|app)/entry');
-
-    this.addEntry = this.addEntry.bind(this);
-    this.ensureEntry = this.ensureEntry.bind(this);
-    this.setEntry = this.setEntry.bind(this);
   }
 
   apply(compiler: webpack.Compiler) {
     if (!isDev()) return;
 
-    this.compiler = compiler;
-    this.setupEntry();
-    this.setupRules();
-    this.setupServer();
-  }
-
-  setupEntry() {
-    this.compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
-      compilation.hooks.addEntry.tap(PLUGIN_NAME, this.addEntry);
-    });
-  }
-
-  addEntry(
-    dep: webpack.Dependency & AnyObject,
-    opts?: webpack.EntryOptions | string,
-  ) {
-    const { request, dependencies } = dep;
-
-    // webpack4 MultiEntryDependency
-    if (isArr(dependencies)) {
-      dependencies.forEach((dep) => this.addEntry(dep, opts));
-
-      return;
-    }
-
-    const name = isObj<webpack.EntryOptions>(opts) ? opts.name : opts;
-    if (name && request && !nodeModuleRE.test(request)) {
-      const entry = this.ensureEntry(request, name);
-      this.setEntry(entry);
-    }
-  }
-
-  ensureEntry(request: string, name: string) {
-    const [baseRequest] = request.split('?');
-    const entry = fileNameRE.test(baseRequest)
-      ? baseRequest.replace(this.compiler.context, '').match(fileNameRE)![1]
-      : name;
-
-    return `/${entry.replace(beforeSlashRE, '')}`;
-  }
-
-  setEntry(entry: string) {
-    if (!this.entries.includes(entry)) {
-      this.entries.push(entry);
-      this.entryRE = new RegExp(`(${this.entries.join('|')})\\.[cm]?[jt]sx?$`);
-    }
-  }
-
-  setupRules() {
-    this.compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
-      this.compiler.options.module.rules.push({
-        test: fileNameRE,
-        use: ({ resource }: AnyObject) => {
-          if (resource && this.entryRE.test(resource)) {
+    compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
+      compiler.options.module.rules.push({
+        test: /\/node_modules\//,
+        include: ENTRY_RE,
+        use: (data: AnyObject) => {
+          const { resource, compiler } = data;
+          if (!compiler || compiler === 'client') {
             return {
-              options: this.options,
+              options: {
+                ...this.options,
+                isCommonjs:
+                  !resource.endsWith(VUE_2_ESM_PATH) &&
+                  !resource.endsWith(VUE_3_ESM_PATH),
+              },
               loader: LOADER_PATH,
             };
           }
+
           return [];
         },
       });
-      this.compiler.options.module.rules.push({
-        test: /node_modules\/@open-editor\//,
+
+      compiler.options.module.rules.push({
+        test: /\/node_modules\/@open-editor\//,
         type: 'javascript/auto',
       });
     });
-  }
 
-  setupServer() {
-    this.compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
+    compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
       const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
       this.options.port = await (portPromiseCache[cacheKey] ||= setupServer({
         ...this.options,
