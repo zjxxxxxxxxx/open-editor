@@ -34,15 +34,15 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="o-e-root" ref={(el) => (this.state.root = el)}>
-          <div className="o-e-content">
-            <span className="o-e-tag" ref={(el) => (this.state.tag = el)}>
+        <div className="oe-root" ref={(el) => (this.state.root = el)}>
+          <div className="oe-content">
+            <span className="oe-tag" ref={(el) => (this.state.tag = el)}>
               {/* el textContent */}
             </span>
-            <span className="o-e-comp" ref={(el) => (this.state.comp = el)}>
+            <span className="oe-comp" ref={(el) => (this.state.comp = el)}>
               {/* comp textContent */}
             </span>
-            <span className="o-e-file" ref={(el) => (this.state.file = el)}>
+            <span className="oe-file" ref={(el) => (this.state.file = el)}>
               {/* file textContent */}
             </span>
           </div>
@@ -52,11 +52,11 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
   }
 
   open() {
-    addClass(this.state.root, 'o-e-show');
+    addClass(this.state.root, 'oe-show');
   }
 
   close() {
-    removeClass(this.state.root, 'o-e-show');
+    removeClass(this.state.root, 'oe-show');
   }
 
   update(el: HTMLElement | null, box: RectBox) {

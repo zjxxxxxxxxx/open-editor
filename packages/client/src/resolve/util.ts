@@ -1,6 +1,12 @@
 import picomatch from 'picomatch';
 import { getOptions } from '../options';
 
+let pm: (v: string) => boolean;
+function setupPm() {
+  const { ignoreComponents } = getOptions();
+  pm ||= picomatch(ignoreComponents, { dot: true });
+}
+
 export function ensureFileName(fileName: string) {
   const { rootDir } = getOptions();
   if (fileName.startsWith(rootDir)) {
@@ -11,9 +17,6 @@ export function ensureFileName(fileName: string) {
 
 const invalidRE = /^\/home\/runner\//;
 export function isValidFileName(fileName?: string): fileName is string {
-  const { ignoreComponents } = getOptions();
-  return fileName
-    ? !invalidRE.test(fileName) &&
-        !picomatch.isMatch(fileName, ignoreComponents)
-    : false;
+  setupPm();
+  return fileName ? !invalidRE.test(fileName) && !pm(fileName) : false;
 }

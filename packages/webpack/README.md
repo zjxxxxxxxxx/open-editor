@@ -76,7 +76,7 @@ interface Options {
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
-   * @default '\/node_modules\/**\/*'
+   * @default '\/**\/node_modules\/**\/*'
    */
   ignoreComponents?: string | string[];
   /**
@@ -85,6 +85,20 @@ interface Options {
    * @default true
    */
   once?: boolean;
+  /**
+   * Internal server configuration
+   */
+  server?: {
+    /**
+     * enable https
+     *
+     * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+     */
+    https?: {
+      key: string;
+      cert: string;
+    };
+  };
   /**
    * custom openEditor handler
    *

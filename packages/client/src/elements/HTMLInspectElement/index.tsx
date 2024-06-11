@@ -187,7 +187,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
   private async openEditor(el: HTMLElement) {
     try {
-      addClass(getHtml(), 'o-e-loading');
+      addClass(getHtml(), 'oe-loading');
       const { meta } = resolveSource(el);
       if (!meta) {
         logError('file not found');
@@ -198,12 +198,12 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       const dispatch = (e: CustomEvent<URL>) => this.dispatchEvent(e);
       await openEditor(meta, dispatch);
     } finally {
-      removeClass(getHtml(), 'o-e-loading');
+      removeClass(getHtml(), 'oe-loading');
     }
   }
 
   private showErrorOverlay() {
-    const errorOverlay = <div className="o-e-error-overlay" />;
+    const errorOverlay = <div className="oe-error-overlay" />;
     const ani = errorOverlay.animate(
       [
         {},
