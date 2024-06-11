@@ -1,8 +1,8 @@
 import { camelCase } from '@open-editor/shared';
 import { ensureFileName } from './util';
 import { resolveDebug } from './resolveDebug';
-import { resolveReact17Plus } from './resolves/react17+';
-import { resolveReact15Plus } from './resolves/react15+';
+import { resolveReact17 } from './resolves/react17';
+import { resolveReact15 } from './resolves/react15';
 import { resolveVue3 } from './resolves/vue3';
 import { resolveVue2 } from './resolves/vue2';
 
@@ -27,9 +27,9 @@ export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
   const debug = resolveDebug(el);
   if (debug) {
     if (debug.key.startsWith('__reactFiber')) {
-      resolveReact17Plus(debug, source.tree, deep);
+      resolveReact17(debug, source.tree, deep);
     } else if (debug.key.startsWith('__reactInternal')) {
-      resolveReact15Plus(debug, source.tree, deep);
+      resolveReact15(debug, source.tree, deep);
     } else if (debug.key.startsWith('__vueParent')) {
       resolveVue3(debug, source.tree, deep);
     } else if (debug.key.startsWith('__vue')) {
