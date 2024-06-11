@@ -1,4 +1,4 @@
-.o-e-root {
+.oe-root {
   position: fixed;
   z-index: var(--z-index-tooltip);
   display: none;
@@ -11,26 +11,26 @@
   pointer-events: none;
   will-change: visibility, top, left;
 }
-.o-e-content {
+.oe-content {
   padding: 12px 20px;
   background: var(--bg-color-opt);
   backdrop-filter: var(--filter);
 }
-.o-e-tag {
+.oe-tag {
   color: var(--text-color);
 }
-.o-e-comp {
+.oe-comp {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-color);
 }
-.o-e-file {
+.oe-file {
   display: block;
   text-decoration: underline;
   word-wrap: break-word;
   color: var(--text-color2);
 }
-.o-e-show {
+.oe-show {
   display: inline-block;
   visibility: hidden;
 }

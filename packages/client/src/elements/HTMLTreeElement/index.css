@@ -3,11 +3,11 @@
   --w: min(calc(100vw - 96px), 500px);
   --h: min(calc(100vh - 148px), 300px);
 }
-.o-e-root {
+.oe-root {
   display: none;
   touch-action: none;
 }
-.o-e-overlay {
+.oe-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -16,7 +16,7 @@
   height: 100vh;
   backdrop-filter: var(--filter);
 }
-.o-e-popup {
+.oe-popup {
   position: fixed;
   top: 50%;
   left: 50%;
@@ -28,7 +28,7 @@
   box-shadow: var(--shadow);
   border-radius: 16px;
 }
-.o-e-close {
+.oe-close {
   position: absolute;
   top: 4px;
   right: 4px;
@@ -40,21 +40,21 @@
   border: none;
   border-radius: 99px;
 }
-.o-e-close:hover {
+.oe-close:hover {
   backdrop-filter: invert(50%);
 }
-.o-e-body {
+.oe-body {
   padding: 20px 28px;
   overflow: hidden;
 }
-.o-e-error,
-.o-e-error * {
+.oe-error,
+.oe-error * {
   color: var(--red);
 }
-.o-e-error .o-e-close:hover {
+.oe-error .oe-close:hover {
   background: var(--red-light);
 }
-.o-e-title {
+.oe-title {
   box-sizing: border-box;
   min-width: var(--min-w);
   max-width: var(--w);
@@ -62,11 +62,11 @@
   font-size: 18px;
   font-weight: 600;
 }
-.o-e-tag {
+.oe-tag {
   font-size: 14px;
   font-weight: 400;
 }
-.o-e-content {
+.oe-content {
   min-width: var(--min-w);
   max-width: var(--w);
   max-height: var(--h);
@@ -74,17 +74,17 @@
   overflow: auto;
   scrollbar-width: none;
 }
-.o-e-content::-webkit-scrollbar {
+.oe-content::-webkit-scrollbar {
   display: none;
 }
-.o-e-content > .o-e-tree {
+.oe-content > .oe-tree {
   margin-left: -10px;
 }
-.o-e-tree {
+.oe-tree {
   position: relative;
   padding-left: 10px;
 }
-.o-e-line {
+.oe-line {
   position: absolute;
   left: 11px;
   top: 22px;
@@ -93,21 +93,21 @@
   height: calc(100% - 44px);
   background: var(--text-color);
 }
-.o-e-node {
+.oe-node {
   margin: 2px 0;
   font-size: 13px;
   font-weight: 500;
   color: var(--text-color);
   opacity: 0.6;
 }
-.o-e-node[title]:hover,
-.o-e-node[title]:hover ~ .o-e-node {
+.oe-node[title]:hover,
+.oe-node[title]:hover ~ .oe-node {
   opacity: 1;
 }
-.o-e-node[title]:hover ~ .o-e-line {
+.oe-node[title]:hover ~ .oe-line {
   opacity: 0.6;
 }
-.o-e-file {
+.oe-file {
   padding-left: 6px;
   font-size: 12px;
   font-weight: 400;
@@ -115,6 +115,6 @@
   color: var(--text-color2);
   pointer-events: none;
 }
-.o-e-show {
+.oe-show {
   display: block;
 }
