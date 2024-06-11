@@ -4,11 +4,11 @@ import type { ResolveDebug } from '../resolveDebug';
 import { ensureFileName, isValidFileName } from '../util';
 
 interface VueResolverOptions<T = any> {
-  isValid(instance: T): boolean;
-  getNext(instance: T): T | null | undefined;
-  getSource(instance: T): string | undefined;
-  getFile(instance: T): string;
-  getName(instance: T): string | undefined;
+  isValid(v: T): boolean;
+  getNext(v: T): T | null | undefined;
+  getSource(v: T): string | undefined;
+  getFile(v: T): string | undefined;
+  getName(v: T): string | undefined;
 }
 
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
@@ -25,16 +25,16 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
       const file = getFile(inst);
       if (isValidFileName(file)) {
         if (source) {
-          if (resolveBySource(file)) return;
+          if (resolveForSource(file)) return;
         } else {
-          if (resolveByFile(file)) return;
+          if (resolveForFile(file)) return;
         }
       }
 
       inst = getNext(inst);
     }
 
-    function resolveBySource(file: string) {
+    function resolveForSource(file: string) {
       const parsedSource = parsePath(source);
       const parsedFile = parsePath(file);
 
@@ -43,27 +43,25 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
           push(inst, parsedSource);
           source = getSource(inst);
         }
-        if (!deep) {
-          return true;
-        }
+
+        return !deep;
       }
     }
 
-    function resolveByFile(file: string) {
+    function resolveForFile(file: string) {
       const parsedFile = parsePath(file);
 
       if (!record.has(parsedFile.file)) {
         push(inst, parsedFile);
       }
-      if (!deep) {
-        return true;
-      }
+
+      return !deep;
     }
 
     function push(inst: any, meta: any) {
       record.add(meta.file);
       tree.push({
-        name: getName(inst) ?? getNameByFile(meta.file),
+        name: getName(inst) ?? getNameForFile(meta.file),
         ...meta,
       });
     }
@@ -94,7 +92,7 @@ function parsePath(source: string) {
 }
 
 const nameRE = /([^/]+)\.[^.]+$/;
-function getNameByFile(file = '') {
+function getNameForFile(file = '') {
   const [, n] = file.match(nameRE)!;
   return n;
 }

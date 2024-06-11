@@ -8,13 +8,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "@open-editor/client": "latest",
+    "vue": "^3.3.4",
+    "unplugin-vue-source": "latest"
   },
   "devDependencies": {
     "@open-editor/vite": "latest",
     "@vitejs/plugin-vue": "^4.2.3",
     "typescript": "^5.0.2",
-    "unplugin-vue-source": "latest",
     "vite": "^4.4.5"
   }
 }

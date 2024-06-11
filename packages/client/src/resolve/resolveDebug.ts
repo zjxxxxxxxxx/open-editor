@@ -7,12 +7,12 @@ export type ResolveDebug<T = any> = {
   value?: T | null;
 };
 
-const react17PlusKeyStarts = '__reactFiber$';
-const react15PlusKeyStarts = '__reactInternalInstance$';
+const react17KeySearch = '__reactFiber$';
+const react15KeySearch = '__reactInternalInstance$';
 // __reactFiber$xxx...
-export let react17PlusKey: string | undefined;
+export let react17Key: string | undefined;
 // __reactInternalInstance$xxx...
-export let react15PlusKey: string | undefined;
+export let react15Key: string | undefined;
 
 export const vue3Key = '__vueParentComponent';
 export const vue2Key = '__vue__';
@@ -34,24 +34,25 @@ function findKey(el: HTMLElement) {
   if (hasOwnProperty(el, vue3Key)) {
     return vue3Key;
   }
+
   // vue2+
-  else if (hasOwnProperty(el, vue2Key)) {
+  if (hasOwnProperty(el, vue2Key)) {
     return vue2Key;
   }
 
   // react17+
-  react17PlusKey ||= startsWith(el, react17PlusKeyStarts);
-  if (react17PlusKey && hasOwnProperty(el, react17PlusKey)) {
-    return react17PlusKey;
+  react17Key ||= startsWith(el, react17KeySearch);
+  if (react17Key && hasOwnProperty(el, react17Key)) {
+    return react17Key;
   }
 
   // react15+
-  react15PlusKey ||= startsWith(el, react15PlusKeyStarts);
-  if (react15PlusKey && hasOwnProperty(el, react15PlusKey)) {
-    return react15PlusKey;
+  react15Key ||= startsWith(el, react15KeySearch);
+  if (react15Key && hasOwnProperty(el, react15Key)) {
+    return react15Key;
   }
 }
 
-function startsWith(el: HTMLElement, starts: string) {
-  return Object.keys(el).find((key) => key.startsWith(starts));
+function startsWith(el: HTMLElement, search: string) {
+  return Object.keys(el).find((key) => key.startsWith(search));
 }

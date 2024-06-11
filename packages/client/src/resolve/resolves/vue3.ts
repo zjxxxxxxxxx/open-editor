@@ -3,40 +3,37 @@ import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
 import { createVueResolver } from '../creators/createVueResolver';
 
+let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
 export function resolveVue3(
   debug: ResolveDebug,
   tree: Partial<SourceCodeMeta>[],
   deep = false,
 ) {
-  ensureLazyResolver()(debug, tree, deep);
+  setupResolver();
+  resolver(debug, tree, deep);
 }
 
-let resolver: ReturnType<typeof createVueResolver<ComponentInternalInstance>>;
-function ensureLazyResolver() {
-  return (resolver ||= createVueResolver({
+function setupResolver() {
+  resolver ||= createVueResolver({
     isValid(inst): inst is any {
       return !!inst;
     },
-    getNext,
-    getSource,
+    getNext(inst) {
+      return inst.parent;
+    },
+    getSource(inst) {
+      while (inst) {
+        const source = <string>inst.props.__source;
+        if (source) return source;
+
+        inst = inst.parent!;
+      }
+    },
     getFile(inst) {
       return <string>inst.type.__file;
     },
     getName(inst) {
       return inst.type.name || inst.type.__name;
     },
-  }));
-
-  function getSource(inst: any) {
-    while (inst) {
-      if (inst.props.__source) {
-        return inst.props.__source;
-      }
-      inst = getNext(inst);
-    }
-  }
-
-  function getNext(inst: any) {
-    return inst.parent;
-  }
+  });
 }

@@ -1,5 +1,4 @@
 {
   "extends": "./tsconfig.base.json",
-  "exclude": ["node_modules", "playground"],
-  "include": ["scripts"]
+  "include": ["./scripts"]
 }

@@ -53,5 +53,5 @@ export function openEditorMiddleware(
 }
 
 function sendMessage(msg: string) {
-  return `@open-editor/server: ${msg}.`;
+  return `[@open-editor/server] ${msg}.`;
 }

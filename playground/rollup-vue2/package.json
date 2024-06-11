@@ -6,7 +6,9 @@
     "dev": "rollup -c -w --environment NODE_ENV:development"
   },
   "dependencies": {
-    "vue": "^2.7.14"
+    "@open-editor/client": "latest",
+    "vue": "^2.7.14",
+    "unplugin-vue-source": "latest"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
@@ -22,7 +24,6 @@
     "rollup-plugin-live-server": "^2.0.0",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-vue": "^5.0.0",
-    "typescript": "^2.2.0",
-    "unplugin-vue-source": "latest"
+    "typescript": "^2.2.0"
   }
 }
