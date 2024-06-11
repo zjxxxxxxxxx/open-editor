@@ -1,11 +1,12 @@
+import type { Source } from 'react-reconciler';
 import type { SourceCodeMeta } from '../';
 import { isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
-  isValid(current?: T | null): boolean;
-  getNext(current?: T | null): T | null | undefined;
-  getSource(current?: T | null): any;
-  getName(current?: T | null): string | undefined;
+  isValid(v: T): boolean;
+  getNext(v: T): T | null | undefined;
+  getSource(v: T): (Source & { columnNumber?: number }) | null | undefined;
+  getName(v: T): string | undefined;
 }
 
 export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
@@ -21,25 +22,20 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
       let next = getNext(cur);
 
       if (isValidFileName(source?.fileName)) {
-        while (!isValid(next)) {
-          if (!next) {
-            return;
-          }
+        while (!isValid(next!)) {
+          if (!next) return;
+
           next = getNext(next);
         }
-        push();
-        if (!deep) {
-          return;
-        }
-      }
 
-      function push() {
         tree.push({
           name: getName(next!),
-          file: source.fileName,
-          line: source.lineNumber,
-          column: source.columnNumber,
+          file: source!.fileName,
+          line: source!.lineNumber,
+          column: source!.columnNumber,
         });
+
+        if (!deep) return;
       }
 
       cur = next;

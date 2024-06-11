@@ -6,6 +6,7 @@
     "dev": "rollup -c -w --environment NODE_ENV:development"
   },
   "dependencies": {
+    "@open-editor/client": "latest",
     "react": "^15.7.0",
     "react-dom": "^15.7.0"
   },

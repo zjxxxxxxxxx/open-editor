@@ -10,10 +10,13 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@open-editor/vite": "latest",
+    "@open-editor/client": "latest",
     "nuxt": "^3.11.2",
     "unplugin-vue-source": "latest",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
+  },
+  "devDependencies": {
+    "@open-editor/vite": "latest"
   }
 }
