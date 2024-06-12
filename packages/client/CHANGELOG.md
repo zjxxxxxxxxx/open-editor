@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.8.3
+
+### Patch Changes
+
+- [#231](https://github.com/zjxxxxxxxxx/open-editor/pull/231) [`9d63552061b28922d6c83918d5194a8b182bec29`](https://github.com/zjxxxxxxxxx/open-editor/commit/9d63552061b28922d6c83918d5194a8b182bec29) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add option `ignoreComponents`
+
+- [#234](https://github.com/zjxxxxxxxxx/open-editor/pull/234) [`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Modify the `disableHoverCSS` token
+
+- [#228](https://github.com/zjxxxxxxxxx/open-editor/pull/228) [`1cb6db4e67422261a3ee4c7584198bd08b29fa10`](https://github.com/zjxxxxxxxxx/open-editor/commit/1cb6db4e67422261a3ee4c7584198bd08b29fa10) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Make the style loaded through link lose the hover effect
+
+- Updated dependencies [[`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe)]:
+  - @open-editor/shared@0.8.3
+
 ## 0.8.2
 
 ### Patch Changes
