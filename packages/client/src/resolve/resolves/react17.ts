@@ -1,8 +1,8 @@
 import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
-import type { SourceCodeMeta } from '..';
-import type { ResolveDebug } from '../resolveDebug';
 import { createReactResolver } from '../creators/createReactResolver';
+import type { SourceCodeMeta } from '../index';
+import type { ResolveDebug } from '../resolveDebug';
 
 export function resolveReact17(
   { value: fiber }: ResolveDebug<Fiber>,
@@ -25,7 +25,7 @@ export function resolveForFiber(
 function setupResolver() {
   resolver ||= createReactResolver({
     isValid(owner) {
-      if (owner._debugSource) {
+      if (owner?._debugSource) {
         return isFn(owner.type) || isFn(owner.type.render);
       }
       return false;

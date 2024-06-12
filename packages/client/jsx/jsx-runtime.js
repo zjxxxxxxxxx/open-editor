@@ -1,4 +1,4 @@
-import { on } from '../src/utils/event';
+import { on } from '../src/event';
 
 const FRAGMENT_TYPE = 'INTERNAL_VIRTUAL_FRAGMENT';
 
