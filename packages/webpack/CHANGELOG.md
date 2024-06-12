@@ -1,5 +1,22 @@
 # @open-editor/webpack
 
+## 0.8.3
+
+### Patch Changes
+
+- [#231](https://github.com/zjxxxxxxxxx/open-editor/pull/231) [`9d63552061b28922d6c83918d5194a8b182bec29`](https://github.com/zjxxxxxxxxx/open-editor/commit/9d63552061b28922d6c83918d5194a8b182bec29) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add option `ignoreComponents`
+
+- [#233](https://github.com/zjxxxxxxxxx/open-editor/pull/233) [`3f754956fc90278bd2d931eb2c2bbb07ee4ad959`](https://github.com/zjxxxxxxxxx/open-editor/commit/3f754956fc90278bd2d931eb2c2bbb07ee4ad959) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add `server` configuration
+
+- [#230](https://github.com/zjxxxxxxxxx/open-editor/pull/230) [`d135ce08871ee06675cfea480a09483abfa4fbbb`](https://github.com/zjxxxxxxxxx/open-editor/commit/d135ce08871ee06675cfea480a09483abfa4fbbb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Update dependence relationship
+
+- [#234](https://github.com/zjxxxxxxxxx/open-editor/pull/234) [`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Import client in a brand new way
+
+- Updated dependencies [[`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe), [`9d63552061b28922d6c83918d5194a8b182bec29`](https://github.com/zjxxxxxxxxx/open-editor/commit/9d63552061b28922d6c83918d5194a8b182bec29), [`3f754956fc90278bd2d931eb2c2bbb07ee4ad959`](https://github.com/zjxxxxxxxxx/open-editor/commit/3f754956fc90278bd2d931eb2c2bbb07ee4ad959), [`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe), [`1cb6db4e67422261a3ee4c7584198bd08b29fa10`](https://github.com/zjxxxxxxxxx/open-editor/commit/1cb6db4e67422261a3ee4c7584198bd08b29fa10)]:
+  - @open-editor/shared@0.8.3
+  - @open-editor/client@0.8.3
+  - @open-editor/server@0.8.3
+
 ## 0.8.2
 
 ### Patch Changes
