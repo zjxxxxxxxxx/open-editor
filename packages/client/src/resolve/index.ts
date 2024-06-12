@@ -1,10 +1,10 @@
 import { camelCase } from '@open-editor/shared';
-import { ensureFileName } from './util';
-import { resolveDebug } from './resolveDebug';
 import { resolveReact17 } from './resolves/react17';
 import { resolveReact15 } from './resolves/react15';
 import { resolveVue3 } from './resolves/vue3';
 import { resolveVue2 } from './resolves/vue2';
+import { ensureFileName } from './util';
+import { resolveDebug } from './resolveDebug';
 
 export interface SourceCodeMeta {
   name: string;

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from './ui';
+import { createGlobalStyle } from '../utils/dom';
 
 const overrideCSS = css`
   * {

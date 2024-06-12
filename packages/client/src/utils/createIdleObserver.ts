@@ -1,4 +1,4 @@
-import { on, off } from './event';
+import { on, off } from '../event';
 
 const events = [
   'pointerup',
