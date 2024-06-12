@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.8.3
+
+### Patch Changes
+
+- [#234](https://github.com/zjxxxxxxxxx/open-editor/pull/234) [`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - `injectClient` supports commonjs import syntax
+
 ## 0.8.2
 
 ## 0.8.1

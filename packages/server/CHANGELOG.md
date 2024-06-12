@@ -1,5 +1,14 @@
 # @open-editor/server
 
+## 0.8.3
+
+### Patch Changes
+
+- [#233](https://github.com/zjxxxxxxxxx/open-editor/pull/233) [`3f754956fc90278bd2d931eb2c2bbb07ee4ad959`](https://github.com/zjxxxxxxxxx/open-editor/commit/3f754956fc90278bd2d931eb2c2bbb07ee4ad959) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Allow HTTPS server to run by adding configuration
+
+- Updated dependencies [[`16bb80bd7f5a1f319c77430062de70458915e3fe`](https://github.com/zjxxxxxxxxx/open-editor/commit/16bb80bd7f5a1f319c77430062de70458915e3fe)]:
+  - @open-editor/shared@0.8.3
+
 ## 0.8.2
 
 ### Patch Changes
