@@ -1,5 +1,4 @@
 import { clamp } from '@open-editor/shared';
-import { type RectBox } from '../HTMLOverlayElement/getRectBoxs';
 import {
   getDOMRect,
   getHtml,
@@ -9,9 +8,13 @@ import {
   removeClass,
   checkVisibility,
   checkValidElement,
-} from '../../utils/ui';
-import { SafeAreaObserver } from '../../utils/SafeAreaObserver';
+} from '../../utils/dom';
+import {
+  createSafeAreaObserver,
+  type SafeAreaObserver,
+} from '../../utils/createSafeAreaObserver';
 import { type SourceCode, resolveSource } from '../../resolve';
+import { type RectBox } from '../utils/getRectBoxs';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 const OFFSET = 6;
@@ -22,8 +25,12 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
   comp: HTMLElement;
   file: HTMLElement;
 }> {
+  private declare safeAreaObserver: SafeAreaObserver;
+
   constructor() {
     super();
+
+    this.safeAreaObserver = createSafeAreaObserver();
 
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
@@ -97,7 +104,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
       clientHeight: winH,
     } = getHtml();
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
-    const { value: safe } = SafeAreaObserver;
+    const { value: safe } = this.safeAreaObserver;
 
     const onTopArea = box.top > rootH + safe.top + OFFSET * 2;
     const top = clamp(

@@ -5,22 +5,18 @@ import {
   removeClass,
   getHtml,
   checkValidElement,
-} from '../../utils/ui';
-import { off, on } from '../../utils/event';
-import {
-  offOpenEditorError,
-  onOpenEditorError,
-  openEditor,
-} from '../../utils/openEditor';
-import { effectStyle, overrideStyle } from '../../utils/globalStyles';
+} from '../../utils/dom';
 import { logError } from '../../utils/logError';
-import { getColorMode } from '../../utils/getColorMode';
+import { effectStyle, overrideStyle } from '../../styles/globalStyles';
+import { off, on } from '../../event';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
+import { getColorMode } from '../utils/getColorMode';
+import { openEditor } from '../utils/openEditor';
+import { setupListeners } from '../utils/setupListeners';
+import { disableHoverCSS, enableHoverCSS } from '../utils/disableHoverCSS';
 import { HTMLCustomElement } from '../HTMLCustomElement';
-import { setupListeners } from './setupListeners';
-import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
 
 export class HTMLInspectElement extends HTMLCustomElement<{
   overlay: HTMLOverlayElement;
@@ -86,7 +82,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       capture: true,
     });
 
-    onOpenEditorError(this.showErrorOverlay);
+    openEditor.onError(this.showErrorOverlay);
   }
 
   override unmount() {
@@ -97,7 +93,7 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       capture: true,
     });
 
-    offOpenEditorError(this.showErrorOverlay);
+    openEditor.offError(this.showErrorOverlay);
   }
 
   private savePointE(e: PointerEvent) {

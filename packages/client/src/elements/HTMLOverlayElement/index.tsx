@@ -1,4 +1,4 @@
-import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/ui';
+import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/dom';
 import {
   type FrameChecker,
   createFrameChecker,
@@ -9,8 +9,8 @@ import {
 } from '../../utils/createIdleObserver';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
+import { type RectBox, getRectBoxs } from '../utils/getRectBoxs';
 import { HTMLCustomElement } from '../HTMLCustomElement';
-import { type RectBox, getRectBoxs } from './getRectBoxs';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
   position: HTMLElement;

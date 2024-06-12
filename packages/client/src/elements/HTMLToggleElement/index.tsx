@@ -5,12 +5,13 @@ import {
   applyStyle,
   addClass,
   removeClass,
-} from '../../utils/ui';
-import { off, on } from '../../utils/event';
+} from '../../utils/dom';
 import {
   SafeAreaObserver,
+  createSafeAreaObserver,
   type SafeAreaValue,
-} from '../../utils/SafeAreaObserver';
+} from '../../utils/createSafeAreaObserver';
+import { off, on } from '../../event';
 import { CACHE_POS_TOP_ID } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
@@ -20,12 +21,16 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   dnding: boolean;
   touchable: boolean;
 }> {
+  private declare safeAreaObserver: SafeAreaObserver;
+
   static get observedAttributes() {
     return ['active'];
   }
 
   constructor() {
     super();
+
+    this.safeAreaObserver = createSafeAreaObserver();
 
     this.startDnD = this.startDnD.bind(this);
     this.stopDnD = this.stopDnD.bind(this);
@@ -81,14 +86,14 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     on('resize', this.updatePosTop);
     on('resize', this.updateSize);
 
-    SafeAreaObserver.observe(this.updatePosRight);
+    this.safeAreaObserver.observe(this.updatePosRight);
   }
 
   override unmount() {
     off('resize', this.updatePosTop);
     off('resize', this.updateSize);
 
-    SafeAreaObserver.unobserve(this.updatePosRight);
+    this.safeAreaObserver.unobserve(this.updatePosRight);
   }
 
   private startDnD() {
@@ -140,7 +145,7 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   private updatePosTop() {
     const { clientHeight: winH } = getHtml();
     const { offsetHeight: toggleH } = this.state.root;
-    const { top, bottom } = SafeAreaObserver.value;
+    const { top, bottom } = this.safeAreaObserver.value;
 
     const cachePosY = +localStorage[CACHE_POS_TOP_ID] || 0;
     const safePosY = clamp(

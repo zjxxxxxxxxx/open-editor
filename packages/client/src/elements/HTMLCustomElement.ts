@@ -1,4 +1,4 @@
-import { replaceChildren } from '../utils/ui';
+import { replaceChildren } from '../utils/dom';
 import { CLIENT } from '../constants';
 
 const BrowserHTMLElement = CLIENT

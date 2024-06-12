@@ -1,10 +1,10 @@
 import { isStr } from '@open-editor/shared';
-import type { SourceCodeMeta } from '../';
+import type { SourceCodeMeta } from '../index';
 import type { ResolveDebug } from '../resolveDebug';
 import { ensureFileName, isValidFileName } from '../util';
 
 interface VueResolverOptions<T = any> {
-  isValid(v: T): boolean;
+  isValid(v?: T): boolean;
   getNext(v: T): T | null | undefined;
   getSource(v: T): string | undefined;
   getFile(v: T): string | undefined;

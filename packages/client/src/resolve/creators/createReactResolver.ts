@@ -1,9 +1,9 @@
 import type { Source } from 'react-reconciler';
-import type { SourceCodeMeta } from '../';
+import type { SourceCodeMeta } from '../index';
 import { isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
-  isValid(v: T): boolean;
+  isValid(v?: T): boolean;
   getNext(v: T): T | null | undefined;
   getSource(v: T): (Source & { columnNumber?: number }) | null | undefined;
   getName(v: T): string | undefined;

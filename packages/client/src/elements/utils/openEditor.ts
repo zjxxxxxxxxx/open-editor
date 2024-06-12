@@ -1,15 +1,15 @@
 import { ServerApis } from '@open-editor/shared';
-import type { SourceCodeMeta } from '../resolve';
-import { getOptions } from '../options';
-import { logError } from './logError';
-import { mitt } from './mitt';
+import { logError } from '../../utils/logError';
+import { mitt } from '../../utils/mitt';
+import type { SourceCodeMeta } from '../../resolve';
+import { getOptions } from '../../options';
 
 export const emitter = mitt<(err: any) => void>();
 
 export async function openEditor(
   source: SourceCodeMeta,
   dispatch: (e: CustomEvent<URL>) => boolean,
-) {
+): Promise<void> {
   const { protocol, hostname, port } = location;
   const { file, line = 1, column = 1 } = source;
   const { port: customPort } = getOptions();
@@ -42,7 +42,5 @@ export async function openEditor(
       });
   }
 }
-
-export const onOpenEditorError = emitter.on;
-
-export const offOpenEditorError = emitter.off;
+openEditor.onError = emitter.on;
+openEditor.offError = emitter.off;

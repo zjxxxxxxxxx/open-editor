@@ -3,11 +3,11 @@ import {
   removeClass,
   getHtml,
   replaceChildren,
-} from '../../utils/ui';
-import { off, on } from '../../utils/event';
-import { openEditor } from '../../utils/openEditor';
+} from '../../utils/dom';
+import { off, on } from '../../event';
 import { type SourceCodeMeta, resolveSource } from '../../resolve';
 import { getOptions } from '../../options';
+import { openEditor } from '../utils/openEditor';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 export class HTMLTreeElement extends HTMLCustomElement<{

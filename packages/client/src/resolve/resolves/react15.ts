@@ -29,7 +29,7 @@ export function resolveForInstance(
 function setupResolver() {
   resolver ||= createReactResolver({
     isValid(owner) {
-      const el = owner._currentElement;
+      const el = owner?._currentElement;
       if (el) {
         return isFn(el.type) || isFn(el.type.render);
       }
