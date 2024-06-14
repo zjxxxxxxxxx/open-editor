@@ -45,7 +45,11 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <div className="oe-root" ref={(el) => (this.state.root = el)}>
+        <div
+          className="oe-root"
+          ref={(el) => (this.state.root = el)}
+          onContextMenu={(e) => e.preventDefault()}
+        >
           <div className="oe-overlay" />
           <button
             className="oe-button"
@@ -99,20 +103,20 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   private startDnD() {
     this.state.dnding = true;
 
+    addClass(this.state.root, 'oe-dnd');
+
     on('pointermove', this.changePosTop);
     on('pointerup', this.stopDnD);
-
-    addClass(this.state.root, 'oe-dnd');
   }
 
   private stopDnD() {
     // Modify when the click e is complete
     setTimeout(() => (this.state.dnding = false));
 
+    removeClass(this.state.root, 'oe-dnd');
+
     off('pointermove', this.changePosTop);
     off('pointerup', this.stopDnD);
-
-    removeClass(this.state.root, 'oe-dnd');
   }
 
   private changePosTop(e: PointerEvent) {
@@ -160,8 +164,6 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   }
 
   private dispatchChange() {
-    // Let the button lose focus to prevent the click event from being accidentally triggered by pressing the Enter key or the Space bar.
-    this.state.button.blur();
     // Prevents the click event from being triggered by the end of the drag
     if (!this.state.dnding) {
       this.dispatchEvent(new CustomEvent('change'));

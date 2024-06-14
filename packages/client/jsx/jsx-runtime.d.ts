@@ -55,6 +55,7 @@ declare type _Element<P> = {
 } & {
   onLongPress?(e: PointerEvent): void;
   onQuickExit?(e: PointerEvent): void;
+  onRightClick?(e: PointerEvent): void;
 };
 
 declare type _IntrinsicElements<ES> = {
