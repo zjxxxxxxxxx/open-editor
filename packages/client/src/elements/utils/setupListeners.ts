@@ -37,11 +37,27 @@ const events = [
   'pointerout',
   'pointerover',
   'pointerup',
-  // others
-  'dbclick',
-  'submit',
-  'reset',
+  // drag
+  'drag',
+  'dragend',
+  'dragenter',
+  'dragleave',
+  'dragover',
+  'dragstart',
+  'drop',
+  // form
+  'focus',
+  'focusin',
+  'focusout',
   'blur',
+  'reset',
+  'submit',
+  'input',
+  'change',
+  'select',
+  // others
+  'auxclick',
+  'dbclick',
 ];
 
 export function setupListeners(opts: SetupListenersOptions) {
@@ -58,6 +74,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     events.forEach((event) => {
       on(event, onSilent, {
         capture: true,
+        passive: false,
       });
     });
 
@@ -183,12 +200,7 @@ function onSilent(e: Event) {
     checkValidElement((<any>e).target) ||
     checkValidElement((<any>e).relatedTarget)
   ) {
-    // [Intervention] Unable to preventDefault inside passive event listener due to target being treated as passive.
-    // Only need to handle touch events, excluding other events such as pointer
-    // See https://www.chromestatus.com/feature/5093566007214080.
-    if (!e.type.startsWith('touch')) {
-      e.preventDefault();
-    }
+    e.preventDefault();
     e.stopPropagation();
   }
 }

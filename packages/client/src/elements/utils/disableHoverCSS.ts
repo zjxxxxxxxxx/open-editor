@@ -43,14 +43,14 @@ function visitCSS(visitor: (css: string) => string) {
         return;
       }
 
-      if (rulesLength && ruleIndex < rulesLength) {
+      if (ruleIndex < rulesLength) {
         const rule = rules[ruleIndex++];
         replaceRule(rule.parentStyleSheet!, visitor(rule.cssText));
-      } else if (stylesLength && styleIndex < stylesLength) {
+      } else if (styleIndex < stylesLength) {
         const style = styles[styleIndex++];
         style.textContent = visitor(style.textContent!);
       } else {
-        asyncTask.resolve(null);
+        asyncTask.resolve();
 
         return;
       }
@@ -72,9 +72,10 @@ interface AsyncTask<T> extends Promise<T> {
   reject: (reason?: any) => void;
 }
 
-function createAsyncTask<T>() {
+function createAsyncTask<T = void>() {
   let resolve!: (value: T | PromiseLike<T>) => void;
   let reject!: (reason?: any) => void;
+
   const asyncTask = new Promise<T>((_resolve, _reject) => {
     resolve = _resolve;
     reject = _reject;

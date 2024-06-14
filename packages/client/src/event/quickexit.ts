@@ -1,4 +1,3 @@
-import { omit } from '@open-editor/shared';
 import { off, on } from './index';
 import {
   type SetupListenerListener,
@@ -13,15 +12,21 @@ function setupListener(
   opts: SetupListenerListenerOptions,
 ) {
   function setup() {
-    on('keydown', trigger, omit(opts, 'target'));
-    on('contextmenu', trigger, opts);
+    on('keydown', trigger, {
+      ...opts,
+      target: window,
+    });
+    on('rightclick', trigger, opts);
 
     return clean;
   }
 
   function clean() {
-    off('keydown', trigger, omit(opts, 'target'));
-    off('contextmenu', trigger, opts);
+    off('keydown', trigger, {
+      ...opts,
+      target: window,
+    });
+    off('rightclick', trigger, opts);
   }
 
   function trigger(e: PointerEvent) {
@@ -29,12 +34,9 @@ function setupListener(
       // esc exit.
       (<any>e).code === 'Escape' ||
       // right-click exit.
-      e.type === 'contextmenu'
+      e.type === 'rightclick'
     ) {
-      if (!e.type.startsWith('touch')) {
-        e.preventDefault();
-      }
-
+      e.preventDefault();
       listener(e);
     }
   }

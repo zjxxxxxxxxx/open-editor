@@ -1,5 +1,7 @@
 import { applyAttrs, checkValidElement } from '../../utils/dom';
 
+const dTagRE = /^(button|fieldset|optgroup|option|select|textarea|input)$/;
+
 let clickedEl: HTMLElement | null = null;
 
 export function checkClickedElement(el: HTMLElement) {
@@ -62,18 +64,6 @@ function resetAttrs(
   ds.forEach((d) => swapAttr(d, disabled.from, disabled.to));
 }
 
-function swapAttr(el: HTMLElement, from: string, to: string) {
-  const val = el.getAttribute(from);
-  if (val != null) {
-    applyAttrs(el, {
-      [from]: null,
-      [to]: val,
-    });
-  }
-}
-
-const dTagRE = /^(button|fieldset|optgroup|option|select|textarea|input)$/;
-
 function findTags(el: HTMLElement | null) {
   const hs: HTMLElement[] = [];
   const ds: HTMLElement[] = [];
@@ -91,4 +81,14 @@ function findTags(el: HTMLElement | null) {
     hs,
     ds,
   };
+}
+
+function swapAttr(el: HTMLElement, from: string, to: string) {
+  const val = el.getAttribute(from);
+  if (val != null) {
+    applyAttrs(el, {
+      [from]: null,
+      [to]: val,
+    });
+  }
 }

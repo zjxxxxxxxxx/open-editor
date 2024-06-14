@@ -9,7 +9,7 @@ import {
 } from '../../utils/createIdleObserver';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
-import { type RectBox, getRectBoxs } from '../utils/getRectBoxs';
+import { type BoxRect, type BoxLines, getBoxModel } from '../utils/getBoxModel';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
@@ -17,7 +17,6 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   margin: HTMLElement;
   border: HTMLElement;
   padding: HTMLElement;
-  content: HTMLElement;
   tooltip: HTMLTooltipElement;
   activeEl: HTMLElement | null;
   observing: boolean;
@@ -56,10 +55,7 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
                 className="oe-padding"
                 ref={(el) => (this.state.padding = el)}
               >
-                <div
-                  className="oe-content"
-                  ref={(el) => (this.state.content = el)}
-                />
+                <div className="oe-content" />
               </div>
             </div>
           </div>
@@ -73,6 +69,9 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
   open() {
     this.state.activeEl = null;
+
+    addClass(this.state.position, 'oe-show');
+
     this.state.tooltip.open();
     this.startObserver();
 
@@ -80,11 +79,11 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     if (!retainFrame) {
       this.idleObserver.start();
     }
-
-    addClass(this.state.position, 'oe-show');
   }
 
   close() {
+    removeClass(this.state.position, 'oe-show');
+
     this.state.tooltip.close();
     this.stopObserver();
 
@@ -92,8 +91,6 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     if (!retainFrame) {
       this.idleObserver.stop();
     }
-
-    removeClass(this.state.position, 'oe-show');
   }
 
   update(el: HTMLElement | null) {
@@ -122,32 +119,29 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   }
 
   private updateOverlay() {
-    const boxs = getRectBoxs(this.state.activeEl);
-    this.state.tooltip.update(this.state.activeEl, boxs.position);
-    this.updateBoxs(boxs);
+    const [rect, lines] = getBoxModel(this.state.activeEl);
+    this.state.tooltip.update(this.state.activeEl, rect);
+    this.renderOverlay(rect, lines);
   }
 
-  private updateBoxs(boxs: Record<string, RectBox>) {
+  private renderOverlay(rect: BoxRect, lines: BoxLines) {
     applyStyle(this.state.position, {
-      width: CSS_util.px(boxs.position.width),
-      height: CSS_util.px(boxs.position.height),
-      top: CSS_util.px(boxs.position.top),
-      left: CSS_util.px(boxs.position.left),
+      width: CSS_util.px(rect.width),
+      height: CSS_util.px(rect.height),
+      top: CSS_util.px(rect.top),
+      left: CSS_util.px(rect.left),
     });
-    this.applyRectBox(this.state.margin, boxs.margin);
-    this.applyRectBox(this.state.border, boxs.border);
-    this.applyRectBox(this.state.padding, boxs.padding);
-    this.applyRectBox(this.state.content, boxs.content);
-  }
 
-  private applyRectBox(el: HTMLElement, box: RectBox) {
-    applyStyle(el, {
-      width: CSS_util.px(box.width),
-      height: CSS_util.px(box.height),
-      borderTopWidth: CSS_util.px(box.top),
-      borderRightWidth: CSS_util.px(box.right),
-      borderBottomWidth: CSS_util.px(box.bottom),
-      borderLeftWidth: CSS_util.px(box.left),
-    });
+    for (const name of Object.keys(lines)) {
+      const el = this.state[name];
+      const line = lines[name];
+
+      applyStyle(el, {
+        borderTopWidth: CSS_util.px(line.top),
+        borderRightWidth: CSS_util.px(line.right),
+        borderBottomWidth: CSS_util.px(line.bottom),
+        borderLeftWidth: CSS_util.px(line.left),
+      });
+    }
   }
 }

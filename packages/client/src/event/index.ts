@@ -1,10 +1,12 @@
 import longpress from './longpress';
 import quickexit from './quickexit';
+import rightclick from './rightclick';
 
 export interface HTMLElementEventWithCustomEventMap
   extends HTMLElementEventMap {
   longpress: PointerEvent;
   quickexit: PointerEvent;
+  rightclick: PointerEvent;
 }
 
 export function on<K extends keyof HTMLElementEventWithCustomEventMap>(
@@ -22,12 +24,19 @@ export function on(
 ): void;
 export function on(type: any, listener: any, opts: any = {}) {
   opts.target ||= window;
-  if (type === 'longpress') {
-    longpress.addEventListener(listener, opts);
-  } else if (type === 'quickexit') {
-    quickexit.addEventListener(listener, opts);
-  } else {
-    opts.target.addEventListener(type, listener, opts);
+
+  switch (type) {
+    case 'longpress':
+      longpress.addEventListener(listener, opts);
+      break;
+    case 'quickexit':
+      quickexit.addEventListener(listener, opts);
+      break;
+    case 'rightclick':
+      rightclick.addEventListener(listener, opts);
+      break;
+    default:
+      opts.target.addEventListener(type, listener, opts);
   }
 }
 
@@ -46,11 +55,18 @@ export function off(
 ): void;
 export function off(type: any, listener: any, opts: any = {}) {
   opts.target ||= window;
-  if (type === 'longpress') {
-    longpress.removeEventListener(listener, opts);
-  } else if (type === 'quickexit') {
-    quickexit.removeEventListener(listener, opts);
-  } else {
-    opts.target.removeEventListener(type, listener, opts);
+
+  switch (type) {
+    case 'longpress':
+      longpress.removeEventListener(listener, opts);
+      break;
+    case 'quickexit':
+      quickexit.removeEventListener(listener, opts);
+      break;
+    case 'rightclick':
+      rightclick.removeEventListener(listener, opts);
+      break;
+    default:
+      opts.target.removeEventListener(type, listener, opts);
   }
 }

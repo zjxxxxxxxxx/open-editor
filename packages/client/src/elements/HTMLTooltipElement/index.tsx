@@ -14,7 +14,7 @@ import {
   type SafeAreaObserver,
 } from '../../utils/createSafeAreaObserver';
 import { type SourceCode, resolveSource } from '../../resolve';
-import { type RectBox } from '../utils/getRectBoxs';
+import { type BoxRect } from '../utils/getBoxModel';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 const OFFSET = 6;
@@ -66,7 +66,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     removeClass(this.state.root, 'oe-show');
   }
 
-  update(el: HTMLElement | null, box: RectBox) {
+  update(el: HTMLElement | null, rect: BoxRect) {
     // before hidden
     applyStyle(this.state.root, {
       visibility: 'hidden',
@@ -80,7 +80,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     const source = resolveSource(el);
     if (source.meta) {
       this.updateText(source);
-      this.updatePosition(box);
+      this.updatePosition(rect);
 
       // after visible
       applyStyle(this.state.root, {
@@ -96,7 +96,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     this.state.file.textContent = `${meta!.file}:${meta!.line}:${meta!.column}`;
   }
 
-  private updatePosition(box: RectBox) {
+  private updatePosition(rect: BoxRect) {
     const {
       // window width excluding the scrollbar width
       clientWidth: winW,
@@ -106,14 +106,14 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
     const { value: safe } = this.safeAreaObserver;
 
-    const onTopArea = box.top > rootH + safe.top + OFFSET * 2;
+    const onTopArea = rect.top > rootH + safe.top + OFFSET * 2;
     const top = clamp(
-      onTopArea ? box.top - rootH - OFFSET : box.bottom + OFFSET,
+      onTopArea ? rect.top - rootH - OFFSET : rect.bottom + OFFSET,
       safe.top + OFFSET,
       winH - rootH - safe.bottom - OFFSET,
     );
     const left = clamp(
-      box.left,
+      rect.left,
       safe.left + OFFSET,
       winW - rootW - safe.right - OFFSET,
     );
