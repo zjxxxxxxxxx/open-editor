@@ -5,16 +5,25 @@ import {
   checkValidElement,
 } from '../../utils/dom';
 
-export interface RectBox {
-  width: number;
-  height: number;
+export interface BoxLine {
   top: number;
   right: number;
   left: number;
   bottom: number;
 }
 
-const emptyRectBox = {
+export interface BoxLines {
+  margin: BoxLine;
+  border: BoxLine;
+  padding: BoxLine;
+}
+
+export interface BoxRect extends BoxLine {
+  width: number;
+  height: number;
+}
+
+export const defaultBoxRect: BoxRect = {
   width: 0,
   height: 0,
   top: 0,
@@ -23,17 +32,17 @@ const emptyRectBox = {
   bottom: 0,
 };
 
-export const emptyRectBoxs = {
-  position: emptyRectBox,
-  margin: emptyRectBox,
-  border: emptyRectBox,
-  padding: emptyRectBox,
-  content: emptyRectBox,
+export const defaultBoxLines: BoxLines = {
+  margin: defaultBoxRect,
+  border: defaultBoxRect,
+  padding: defaultBoxRect,
 };
 
-export function getRectBoxs(el: HTMLElement | null): Record<string, RectBox> {
+export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   // When an invalid element or invisible element is encountered, empty is returned.
-  if (!checkValidElement(el) || !checkVisibility(el)) return emptyRectBoxs;
+  if (!checkValidElement(el) || !checkVisibility(el)) {
+    return [defaultBoxRect, defaultBoxLines];
+  }
 
   const {
     // border + padding + content
@@ -54,35 +63,26 @@ export function getRectBoxs(el: HTMLElement | null): Record<string, RectBox> {
 
   const marginRight = get('margin-right');
   const marginBottom = get('margin-bottom');
-  const marginWidth = width;
-  const marginHeight = height;
 
   const borderTop = get('border-top');
   const borderRight = get('border-right');
   const borderBottom = get('border-bottom');
   const borderLeft = get('border-left');
-  const borderWidth = marginWidth - borderRight - borderLeft;
-  const borderHeight = marginHeight - borderTop - borderBottom;
 
   const paddingTop = get('padding-top');
   const paddingRight = get('padding-right');
   const paddingBottom = get('padding-bottom');
   const paddingLeft = get('padding-left');
-  const paddingWidth = borderWidth - paddingRight - paddingLeft;
-  const paddingHeight = borderHeight - paddingTop - paddingBottom;
-
-  const contentWidth = paddingWidth;
-  const contentHeight = paddingHeight;
 
   const positionTop = top - marginTop;
   const positionRight = right + marginRight;
   const positionBottom = bottom + marginBottom;
   const positionLeft = left - marginLeft;
-  const positionWidth = marginWidth + marginLeft + marginRight;
-  const positionHeight = marginHeight + marginTop + marginBottom;
+  const positionWidth = width + marginLeft + marginRight;
+  const positionHeight = height + marginTop + marginBottom;
 
-  return {
-    position: {
+  return [
+    {
       width: positionWidth,
       height: positionHeight,
       top: positionTop,
@@ -90,34 +90,25 @@ export function getRectBoxs(el: HTMLElement | null): Record<string, RectBox> {
       bottom: positionBottom,
       left: positionLeft,
     },
-    margin: {
-      width: marginWidth,
-      height: marginHeight,
-      top: marginTop,
-      right: marginRight,
-      left: marginLeft,
-      bottom: marginBottom,
+    {
+      margin: {
+        top: marginTop,
+        right: marginRight,
+        left: marginLeft,
+        bottom: marginBottom,
+      },
+      border: {
+        top: borderTop,
+        right: borderRight,
+        left: borderLeft,
+        bottom: borderBottom,
+      },
+      padding: {
+        top: paddingTop,
+        right: paddingRight,
+        left: paddingLeft,
+        bottom: paddingBottom,
+      },
     },
-    border: {
-      width: borderWidth,
-      height: borderHeight,
-      top: borderTop,
-      right: borderRight,
-      left: borderLeft,
-      bottom: borderBottom,
-    },
-    padding: {
-      width: paddingWidth,
-      height: paddingHeight,
-      top: paddingTop,
-      right: paddingRight,
-      left: paddingLeft,
-      bottom: paddingBottom,
-    },
-    content: {
-      ...emptyRectBox,
-      width: contentWidth,
-      height: contentHeight,
-    },
-  };
+  ];
 }

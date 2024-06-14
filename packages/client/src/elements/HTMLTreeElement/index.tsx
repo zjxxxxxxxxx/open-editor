@@ -70,11 +70,11 @@ export class HTMLTreeElement extends HTMLCustomElement<{
   open(el: HTMLElement) {
     this.isOpen = true;
 
-    this.renderTree(el);
-    this.enableClick();
-
     addClass(this.state.root, 'oe-show');
     addClass(getHtml(), 'oe-lock-screen');
+
+    this.renderTree(el);
+    this.enableClick();
   }
 
   close() {
