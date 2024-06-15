@@ -9,6 +9,8 @@ export interface ReactResolverOptions<T = any> {
   getName(v: T): string | undefined;
 }
 
+export type ReactResolver<T = any> = ReturnType<typeof createReactResolver<T>>;
+
 export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
   const { isValid, getNext, getSource, getName } = opts;
 

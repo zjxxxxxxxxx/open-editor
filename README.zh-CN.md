@@ -41,7 +41,7 @@
 
 > 需要 React 版本 15+。
 
-`OpenEditor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`open-editor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
+`OpenEditor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`OpenEditor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
 
 ### Vue
 
@@ -107,11 +107,11 @@ npm run dev
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-此时点击元素即可自动在代码编辑器中打开源代码文件，并定位到行和列。
+此时点击（快捷键：⌨️ <kbd>enter</kbd> ）元素即可自动在代码编辑器中打开源代码文件，并定位到行和列。
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-此时也可以选择长按（快捷键：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树。
+此时也可以选择长按（快捷键1：⌨️ <kbd>backspace</kbd>，快捷键2：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树。
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

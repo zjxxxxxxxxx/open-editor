@@ -3,13 +3,15 @@ import type { SourceCodeMeta } from '../index';
 import type { ResolveDebug } from '../resolveDebug';
 import { ensureFileName, isValidFileName } from '../util';
 
-interface VueResolverOptions<T = any> {
+export interface VueResolverOptions<T = any> {
   isValid(v?: T): boolean;
   getNext(v: T): T | null | undefined;
   getSource(v: T): string | undefined;
   getFile(v: T): string | undefined;
   getName(v: T): string | undefined;
 }
+
+export type VueResolver<T = any> = ReturnType<typeof createVueResolver<T>>;
 
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   function vueResolver(

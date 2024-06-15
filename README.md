@@ -41,7 +41,7 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 > Requires React version 15+.
 
-`OpenEditor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `open-editor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
+`OpenEditor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `OpenEditor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
 
 ### Vue
 
@@ -103,15 +103,15 @@ At this time, open the local server address of the project in the browser, and y
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
-Enable the inspector by clicking (shortcut: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
+Enable the inspector by clicking (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 
-At this point, click on the element to automatically open the source code file in the code editor and locate the line and column.
+At this point, click (shortcut key: ⌨️ <kbd>enter</kbd>) on the element to automatically open the source code file in the code editor and locate the line and column.
 
 <img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
 
-At this time, you can also choose to long press (shortcut key: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) element to view the complete component tree.
+At this time, you can also choose to long press (shortcut key 1: ⌨️ <kbd>backspace</kbd>, shortcut key 2: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) element to view the complete component tree.
 
 <img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
 

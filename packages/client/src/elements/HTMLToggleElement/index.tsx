@@ -48,6 +48,11 @@ export class HTMLToggleElement extends HTMLCustomElement<{
         <div
           className="oe-root"
           ref={(el) => (this.state.root = el)}
+          // Prevent screen scrolling caused by dragging buttons
+          // in Firefox browser
+          onTouchMove={(e) => e.preventDefault()}
+          // Prevent the default behavior of contextmenu triggered
+          // by long pressing the screen on mobile devices
           onContextMenu={(e) => e.preventDefault()}
         >
           <div className="oe-overlay" />

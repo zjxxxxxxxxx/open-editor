@@ -1,6 +1,9 @@
 import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
-import { createReactResolver } from '../creators/createReactResolver';
+import {
+  type ReactResolver,
+  createReactResolver,
+} from '../creators/createReactResolver';
 import type { SourceCodeMeta } from '../index';
 import type { ResolveDebug } from '../resolveDebug';
 
@@ -12,7 +15,7 @@ export function resolveReact17(
   resolveForFiber(fiber, tree, deep);
 }
 
-let resolver: ReturnType<typeof createReactResolver<Fiber>>;
+let resolver: ReactResolver<Fiber>;
 export function resolveForFiber(
   fiber: Fiber | null | undefined,
   tree: Partial<SourceCodeMeta>[],
