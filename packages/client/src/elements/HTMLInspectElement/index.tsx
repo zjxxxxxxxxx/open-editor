@@ -4,7 +4,6 @@ import {
   addClass,
   removeClass,
   getHtml,
-  checkValidElement,
 } from '../../utils/dom';
 import { logError } from '../../utils/logError';
 import { effectStyle, overrideStyle } from '../../styles/globalStyles';
@@ -22,18 +21,15 @@ export class HTMLInspectElement extends HTMLCustomElement<{
   overlay: HTMLOverlayElement;
   tree: HTMLTreeElement;
   toggle?: HTMLToggleElement;
-  pointE: PointerEvent;
   active: boolean;
 }> {
   constructor() {
     super();
 
-    this.savePointE = this.savePointE.bind(this);
     this.onKeydown = this.onKeydown.bind(this);
     this.toggleActiveEffect = this.toggleActiveEffect.bind(this);
     this.setupHandlers = this.setupHandlers.bind(this);
     this.cleanHandlers = this.cleanHandlers.bind(this);
-    this.activeDefaultElement = this.activeDefaultElement.bind(this);
     this.openEditor = this.openEditor.bind(this);
     this.showErrorOverlay = this.showErrorOverlay.bind(this);
 
@@ -77,10 +73,6 @@ export class HTMLInspectElement extends HTMLCustomElement<{
 
   override mounted() {
     on('keydown', this.onKeydown);
-    // Capture mouse position to prevent `stopPropagation`
-    on('mousemove', this.savePointE, {
-      capture: true,
-    });
 
     openEditor.onError(this.showErrorOverlay);
   }
@@ -89,15 +81,8 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     this.cleanHandlers();
 
     off('keydown', this.onKeydown);
-    off('mousemove', this.savePointE, {
-      capture: true,
-    });
 
     openEditor.offError(this.showErrorOverlay);
-  }
-
-  private savePointE(e: PointerEvent) {
-    this.state.pointE = e;
   }
 
   private onKeydown(e: KeyboardEvent) {
@@ -137,7 +122,8 @@ export class HTMLInspectElement extends HTMLCustomElement<{
         const { disableHoverCSS: isDisabled } = getOptions();
         if (isDisabled) await disableHoverCSS();
 
-        this.activeDefaultElement();
+        // @ts-ignore
+        document.activeElement?.blur();
       }
     } catch {
       //
@@ -165,19 +151,6 @@ export class HTMLInspectElement extends HTMLCustomElement<{
       }
     } catch {
       //
-    }
-  }
-
-  private activeDefaultElement() {
-    // @ts-ignore
-    document.activeElement?.blur();
-
-    if (this.state.pointE) {
-      const { x, y } = this.state.pointE;
-      const initEl = document.elementFromPoint(x, y) as HTMLElement;
-      if (checkValidElement(initEl)) {
-        this.state.overlay.update(initEl);
-      }
     }
   }
 

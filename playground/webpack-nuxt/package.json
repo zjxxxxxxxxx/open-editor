@@ -19,5 +19,8 @@
   "devDependencies": {
     "@open-editor/webpack": "latest",
     "@nuxt/webpack-builder": "^3.11.2"
+  },
+  "resolutions": {
+    "webpack-dev-middleware": "7.0.0"
   }
 }
