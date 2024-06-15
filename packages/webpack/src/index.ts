@@ -79,9 +79,15 @@ const VUE_2_ESM_PATH = 'vue/dist/vue.runtime.esm.js';
 const VUE_3_PATH = 'vue/index.js';
 const VUE_3_ESM_PATH = 'vue/dist/vue.runtime.esm-bundler.js';
 
-const ENTRY_RE = RegExp(
-  `/node_modules/${[REACT_15_PATH, REACT_17_PATH, VUE_2_PATH, VUE_2_ESM_PATH, VUE_3_PATH, VUE_3_ESM_PATH].join('|')}$`,
-);
+const ENTRY_PATHS = [
+  REACT_15_PATH,
+  REACT_17_PATH,
+  VUE_2_PATH,
+  VUE_2_ESM_PATH,
+  VUE_3_PATH,
+  VUE_3_ESM_PATH,
+].map((path) => path.replace(/\./g, '\\.'));
+const ENTRY_MATCH_RE = RegExp(`/node_modules/(${ENTRY_PATHS.join('|')})$`);
 
 const portPromiseCache: AnyObject<Promise<number>> = {};
 
@@ -107,7 +113,7 @@ export default class OpenEditorPlugin {
     compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
       compiler.options.module.rules.push({
         test: /\/node_modules\//,
-        include: ENTRY_RE,
+        include: ENTRY_MATCH_RE,
         use: (data: AnyObject) => {
           const { resource, compiler } = data;
           if (!compiler || compiler === 'client') {
