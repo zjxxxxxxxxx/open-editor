@@ -1,8 +1,11 @@
-import { createVueResolver } from '../creators/createVueResolver';
+import {
+  type VueResolver,
+  createVueResolver,
+} from '../creators/createVueResolver';
 import type { SourceCodeMeta } from '../index';
 import type { ResolveDebug } from '../resolveDebug';
 
-let resolver: ReturnType<typeof createVueResolver<any>>;
+let resolver: VueResolver;
 export function resolveVue2(
   debug: ResolveDebug,
   tree: Partial<SourceCodeMeta>[],

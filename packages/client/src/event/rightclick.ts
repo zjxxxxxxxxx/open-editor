@@ -25,7 +25,7 @@ function setupListener(
     e.preventDefault();
 
     // The contextmenu event triggered only by the mouse is a rightclick event
-    if (e.pointerType === 'mouse') {
+    if (e.pointerType == null || e.pointerType === 'mouse') {
       listener(e);
     }
   }

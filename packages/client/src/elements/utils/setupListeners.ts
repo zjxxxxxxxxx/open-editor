@@ -6,6 +6,7 @@ import {
   setupClickedElementAttrs,
   cleanClickedElementAttrs,
 } from './clickedElement';
+import { getDefaultActive } from './getDefaultActive';
 
 export interface SetupListenersOptions {
   onActive(el: HTMLElement | null): void;
@@ -14,7 +15,10 @@ export interface SetupListenersOptions {
   onExitInspect(): void;
 }
 
-const events = [
+/**
+ * Events that need to be blocked
+ */
+const SILENT_EVENTS = [
   // mouse
   'mousedown',
   'mouseenter',
@@ -56,9 +60,19 @@ const events = [
   'change',
   'select',
   // others
-  'auxclick',
   'dbclick',
 ];
+
+/**
+ * Blocking the default behavior of touchstart and touchend in
+ * Safari will result in the inability to trigger click events
+ */
+const CLICK_ATTACHMENT_EVENTS = ['touchstart', 'touchend'];
+
+/**
+ * Keys for quick interaction
+ */
+const SHORTCUT_KEYS = ['Enter', 'Space'];
 
 export function setupListeners(opts: SetupListenersOptions) {
   const onActive = withEventFn(opts.onActive);
@@ -68,17 +82,22 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   const { once } = getOptions();
 
-  let activeEl: HTMLElement | null;
+  let activeEl = getDefaultActive();
+
+  if (activeEl) {
+    onActive(activeEl);
+  }
 
   function setupEventListeners() {
-    events.forEach((event) => {
+    SILENT_EVENTS.forEach((event) => {
       on(event, onSilent, {
         capture: true,
         passive: false,
       });
     });
 
-    // The click event on the window does not run, but the click event on the document does.
+    // The click event on the window does not run, but the click
+    // event on the document does.
     on('click', onInspect, {
       capture: true,
       target: document,
@@ -101,12 +120,18 @@ export function setupListeners(opts: SetupListenersOptions) {
     on('quickexit', onExitInspect, {
       capture: true,
     });
+    on('keydown', onKeydown, {
+      capture: true,
+    });
+    on('keyup', onKeyup, {
+      capture: true,
+    });
 
     return cleanEventListeners;
   }
 
   function cleanEventListeners() {
-    events.forEach((event) => {
+    SILENT_EVENTS.forEach((event) => {
       off(event, onSilent, {
         capture: true,
       });
@@ -132,6 +157,12 @@ export function setupListeners(opts: SetupListenersOptions) {
       capture: true,
     });
     off('quickexit', onExitInspect, {
+      capture: true,
+    });
+    off('keydown', onKeydown, {
+      capture: true,
+    });
+    off('keyup', onKeyup, {
       capture: true,
     });
   }
@@ -165,6 +196,29 @@ export function setupListeners(opts: SetupListenersOptions) {
     }
   }
 
+  function onKeydown(e: KeyboardEvent) {
+    if (activeEl && SHORTCUT_KEYS.includes(e.code)) {
+      Object.defineProperty(e, 'type', {
+        get() {
+          return `key${e.code}`.toLowerCase();
+        },
+      });
+      Object.defineProperty(e, 'target', {
+        get() {
+          return activeEl;
+        },
+      });
+      setupClickedElementAttrs(e);
+      onInspect(e as unknown as PointerEvent);
+    }
+  }
+
+  function onKeyup(e: KeyboardEvent) {
+    if (SHORTCUT_KEYS.includes(e.code)) {
+      cleanClickedElementAttrs();
+    }
+  }
+
   function onInspect(e: PointerEvent) {
     onSilent(e);
 
@@ -175,7 +229,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
       onActive((activeEl = null));
 
-      if (e.metaKey || e.type === 'longpress') {
+      if (e.metaKey || e.type === 'longpress' || e.type === 'keyspace') {
         onOpenTree(targetEl);
       } else {
         onOpenEditor(targetEl);
@@ -195,12 +249,15 @@ function withEventFn<T extends (...args: any[]) => any>(fn: T) {
 }
 
 function onSilent(e: Event) {
-  // No action is expected on the event when target or relatedTarget is an invalid element.
+  // No action is expected on the event when target or relatedTarget
+  // is an invalid element.
   if (
     checkValidElement((<any>e).target) ||
     checkValidElement((<any>e).relatedTarget)
   ) {
-    e.preventDefault();
+    if (!CLICK_ATTACHMENT_EVENTS.includes(e.type)) {
+      e.preventDefault();
+    }
     e.stopPropagation();
   }
 }

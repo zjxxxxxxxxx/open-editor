@@ -1,7 +1,10 @@
 import { isFn, hasOwnProperty } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../';
 import type { ResolveDebug } from '../resolveDebug';
-import { createReactResolver } from '../creators/createReactResolver';
+import {
+  type ReactResolver,
+  createReactResolver,
+} from '../creators/createReactResolver';
 import { resolveForFiber } from './react17';
 
 export function resolveReact15(
@@ -16,7 +19,7 @@ export function resolveReact15(
   }
 }
 
-let resolver: ReturnType<typeof createReactResolver<any>>;
+let resolver: ReactResolver;
 export function resolveForInstance(
   inst: any | null | undefined,
   tree: Partial<SourceCodeMeta>[],
