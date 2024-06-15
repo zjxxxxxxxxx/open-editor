@@ -50,6 +50,7 @@
     "@open-editor/client": "workspace:*"
   },
   "dependencies": {
+    "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",
     "@open-editor/shared": "workspace:*"
   },

@@ -9,7 +9,7 @@
   border-radius: 12px;
   overflow: hidden;
   pointer-events: none;
-  will-change: visibility, top, left;
+  will-change: visibility, width, height, top, left;
 }
 .oe-content {
   padding: 12px 20px;

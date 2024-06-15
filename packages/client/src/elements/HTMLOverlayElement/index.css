@@ -9,16 +9,17 @@
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  will-change: border;
+  border: 0px solid;
+  will-change: width, height, border;
 }
 .oe-margin {
-  border: 0px solid var(--overlay-margin);
+  border-color: var(--overlay-margin);
 }
 .oe-border {
-  border: 0px solid var(--overlay-border);
+  border-color: var(--overlay-border);
 }
 .oe-padding {
-  border: 0px solid var(--overlay-padding);
+  border-color: var(--overlay-padding);
 }
 .oe-content {
   background: var(--overlay-content);
