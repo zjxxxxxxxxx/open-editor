@@ -1,5 +1,20 @@
 # @open-editor/webpack
 
+## 0.8.4
+
+### Patch Changes
+
+- [#241](https://github.com/zjxxxxxxxxx/open-editor/pull/241) [`f4e102491fe0ce2b8a529bc91bb0401668ac7465`](https://github.com/zjxxxxxxxxx/open-editor/commit/f4e102491fe0ce2b8a529bc91bb0401668ac7465) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - No additional installation required for '@open-editor/client'
+
+- [#240](https://github.com/zjxxxxxxxxx/open-editor/pull/240) [`3c05ee2e711244deb83da78fc16488ac48d3717c`](https://github.com/zjxxxxxxxxx/open-editor/commit/3c05ee2e711244deb83da78fc16488ac48d3717c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add '@open-editor/client' to 'dependencies'
+
+- [#240](https://github.com/zjxxxxxxxxx/open-editor/pull/240) [`3c05ee2e711244deb83da78fc16488ac48d3717c`](https://github.com/zjxxxxxxxxx/open-editor/commit/3c05ee2e711244deb83da78fc16488ac48d3717c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix entry match errors
+
+- Updated dependencies [[`a306e7b4b390a18b33742b4795e1a0ddf32db928`](https://github.com/zjxxxxxxxxx/open-editor/commit/a306e7b4b390a18b33742b4795e1a0ddf32db928), [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69), [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69), [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69), [`f4e102491fe0ce2b8a529bc91bb0401668ac7465`](https://github.com/zjxxxxxxxxx/open-editor/commit/f4e102491fe0ce2b8a529bc91bb0401668ac7465), [`a306e7b4b390a18b33742b4795e1a0ddf32db928`](https://github.com/zjxxxxxxxxx/open-editor/commit/a306e7b4b390a18b33742b4795e1a0ddf32db928)]:
+  - @open-editor/client@0.8.4
+  - @open-editor/shared@0.8.4
+  - @open-editor/server@0.8.4
+
 ## 0.8.3
 
 ### Patch Changes

@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.8.4
+
+### Patch Changes
+
+- [#241](https://github.com/zjxxxxxxxxx/open-editor/pull/241) [`f4e102491fe0ce2b8a529bc91bb0401668ac7465`](https://github.com/zjxxxxxxxxx/open-editor/commit/f4e102491fe0ce2b8a529bc91bb0401668ac7465) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Extract common constants
+
 ## 0.8.3
 
 ### Patch Changes
