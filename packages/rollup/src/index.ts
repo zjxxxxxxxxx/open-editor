@@ -1,7 +1,11 @@
 import { resolve } from 'node:path';
 import { type Plugin } from 'rollup';
-import { isDev } from '@open-editor/shared/node';
-import { injectClient, isObj, isStr } from '@open-editor/shared';
+import { isDev, resolvePath } from '@open-editor/shared/node';
+import {
+  CLIENT_MODULE_ID,
+  ENTRY_MATCH_RE,
+  injectClient,
+} from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -81,29 +85,19 @@ const portPromiseCache: AnyObject<Promise<number>> = {};
 export default function OpenEditorPlugin(
   options: Options = {},
 ): Plugin | undefined {
-  if (!isDev()) return;
+  if (!isDev()) {
+    return {
+      name: 'OpenEditorPlugin',
+    };
+  }
 
   const { onOpenEditor } = options;
   const rootDir = options.rootDir ? resolve(options.rootDir) : process.cwd();
-
-  const include = new Set<string>();
 
   let port: number;
 
   return {
     name: 'OpenEditorPlugin',
-    options({ input }) {
-      if (input) {
-        const entries = isStr(input)
-          ? [input]
-          : isObj(input)
-            ? Object.values(input)
-            : input;
-        for (const entry of entries) {
-          include.add(resolve(entry));
-        }
-      }
-    },
     async buildStart() {
       const cacheKey = `${rootDir}${onOpenEditor}`;
       port = await (portPromiseCache[cacheKey] ||= setupServer({
@@ -112,8 +106,16 @@ export default function OpenEditorPlugin(
         onOpenEditor,
       }));
     },
-    transform(code, id) {
-      if (include.has(id)) {
+    resolveId(id: string) {
+      if (id === CLIENT_MODULE_ID) {
+        return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(
+          /\.js$/,
+          '.mjs',
+        );
+      }
+    },
+    transform(code: string, id: string) {
+      if (ENTRY_MATCH_RE.test(id)) {
         return injectClient(code, {
           ...options,
           rootDir,

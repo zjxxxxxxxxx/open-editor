@@ -9,16 +9,8 @@ A webpack plugin for fast find source code.
 
 ## Install
 
-- plugin
-
 ```bash
 npm i @open-editor/webpack -D
-```
-
-- client
-
-```bash
-npm i @open-editor/client
 ```
 
 ## Usage

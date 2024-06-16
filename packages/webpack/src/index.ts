@@ -1,5 +1,10 @@
 import type webpack from 'webpack';
-import { isDev, resolvePath } from '@open-editor/shared/node';
+import {
+  CLIENT_MODULE_ID,
+  ENTRY_ESM_MATCH_RE,
+  ENTRY_MATCH_RE,
+} from '@open-editor/shared';
+import { isDev, resolvePath as _resolvePath } from '@open-editor/shared/node';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -34,7 +39,7 @@ export interface Options {
    */
   retainFrame?: boolean;
   /**
-   * Ignoring components in some directories, using glob pattern syntax for matching
+   * Ignoring components in some directories, using glob pattern syntax for match
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
@@ -69,25 +74,10 @@ export interface Options {
   onOpenEditor?(file: string): void;
 }
 
+const resolvePath = (path: string) => _resolvePath(path, import.meta.url);
+
 const PLUGIN_NAME = 'OpenEditorPlugin';
-const LOADER_PATH = resolvePath('./transform', import.meta.url);
-
-const REACT_15_PATH = 'react/react.js';
-const REACT_17_PATH = 'react/index.js';
-const VUE_2_PATH = 'vue/dist/vue.runtime.common.js';
-const VUE_2_ESM_PATH = 'vue/dist/vue.runtime.esm.js';
-const VUE_3_PATH = 'vue/index.js';
-const VUE_3_ESM_PATH = 'vue/dist/vue.runtime.esm-bundler.js';
-
-const ENTRY_PATHS = [
-  REACT_15_PATH,
-  REACT_17_PATH,
-  VUE_2_PATH,
-  VUE_2_ESM_PATH,
-  VUE_3_PATH,
-  VUE_3_ESM_PATH,
-].map((path) => path.replace(/\./g, '\\.'));
-const ENTRY_MATCH_RE = RegExp(`/node_modules/(${ENTRY_PATHS.join('|')})$`);
+const LOADER_PATH = resolvePath('./transform');
 
 const portPromiseCache: AnyObject<Promise<number>> = {};
 
@@ -120,9 +110,7 @@ export default class OpenEditorPlugin {
             return {
               options: {
                 ...this.options,
-                isCommonjs:
-                  !resource.endsWith(VUE_2_ESM_PATH) &&
-                  !resource.endsWith(VUE_3_ESM_PATH),
+                isCommonjs: !ENTRY_ESM_MATCH_RE.test(resource),
               },
               loader: LOADER_PATH,
             };
@@ -132,10 +120,9 @@ export default class OpenEditorPlugin {
         },
       });
 
-      compiler.options.module.rules.push({
-        test: /\/node_modules\/@open-editor\//,
-        type: 'javascript/auto',
-      });
+      compiler.options.resolve.alias ||= {};
+      compiler.options.resolve.alias[CLIENT_MODULE_ID] =
+        resolvePath(CLIENT_MODULE_ID);
     });
 
     compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
