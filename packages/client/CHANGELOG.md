@@ -1,5 +1,22 @@
 # @open-editor/client
 
+## 0.8.4
+
+### Patch Changes
+
+- [#239](https://github.com/zjxxxxxxxxx/open-editor/pull/239) [`a306e7b4b390a18b33742b4795e1a0ddf32db928`](https://github.com/zjxxxxxxxxx/open-editor/commit/a306e7b4b390a18b33742b4795e1a0ddf32db928) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add shortcut keys for 'openeditor'
+
+- [#237](https://github.com/zjxxxxxxxxx/open-editor/pull/237) [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add custom event 'rightclick'
+
+- [#237](https://github.com/zjxxxxxxxxx/open-editor/pull/237) [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Global disable of form events and drag events in enabled state
+
+- [#237](https://github.com/zjxxxxxxxxx/open-editor/pull/237) [`33658795e0761c32d3ba5b12f28410a5992dee69`](https://github.com/zjxxxxxxxxx/open-editor/commit/33658795e0761c32d3ba5b12f28410a5992dee69) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Optimize overlay render efficiency
+
+- [#239](https://github.com/zjxxxxxxxxx/open-editor/pull/239) [`a306e7b4b390a18b33742b4795e1a0ddf32db928`](https://github.com/zjxxxxxxxxx/open-editor/commit/a306e7b4b390a18b33742b4795e1a0ddf32db928) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add shortcut keys for 'opentree'
+
+- Updated dependencies [[`f4e102491fe0ce2b8a529bc91bb0401668ac7465`](https://github.com/zjxxxxxxxxx/open-editor/commit/f4e102491fe0ce2b8a529bc91bb0401668ac7465)]:
+  - @open-editor/shared@0.8.4
+
 ## 0.8.3
 
 ### Patch Changes
