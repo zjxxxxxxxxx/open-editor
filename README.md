@@ -55,16 +55,8 @@ Whether you are a `React` developer, a `Vue` developer, or a `React` and `Vue` d
 
 First you need to install the plugin into the project.
 
-- plugin
-
 ```bash
 npm i @open-editor/vite -D
-```
-
-- client
-
-```bash
-npm i @open-editor/client
 ```
 
 Then add the plugin to the build configuration.
@@ -103,7 +95,7 @@ At this time, open the local server address of the project in the browser, and y
 
 <img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
 
-Enable the inspector by clicking (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
+Enable the inspector by click (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
 
 <img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
 

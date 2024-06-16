@@ -6,7 +6,6 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "@open-editor/client": "latest",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "unplugin-vue-source": "latest"

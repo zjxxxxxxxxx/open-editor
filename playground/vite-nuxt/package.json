@@ -10,7 +10,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@open-editor/client": "latest",
     "nuxt": "^3.11.2",
     "unplugin-vue-source": "latest",
     "vue": "^3.4.21",

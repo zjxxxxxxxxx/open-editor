@@ -30,7 +30,7 @@ export interface Options {
    */
   retainFrame?: boolean;
   /**
-   * Ignoring components in some directories, using glob pattern syntax for matching
+   * Ignoring components in some directories, using glob pattern syntax for match
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
    *
