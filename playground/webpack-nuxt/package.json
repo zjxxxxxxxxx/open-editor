@@ -10,7 +10,6 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
-    "@open-editor/client": "latest",
     "nuxt": "^3.11.2",
     "unplugin-vue-source": "latest",
     "vue": "^3.4.21",
@@ -18,9 +17,7 @@
   },
   "devDependencies": {
     "@open-editor/webpack": "latest",
-    "@nuxt/webpack-builder": "^3.11.2"
-  },
-  "resolutions": {
+    "@nuxt/webpack-builder": "^3.11.2",
     "webpack-dev-middleware": "7.0.0"
   }
 }

@@ -18,8 +18,7 @@
   "scripts": {
     "build": "pnpm rollup -c --environment __TARGET__:es2020",
     "dev": "pnpm build -w --environment __DEV__",
-    "check": "tsc --noEmit",
-    "test": "vitest run"
+    "check": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -40,9 +39,6 @@
     "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup#readme",
-  "peerDependencies": {
-    "@open-editor/client": "workspace:*"
-  },
   "dependencies": {
     "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",

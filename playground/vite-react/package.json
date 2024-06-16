@@ -8,7 +8,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@open-editor/client": "latest",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
