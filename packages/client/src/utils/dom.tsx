@@ -28,17 +28,25 @@ export function getHtml() {
   return document.documentElement;
 }
 
-export function getDOMRect(target: HTMLElement): Omit<DOMRect, 'toJSON'> {
+const withZoom =
+  CLIENT && 'zoom' in getHtml().style && !/firefox/i.test(navigator.userAgent);
+export function getDOMRect(
+  target: HTMLElement,
+): Omit<DOMRectReadOnly, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
+  if (withZoom) {
+    return computeDOMRect(target, domRect);
+  }
+  return domRect;
+}
 
+function computeDOMRect(target: HTMLElement, domRect: DOMRect) {
   let zoom = 1;
   while (target) {
     zoom *= computedStyle(target)('zoom');
     target = target.parentElement!;
   }
-
-  // In browsers that do not support zoom, zoom is always empty.
-  if (zoom !== 0 && zoom !== 1) {
+  if (zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
   }
   return domRect;
