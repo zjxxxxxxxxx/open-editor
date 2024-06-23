@@ -1,5 +1,14 @@
 # @open-editor/rollup
 
+## 0.8.5
+
+### Patch Changes
+
+- Updated dependencies [[`398af2b52f09f0f8c68772b89837b00c31a01ab0`](https://github.com/zjxxxxxxxxx/open-editor/commit/398af2b52f09f0f8c68772b89837b00c31a01ab0)]:
+  - @open-editor/client@0.8.5
+  - @open-editor/server@0.8.5
+  - @open-editor/shared@0.8.5
+
 ## 0.8.4
 
 ### Patch Changes

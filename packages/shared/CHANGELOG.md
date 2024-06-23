@@ -1,5 +1,7 @@
 # @open-editor/shared
 
+## 0.8.5
+
 ## 0.8.4
 
 ### Patch Changes
