@@ -55,16 +55,8 @@
 
 首先需要将插件安装到项目中。
 
-- 插件
-
 ```bash
 npm i @open-editor/vite -D
-```
-
-- 客户端
-
-```bash
-npm i @open-editor/client
 ```
 
 然后将插件添加到编译配置中。
