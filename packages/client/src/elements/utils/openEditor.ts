@@ -15,10 +15,11 @@ export async function openEditor(
   const { port: customPort } = getOptions();
 
   const openURL = new URL(`${protocol}//${hostname}`);
-  openURL.pathname = `${ServerApis.OPEN_EDITOR}${file}`;
+  openURL.pathname = ServerApis.OPEN_EDITOR;
   openURL.port = customPort || port;
-  openURL.searchParams.set('line', String(line));
-  openURL.searchParams.set('column', String(column));
+  openURL.searchParams.set('f', encodeURIComponent(file));
+  openURL.searchParams.set('l', String(line));
+  openURL.searchParams.set('c', String(column));
 
   // open-editor event
   const e = new CustomEvent('openeditor', {
