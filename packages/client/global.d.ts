@@ -1,7 +1,5 @@
 /// <reference types="../../scripts/types.d.ts" />
 
-declare module 'picomatch';
-
 declare interface HTMLInspectElement extends HTMLElement {}
 
 declare interface HTMLToggleElement extends HTMLElement {}
