@@ -1,22 +1,46 @@
-import picomatch from 'picomatch';
+import { isStr } from '@open-editor/shared';
+import { Minimatch } from 'minimatch';
 import { getOptions } from '../options';
-
-let pm: (v: string) => boolean;
-function setupPm() {
-  const { ignoreComponents } = getOptions();
-  pm ||= picomatch(ignoreComponents, { dot: true });
-}
 
 export function ensureFileName(fileName: string) {
   const { rootDir } = getOptions();
   if (fileName.startsWith(rootDir)) {
-    fileName = fileName.replace(rootDir, '');
+    fileName = fileName.replace(rootDir, '').replace(/^\//, '');
   }
-  return `/${fileName.replace(/^\//, '')}`;
+  return fileName;
 }
 
 const invalidRE = /^\/home\/runner\//;
 export function isValidFileName(fileName?: string): fileName is string {
-  setupPm();
-  return fileName ? !invalidRE.test(fileName) && !pm(fileName) : false;
+  if (fileName) {
+    fileName = fileName.startsWith('/') ? fileName : `/${fileName}`;
+    return !invalidRE.test(fileName) && filter(fileName);
+  }
+
+  return false;
+}
+
+const globs: Minimatch[] = [];
+
+function filter(fileName: string) {
+  setupGlobs();
+
+  if (globs.length) {
+    return globs.every((glob) => !glob.match(fileName));
+  }
+
+  return true;
+}
+
+function setupGlobs() {
+  if (globs.length) return;
+
+  const { ignoreComponents } = getOptions();
+  const patterns = isStr(ignoreComponents)
+    ? [ignoreComponents]
+    : (ignoreComponents ?? []);
+
+  patterns.forEach((pattern) => {
+    globs.push(new Minimatch(pattern, { dot: true }));
+  });
 }

@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { resolve } from 'node:path';
 import { parse } from 'node:url';
 import connect from 'connect';
 import openEditor from 'launch-editor';
@@ -25,16 +25,19 @@ export function openEditorMiddleware(
   const { rootDir = process.cwd(), onOpenEditor = openEditor } = options;
 
   return (req, res) => {
-    const { pathname, query } = parse(req.url ?? '/', true);
+    const { query } = parse(req.url ?? '/', true);
+    const {
+      f: file = '',
+      l: line = 1,
+      c: column = 1,
+    } = query as AnyObject<string>;
 
-    let filename = decodeURIComponent(pathname!);
-    if (!existsSync(filename)) filename = join(rootDir, filename);
+    const filename = resolve(rootDir, decodeURIComponent(file));
     if (!existsSync(filename)) {
       res.statusCode = 404;
       res.end(sendMessage(`file '${filename}' not found`));
       return;
     }
-
     if (!statSync(filename).isFile()) {
       res.statusCode = 500;
       res.end(sendMessage(`'${filename}' is not a valid file`));
@@ -42,7 +45,6 @@ export function openEditorMiddleware(
     }
 
     if (req.headers.referer) {
-      const { line = 1, column = 1 } = query;
       onOpenEditor(`${filename}:${line}:${column}`);
     }
 
