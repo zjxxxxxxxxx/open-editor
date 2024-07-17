@@ -1,5 +1,16 @@
 # @open-editor/vite
 
+## 0.8.5
+
+### Patch Changes
+
+- [#246](https://github.com/zjxxxxxxxxx/open-editor/pull/246) [`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Normalize paths in Windows
+
+- Updated dependencies [[`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269), [`398af2b52f09f0f8c68772b89837b00c31a01ab0`](https://github.com/zjxxxxxxxxx/open-editor/commit/398af2b52f09f0f8c68772b89837b00c31a01ab0), [`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66), [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269), [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269)]:
+  - @open-editor/client@0.8.5
+  - @open-editor/shared@0.8.5
+  - @open-editor/server@0.8.5
+
 ## 0.8.4
 
 ### Patch Changes

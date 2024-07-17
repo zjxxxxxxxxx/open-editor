@@ -1,5 +1,22 @@
 # @open-editor/client
 
+## 0.8.5
+
+### Patch Changes
+
+- [#245](https://github.com/zjxxxxxxxxx/open-editor/pull/245) [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Replace 'picomatch' with 'minimatch'
+
+- [#242](https://github.com/zjxxxxxxxxx/open-editor/pull/242) [`398af2b52f09f0f8c68772b89837b00c31a01ab0`](https://github.com/zjxxxxxxxxx/open-editor/commit/398af2b52f09f0f8c68772b89837b00c31a01ab0) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix DOMRect error in Firefox
+
+- [#246](https://github.com/zjxxxxxxxxx/open-editor/pull/246) [`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Normalize paths in Windows
+
+- [#245](https://github.com/zjxxxxxxxxx/open-editor/pull/245) [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Passing file paths between the client and server through parameters
+
+- [#245](https://github.com/zjxxxxxxxxx/open-editor/pull/245) [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Remove the slash before the relative path
+
+- Updated dependencies [[`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66)]:
+  - @open-editor/shared@0.8.5
+
 ## 0.8.4
 
 ### Patch Changes
