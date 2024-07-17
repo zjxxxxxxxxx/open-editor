@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.8.5
+
+### Patch Changes
+
+- [#246](https://github.com/zjxxxxxxxxx/open-editor/pull/246) [`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Normalize paths in Windows
+
 ## 0.8.4
 
 ### Patch Changes
