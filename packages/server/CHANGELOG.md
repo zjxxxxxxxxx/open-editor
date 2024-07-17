@@ -1,5 +1,14 @@
 # @open-editor/server
 
+## 0.8.5
+
+### Patch Changes
+
+- [#245](https://github.com/zjxxxxxxxxx/open-editor/pull/245) [`0b2ea5cdc41a9f86464dc4523a9bc80204651269`](https://github.com/zjxxxxxxxxx/open-editor/commit/0b2ea5cdc41a9f86464dc4523a9bc80204651269) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Passing file paths between the client and server through parameters
+
+- Updated dependencies [[`f6af1544b96e7d9524363dd3a0233dc3c5189f66`](https://github.com/zjxxxxxxxxx/open-editor/commit/f6af1544b96e7d9524363dd3a0233dc3c5189f66)]:
+  - @open-editor/shared@0.8.5
+
 ## 0.8.4
 
 ### Patch Changes
