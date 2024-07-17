@@ -1,4 +1,4 @@
-import { isStr } from '@open-editor/shared';
+import { isStr, normalizePath } from '@open-editor/shared';
 import type { SourceCodeMeta } from '../index';
 import type { ResolveDebug } from '../resolveDebug';
 import { ensureFileName, isValidFileName } from '../util';
@@ -24,7 +24,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
     let [inst, source] = getAnchor(debug, getSource);
 
     while (isValid(inst)) {
-      const file = getFile(inst);
+      const file = normalizeSource(getFile(inst));
       if (isValidFileName(file)) {
         if (source) {
           if (resolveForSource(file)) return;
@@ -43,7 +43,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
       if (parsedSource.file === parsedFile.file) {
         if (!record.has(parsedSource.file)) {
           push(inst, parsedSource);
-          source = getSource(inst);
+          source = normalizeSource(getSource(inst));
         }
 
         return !deep;
@@ -76,18 +76,18 @@ function getAnchor<T = any>(
   debug: ResolveDebug,
   getSource: VueResolverOptions<T>['getSource'],
 ) {
-  const source = debug.el.getAttribute('__source');
+  const source = normalizeSource(debug.el.getAttribute('__source'));
   while (isStr(source)) {
     return [debug.value, source];
   }
-  return [debug.value, getSource(debug.value)];
+  return [debug.value, normalizeSource(getSource(debug.value))];
 }
 
 const splitRE = /:(?=\d)/;
 function parsePath(source: string) {
   const [f, l = 1, c = 1] = source.split(splitRE)!;
   return {
-    file: ensureFileName(f),
+    file: f,
     line: Number(l),
     column: Number(c),
   };
@@ -97,4 +97,8 @@ const nameRE = /([^/]+)\.[^.]+$/;
 function getNameForFile(file = '') {
   const [, n] = file.match(nameRE)!;
   return n;
+}
+
+function normalizeSource(source?: string | null) {
+  return source && ensureFileName(normalizePath(source));
 }

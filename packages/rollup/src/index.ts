@@ -5,6 +5,7 @@ import {
   CLIENT_MODULE_ID,
   ENTRY_MATCH_RE,
   injectClient,
+  normalizePath,
 } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
@@ -92,7 +93,9 @@ export default function OpenEditorPlugin(
   }
 
   const { onOpenEditor } = options;
-  const rootDir = options.rootDir ? resolve(options.rootDir) : process.cwd();
+  const rootDir = normalizePath(
+    options.rootDir ? resolve(options.rootDir) : process.cwd(),
+  );
 
   let port: number;
 

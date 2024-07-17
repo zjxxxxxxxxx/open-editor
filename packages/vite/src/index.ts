@@ -4,6 +4,7 @@ import {
   CLIENT_MODULE_ID,
   ServerApis,
   injectClient,
+  normalizePath,
 } from '@open-editor/shared';
 import { isDev, resolvePath } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
@@ -74,7 +75,9 @@ export default function OpenEditorPlugin(options: Options = {}) {
   }
 
   const { onOpenEditor } = options;
-  const rootDir = options.rootDir ? resolve(options.rootDir) : process.cwd();
+  const rootDir = normalizePath(
+    options.rootDir ? resolve(options.rootDir) : process.cwd(),
+  );
 
   return {
     name: 'OpenEditorPlugin',

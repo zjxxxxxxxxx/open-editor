@@ -22,9 +22,12 @@ export const ENTRY_ESM_MATCH_RE = createMatchRE([
 export const CLIENT_MODULE_ID = '@open-editor/client';
 
 function normalizePath(path: string) {
-  return path.replace(/\./g, '\\.');
+  return `/node_modules/${path.replace(/\./g, '\\.')}`.replace(
+    /\//g,
+    '[\\\\/]',
+  );
 }
 
 function createMatchRE(paths: string[]) {
-  return RegExp(`/node_modules/(${paths.join('|')})$`);
+  return RegExp(`(${paths.join('|')})$`);
 }

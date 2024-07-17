@@ -3,6 +3,7 @@ import {
   CLIENT_MODULE_ID,
   ENTRY_ESM_MATCH_RE,
   ENTRY_MATCH_RE,
+  normalizePath,
 } from '@open-editor/shared';
 import { isDev, resolvePath as _resolvePath } from '@open-editor/shared/node';
 import { setupServer } from '@open-editor/server';
@@ -92,7 +93,7 @@ export default class OpenEditorPlugin {
       options;
     this.options = {
       ...options,
-      rootDir,
+      rootDir: normalizePath(rootDir),
       onOpenEditor,
     };
   }
@@ -102,7 +103,7 @@ export default class OpenEditorPlugin {
 
     compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
       compiler.options.module.rules.push({
-        test: /\/node_modules\//,
+        test: /[\\/]node_modules[\\/]/,
         include: ENTRY_MATCH_RE,
         use: (data: AnyObject) => {
           const { resource, compiler } = data;
