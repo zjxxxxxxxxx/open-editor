@@ -1,6 +1,7 @@
+import { normalizePath } from '@open-editor/shared';
 import type { Source } from 'react-reconciler';
 import type { SourceCodeMeta } from '../index';
-import { isValidFileName } from '../util';
+import { ensureFileName, isValidFileName } from '../util';
 
 export interface ReactResolverOptions<T = any> {
   isValid(v?: T): boolean;
@@ -20,7 +21,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
     deep: boolean,
   ) {
     while (cur) {
-      const source = getSource(cur);
+      const source = normalizeSource(getSource(cur));
       let next = getNext(cur);
 
       if (isValidFileName(source?.fileName)) {
@@ -42,6 +43,15 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
       cur = next;
     }
+  }
+
+  function normalizeSource(
+    source: (Source & { columnNumber?: number }) | null | undefined,
+  ) {
+    if (source) {
+      source.fileName = ensureFileName(normalizePath(source.fileName));
+    }
+    return source;
   }
 
   return reactResolver;
