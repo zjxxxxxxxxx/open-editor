@@ -3,7 +3,6 @@ import { resolveReact17 } from './resolves/react17';
 import { resolveReact15 } from './resolves/react15';
 import { resolveVue3 } from './resolves/vue3';
 import { resolveVue2 } from './resolves/vue2';
-import { ensureFileName } from './util';
 import { resolveDebug } from './resolveDebug';
 
 export interface SourceCodeMeta {
@@ -46,7 +45,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
 export function normalizeMeta(meta: Partial<SourceCodeMeta>) {
   return {
     name: meta.name ? camelCase(meta.name) : 'Anonymous',
-    file: ensureFileName(meta.file!),
+    file: meta.file!,
     line: meta.line || 1,
     column: meta.column || 1,
   };

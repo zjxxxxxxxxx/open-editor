@@ -5,3 +5,4 @@ export * from './camelCase';
 export * from './clamp';
 export * from './hasOwnProperty';
 export * from './injectClient';
+export * from './normalizePath';

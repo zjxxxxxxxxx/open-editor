@@ -11,7 +11,7 @@ export function ensureFileName(fileName: string) {
 }
 
 const invalidRE = /^\/home\/runner\//;
-export function isValidFileName(fileName?: string): fileName is string {
+export function isValidFileName(fileName?: string | null): fileName is string {
   if (fileName) {
     fileName = fileName.startsWith('/') ? fileName : `/${fileName}`;
     return !invalidRE.test(fileName) && filter(fileName);
