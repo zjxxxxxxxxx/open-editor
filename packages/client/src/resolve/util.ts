@@ -1,5 +1,4 @@
-import { isStr } from '@open-editor/shared';
-import { Minimatch } from 'minimatch';
+import outmatch from 'outmatch';
 import { getOptions } from '../options';
 
 export function ensureFileName(fileName: string) {
@@ -20,27 +19,13 @@ export function isValidFileName(fileName?: string | null): fileName is string {
   return false;
 }
 
-const globs: Minimatch[] = [];
-
+let glob: ReturnType<typeof outmatch>;
 function filter(fileName: string) {
-  setupGlobs();
-
-  if (globs.length) {
-    return globs.every((glob) => !glob.match(fileName));
-  }
-
-  return true;
-}
-
-function setupGlobs() {
-  if (globs.length) return;
-
   const { ignoreComponents } = getOptions();
-  const patterns = isStr(ignoreComponents)
-    ? [ignoreComponents]
-    : (ignoreComponents ?? []);
-
-  patterns.forEach((pattern) => {
-    globs.push(new Minimatch(pattern, { dot: true }));
-  });
+  if (ignoreComponents) {
+    return !(glob ||= outmatch(ignoreComponents, { excludeDot: true }))(
+      fileName,
+    );
+  }
+  return true;
 }
