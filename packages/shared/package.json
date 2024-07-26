@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/shared",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "internal utils shared across @open-editor packages",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

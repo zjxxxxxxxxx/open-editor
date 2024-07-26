@@ -1,5 +1,14 @@
 # @open-editor/webpack
 
+## 0.8.6
+
+### Patch Changes
+
+- Updated dependencies [[`1e533aa05d740b69cb33e42bddc1346c4701ac1c`](https://github.com/zjxxxxxxxxx/open-editor/commit/1e533aa05d740b69cb33e42bddc1346c4701ac1c)]:
+  - @open-editor/client@0.8.6
+  - @open-editor/server@0.8.6
+  - @open-editor/shared@0.8.6
+
 ## 0.8.5
 
 ### Patch Changes
