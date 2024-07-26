@@ -33,7 +33,7 @@
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/client#readme",
   "dependencies": {
     "@open-editor/shared": "workspace:*",
-    "minimatch": "^10.0.1"
+    "outmatch": "^1.0.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",
