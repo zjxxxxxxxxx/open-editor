@@ -122,9 +122,9 @@ importers:
       '@open-editor/shared':
         specifier: workspace:*
         version: link:../shared
-      minimatch:
-        specifier: ^10.0.1
-        version: 10.0.1
+      outmatch:
+        specifier: ^1.0.0
+        version: 1.0.0
     devDependencies:
       '@types/react':
         specifier: ^18.2.45
@@ -19135,16 +19135,6 @@ packages:
       }
     dev: true
 
-  /minimatch@10.0.1:
-    resolution:
-      {
-        integrity: sha512-ethXTt3SGGR+95gudmqJ1eNhRO7eGEGIgYA9vnPatK4/etz2MEVDno5GMCibdMTuBMyElzIlgxMna3K94XDIDQ==,
-      }
-    engines: { node: 20 || >=22 }
-    dependencies:
-      brace-expansion: 2.0.1
-    dev: false
-
   /minimatch@3.0.8:
     resolution:
       {
@@ -20392,6 +20382,13 @@ packages:
         integrity: sha512-/jHxFIzoMXdqPzTaCpFzAAWhpkSjZPF4Vsn6jAfNpmbH/ymsmd7Qc6VE9BGn0L6YMj6uwpQLxCECpus4ukKS9Q==,
       }
     dev: true
+
+  /outmatch@1.0.0:
+    resolution:
+      {
+        integrity: sha512-Dro+1hlvosA7DUKFqeHUA2g+xdWGoGTGZ+19go5vwxqS7iSTXQtajrEdhTdBXdahzGBEV2NH89vouFWpLyOuPg==,
+      }
+    dev: false
 
   /p-filter@2.1.0:
     resolution:
@@ -27934,7 +27931,7 @@ packages:
     dependencies:
       chalk: 4.1.2
       hash-sum: 2.0.0
-      vue: 3.4.31(typescript@5.2.2)
+      vue: 3.4.31(typescript@4.5.5)
       watchpack: 2.4.1
       webpack: 5.93.0(esbuild@0.18.20)
     dev: true
