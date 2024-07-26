@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.8.6
+
+### Patch Changes
+
+- [#247](https://github.com/zjxxxxxxxxx/open-editor/pull/247) [`1e533aa05d740b69cb33e42bddc1346c4701ac1c`](https://github.com/zjxxxxxxxxx/open-editor/commit/1e533aa05d740b69cb33e42bddc1346c4701ac1c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Replace 'minimatch' with 'outmatch'
+
+- Updated dependencies []:
+  - @open-editor/shared@0.8.6
+
 ## 0.8.5
 
 ### Patch Changes
