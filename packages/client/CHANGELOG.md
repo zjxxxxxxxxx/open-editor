@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.8.7
+
+### Patch Changes
+
+- [#249](https://github.com/zjxxxxxxxxx/open-editor/pull/249) [`0550a4daf97448cef785d2262860a7da48445dfc`](https://github.com/zjxxxxxxxxx/open-editor/commit/0550a4daf97448cef785d2262860a7da48445dfc) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix the size anomaly caused by zoom
+
+- Updated dependencies []:
+  - @open-editor/shared@0.8.7
+
 ## 0.8.6
 
 ### Patch Changes
