@@ -1,7 +1,7 @@
 import { replaceChildren } from '../utils/dom';
-import { CLIENT } from '../constants';
+import { IS_CLIENT } from '../constants';
 
-const BrowserHTMLElement = CLIENT
+const BrowserHTMLElement = IS_CLIENT
   ? HTMLElement
   : (class HTMLElement {} as typeof HTMLElement);
 

@@ -1,4 +1,5 @@
-import { applyAttrs, checkValidElement } from '../../utils/dom';
+import { applyAttrs } from '../../utils/dom';
+import { checkValidElement } from '../../utils/checkElement';
 
 const dTagRE = /^(button|fieldset|optgroup|option|select|textarea|input)$/;
 

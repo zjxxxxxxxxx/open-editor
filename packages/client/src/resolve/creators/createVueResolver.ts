@@ -83,6 +83,10 @@ function getAnchor<T = any>(
   return [debug.value, normalizeSource(getSource(debug.value))];
 }
 
+function normalizeSource(source?: string | null) {
+  return source && ensureFileName(normalizePath(source));
+}
+
 const splitRE = /:(?=\d)/;
 function parsePath(source: string) {
   const [f, l = 1, c = 1] = source.split(splitRE)!;
@@ -97,8 +101,4 @@ const nameRE = /([^/]+)\.[^.]+$/;
 function getNameForFile(file = '') {
   const [, n] = file.match(nameRE)!;
   return n;
-}
-
-function normalizeSource(source?: string | null) {
-  return source && ensureFileName(normalizePath(source));
 }

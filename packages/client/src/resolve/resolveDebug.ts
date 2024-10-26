@@ -1,5 +1,5 @@
 import { hasOwnProperty } from '@open-editor/shared';
-import { checkValidElement } from '../utils/dom';
+import { checkValidElement } from '../utils/checkElement';
 
 export type ResolveDebug<T = any> = {
   el: HTMLElement;

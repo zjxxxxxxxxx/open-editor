@@ -1,4 +1,4 @@
-import { checkValidElement } from '../../utils/dom';
+import { checkValidElement } from '../../utils/checkElement';
 import { getOptions } from '../../options';
 import { off, on } from '../../event';
 import {
@@ -6,7 +6,7 @@ import {
   setupClickedElementAttrs,
   cleanClickedElementAttrs,
 } from './clickedElement';
-import { getDefaultActive } from './getDefaultActive';
+import { getActiveElement } from './getActiveElement';
 
 export interface SetupListenersOptions {
   onActive(el: HTMLElement | null): void;
@@ -82,8 +82,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   const { once } = getOptions();
 
-  let activeEl = getDefaultActive();
-
+  let activeEl = getActiveElement();
   if (activeEl) {
     onActive(activeEl);
   }
