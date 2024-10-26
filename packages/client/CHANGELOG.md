@@ -1,5 +1,16 @@
 # @open-editor/client
 
+## 0.8.7
+
+### Patch Changes
+
+- [#251](https://github.com/zjxxxxxxxxx/open-editor/pull/251) [`571e30a09dc47d107e5dd4e12911f4a8b5e3eb5b`](https://github.com/zjxxxxxxxxx/open-editor/commit/571e30a09dc47d107e5dd4e12911f4a8b5e3eb5b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix box model size error
+
+- [#249](https://github.com/zjxxxxxxxxx/open-editor/pull/249) [`0550a4daf97448cef785d2262860a7da48445dfc`](https://github.com/zjxxxxxxxxx/open-editor/commit/0550a4daf97448cef785d2262860a7da48445dfc) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix the size anomaly caused by zoom
+
+- Updated dependencies []:
+  - @open-editor/shared@0.8.7
+
 ## 0.8.6
 
 ### Patch Changes
