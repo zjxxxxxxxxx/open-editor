@@ -6,6 +6,8 @@ export const InternalElements = <const>{
   HTML_TREE_ELEMENT: 'open-editor-tree',
 };
 
-export const CLIENT = typeof window !== 'undefined';
+export const IS_CLIENT = typeof window !== 'undefined';
+
+export const IS_FIREFOX = IS_CLIENT && /firefox/i.test(navigator.userAgent);
 
 export const CACHE_POS_TOP_ID = 'oe-pt';

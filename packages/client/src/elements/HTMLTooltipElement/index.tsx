@@ -1,14 +1,14 @@
 import { clamp } from '@open-editor/shared';
 import {
-  getDOMRect,
   getHtml,
   CSS_util,
   applyStyle,
   addClass,
   removeClass,
   checkVisibility,
-  checkValidElement,
 } from '../../utils/dom';
+import { checkValidElement } from '../../utils/checkElement';
+import { getDOMRect } from '../../utils/getDOMRect';
 import {
   createSafeAreaObserver,
   type SafeAreaObserver,

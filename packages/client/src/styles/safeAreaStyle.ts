@@ -1,4 +1,4 @@
-import { createGlobalStyle } from '../utils/dom';
+import { createGlobalStyle } from '../utils/createGlobalStyle';
 
 const safeAreaCSS = css`
   :root {
