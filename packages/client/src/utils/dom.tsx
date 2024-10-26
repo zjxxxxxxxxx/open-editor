@@ -1,69 +1,7 @@
 import { Fragment } from '../../jsx/jsx-runtime';
-import { CLIENT, InternalElements } from '../constants';
-
-const internals = Object.values(InternalElements).map((internal) =>
-  internal.toUpperCase(),
-);
-export function checkInternalElement(
-  el: HTMLElement | null,
-): el is HTMLElement {
-  return el != null && internals.includes(el.nodeName);
-}
-
-const invalids = [
-  ...internals,
-  // In Firefox, when the mouse leaves the visual area, the event target is `HTMLDocument`.
-  '#document',
-  // The `html` check is triggered when the mouse leaves the browser,
-  // and filtering is needed to ignore this unexpected check.
-  'HTML',
-  // `iframe` should be left to the internal inspector.
-  'IFRAME',
-];
-export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
-  return el != null && el.isConnected && !invalids.includes(el.nodeName);
-}
 
 export function getHtml() {
   return document.documentElement;
-}
-
-/**
- * In most browsers, the return value of [getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
- * does not calculate [zoom](https://developer.mozilla.org/en-US/docs/Web/CSS/zoom),
- * causing the obtained value to be inconsistent with the actual size of the element.
- * Additional calculation is required to solve this problem.
- */
-const withZoom =
-  CLIENT &&
-  'zoom' in getHtml().style &&
-  // Firefox does not need to calculate
-  !/firefox/i.test(navigator.userAgent) &&
-  // Chromium version greater than 127 do not need to be calculated
-  // @ts-ignore
-  !navigator.userAgentData?.brands.find(
-    (i) => i.brand === 'Chromium' && +i.version > 127,
-  );
-export function getDOMRect(
-  target: HTMLElement,
-): Omit<DOMRectReadOnly, 'toJSON'> {
-  const domRect = target.getBoundingClientRect().toJSON();
-  if (withZoom) {
-    return computeDOMRect(target, domRect);
-  }
-  return domRect;
-}
-
-function computeDOMRect(target: HTMLElement, domRect: DOMRect) {
-  let zoom = 1;
-  while (target) {
-    zoom *= computedStyle(target)('zoom');
-    target = target.parentElement!;
-  }
-  if (zoom !== 1) {
-    Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
-  }
-  return domRect;
 }
 
 export function applyAttrs(el: HTMLElement, attrs: AnyObject) {
@@ -168,21 +106,6 @@ export function computedStyle(el: HTMLElement) {
     return value;
   }
   return get;
-}
-
-export function createGlobalStyle(css: string) {
-  if (!CLIENT) return { mount() {}, unmount() {} };
-
-  const style = <style type="text/css">{css}</style>;
-  return {
-    mount() {
-      // Insert into `body` to override the same styles that may have been set
-      if (!style.isConnected) appendChild(document.body, style);
-    },
-    unmount() {
-      if (style.isConnected) style.remove();
-    },
-  };
 }
 
 export function addClass(el: HTMLElement, className: string) {

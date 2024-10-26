@@ -1,6 +1,6 @@
 import { computedStyle } from '../utils/dom';
 import { safeAreaStyle } from '../styles/safeAreaStyle';
-import { CLIENT } from '../constants';
+import { IS_CLIENT } from '../constants';
 import { on, off } from '../event';
 import { mitt } from './mitt';
 
@@ -20,7 +20,7 @@ export function createSafeAreaObserver() {
 
   let value: SafeAreaValue;
   // init
-  if (CLIENT) {
+  if (IS_CLIENT) {
     updateValue();
   }
 
