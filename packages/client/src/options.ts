@@ -24,12 +24,6 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * The inspector remains rendered when the browser is idle
-   *
-   * @default true
-   */
-  retainFrame?: boolean;
-  /**
    * Ignoring components in some directories, using glob pattern syntax for match
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)
@@ -61,7 +55,6 @@ export function setOptions(
     displayToggle: userOpts.displayToggle ?? true,
     colorMode: userOpts.colorMode ?? 'system',
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
-    retainFrame: userOpts.retainFrame ?? true,
     ignoreComponents: userOpts.ignoreComponents ?? '/**/node_modules/**/*',
     once: userOpts.once ?? true,
   };

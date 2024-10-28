@@ -29,14 +29,14 @@ export function getDOMRect(
 }
 
 function computedDOMRect(target: HTMLElement, domRect: DOMRect) {
-  const zoom = getZoom(target);
+  const zoom = getCompositeZoom(target);
   if (zoom !== 1) {
     Object.keys(domRect).forEach((key) => (domRect[key] *= zoom));
   }
   return domRect;
 }
 
-export function getZoom(target: HTMLElement) {
+export function getCompositeZoom(target: HTMLElement) {
   let zoom = 1;
   while (target) {
     zoom *= computedStyle(target)('zoom');
