@@ -1,5 +1,7 @@
 .oe-root {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: var(--z-index-tooltip);
   display: none;
   max-width: calc(100% - 56px);
@@ -9,7 +11,7 @@
   border-radius: 12px;
   overflow: hidden;
   pointer-events: none;
-  will-change: visibility, width, height, top, left;
+  will-change: visibility, width, height, transform;
 }
 .oe-content {
   padding: 12px 20px;
