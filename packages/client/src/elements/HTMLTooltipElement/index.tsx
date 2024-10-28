@@ -70,8 +70,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     // before hidden
     applyStyle(this.state.root, {
       visibility: 'hidden',
-      top: CSS_util.px(OFFSET),
-      left: CSS_util.px(OFFSET),
+      transform: CSS_util.translate(OFFSET, OFFSET),
     });
 
     // When encountering an invalid element or an invisible element, hide it
@@ -119,8 +118,7 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
     );
 
     applyStyle(this.state.root, {
-      top: CSS_util.px(top),
-      left: CSS_util.px(left),
+      transform: CSS_util.translate(left, top),
     });
   }
 }

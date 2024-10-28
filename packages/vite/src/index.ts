@@ -35,12 +35,6 @@ export interface Options {
    */
   disableHoverCSS?: boolean;
   /**
-   * The inspector remains rendered when the browser is idle
-   *
-   * @default true
-   */
-  retainFrame?: boolean;
-  /**
    * Ignoring components in some directories, using glob pattern syntax for matching
    *
    * @see https://en.wikipedia.org/wiki/Glob_(programming)

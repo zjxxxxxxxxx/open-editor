@@ -1,15 +1,6 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../../utils/dom';
-import {
-  type FrameChecker,
-  createFrameChecker,
-} from '../../utils/createFrameChecker';
-import {
-  type IdleObserver,
-  createIdleObserver,
-} from '../../utils/createIdleObserver';
-import { InternalElements } from '../../constants';
-import { getOptions } from '../../options';
 import { type BoxRect, type BoxLines, getBoxModel } from '../utils/getBoxModel';
+import { InternalElements } from '../../constants';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 export class HTMLOverlayElement extends HTMLCustomElement<{
@@ -19,23 +10,11 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
   padding: HTMLElement;
   tooltip: HTMLTooltipElement;
   activeEl: HTMLElement | null;
+  activeRect: DOMRect | null;
   observing: boolean;
 }> {
-  /**
-   * Detects frame rate and keeps rendering at 60 frames per second to avoid over-rendering on high refresh rate screens.
-   */
-  private declare checkNextFrame: FrameChecker;
-
-  private declare idleObserver: IdleObserver;
-
   constructor() {
     super();
-
-    // After testing, it was concluded that setting the frame interval to 15 milliseconds
-    // can ensure rendering on a 120-frame monitor at a speed of about 60 frames per second.
-    this.checkNextFrame = createFrameChecker(15);
-
-    this.idleObserver = createIdleObserver(300);
 
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
@@ -74,11 +53,6 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
     this.state.tooltip.open();
     this.startObserver();
-
-    const { retainFrame } = getOptions();
-    if (!retainFrame) {
-      this.idleObserver.start();
-    }
   }
 
   close() {
@@ -86,11 +60,6 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
 
     this.state.tooltip.close();
     this.stopObserver();
-
-    const { retainFrame } = getOptions();
-    if (!retainFrame) {
-      this.idleObserver.stop();
-    }
   }
 
   update(el: HTMLElement | null) {
@@ -106,36 +75,49 @@ export class HTMLOverlayElement extends HTMLCustomElement<{
     this.state.observing = false;
   }
 
+  private get isActiveRectChanged() {
+    const prevAxis = this.state.activeRect;
+    const nextAxis = (this.state.activeRect =
+      this.state.activeEl?.getBoundingClientRect() ?? null);
+
+    if (prevAxis == null && nextAxis == null) {
+      return false;
+    }
+    if (prevAxis == null || nextAxis == null) {
+      return true;
+    }
+
+    const diff = (key: keyof DOMRect) => prevAxis[key] !== nextAxis[key];
+    return diff('x') || diff('y') || diff('width') || diff('height');
+  }
+
   private observe() {
     if (this.state.observing) {
-      if (!this.idleObserver.isIdle && this.checkNextFrame()) {
+      if (!document.hidden && this.isActiveRectChanged) {
         if (this.state.activeEl?.isConnected === false) {
           this.state.activeEl = null;
+          this.state.activeRect = null;
         }
-        this.updateOverlay();
+
+        const [rect, lines] = getBoxModel(this.state.activeEl);
+        this.state.tooltip.update(this.state.activeEl, rect);
+        this.updateOverlay(rect, lines);
       }
+
       requestAnimationFrame(this.observe);
     }
   }
 
-  private updateOverlay() {
-    const [rect, lines] = getBoxModel(this.state.activeEl);
-    this.state.tooltip.update(this.state.activeEl, rect);
-    this.renderOverlay(rect, lines);
-  }
-
-  private renderOverlay(rect: BoxRect, lines: BoxLines) {
+  private updateOverlay(rect: BoxRect, lines: BoxLines) {
     applyStyle(this.state.position, {
       width: CSS_util.px(rect.width),
       height: CSS_util.px(rect.height),
-      top: CSS_util.px(rect.top),
-      left: CSS_util.px(rect.left),
+      transform: CSS_util.translate(rect.left, rect.top),
     });
 
-    for (const name of Object.keys(lines)) {
-      const el = this.state[name];
-      const line = lines[name];
-
+    for (const key of Object.keys(lines)) {
+      const el = this.state[key];
+      const line = lines[key];
       applyStyle(el, {
         borderTopWidth: CSS_util.px(line.top),
         borderRightWidth: CSS_util.px(line.right),

@@ -1,5 +1,3 @@
-import { createFrameChecker } from '../../utils/createFrameChecker';
-
 const DISABLE_RE = /:hover/g;
 const DISABLE_TOKEN = '::hover';
 
@@ -70,6 +68,18 @@ function replaceRule(sheet: CSSStyleSheet, text: string) {
 interface AsyncTask<T> extends Promise<T> {
   resolve: (value: T | PromiseLike<T>) => void;
   reject: (reason?: any) => void;
+}
+
+function createFrameChecker(frameDuration: number) {
+  let lastTime = performance.now();
+  return function checkNextFrame() {
+    const currentTime = performance.now();
+    const nextFrame = currentTime - lastTime > frameDuration;
+    if (nextFrame) {
+      lastTime = currentTime;
+    }
+    return nextFrame;
+  };
 }
 
 function createAsyncTask<T = void>() {

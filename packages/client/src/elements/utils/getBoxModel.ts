@@ -1,6 +1,6 @@
 import { computedStyle, checkVisibility } from '../../utils/dom';
 import { checkValidElement } from '../../utils/checkElement';
-import { getDOMRect, getZoom } from '../../utils/getDOMRect';
+import { getDOMRect, getCompositeZoom } from '../../utils/getDOMRect';
 import { IS_FIREFOX } from '../../constants';
 
 export interface BoxLine {
@@ -56,7 +56,7 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   } = getDOMRect(el);
   const get = computedStyle(el);
 
-  const zoom = getZoom(el);
+  const zoom = getCompositeZoom(el);
   function withZoom(value: number, use = true) {
     return use ? value * zoom : value;
   }

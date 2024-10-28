@@ -1,9 +1,11 @@
 .oe-position {
   position: fixed;
+  top: 0;
+  left: 0;
   z-index: var(--z-index-overlay);
   display: none;
   pointer-events: none;
-  will-change: width, height, top, left;
+  will-change: width, height, transform;
 }
 .oe-position * {
   box-sizing: border-box;

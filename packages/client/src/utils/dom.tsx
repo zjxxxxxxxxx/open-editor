@@ -74,8 +74,6 @@ export function checkVisibility(el: HTMLElement) {
   return true;
 }
 
-type PartialWithNull<T> = { [P in keyof T]?: T[P] | undefined | null };
-
 export const CSS_util = {
   px(value: string | number) {
     return `${value}px`;
@@ -83,11 +81,16 @@ export const CSS_util = {
   pv(value: string) {
     return Number.parseFloat(value);
   },
+  translate(x: number, y: number) {
+    return `translate(${CSS_util.px(x)}, ${CSS_util.px(y)})`;
+  },
 };
 
 export function applyStyle(
   el: HTMLElement,
-  ...styles: PartialWithNull<CSSStyleDeclaration>[]
+  ...styles: {
+    [P in keyof CSSStyleDeclaration]?: CSSStyleDeclaration[P] | null;
+  }[]
 ) {
   Object.assign(el.style, ...styles);
 }
