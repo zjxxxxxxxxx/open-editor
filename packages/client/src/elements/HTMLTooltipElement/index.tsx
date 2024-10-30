@@ -9,11 +9,8 @@ import {
 } from '../../utils/dom';
 import { checkValidElement } from '../../utils/checkElement';
 import { getDOMRect } from '../../utils/getDOMRect';
-import {
-  createSafeAreaObserver,
-  type SafeAreaObserver,
-} from '../../utils/createSafeAreaObserver';
 import { type SourceCode, resolveSource } from '../../resolve';
+import { safeArea } from '../utils/safeArea';
 import { type BoxRect } from '../utils/getBoxModel';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
@@ -25,12 +22,8 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
   comp: HTMLElement;
   file: HTMLElement;
 }> {
-  private declare safeAreaObserver: SafeAreaObserver;
-
   constructor() {
     super();
-
-    this.safeAreaObserver = createSafeAreaObserver();
 
     this.open = this.open.bind(this);
     this.close = this.close.bind(this);
@@ -103,18 +96,17 @@ export class HTMLTooltipElement extends HTMLCustomElement<{
       clientHeight: winH,
     } = getHtml();
     const { width: rootW, height: rootH } = getDOMRect(this.state.root);
-    const { value: safe } = this.safeAreaObserver;
 
-    const onTopArea = rect.top > rootH + safe.top + OFFSET * 2;
+    const onTopArea = rect.top > rootH + safeArea.top + OFFSET * 2;
     const top = clamp(
       onTopArea ? rect.top - rootH - OFFSET : rect.bottom + OFFSET,
-      safe.top + OFFSET,
-      winH - rootH - safe.bottom - OFFSET,
+      safeArea.top + OFFSET,
+      winH - rootH - safeArea.bottom - OFFSET,
     );
     const left = clamp(
       rect.left,
-      safe.left + OFFSET,
-      winW - rootW - safe.right - OFFSET,
+      safeArea.left + OFFSET,
+      winW - rootW - safeArea.right - OFFSET,
     );
 
     applyStyle(this.state.root, {

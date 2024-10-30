@@ -22,12 +22,6 @@ export interface Options {
    */
   displayToggle?: boolean;
   /**
-   * set UI color mode
-   *
-   * @default 'system'
-   */
-  colorMode?: 'system' | 'light' | 'dark';
-  /**
    * Disable hover effect from CSS when inspector is enabled
    *
    * @default true
