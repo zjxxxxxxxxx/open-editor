@@ -11,7 +11,6 @@ import { off, on } from '../../event';
 import { InternalElements } from '../../constants';
 import { getOptions } from '../../options';
 import { resolveSource } from '../../resolve';
-import { getColorMode } from '../utils/getColorMode';
 import { openEditor } from '../utils/openEditor';
 import { setupListeners } from '../utils/setupListeners';
 import { disableHoverCSS, enableHoverCSS } from '../utils/disableHoverCSS';
@@ -54,7 +53,6 @@ export class HTMLInspectElement extends HTMLCustomElement<{
     return (
       <>
         <link rel="stylesheet" href="./index.css" />
-        <style type="text/css">{getColorMode()}</style>
         <InternalElements.HTML_OVERLAY_ELEMENT
           ref={(el) => (this.state.overlay = el)}
         />

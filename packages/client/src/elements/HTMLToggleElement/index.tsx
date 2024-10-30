@@ -6,13 +6,13 @@ import {
   addClass,
   removeClass,
 } from '../../utils/dom';
-import {
-  SafeAreaObserver,
-  createSafeAreaObserver,
-  type SafeAreaValue,
-} from '../../utils/createSafeAreaObserver';
 import { off, on } from '../../event';
 import { CACHE_POS_TOP_ID } from '../../constants';
+import {
+  safeArea,
+  onSafeAreaChange,
+  offSafeAreaChange,
+} from '../utils/safeArea';
 import { HTMLCustomElement } from '../HTMLCustomElement';
 
 export class HTMLToggleElement extends HTMLCustomElement<{
@@ -21,16 +21,12 @@ export class HTMLToggleElement extends HTMLCustomElement<{
   dnding: boolean;
   touchable: boolean;
 }> {
-  private declare safeAreaObserver: SafeAreaObserver;
-
   static get observedAttributes() {
     return ['active'];
   }
 
   constructor() {
     super();
-
-    this.safeAreaObserver = createSafeAreaObserver();
 
     this.startDnD = this.startDnD.bind(this);
     this.stopDnD = this.stopDnD.bind(this);
@@ -95,14 +91,14 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     on('resize', this.updatePosTop);
     on('resize', this.updateSize);
 
-    this.safeAreaObserver.observe(this.updatePosRight);
+    onSafeAreaChange(this.updatePosRight);
   }
 
   override unmount() {
     off('resize', this.updatePosTop);
     off('resize', this.updateSize);
 
-    this.safeAreaObserver.unobserve(this.updatePosRight);
+    offSafeAreaChange(this.updatePosRight);
   }
 
   private startDnD() {
@@ -145,22 +141,21 @@ export class HTMLToggleElement extends HTMLCustomElement<{
     }
   }
 
-  private updatePosRight(value: SafeAreaValue) {
+  private updatePosRight() {
     applyStyle(this.state.root, {
-      right: CSS_util.px(value.right),
+      right: CSS_util.px(safeArea.right),
     });
   }
 
   private updatePosTop() {
     const { clientHeight: winH } = getHtml();
     const { offsetHeight: toggleH } = this.state.root;
-    const { top, bottom } = this.safeAreaObserver.value;
 
     const cachePosY = +localStorage[CACHE_POS_TOP_ID] || 0;
     const safePosY = clamp(
       cachePosY - toggleH / 2,
-      top,
-      winH - toggleH - bottom,
+      safeArea.top,
+      winH - toggleH - safeArea.bottom,
     );
 
     applyStyle(this.state.root, {

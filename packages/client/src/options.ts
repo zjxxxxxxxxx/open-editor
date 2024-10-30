@@ -12,12 +12,6 @@ export interface Options {
    */
   displayToggle?: boolean;
   /**
-   * set UI color mode
-   *
-   * @default 'system'
-   */
-  colorMode?: 'system' | 'light' | 'dark';
-  /**
    * Disable hover effect from CSS when inspector is enabled
    *
    * @default true
@@ -53,7 +47,6 @@ export function setOptions(
   opts = {
     ...userOpts,
     displayToggle: userOpts.displayToggle ?? true,
-    colorMode: userOpts.colorMode ?? 'system',
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
     ignoreComponents: userOpts.ignoreComponents ?? '/**/node_modules/**/*',
     once: userOpts.once ?? true,
