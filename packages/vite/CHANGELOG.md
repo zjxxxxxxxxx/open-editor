@@ -1,5 +1,18 @@
 # @open-editor/vite
 
+## 0.8.8
+
+### Patch Changes
+
+- [#252](https://github.com/zjxxxxxxxxx/open-editor/pull/252) [`d7ac6c75a35d9b1c7074ee3467945c9d470baa45`](https://github.com/zjxxxxxxxxx/open-editor/commit/d7ac6c75a35d9b1c7074ee3467945c9d470baa45) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Remove retainFrame option
+
+- [#254](https://github.com/zjxxxxxxxxx/open-editor/pull/254) [`c4bd871c68beae9f8569a8920eb810f96913f023`](https://github.com/zjxxxxxxxxx/open-editor/commit/c4bd871c68beae9f8569a8920eb810f96913f023) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Remove colorMode option
+
+- Updated dependencies [[`00a257e34e226cac35c1e8b1eb78bea4c872729a`](https://github.com/zjxxxxxxxxx/open-editor/commit/00a257e34e226cac35c1e8b1eb78bea4c872729a), [`d7ac6c75a35d9b1c7074ee3467945c9d470baa45`](https://github.com/zjxxxxxxxxx/open-editor/commit/d7ac6c75a35d9b1c7074ee3467945c9d470baa45), [`c4bd871c68beae9f8569a8920eb810f96913f023`](https://github.com/zjxxxxxxxxx/open-editor/commit/c4bd871c68beae9f8569a8920eb810f96913f023), [`d7ac6c75a35d9b1c7074ee3467945c9d470baa45`](https://github.com/zjxxxxxxxxx/open-editor/commit/d7ac6c75a35d9b1c7074ee3467945c9d470baa45)]:
+  - @open-editor/client@0.8.8
+  - @open-editor/server@0.8.8
+  - @open-editor/shared@0.8.8
+
 ## 0.8.7
 
 ### Patch Changes
