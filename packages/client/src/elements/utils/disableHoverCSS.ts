@@ -1,7 +1,7 @@
 const DISABLE_RE = /:hover/g;
-const DISABLE_TOKEN = '::hover';
+const DISABLE_TOKEN = ':oe-disable-hover';
 
-const ENABLE_RE = /:+:hover/g;
+const ENABLE_RE = /:oe-disable-hover/g;
 const ENABLE_TOKEN = ':hover';
 
 export function disableHoverCSS() {
