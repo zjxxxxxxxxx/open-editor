@@ -11,6 +11,10 @@ const svgTypes = {
 function jsx(type, props) {
   const { ref, className, style, children, ...attrs } = props;
 
+  if (typeof type === 'function') {
+    return type(props);
+  }
+
   const el = svgTypes[type]
     ? document.createElementNS(svgNS, type)
     : document.createElement(type);
@@ -38,15 +42,6 @@ function jsx(type, props) {
   return el;
 }
 
-const eventRE = /^on[A-Z]/;
-function isEventType(val) {
-  return eventRE.test(val);
-}
-
-function toNativeType(val) {
-  return val.substr(2).toLowerCase();
-}
-
 function appendChildren(el, children) {
   for (const child of children) {
     if (child instanceof Element) {
@@ -61,6 +56,15 @@ function appendChildren(el, children) {
       el.appendChild(document.createTextNode(child));
     }
   }
+}
+
+const eventRE = /^on[A-Z]/;
+function isEventType(val) {
+  return eventRE.test(val);
+}
+
+function toNativeType(val) {
+  return val.substr(2).toLowerCase();
 }
 
 export { jsx, jsx as jsxs, FRAGMENT_TYPE as Fragment };
