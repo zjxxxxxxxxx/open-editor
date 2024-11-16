@@ -1,12 +1,10 @@
-import { appendChild } from './utils/dom';
-import { InternalElements } from './constants';
 import { type Options, setOptions } from './options';
-import { defineElements } from './elements';
+import { setupUI } from './ui';
+import { on } from './event';
 
 export function setupClient(userOpts: Options) {
-  if (!document.querySelector(InternalElements.HTML_INSPECT_ELEMENT)) {
+  on('DOMContentLoaded', () => {
     setOptions(userOpts);
-    defineElements();
-    appendChild(document.body, <InternalElements.HTML_INSPECT_ELEMENT />);
-  }
+    setupUI();
+  });
 }
