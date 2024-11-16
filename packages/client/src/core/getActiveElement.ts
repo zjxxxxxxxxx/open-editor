@@ -1,6 +1,6 @@
-import { checkValidElement } from '../../utils/checkElement';
-import { IS_CLIENT } from '../../constants';
-import { on } from '../../event';
+import { checkValidElement } from '../utils/checkElement';
+import { IS_CLIENT } from '../constants';
+import { on } from '../event';
 
 export const mouse = {
   x: 0,

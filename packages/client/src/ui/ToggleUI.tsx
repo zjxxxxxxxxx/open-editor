@@ -7,9 +7,11 @@ import {
   removeClass,
 } from '../utils/dom';
 import { off, on } from '../event';
-import { safeArea, onSafeAreaChange } from './utils/safeArea';
+import { safeArea, safeAreaObserver } from '../utils/safeArea';
+import { enableBridge, exitBridge } from '../core/bridge';
+import { isActive } from '../core';
 
-export function ToggleUI(props: { ref: AnyObject; onToggle(): void }) {
+export function ToggleUI() {
   const state = {} as {
     root: HTMLElement;
     button: HTMLElement;
@@ -18,14 +20,17 @@ export function ToggleUI(props: { ref: AnyObject; onToggle(): void }) {
     touchable: boolean;
   };
 
-  props.ref.toggle = function change() {
-    state.active = !state.active;
-    if (state.active) {
-      addClass(state.button, 'oe-toggle-active');
-    } else {
-      removeClass(state.button, 'oe-toggle-active');
-    }
-  };
+  enableBridge.on(() => {
+    applyStyle(state.button, {
+      color: 'var(--cyan)',
+    });
+  });
+
+  exitBridge.on(() => {
+    applyStyle(state.button, {
+      color: null,
+    });
+  });
 
   on('resize', updatePosTop);
   on('resize', updateSize);
@@ -92,10 +97,14 @@ export function ToggleUI(props: { ref: AnyObject; onToggle(): void }) {
     });
   }
 
-  function dispatchChange() {
+  function toggleActive() {
     // Prevents the click event from being triggered by the end of the drag
     if (!state.dnding) {
-      props.onToggle();
+      if (!isActive) {
+        enableBridge.emit();
+      } else {
+        exitBridge.emit();
+      }
     }
   }
 
@@ -115,7 +124,7 @@ export function ToggleUI(props: { ref: AnyObject; onToggle(): void }) {
         <button
           className="oe-toggle-button"
           ref={(el) => (state.button = el)}
-          onClick={dispatchChange}
+          onClick={toggleActive}
           onLongPress={startDnD}
         >
           <svg
@@ -133,6 +142,6 @@ export function ToggleUI(props: { ref: AnyObject; onToggle(): void }) {
   } finally {
     updatePosTop();
     updateSize();
-    onSafeAreaChange(updatePosRight);
+    safeAreaObserver.on(updatePosRight);
   }
 }
