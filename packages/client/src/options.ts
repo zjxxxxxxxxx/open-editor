@@ -55,7 +55,7 @@ export function setOptions(
 
 export function getOptions() {
   if (!opts) {
-    logError('options missing', 'throw');
+    logError('options missing.', 'throw');
   }
   return opts;
 }

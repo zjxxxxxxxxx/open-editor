@@ -1,6 +1,6 @@
-import { checkValidElement } from '../../utils/checkElement';
-import { getOptions } from '../../options';
-import { off, on } from '../../event';
+import { checkValidElement } from '../utils/checkElement';
+import { getOptions } from '../options';
+import { off, on } from '../event';
 import {
   checkClickedElement,
   setupClickedElementAttrs,
@@ -75,17 +75,15 @@ const CLICK_ATTACHMENT_EVENTS = ['touchstart', 'touchend'];
 const SHORTCUT_KEYS = ['Enter', 'Space'];
 
 export function setupListeners(opts: SetupListenersOptions) {
+  const { once } = getOptions();
   const onActive = withEventFn(opts.onActive);
   const onOpenEditor = withEventFn(opts.onOpenEditor);
   const onOpenTree = withEventFn(opts.onOpenTree);
   const onExitInspect = withEventFn(opts.onExitInspect);
 
-  const { once } = getOptions();
-
   let activeEl = getActiveElement();
-  if (activeEl) {
-    onActive(activeEl);
-  }
+
+  onActive(activeEl);
 
   function setupEventListeners() {
     SILENT_EVENTS.forEach((event) => {

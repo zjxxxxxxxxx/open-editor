@@ -1,82 +1,23 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
-import { TooltipUI } from './TooltipUI';
-import { type BoxRect, type BoxLines, getBoxModel } from './utils/getBoxModel';
+import { enableBridge, exitBridge, boxModelBridge } from '../core/bridge';
 
-export function OverlayUI(props: { ref: AnyObject }) {
+export function OverlayUI() {
   const state = {} as {
     position: HTMLElement;
     margin: HTMLElement;
     border: HTMLElement;
     padding: HTMLElement;
-    activeEl: HTMLElement | null;
-    activeRect: DOMRect | null;
-    observing: boolean;
   };
-  const tooltipRef = {} as AnyObject;
 
-  props.ref.open = function open() {
-    state.activeEl = null;
-
+  enableBridge.on(() => {
     addClass(state.position, 'oe-overlay-show');
+  });
 
-    tooltipRef.open();
-    startObserver();
-  };
-
-  props.ref.close = function close() {
+  exitBridge.on(() => {
     removeClass(state.position, 'oe-overlay-show');
+  });
 
-    tooltipRef.close();
-    stopObserver();
-  };
-
-  props.ref.update = function update(el: HTMLElement | null) {
-    state.activeEl = el;
-  };
-
-  function startObserver() {
-    state.observing = true;
-    observe();
-  }
-
-  function stopObserver() {
-    state.observing = false;
-  }
-
-  function isActiveRectChanged() {
-    const prevAxis = state.activeRect;
-    const nextAxis = (state.activeRect =
-      state.activeEl?.getBoundingClientRect() ?? null);
-
-    if (prevAxis == null && nextAxis == null) {
-      return false;
-    }
-    if (prevAxis == null || nextAxis == null) {
-      return true;
-    }
-
-    const diff = (key: keyof DOMRect) => prevAxis[key] !== nextAxis[key];
-    return diff('x') || diff('y') || diff('width') || diff('height');
-  }
-
-  function observe() {
-    if (state.observing) {
-      if (!document.hidden && isActiveRectChanged()) {
-        if (state.activeEl?.isConnected === false) {
-          state.activeEl = null;
-          state.activeRect = null;
-        }
-
-        const [rect, lines] = getBoxModel(state.activeEl);
-        tooltipRef.update(state.activeEl, rect);
-        updateOverlay(rect, lines);
-      }
-
-      requestAnimationFrame(observe);
-    }
-  }
-
-  function updateOverlay(rect: BoxRect, lines: BoxLines) {
+  boxModelBridge.on((rect, lines) => {
     applyStyle(state.position, {
       width: CSS_util.px(rect.width),
       height: CSS_util.px(rect.height),
@@ -93,23 +34,20 @@ export function OverlayUI(props: { ref: AnyObject }) {
         borderLeftWidth: CSS_util.px(line.left),
       });
     }
-  }
+  });
 
   return (
-    <>
-      <div className="oe-overlay" ref={(el) => (state.position = el)}>
-        <div className="oe-overlay-margin" ref={(el) => (state.margin = el)}>
-          <div className="oe-overlay-border" ref={(el) => (state.border = el)}>
-            <div
-              className="oe-overlay-padding"
-              ref={(el) => (state.padding = el)}
-            >
-              <div className="oe-overlay-content" />
-            </div>
+    <div className="oe-overlay" ref={(el) => (state.position = el)}>
+      <div className="oe-overlay-margin" ref={(el) => (state.margin = el)}>
+        <div className="oe-overlay-border" ref={(el) => (state.border = el)}>
+          <div
+            className="oe-overlay-padding"
+            ref={(el) => (state.padding = el)}
+          >
+            <div className="oe-overlay-content" />
           </div>
         </div>
       </div>
-      <TooltipUI ref={tooltipRef} />
-    </>
+    </div>
   );
 }
