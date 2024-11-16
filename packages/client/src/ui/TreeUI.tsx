@@ -5,12 +5,16 @@ import {
   replaceChildren,
   applyStyle,
 } from '../utils/dom';
+import {
+  closeTreeBridge,
+  openEditorBridge,
+  openTreeBridge,
+} from '../core/bridge';
+import type { SourceCode, SourceCodeMeta } from '../resolve';
 import { off, on } from '../event';
-import { type SourceCodeMeta, resolveSource } from '../resolve';
 import { getOptions } from '../options';
-import { openEditor } from './utils/openEditor';
 
-export function TreeUI(props: { ref: AnyObject }) {
+export function TreeUI() {
   const state = {} as {
     root: HTMLElement;
     overlay: HTMLElement;
@@ -20,27 +24,24 @@ export function TreeUI(props: { ref: AnyObject }) {
     clickable: boolean;
   };
 
-  props.ref.open = function open(el: HTMLElement) {
-    props.ref.isOpen = true;
+  openTreeBridge.on((source) => {
     applyStyle(state.root, {
       display: 'block',
     });
     addClass(getHtml(), 'oe-lock-screen');
 
-    render(el);
+    renderTree(source);
     enableClick();
-  };
+  });
 
-  props.ref.close = function close() {
-    props.ref.isOpen = false;
+  closeTreeBridge.on(() => {
     applyStyle(state.root, {
       display: 'none',
     });
     removeClass(getHtml(), 'oe-lock-screen');
-  };
+  });
 
-  function render(el: HTMLElement) {
-    const source = resolveSource(el, true);
+  function renderTree(source: SourceCode) {
     const hasTree = source.tree.length > 0;
     const content = (
       <>
@@ -65,7 +66,7 @@ export function TreeUI(props: { ref: AnyObject }) {
 
   function buildTree(tree: SourceCodeMeta[]) {
     const meta = tree.pop()!;
-    const tagName = '<' + meta.name + '>';
+    const tagName = `<${meta.name}>`;
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
 
     return (
@@ -79,10 +80,9 @@ export function TreeUI(props: { ref: AnyObject }) {
                 addClass(getHtml(), 'oe-tree-loading');
 
                 const { once } = getOptions();
-                if (once) props.ref.close();
+                if (once) closeTreeBridge.emit();
 
-                const dispatch = (e: CustomEvent<URL>) => dispatchEvent(e);
-                await openEditor(meta, dispatch);
+                openEditorBridge.emit(meta);
               } finally {
                 removeClass(getHtml(), 'oe-tree-loading');
               }
@@ -117,7 +117,7 @@ export function TreeUI(props: { ref: AnyObject }) {
 
   function exit() {
     if (state.clickable) {
-      props.ref.close();
+      closeTreeBridge.emit();
     }
   }
 
@@ -126,7 +126,7 @@ export function TreeUI(props: { ref: AnyObject }) {
       className="oe-tree"
       ref={(el) => (state.root = el)}
       onClick={exit}
-      onQuickExit={props.ref.close}
+      onQuickExit={closeTreeBridge.emit}
     >
       <div
         className="oe-tree-popup"

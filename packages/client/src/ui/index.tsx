@@ -1,9 +1,12 @@
 import { HTML_INSPECT_ELEMENT } from '../constants';
-import { InspectUI } from './InspectUI';
-import { effectStyle } from '../styles/globalStyles';
 import { appendChild, replaceChildren } from '../utils/dom';
-import { openEditor } from './utils/openEditor';
+import { openEditorErrorBridge } from '../core/bridge';
 import { on } from '../event';
+import { getOptions } from '../options';
+import { ToggleUI } from './ToggleUI';
+import { OverlayUI } from './OverlayUI';
+import { TooltipUI } from './TooltipUI';
+import { TreeUI } from './TreeUI';
 
 export function setupUI() {
   if (document.querySelector(HTML_INSPECT_ELEMENT)) {
@@ -20,42 +23,41 @@ export function setupUI() {
         Object.defineProperty(this, 'shadowRoot', {
           value: this.attachShadow({ mode: 'closed' }),
         });
-        this.showErrorOverlay = this.showErrorOverlay.bind(this);
       }
 
       public connectedCallback() {
-        openEditor.onError(this.showErrorOverlay);
-        effectStyle.mount();
+        const { displayToggle } = getOptions();
+
+        openEditorErrorBridge.on(() => {
+          const errorOverlay = <div className="oe-error-overlay" />;
+          const ani = errorOverlay.animate(
+            [
+              {},
+              {
+                boxShadow: 'inset 0 0 20px 10px var(--red)',
+                background: 'var(--red-light)',
+              },
+              {},
+            ],
+            {
+              duration: 600,
+              easing: 'ease-out',
+            },
+          );
+          on('finish', () => errorOverlay.remove(), { target: ani });
+          appendChild(this.shadowRoot, errorOverlay);
+        });
+
         replaceChildren(
           this.shadowRoot,
           <>
             <link rel="stylesheet" href="./index.css" />
-            <InspectUI showErrorOverlay={this.showErrorOverlay} />
+            {displayToggle && <ToggleUI />}
+            <OverlayUI />
+            <TooltipUI />
+            <TreeUI />
           </>,
         );
-      }
-
-      private showErrorOverlay() {
-        const errorOverlay = <div className="oe-error-overlay" />;
-        const ani = errorOverlay.animate(
-          [
-            {},
-            {
-              boxShadow: 'inset 0 0 20px 10px var(--red)',
-              background: 'var(--red-light)',
-            },
-            {},
-          ],
-          {
-            duration: 600,
-            easing: 'ease-out',
-          },
-        );
-
-        const remove = () => errorOverlay.remove();
-        on('finish', remove, { target: ani });
-
-        appendChild(this.shadowRoot, errorOverlay);
       }
     },
   );

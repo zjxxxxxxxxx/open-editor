@@ -1,7 +1,7 @@
-import { computedStyle, checkVisibility } from '../../utils/dom';
-import { checkValidElement } from '../../utils/checkElement';
-import { getDOMRect, getCompositeZoom } from '../../utils/getDOMRect';
-import { IS_FIREFOX } from '../../constants';
+import { computedStyle, checkVisibility } from '../utils/dom';
+import { checkValidElement } from '../utils/checkElement';
+import { getDOMRect, getCompositeZoom } from '../utils/getDOMRect';
+import { IS_FIREFOX } from '../constants';
 
 export interface BoxLine {
   top: number;

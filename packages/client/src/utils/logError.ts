@@ -7,5 +7,5 @@ export function logError(msg: string, logLevel: 'log' | 'throw' = 'log') {
 }
 
 export function errMsg(msg: string) {
-  return `[@open-editor/client] ${msg}.`;
+  return `[@open-editor/client] ${msg}`;
 }

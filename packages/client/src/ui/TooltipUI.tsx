@@ -5,17 +5,18 @@ import {
   applyStyle,
   addClass,
   removeClass,
-  checkVisibility,
 } from '../utils/dom';
-import { checkValidElement } from '../utils/checkElement';
 import { getDOMRect } from '../utils/getDOMRect';
-import { type SourceCode, resolveSource } from '../resolve';
-import { safeArea } from './utils/safeArea';
-import { type BoxRect } from './utils/getBoxModel';
+import { safeArea } from '../utils/safeArea';
+import {
+  enableBridge,
+  exitBridge,
+  boxModelBridge,
+  sourceBridge,
+} from '../core/bridge';
 
-export function TooltipUI(props: { ref: AnyObject }) {
+export function TooltipUI() {
   const OFFSET = 6;
-
   const state = {} as {
     root: HTMLElement;
     tag: HTMLElement;
@@ -23,44 +24,34 @@ export function TooltipUI(props: { ref: AnyObject }) {
     file: HTMLElement;
   };
 
-  props.ref.open = function open() {
+  enableBridge.on(() => {
     addClass(state.root, 'oe-tooltip-show');
-  };
+  });
 
-  props.ref.close = function close() {
+  exitBridge.on(() => {
     removeClass(state.root, 'oe-tooltip-show');
-  };
+  });
 
-  props.ref.update = function update(el: HTMLElement | null, rect: BoxRect) {
+  sourceBridge.on((source) => {
     // before hidden
     applyStyle(state.root, {
       visibility: 'hidden',
       transform: CSS_util.translate(OFFSET, OFFSET),
     });
 
-    // When encountering an invalid element or an invisible element, hide it
-    if (!checkValidElement(el) || !checkVisibility(el)) return;
-
-    const source = resolveSource(el);
-    if (source.meta) {
-      updateText(source);
-      updatePosition(rect);
+    if (source?.meta) {
+      state.tag.textContent = `${source.el} in `;
+      state.comp.textContent = `<${source.meta.name}>`;
+      state.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
 
       // after visible
       applyStyle(state.root, {
         visibility: 'visible',
       });
     }
-  };
+  });
 
-  function updateText(source: SourceCode) {
-    const { el, meta } = source;
-    state.tag.textContent = `${el} in `;
-    state.comp.textContent = `<${meta!.name}>`;
-    state.file.textContent = `${meta!.file}:${meta!.line}:${meta!.column}`;
-  }
-
-  function updatePosition(rect: BoxRect) {
+  boxModelBridge.on((rect) => {
     const {
       // window width excluding the scrollbar width
       clientWidth: winW,
@@ -84,7 +75,7 @@ export function TooltipUI(props: { ref: AnyObject }) {
     applyStyle(state.root, {
       transform: CSS_util.translate(left, top),
     });
-  }
+  });
 
   return (
     <div className="oe-tooltip" ref={(el) => (state.root = el)}>

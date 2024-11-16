@@ -85,9 +85,6 @@
   border-radius: 999px;
   transition: all 0.1s;
 }
-.oe-toggle-active {
-  color: var(--cyan);
-}
 .oe-toggle-touch {
   padding: 10px;
 }
