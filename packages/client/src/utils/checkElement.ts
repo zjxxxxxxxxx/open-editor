@@ -1,25 +1,24 @@
-import { InternalElements } from '../constants';
+import { HTML_INSPECT_ELEMENT } from '../constants';
 
-const INTERNAL_ELEMENT = Object.values(InternalElements).map((internal) =>
-  internal.toUpperCase(),
-);
 const INVALID_ELEMENT = [
-  ...INTERNAL_ELEMENT,
+  HTML_INSPECT_ELEMENT,
   // In Firefox, when the mouse leaves the visual area, the event target is `HTMLDocument`.
-  '#document',
+  undefined,
   // The `html` check is triggered when the mouse leaves the browser,
   // and filtering is needed to ignore this unexpected check.
-  'HTML',
+  'html',
   // `iframe` should be left to the internal inspector.
-  'IFRAME',
+  'iframe',
 ];
 
 export function checkInternalElement(
   el: HTMLElement | null,
 ): el is HTMLElement {
-  return el != null && INTERNAL_ELEMENT.includes(el.nodeName);
+  return el != null && el.nodeName === HTML_INSPECT_ELEMENT;
 }
 
 export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
-  return el != null && el.isConnected && !INVALID_ELEMENT.includes(el.nodeName);
+  return (
+    el != null && el.isConnected && !INVALID_ELEMENT.includes(el.localName)
+  );
 }

@@ -43,5 +43,5 @@ export async function openEditor(
       });
   }
 }
-openEditor.onError = emitter.on;
-openEditor.offError = emitter.off;
+openEditor.onError = emitter.on.bind(emitter);
+openEditor.offError = emitter.off.bind(emitter);

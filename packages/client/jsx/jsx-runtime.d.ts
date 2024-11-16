@@ -24,22 +24,6 @@ declare type InternalCustomElements = {
     React.HTMLAttributes<HTMLInspectElement>,
     HTMLInspectElement
   >;
-  'open-editor-overlay': React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLOverlayElement>,
-    HTMLOverlayElement
-  >;
-  'open-editor-tooltip': React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLTooltipElement>,
-    HTMLTooltipElement
-  >;
-  'open-editor-toggle': React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLToggleElement>,
-    HTMLToggleElement
-  >;
-  'open-editor-tree': React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLTreeElement>,
-    HTMLTreeElement
-  >;
 };
 
 declare type _Node = HTMLElement | string | number | false | null | undefined;
