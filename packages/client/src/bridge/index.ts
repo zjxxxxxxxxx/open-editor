@@ -1,5 +1,6 @@
 export { enableBridge } from './enableBridge';
 export { exitBridge } from './exitBridge';
+export { activeBridge } from './activeBridge';
 export { sourceBridge } from './sourceBridge';
 export { boxModelBridge } from './boxModelBridge';
 export { openTreeBridge } from './openTreeBridge';

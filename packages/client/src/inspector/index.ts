@@ -1,7 +1,11 @@
 import { addClass, getHtml, removeClass } from '../utils/dom';
 import { logError } from '../utils/logError';
-import { mouse } from '../utils/mouse';
 import { on } from '../event';
+import {
+  CURRENT_INSPECT_ID,
+  IS_SAME_ORIGIN,
+  IS_TOP_WINDOW,
+} from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import {
@@ -15,6 +19,7 @@ import {
   openEditorErrorBridge,
   openEditorStartBridge,
   openEditorEndBridge,
+  activeBridge,
 } from '../bridge';
 import { effectStyle, overrideStyle } from './globalStyles';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
@@ -22,7 +27,8 @@ import { getBoxModel } from './getBoxModel';
 import { openEditor } from './openEditor';
 import { setupListeners } from './setupListeners';
 
-export let isActive = false;
+export let isEnable = false;
+export let isRending = false;
 export let isTreeOpen = false;
 export let activeEl: HTMLElement | null = null;
 export let activeRect: DOMRect | null = null;
@@ -36,7 +42,7 @@ export function setupInspector() {
 
   on('keydown', (e) => {
     if (!isTreeOpen && e.altKey && e.metaKey && e.code === 'KeyO') {
-      if (!isActive) {
+      if (!isEnable) {
         enableBridge.emit();
       } else {
         exitBridge.emit();
@@ -52,11 +58,12 @@ export function setupInspector() {
         composed: true,
       });
       if (dispatchEvent(e)) {
-        isActive = true;
+        isEnable = true;
+
         cleanListeners = setupListeners({
           onActive(el) {
             activeEl = el;
-            renderUI();
+            activeBridge.emit([CURRENT_INSPECT_ID]);
           },
           onOpenTree(el) {
             openTreeBridge.emit([resolveSource(el, true)]);
@@ -67,8 +74,6 @@ export function setupInspector() {
           },
           onExitInspect: exitBridge.emit,
         });
-
-        reRenderUI();
 
         // Override the default mouse style and touch feedback
         overrideStyle.mount();
@@ -91,11 +96,9 @@ export function setupInspector() {
         composed: true,
       });
       if (dispatchEvent(e)) {
-        isActive = false;
-        activeEl = null;
-        activeRect = null;
+        isEnable = false;
+        isRending = false;
 
-        renderUI();
         cleanListeners();
 
         overrideStyle.unmount();
@@ -104,6 +107,22 @@ export function setupInspector() {
       }
     } catch {
       //
+    }
+  });
+
+  activeBridge.on((activeId) => {
+    if (activeId === CURRENT_INSPECT_ID) {
+      sourceBridge.emit(activeEl ? [resolveSource(activeEl)] : undefined);
+      boxModelBridge.emit(getBoxModel(activeEl));
+
+      if (!isRending) {
+        isRending = true;
+        renderUI();
+      }
+    } else {
+      isRending = false;
+      activeEl = null;
+      activeRect = null;
     }
   });
 
@@ -142,15 +161,11 @@ export function setupInspector() {
   });
 
   function renderUI() {
-    if (!opts.crossIframe || !mouse.outWindow) {
-      sourceBridge.emit(activeEl ? [resolveSource(activeEl)] : undefined);
-      boxModelBridge.emit(getBoxModel(activeEl));
-    }
-  }
-
-  function reRenderUI() {
-    if (isActive) {
-      if (isActiveRectChanged()) {
+    if (isRending) {
+      if (
+        isActiveRectChanged() ||
+        (opts.crossIframe && IS_SAME_ORIGIN && !IS_TOP_WINDOW && activeEl)
+      ) {
         if (activeEl?.isConnected === false) {
           activeEl = null;
           activeRect = null;
@@ -159,7 +174,7 @@ export function setupInspector() {
         boxModelBridge.emit(getBoxModel(activeEl));
       }
 
-      requestAnimationFrame(reRenderUI);
+      requestAnimationFrame(renderUI);
     }
   }
 
