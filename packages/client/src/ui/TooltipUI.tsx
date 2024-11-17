@@ -13,7 +13,7 @@ import {
   exitBridge,
   boxModelBridge,
   sourceBridge,
-} from '../core/bridge';
+} from '../bridge';
 
 export function TooltipUI() {
   const OFFSET = 6;
