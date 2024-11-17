@@ -7,6 +7,7 @@ import {
   cleanClickedElementAttrs,
 } from './clickedElement';
 import { getActiveElement } from './getActiveElement';
+import { IS_TOP_WINDOW } from '../constants';
 
 export interface SetupListenersOptions {
   onActive(el: HTMLElement | null): void;
@@ -75,14 +76,16 @@ const CLICK_ATTACHMENT_EVENTS = ['touchstart', 'touchend'];
 const SHORTCUT_KEYS = ['Enter', 'Space'];
 
 export function setupListeners(opts: SetupListenersOptions) {
-  const { once } = getOptions();
+  const { once, crossIframe } = getOptions();
   const onActive = withEventFn(opts.onActive);
   const onOpenEditor = withEventFn(opts.onOpenEditor);
   const onOpenTree = withEventFn(opts.onOpenTree);
   const onExitInspect = withEventFn(opts.onExitInspect);
 
   let activeEl = getActiveElement();
-  onActive(activeEl);
+  if (activeEl) {
+    onActive(activeEl);
+  }
 
   function setupEventListeners() {
     SILENT_EVENTS.forEach((event) => {
@@ -186,6 +189,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     // On PC devices, focus is lost when the mouse leaves the browser window
     if (
       e.pointerType === 'mouse' &&
+      (!crossIframe || IS_TOP_WINDOW) &&
       !checkValidElement(<HTMLElement>e.relatedTarget)
     ) {
       onActive((activeEl = null));

@@ -1,6 +1,6 @@
 import {
   HTML_INSPECT_ELEMENT,
-  IS_CROSS_ORIGIN,
+  IS_SAME_ORIGIN,
   IS_TOP_WINDOW,
 } from '../constants';
 import { appendChild, replaceChildren } from '../utils/dom';
@@ -16,7 +16,7 @@ export function setupUI() {
   const { crossIframe, displayToggle } = getOptions();
 
   if (
-    (crossIframe && IS_CROSS_ORIGIN && !IS_TOP_WINDOW) ||
+    (crossIframe && IS_SAME_ORIGIN && !IS_TOP_WINDOW) ||
     document.querySelector(HTML_INSPECT_ELEMENT)
   ) {
     return;
