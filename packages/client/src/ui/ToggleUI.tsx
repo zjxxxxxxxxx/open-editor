@@ -9,7 +9,7 @@ import {
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
 import { off, on } from '../event';
 import { enableBridge, exitBridge } from '../bridge';
-import { isActive } from '../inspector';
+import { isEnable } from '../inspector';
 
 export function ToggleUI() {
   const state = {} as {
@@ -97,10 +97,10 @@ export function ToggleUI() {
     });
   }
 
-  function toggleActive() {
+  function toggleEnable() {
     // Prevents the click event from being triggered by the end of the drag
     if (!state.dnding) {
-      if (!isActive) {
+      if (!isEnable) {
         enableBridge.emit();
       } else {
         exitBridge.emit();
@@ -124,7 +124,7 @@ export function ToggleUI() {
         <button
           className="oe-toggle-button"
           ref={(el) => (state.button = el)}
-          onClick={toggleActive}
+          onClick={toggleEnable}
           onLongPress={startDnD}
         >
           <svg

@@ -1,4 +1,4 @@
-import { HTML_INSPECT_ELEMENT, IS_CROSS_ORIGIN } from '../constants';
+import { HTML_INSPECT_ELEMENT, IS_SAME_ORIGIN } from '../constants';
 import { getOptions } from '../options';
 
 const INVALID_ELEMEN_TCROSS_IFRAME = [HTML_INSPECT_ELEMENT];
@@ -20,7 +20,7 @@ export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
   }
 
   const { crossIframe } = getOptions();
-  if (crossIframe && IS_CROSS_ORIGIN) {
+  if (crossIframe && IS_SAME_ORIGIN) {
     return !INVALID_ELEMEN_TCROSS_IFRAME.includes(el.localName);
   }
   return !INVALID_ELEMENT.includes(el.localName);

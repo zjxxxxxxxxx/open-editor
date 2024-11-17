@@ -1,15 +1,17 @@
 import { mitt } from '../utils/mitt';
 import { onMessage, postMessage } from '../utils/message';
-import type { SourceCode } from '../resolve';
-import { IS_SAME_ORIGIN, SOURCE_CROSS_IFRAME } from '../constants';
+import { IS_SAME_ORIGIN, ACTIVE_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
-export const sourceBridge = mitt<[SourceCode | undefined]>({
+export const activeBridge = mitt<[string]>({
   onBefore() {
     const { crossIframe } = getOptions();
     if (crossIframe && IS_SAME_ORIGIN) {
-      onMessage<[SourceCode | undefined]>(SOURCE_CROSS_IFRAME, (args) => {
-        sourceBridge.emit(args, true);
+      onMessage<[string]>(ACTIVE_CROSS_IFRAME, (args) => {
+        Array.from(window.frames).forEach((frame) => {
+          postMessage(ACTIVE_CROSS_IFRAME, args, frame);
+        });
+        activeBridge.emit(args, true);
       });
     }
   },
@@ -17,7 +19,7 @@ export const sourceBridge = mitt<[SourceCode | undefined]>({
     (args, next, formTopWindow) => {
       const { crossIframe } = getOptions();
       if (crossIframe && IS_SAME_ORIGIN && !formTopWindow) {
-        postMessage(SOURCE_CROSS_IFRAME, args, window.top);
+        postMessage(ACTIVE_CROSS_IFRAME, args, window.top);
       } else {
         next();
       }
