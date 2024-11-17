@@ -27,8 +27,9 @@ Whether you are a `React` developer, a `Vue` developer, or a developer who uses 
 
 ## Features
 
-- 🌈 Support `React`、`Nextjs`、`Vue`、`Nuxt`。
-- 🔥 Support `Rollup`、`Vite`、`Webpack`。
+- 🌈 Support `React`、`Nextjs`、`Vue`、`Nuxt`.
+- 🔥 Support `Rollup`、`Vite`、`Webpack`.
+- 🎢 Support cross-iframe interaction.
 - 🕹️ Support combined shortcut keys.
 - 🎯 Support precise positioning of line and column.
 - 🚀 Support find component tree.

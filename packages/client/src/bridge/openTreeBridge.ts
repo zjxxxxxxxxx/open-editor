@@ -1,28 +1,34 @@
 import { mitt } from '../utils/mitt';
-import { decodeMessage, encodeMessage, isMessage } from '../utils/message';
-import type { SourceCode } from '../resolve';
-import { OPEN_TREE_CROSS_IFRAME } from '../constants';
+import { onMessage, postMessage } from '../utils/message';
+import { resolveSource, type SourceCode } from '../resolve';
+import {
+  IS_CROSS_ORIGIN,
+  IS_TOP_WINDOW,
+  OPEN_TREE_CROSS_IFRAME,
+} from '../constants';
 import { getOptions } from '../options';
-import { on } from '../event';
 
 export const openTreeBridge = mitt<[SourceCode]>({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe) {
-      on('message', (e) => {
-        if (isMessage(OPEN_TREE_CROSS_IFRAME, e.data)) {
-          const args = decodeMessage(OPEN_TREE_CROSS_IFRAME, e.data);
-          openTreeBridge.emit(args, true);
-        }
+    if (crossIframe && IS_CROSS_ORIGIN) {
+      onMessage<[SourceCode]>(OPEN_TREE_CROSS_IFRAME, (args) => {
+        openTreeBridge.emit(args, IS_TOP_WINDOW);
       });
     }
   },
   emitMiddlewares: [
-    (args, next, formTopWindow) => {
+    ([source], next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && !formTopWindow) {
-        const message = encodeMessage(OPEN_TREE_CROSS_IFRAME, args);
-        window.top?.postMessage(message);
+      if (crossIframe && IS_CROSS_ORIGIN && !formTopWindow) {
+        if (window.frameElement) {
+          const { tree } = resolveSource(
+            window.frameElement as HTMLElement,
+            true,
+          );
+          source.tree.push(...tree);
+        }
+        postMessage(OPEN_TREE_CROSS_IFRAME, [source], window.parent);
       } else {
         next();
       }

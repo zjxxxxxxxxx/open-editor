@@ -43,7 +43,9 @@ export interface Options {
    */
   once?: boolean;
   /**
-   * Enable interaction between multiple iframes to be promoted to the top-level window
+   * Enable interaction between multiple iframes to be promoted to the top-level window.
+   *
+   * It only takes effect when the top window and iframe window have the same origin.
    *
    * @default false
    */

@@ -1,27 +1,25 @@
 import { mitt } from '../utils/mitt';
-import { EXIT_CROSS_IFRAME } from '../constants';
+import { onMessage, postMessage } from '../utils/message';
+import { EXIT_CROSS_IFRAME, IS_CROSS_ORIGIN } from '../constants';
 import { getOptions } from '../options';
-import { on } from '../event';
 
 export const exitBridge = mitt({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe) {
-      on('message', (e) => {
-        if (e.data === EXIT_CROSS_IFRAME) {
-          Array.from(window.frames).forEach((frame) =>
-            frame.postMessage(EXIT_CROSS_IFRAME),
-          );
-          exitBridge.emit([], true);
-        }
+    if (crossIframe && IS_CROSS_ORIGIN) {
+      onMessage(EXIT_CROSS_IFRAME, (args) => {
+        Array.from(window.frames).forEach((frame) => {
+          postMessage(EXIT_CROSS_IFRAME, args, frame);
+        });
+        exitBridge.emit(args, true);
       });
     }
   },
   emitMiddlewares: [
-    (_, next, formTopWindow) => {
+    (args, next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && !formTopWindow) {
-        window.top?.postMessage(EXIT_CROSS_IFRAME);
+      if (crossIframe && IS_CROSS_ORIGIN && !formTopWindow) {
+        postMessage(EXIT_CROSS_IFRAME, args, window.top);
       } else {
         next();
       }

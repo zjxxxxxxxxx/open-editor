@@ -9,7 +9,7 @@ import {
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
 import { off, on } from '../event';
 import { enableBridge, exitBridge } from '../bridge';
-import { isActive } from '../core';
+import { isActive } from '../inspector';
 
 export function ToggleUI() {
   const state = {} as {
