@@ -29,6 +29,7 @@
 
 - 🌈 支持 `React`、`Nextjs`、`Vue`、`Nuxt`。
 - 🔥 支持 `Rollup`、`Vite`、`Webpack`。
+- 🎢 支持跨 iframe 交互。
 - 🕹️ 支持组合式快捷键。
 - 🎯 支持精准定位行和列。
 - 🚀 支持查找组件树。

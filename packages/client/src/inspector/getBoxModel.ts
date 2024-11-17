@@ -63,11 +63,9 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
 
   // Negative values will cause the position to shift and should be ignored.
   const marginTop = withZoom(Math.max(get('margin-top'), 0));
-  // Negative values will cause the position to shift and should be ignored.
   const marginLeft = withZoom(Math.max(get('margin-left'), 0));
-
-  const marginRight = withZoom(get('margin-right'));
-  const marginBottom = withZoom(get('margin-bottom'));
+  const marginRight = withZoom(Math.max(get('margin-right'), 0));
+  const marginBottom = withZoom(Math.max(get('margin-bottom'), 0));
 
   const borderTop = withZoom(get('border-top'), IS_BORDER_WITH_ZOOM);
   const borderRight = withZoom(get('border-right'), IS_BORDER_WITH_ZOOM);

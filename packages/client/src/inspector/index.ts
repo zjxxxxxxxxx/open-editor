@@ -1,4 +1,3 @@
-import { effectStyle, overrideStyle } from '../styles/globalStyles';
 import { addClass, getHtml, removeClass } from '../utils/dom';
 import { logError } from '../utils/logError';
 import { mouse } from '../utils/mouse';
@@ -17,6 +16,7 @@ import {
   openEditorStartBridge,
   openEditorEndBridge,
 } from '../bridge';
+import { effectStyle, overrideStyle } from './globalStyles';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
 import { getBoxModel } from './getBoxModel';
 import { openEditor } from './openEditor';
@@ -142,7 +142,7 @@ export function setupInspector() {
   });
 
   function renderUI() {
-    if (!opts.crossIframe || !mouse.outView) {
+    if (!opts.crossIframe || !mouse.outWindow) {
       sourceBridge.emit(activeEl ? [resolveSource(activeEl)] : undefined);
       boxModelBridge.emit(getBoxModel(activeEl));
     }
