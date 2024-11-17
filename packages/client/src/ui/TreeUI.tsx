@@ -5,14 +5,10 @@ import {
   replaceChildren,
   applyStyle,
 } from '../utils/dom';
-import {
-  closeTreeBridge,
-  openEditorBridge,
-  openTreeBridge,
-} from '../core/bridge';
+import { closeTreeBridge, openEditorBridge, openTreeBridge } from '../bridge';
+import { getOptions } from '../options';
 import type { SourceCode, SourceCodeMeta } from '../resolve';
 import { off, on } from '../event';
-import { getOptions } from '../options';
 
 export function TreeUI() {
   const state = {} as {
@@ -82,7 +78,7 @@ export function TreeUI() {
                 const { once } = getOptions();
                 if (once) closeTreeBridge.emit();
 
-                openEditorBridge.emit(meta);
+                openEditorBridge.emit([meta]);
               } finally {
                 removeClass(getHtml(), 'oe-tree-loading');
               }
@@ -126,7 +122,7 @@ export function TreeUI() {
       className="oe-tree"
       ref={(el) => (state.root = el)}
       onClick={exit}
-      onQuickExit={closeTreeBridge.emit}
+      onQuickExit={() => closeTreeBridge.emit()}
     >
       <div
         className="oe-tree-popup"

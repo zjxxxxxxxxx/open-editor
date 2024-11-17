@@ -32,6 +32,12 @@ export interface Options {
    */
   once?: boolean;
   /**
+   * Enable interaction between multiple iframes to be promoted to the top-level window
+   *
+   * @default false
+   */
+  crossIframe?: boolean;
+  /**
    * internal server port
    *
    * relative address is used when this parameter is empty
@@ -50,6 +56,7 @@ export function setOptions(
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
     ignoreComponents: userOpts.ignoreComponents ?? '/**/node_modules/**/*',
     once: userOpts.once ?? true,
+    crossIframe: userOpts.crossIframe ?? false,
   };
 }
 
