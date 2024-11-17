@@ -1,4 +1,8 @@
-import { HTML_INSPECT_ELEMENT, IS_TOP_WINDOW } from '../constants';
+import {
+  HTML_INSPECT_ELEMENT,
+  IS_CROSS_ORIGIN,
+  IS_TOP_WINDOW,
+} from '../constants';
 import { appendChild, replaceChildren } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';
@@ -12,7 +16,7 @@ export function setupUI() {
   const { crossIframe, displayToggle } = getOptions();
 
   if (
-    (crossIframe && !IS_TOP_WINDOW) ||
+    (crossIframe && IS_CROSS_ORIGIN && !IS_TOP_WINDOW) ||
     document.querySelector(HTML_INSPECT_ELEMENT)
   ) {
     return;

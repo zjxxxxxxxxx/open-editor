@@ -1,24 +1,22 @@
 import { mitt } from '../utils/mitt';
-import { CLOSE_TREE_CROSS_IFRAME } from '../constants';
+import { onMessage, postMessage } from '../utils/message';
+import { CLOSE_TREE_CROSS_IFRAME, IS_CROSS_ORIGIN } from '../constants';
 import { getOptions } from '../options';
-import { on } from '../event';
 
 export const closeTreeBridge = mitt({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe) {
-      on('message', (e) => {
-        if (e.data === CLOSE_TREE_CROSS_IFRAME) {
-          closeTreeBridge.emit([], true);
-        }
+    if (crossIframe && IS_CROSS_ORIGIN) {
+      onMessage(CLOSE_TREE_CROSS_IFRAME, (args) => {
+        closeTreeBridge.emit(args, true);
       });
     }
   },
   emitMiddlewares: [
     (_, next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && !formTopWindow) {
-        window.top?.postMessage(CLOSE_TREE_CROSS_IFRAME);
+      if (crossIframe && IS_CROSS_ORIGIN && !formTopWindow) {
+        postMessage(CLOSE_TREE_CROSS_IFRAME, [], window.top);
       } else {
         next();
       }
