@@ -1,5 +1,5 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
-import { enableBridge, exitBridge, boxModelBridge } from '../core/bridge';
+import { enableBridge, exitBridge, boxModelBridge } from '../bridge';
 
 export function OverlayUI() {
   const state = {} as {

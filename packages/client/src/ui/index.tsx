@@ -1,6 +1,6 @@
-import { HTML_INSPECT_ELEMENT } from '../constants';
+import { HTML_INSPECT_ELEMENT, IS_TOP_WINDOW } from '../constants';
 import { appendChild, replaceChildren } from '../utils/dom';
-import { openEditorErrorBridge } from '../core/bridge';
+import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';
 import { getOptions } from '../options';
 import { ToggleUI } from './ToggleUI';
@@ -9,7 +9,12 @@ import { TooltipUI } from './TooltipUI';
 import { TreeUI } from './TreeUI';
 
 export function setupUI() {
-  if (document.querySelector(HTML_INSPECT_ELEMENT)) {
+  const { crossIframe, displayToggle } = getOptions();
+
+  if (
+    (crossIframe && !IS_TOP_WINDOW) ||
+    document.querySelector(HTML_INSPECT_ELEMENT)
+  ) {
     return;
   }
 
@@ -26,8 +31,6 @@ export function setupUI() {
       }
 
       public connectedCallback() {
-        const { displayToggle } = getOptions();
-
         openEditorErrorBridge.on(() => {
           const errorOverlay = <div className="oe-error-overlay" />;
           const ani = errorOverlay.animate(

@@ -1,7 +1,10 @@
 import { HTML_INSPECT_ELEMENT } from '../constants';
+import { getOptions } from '../options';
+
+const INVALID_ELEMEN_TCROSS_IFRAME = [HTML_INSPECT_ELEMENT];
 
 const INVALID_ELEMENT = [
-  HTML_INSPECT_ELEMENT,
+  ...INVALID_ELEMEN_TCROSS_IFRAME,
   // In Firefox, when the mouse leaves the visual area, the event target is `HTMLDocument`.
   undefined,
   // The `html` check is triggered when the mouse leaves the browser,
@@ -11,14 +14,14 @@ const INVALID_ELEMENT = [
   'iframe',
 ];
 
-export function checkInternalElement(
-  el: HTMLElement | null,
-): el is HTMLElement {
-  return el != null && el.nodeName === HTML_INSPECT_ELEMENT;
-}
-
 export function checkValidElement(el: HTMLElement | null): el is HTMLElement {
-  return (
-    el != null && el.isConnected && !INVALID_ELEMENT.includes(el.localName)
-  );
+  if (el == null || !el.isConnected) {
+    return false;
+  }
+
+  const { crossIframe } = getOptions();
+  if (crossIframe) {
+    return !INVALID_ELEMEN_TCROSS_IFRAME.includes(el.localName);
+  }
+  return !INVALID_ELEMENT.includes(el.localName);
 }

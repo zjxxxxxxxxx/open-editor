@@ -66,6 +66,12 @@ interface Options {
    */
   once?: boolean;
   /**
+   * Enable interaction between multiple iframes to be promoted to the top-level window
+   *
+   * @default false
+   */
+  crossIframe?: boolean;
+  /**
    * custom openEditor handler
    *
    * @default 'launch-editor'

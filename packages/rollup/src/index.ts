@@ -43,6 +43,12 @@ export interface Options {
    */
   once?: boolean;
   /**
+   * Enable interaction between multiple iframes to be promoted to the top-level window
+   *
+   * @default false
+   */
+  crossIframe?: boolean;
+  /**
    * Internal server configuration
    */
   server?: {

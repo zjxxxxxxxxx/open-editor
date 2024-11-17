@@ -1,13 +1,10 @@
 import { effectStyle, overrideStyle } from '../styles/globalStyles';
 import { addClass, getHtml, removeClass } from '../utils/dom';
 import { logError } from '../utils/logError';
+import { mouse } from '../utils/mouse';
 import { on } from '../event';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
-import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
-import { getBoxModel } from './getBoxModel';
-import { openEditor } from './openEditor';
-import { setupListeners } from './setupListeners';
 import {
   closeTreeBridge,
   enableBridge,
@@ -17,16 +14,22 @@ import {
   boxModelBridge,
   sourceBridge,
   openEditorErrorBridge,
-} from './bridge';
+  openEditorStartBridge,
+  openEditorEndBridge,
+} from '../bridge';
+import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
+import { getBoxModel } from './getBoxModel';
+import { openEditor } from './openEditor';
+import { setupListeners } from './setupListeners';
 
 export let isActive = false;
 export let isTreeOpen = false;
+export let activeEl: HTMLElement | null = null;
+export let activeRect: DOMRect | null = null;
 
 export function setupInspector() {
   const opts = getOptions();
 
-  let activeEl: HTMLElement | null = null;
-  let activeRect: DOMRect | null = null;
   let cleanListeners: () => void;
 
   effectStyle.mount();
@@ -53,20 +56,19 @@ export function setupInspector() {
         cleanListeners = setupListeners({
           onActive(el) {
             activeEl = el;
-            sourceBridge.emit(activeEl ? resolveSource(activeEl) : undefined);
-            boxModelBridge.emit(...getBoxModel(activeEl));
+            renderUI();
           },
-          onOpenTree: (el) => {
-            openTreeBridge.emit(resolveSource(el, true));
+          onOpenTree(el) {
+            openTreeBridge.emit([resolveSource(el, true)]);
           },
-          onOpenEditor: (el) => {
+          onOpenEditor(el) {
             const { meta } = resolveSource(el);
-            openEditorBridge.emit(meta);
+            openEditorBridge.emit([meta]);
           },
           onExitInspect: exitBridge.emit,
         });
 
-        renderUI();
+        reRenderUI();
 
         // Override the default mouse style and touch feedback
         overrideStyle.mount();
@@ -93,6 +95,7 @@ export function setupInspector() {
         activeEl = null;
         activeRect = null;
 
+        renderUI();
         cleanListeners();
 
         overrideStyle.unmount();
@@ -114,7 +117,7 @@ export function setupInspector() {
 
   openEditorBridge.on(async (meta) => {
     try {
-      addClass(getHtml(), 'oe-loading');
+      openEditorStartBridge.emit();
 
       if (!meta) {
         logError('file not found.');
@@ -126,11 +129,26 @@ export function setupInspector() {
     } catch {
       openEditorErrorBridge.emit();
     } finally {
-      removeClass(getHtml(), 'oe-loading');
+      openEditorEndBridge.emit();
     }
   });
 
+  openEditorStartBridge.on(() => {
+    addClass(getHtml(), 'oe-loading');
+  });
+
+  openEditorEndBridge.on(() => {
+    removeClass(getHtml(), 'oe-loading');
+  });
+
   function renderUI() {
+    if (!opts.crossIframe || !mouse.outView) {
+      sourceBridge.emit(activeEl ? [resolveSource(activeEl)] : undefined);
+      boxModelBridge.emit(getBoxModel(activeEl));
+    }
+  }
+
+  function reRenderUI() {
     if (isActive) {
       if (isActiveRectChanged()) {
         if (activeEl?.isConnected === false) {
@@ -138,10 +156,10 @@ export function setupInspector() {
           activeRect = null;
         }
 
-        boxModelBridge.emit(...getBoxModel(activeEl));
+        boxModelBridge.emit(getBoxModel(activeEl));
       }
 
-      requestAnimationFrame(renderUI);
+      requestAnimationFrame(reRenderUI);
     }
   }
 

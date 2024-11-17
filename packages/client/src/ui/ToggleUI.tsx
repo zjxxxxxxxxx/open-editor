@@ -6,9 +6,9 @@ import {
   addClass,
   removeClass,
 } from '../utils/dom';
-import { off, on } from '../event';
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
-import { enableBridge, exitBridge } from '../core/bridge';
+import { off, on } from '../event';
+import { enableBridge, exitBridge } from '../bridge';
 import { isActive } from '../core';
 
 export function ToggleUI() {
