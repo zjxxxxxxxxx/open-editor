@@ -55,26 +55,18 @@ export function setupInspector() {
       });
       if (dispatchEvent(e)) {
         inspectorState.isEnable = true;
-
         cleanListeners = setupListeners({
-          onActive() {
-            activeBridge.emit([CURRENT_INSPECT_ID]);
-          },
-          onOpenTree(el) {
-            openTreeBridge.emit([resolveSource(el, true)]);
-          },
-          onOpenEditor(el) {
-            const { meta } = resolveSource(el);
-            openEditorBridge.emit([meta]);
-          },
-          onExitInspect: exitBridge.emit,
+          onActive: () => activeBridge.emit([CURRENT_INSPECT_ID]),
+          onOpenTree: (el) => openTreeBridge.emit([resolveSource(el, true)]),
+          onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
+          onExitInspect: () => exitBridge.emit(),
         });
 
         // Override the default mouse style and touch feedback
         overrideStyle.mount();
-
-        if (opts.disableHoverCSS) await disableHoverCSS();
-
+        if (opts.disableHoverCSS) {
+          await disableHoverCSS();
+        }
         // @ts-ignore
         document.activeElement?.blur();
       }
@@ -98,8 +90,9 @@ export function setupInspector() {
         cleanListeners();
 
         overrideStyle.unmount();
-
-        if (opts.disableHoverCSS) await enableHoverCSS();
+        if (opts.disableHoverCSS) {
+          await enableHoverCSS();
+        }
       }
     } catch {
       //
@@ -107,21 +100,21 @@ export function setupInspector() {
   });
 
   activeBridge.on((activeId) => {
-    if (activeId === CURRENT_INSPECT_ID) {
-      sourceBridge.emit(
-        inspectorState.activeEl
-          ? [resolveSource(inspectorState.activeEl)]
-          : undefined,
-      );
-      boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
-
-      if (!inspectorState.isRending) {
-        inspectorState.isRending = true;
-        renderUI();
-      }
-    } else {
+    if (activeId !== CURRENT_INSPECT_ID) {
       inspectorState.isRending = false;
       inspectorState.activeEl = null;
+      return;
+    }
+
+    sourceBridge.emit(
+      inspectorState.activeEl
+        ? [resolveSource(inspectorState.activeEl)]
+        : undefined,
+    );
+
+    if (!inspectorState.isRending) {
+      inspectorState.isRending = true;
+      renderUI();
     }
   });
 

@@ -1,12 +1,12 @@
-import { mitt } from '../utils/mitt';
-import { isTopWindow, topWindow } from '../utils/getTopWindow';
+import { bridge } from '../utils/bridge';
+import { isTopWindow, topWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
 import { resolveSource, type SourceCode } from '../resolve';
 import { OPEN_TREE_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
-export const openTreeBridge = mitt<[SourceCode]>({
-  onBefore() {
+export const openTreeBridge = bridge<[SourceCode]>({
+  setup() {
     const { crossIframe } = getOptions();
     if (crossIframe) {
       onMessage<[SourceCode]>(OPEN_TREE_CROSS_IFRAME, (args) => {

@@ -42,7 +42,7 @@ function detectionScreen() {
   const { outerWidth: w, outerHeight: h } = window;
   if (portrait !== (portrait = w < h)) {
     updateValue();
-    safeAreaObserver.emit([safeArea]);
+    safeAreaObserver.emit(safeArea);
   }
 }
 

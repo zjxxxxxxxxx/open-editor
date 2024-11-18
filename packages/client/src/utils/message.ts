@@ -20,7 +20,7 @@ export function postMessage(
   target?.postMessage(`${type}${JSON.stringify(args)}`, '*');
 }
 
-export function broadcastMessage(
+export function postMessageAll(
   type: string,
   args: any[] = [],
   corssOrigin: boolean = false,
