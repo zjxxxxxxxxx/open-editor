@@ -1,11 +1,11 @@
-import { mitt } from '../utils/mitt';
-import { topWindow } from '../utils/getTopWindow';
+import { bridge } from '../utils/bridge';
+import { topWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
 import { OPEN_EDITOR_ERROR_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
-export const openEditorErrorBridge = mitt({
-  onBefore() {
+export const openEditorErrorBridge = bridge({
+  setup() {
     const { crossIframe } = getOptions();
     if (crossIframe) {
       onMessage(OPEN_EDITOR_ERROR_CROSS_IFRAME, (args) => {
