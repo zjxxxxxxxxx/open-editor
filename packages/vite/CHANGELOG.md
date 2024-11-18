@@ -1,5 +1,18 @@
 # @open-editor/vite
 
+## 0.9.0
+
+### Minor Changes
+
+- [#259](https://github.com/zjxxxxxxxxx/open-editor/pull/259) [`dad760924f0ee93307608ef06dd73ca39fb04028`](https://github.com/zjxxxxxxxxx/open-editor/commit/dad760924f0ee93307608ef06dd73ca39fb04028) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add crossIframe option
+
+### Patch Changes
+
+- Updated dependencies [[`66f3fccdc96ceb5f3080710d1f45857c69b32074`](https://github.com/zjxxxxxxxxx/open-editor/commit/66f3fccdc96ceb5f3080710d1f45857c69b32074), [`dad760924f0ee93307608ef06dd73ca39fb04028`](https://github.com/zjxxxxxxxxx/open-editor/commit/dad760924f0ee93307608ef06dd73ca39fb04028), [`61dda180665910ac73cebc0f9f25c250b2e7bdb7`](https://github.com/zjxxxxxxxxx/open-editor/commit/61dda180665910ac73cebc0f9f25c250b2e7bdb7), [`4b782246ea9f9f2d392430b297293d40698401ec`](https://github.com/zjxxxxxxxxx/open-editor/commit/4b782246ea9f9f2d392430b297293d40698401ec), [`a62de8cd253c943e9546c5706d2fd1bc0df8b136`](https://github.com/zjxxxxxxxxx/open-editor/commit/a62de8cd253c943e9546c5706d2fd1bc0df8b136), [`4ff94e496160958e97af33a228ba466a539240dd`](https://github.com/zjxxxxxxxxx/open-editor/commit/4ff94e496160958e97af33a228ba466a539240dd), [`d67e23e006baa8d91f9fc8914053dfcd2154a6a9`](https://github.com/zjxxxxxxxxx/open-editor/commit/d67e23e006baa8d91f9fc8914053dfcd2154a6a9)]:
+  - @open-editor/client@0.9.0
+  - @open-editor/server@0.9.0
+  - @open-editor/shared@0.9.0
+
 ## 0.8.8
 
 ### Patch Changes
