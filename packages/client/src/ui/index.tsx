@@ -1,4 +1,4 @@
-import { isTopWindow } from '../utils/getTopWindow';
+import { isTopWindow } from '../utils/topWindow';
 import { appendChild, replaceChildren } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';

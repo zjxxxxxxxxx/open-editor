@@ -1,5 +1,5 @@
 import { checkValidElement } from '../utils/checkElement';
-import { isTopWindow } from '../utils/getTopWindow';
+import { isTopWindow } from '../utils/topWindow';
 import { getOptions } from '../options';
 import { off, on } from '../event';
 import {

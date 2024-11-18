@@ -24,7 +24,10 @@
   --min-w: 280px;
   --w: min(calc(100vw - 96px), 500px);
   --h: min(calc(100vh - 148px), 300px);
+
+  all: initial;
 }
+
 * {
   margin: 0;
   padding: 0;

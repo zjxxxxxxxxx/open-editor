@@ -1,4 +1,5 @@
 import { clamp } from '@open-editor/shared';
+import { mitt } from '../utils/mitt';
 import {
   getHtml,
   CSS_util,
@@ -22,7 +23,9 @@ export function TooltipUI() {
     tag: HTMLElement;
     comp: HTMLElement;
     file: HTMLElement;
+    isPending: boolean;
   };
+  const pending = mitt();
 
   enableBridge.on(() => {
     addClass(state.root, 'oe-tooltip-show');
@@ -33,6 +36,8 @@ export function TooltipUI() {
   });
 
   sourceBridge.on((source) => {
+    state.isPending = true;
+
     // before hidden
     applyStyle(state.root, {
       visibility: 'hidden',
@@ -44,10 +49,8 @@ export function TooltipUI() {
       state.comp.textContent = `<${source.meta.name}>`;
       state.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
 
-      // after visible
-      applyStyle(state.root, {
-        visibility: 'visible',
-      });
+      state.isPending = false;
+      pending.emit();
     }
   });
 
@@ -71,10 +74,18 @@ export function TooltipUI() {
       safeArea.left + OFFSET,
       winW - rootW - safeArea.right - OFFSET,
     );
-
-    applyStyle(state.root, {
+    const style = {
+      visibility: 'visible',
       transform: CSS_util.translate(left, top),
-    });
+    };
+
+    if (state.isPending) {
+      pending.once(() => {
+        applyStyle(state.root, style);
+      });
+    } else {
+      applyStyle(state.root, style);
+    }
   });
 
   return (

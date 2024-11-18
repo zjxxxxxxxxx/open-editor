@@ -1,5 +1,5 @@
-import { mitt } from '../utils/mitt';
-import { isTopWindow, topWindow } from '../utils/getTopWindow';
+import { bridge } from '../utils/bridge';
+import { isTopWindow, topWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
 import {
   type BoxLines,
@@ -9,8 +9,8 @@ import {
 import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
-export const boxModelBridge = mitt<[BoxRect, BoxLines]>({
-  onBefore() {
+export const boxModelBridge = bridge<[BoxRect, BoxLines]>({
+  setup() {
     const { crossIframe } = getOptions();
     if (crossIframe) {
       onMessage<[BoxRect, BoxLines]>(BOX_MODEL_CROSS_IFRAME, (args) => {
