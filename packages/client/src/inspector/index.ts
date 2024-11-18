@@ -1,11 +1,7 @@
 import { addClass, getHtml, removeClass } from '../utils/dom';
 import { logError } from '../utils/logError';
 import { on } from '../event';
-import {
-  CURRENT_INSPECT_ID,
-  IS_SAME_ORIGIN,
-  IS_TOP_WINDOW,
-} from '../constants';
+import { CURRENT_INSPECT_ID } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import {
@@ -26,12 +22,7 @@ import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
 import { getBoxModel } from './getBoxModel';
 import { openEditor } from './openEditor';
 import { setupListeners } from './setupListeners';
-
-export let isEnable = false;
-export let isRending = false;
-export let isTreeOpen = false;
-export let activeEl: HTMLElement | null = null;
-export let activeRect: DOMRect | null = null;
+import { inspectorState } from './inspectorState';
 
 export function setupInspector() {
   const opts = getOptions();
@@ -41,8 +32,13 @@ export function setupInspector() {
   effectStyle.mount();
 
   on('keydown', (e) => {
-    if (!isTreeOpen && e.altKey && e.metaKey && e.code === 'KeyO') {
-      if (!isEnable) {
+    if (
+      !inspectorState.isTreeOpen &&
+      e.altKey &&
+      e.metaKey &&
+      e.code === 'KeyO'
+    ) {
+      if (!inspectorState.isEnable) {
         enableBridge.emit();
       } else {
         exitBridge.emit();
@@ -58,11 +54,10 @@ export function setupInspector() {
         composed: true,
       });
       if (dispatchEvent(e)) {
-        isEnable = true;
+        inspectorState.isEnable = true;
 
         cleanListeners = setupListeners({
-          onActive(el) {
-            activeEl = el;
+          onActive() {
             activeBridge.emit([CURRENT_INSPECT_ID]);
           },
           onOpenTree(el) {
@@ -96,8 +91,9 @@ export function setupInspector() {
         composed: true,
       });
       if (dispatchEvent(e)) {
-        isEnable = false;
-        isRending = false;
+        inspectorState.isEnable = false;
+        inspectorState.isRending = false;
+        inspectorState.activeEl = null;
 
         cleanListeners();
 
@@ -112,26 +108,29 @@ export function setupInspector() {
 
   activeBridge.on((activeId) => {
     if (activeId === CURRENT_INSPECT_ID) {
-      sourceBridge.emit(activeEl ? [resolveSource(activeEl)] : undefined);
-      boxModelBridge.emit(getBoxModel(activeEl));
+      sourceBridge.emit(
+        inspectorState.activeEl
+          ? [resolveSource(inspectorState.activeEl)]
+          : undefined,
+      );
+      boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
 
-      if (!isRending) {
-        isRending = true;
+      if (!inspectorState.isRending) {
+        inspectorState.isRending = true;
         renderUI();
       }
     } else {
-      isRending = false;
-      activeEl = null;
-      activeRect = null;
+      inspectorState.isRending = false;
+      inspectorState.activeEl = null;
     }
   });
 
   openTreeBridge.on(() => {
-    isTreeOpen = true;
+    inspectorState.isTreeOpen = true;
   });
 
   closeTreeBridge.on(() => {
-    isTreeOpen = false;
+    inspectorState.isTreeOpen = false;
   });
 
   openEditorBridge.on(async (meta) => {
@@ -161,35 +160,18 @@ export function setupInspector() {
   });
 
   function renderUI() {
-    if (isRending) {
-      if (
-        isActiveRectChanged() ||
-        (opts.crossIframe && IS_SAME_ORIGIN && !IS_TOP_WINDOW && activeEl)
-      ) {
-        if (activeEl?.isConnected === false) {
-          activeEl = null;
-          activeRect = null;
+    if (inspectorState.isRending) {
+      const prevActiveEl = inspectorState.prevActiveEl;
+      const activeEl = (inspectorState.prevActiveEl = inspectorState.activeEl);
+      if (prevActiveEl != null || activeEl != null) {
+        if (inspectorState.activeEl?.isConnected === false) {
+          inspectorState.activeEl = null;
         }
 
-        boxModelBridge.emit(getBoxModel(activeEl));
+        boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
       }
 
       requestAnimationFrame(renderUI);
     }
-  }
-
-  function isActiveRectChanged() {
-    const prevAxis = activeRect;
-    const nextAxis = (activeRect = activeEl?.getBoundingClientRect() ?? null);
-
-    if (prevAxis == null && nextAxis == null) {
-      return false;
-    }
-    if (prevAxis == null || nextAxis == null) {
-      return true;
-    }
-
-    const diff = (key: keyof DOMRect) => prevAxis[key] !== nextAxis[key];
-    return diff('x') || diff('y') || diff('width') || diff('height');
   }
 }

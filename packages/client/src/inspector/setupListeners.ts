@@ -1,4 +1,5 @@
 import { checkValidElement } from '../utils/checkElement';
+import { isTopWindow } from '../utils/getTopWindow';
 import { getOptions } from '../options';
 import { off, on } from '../event';
 import {
@@ -7,10 +8,10 @@ import {
   cleanClickedElementAttrs,
 } from './clickedElement';
 import { getActiveElement } from './getActiveElement';
-import { IS_TOP_WINDOW } from '../constants';
+import { inspectorState } from './inspectorState';
 
 export interface SetupListenersOptions {
-  onActive(el: HTMLElement | null): void;
+  onActive(): void;
   onOpenEditor(el: HTMLElement): void;
   onOpenTree(el: HTMLElement): void;
   onExitInspect(): void;
@@ -82,9 +83,9 @@ export function setupListeners(opts: SetupListenersOptions) {
   const onOpenTree = withEventFn(opts.onOpenTree);
   const onExitInspect = withEventFn(opts.onExitInspect);
 
-  let activeEl = getActiveElement();
-  if (activeEl) {
-    onActive(activeEl);
+  inspectorState.activeEl = getActiveElement();
+  if (inspectorState.activeEl) {
+    onActive();
   }
 
   function setupEventListeners() {
@@ -172,9 +173,9 @@ export function setupListeners(opts: SetupListenersOptions) {
         ? document.elementFromPoint(e.clientX, e.clientY)
         : e.target)
     );
-    if (el !== activeEl) {
-      activeEl = checkValidElement(el) ? el : null;
-      onActive(activeEl);
+    if (el !== inspectorState.activeEl) {
+      inspectorState.activeEl = checkValidElement(el) ? el : null;
+      onActive();
     }
   }
 
@@ -186,18 +187,18 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   function onLeaveScreen(e: PointerEvent) {
+    if (crossIframe && !isTopWindow) {
+      return;
+    }
     // On PC devices, focus is lost when the mouse leaves the browser window
-    if (
-      e.pointerType === 'mouse' &&
-      (!crossIframe || IS_TOP_WINDOW) &&
-      !checkValidElement(<HTMLElement>e.relatedTarget)
-    ) {
-      onActive((activeEl = null));
+    if (e.pointerType === 'mouse' && e.relatedTarget == null) {
+      inspectorState.activeEl = null;
+      onActive();
     }
   }
 
   function onKeydown(e: KeyboardEvent) {
-    if (activeEl && SHORTCUT_KEYS.includes(e.code)) {
+    if (inspectorState.activeEl && SHORTCUT_KEYS.includes(e.code)) {
       Object.defineProperty(e, 'type', {
         get() {
           return `key${e.code}`.toLowerCase();
@@ -205,7 +206,7 @@ export function setupListeners(opts: SetupListenersOptions) {
       });
       Object.defineProperty(e, 'target', {
         get() {
-          return activeEl;
+          return inspectorState.activeEl;
         },
       });
       setupClickedElementAttrs(e);
@@ -224,10 +225,13 @@ export function setupListeners(opts: SetupListenersOptions) {
 
     const el = <HTMLElement>e.target;
     if (checkClickedElement(el)) {
-      const targetEl = activeEl?.isConnected ? activeEl : el;
+      const targetEl = inspectorState.activeEl?.isConnected
+        ? inspectorState.activeEl
+        : el;
       if (once) onExitInspect();
 
-      onActive((activeEl = null));
+      inspectorState.activeEl = null;
+      onActive();
 
       if (e.metaKey || e.type === 'longpress' || e.type === 'keyspace') {
         onOpenTree(targetEl);

@@ -19,3 +19,21 @@ export function postMessage(
 ) {
   target?.postMessage(`${type}${JSON.stringify(args)}`, '*');
 }
+
+export function broadcastMessage(
+  type: string,
+  args: any[] = [],
+  corssOrigin: boolean = false,
+) {
+  Array.from(window.frames).forEach((frame) => {
+    try {
+      if (corssOrigin || frame.document) {
+        postMessage(type, args, frame);
+      }
+    } catch {
+      if (corssOrigin) {
+        postMessage(type, args, frame);
+      }
+    }
+  });
+}

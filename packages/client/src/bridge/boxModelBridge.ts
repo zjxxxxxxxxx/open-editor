@@ -1,30 +1,27 @@
 import { mitt } from '../utils/mitt';
+import { isTopWindow, topWindow } from '../utils/getTopWindow';
 import { onMessage, postMessage } from '../utils/message';
 import {
   type BoxLines,
   type BoxRect,
   getBoxModel,
 } from '../inspector/getBoxModel';
-import {
-  BOX_MODEL_CROSS_IFRAME,
-  IS_SAME_ORIGIN,
-  IS_TOP_WINDOW,
-} from '../constants';
+import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
 export const boxModelBridge = mitt<[BoxRect, BoxLines]>({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe && IS_SAME_ORIGIN) {
+    if (crossIframe) {
       onMessage<[BoxRect, BoxLines]>(BOX_MODEL_CROSS_IFRAME, (args) => {
-        boxModelBridge.emit(args, IS_TOP_WINDOW);
+        boxModelBridge.emit(args, isTopWindow);
       });
     }
   },
   emitMiddlewares: [
     ([rect, lines], next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && IS_SAME_ORIGIN && !formTopWindow) {
+      if (crossIframe && !formTopWindow) {
         if (window.frameElement) {
           const [position, { margin, border, padding }] = getBoxModel(
             window.frameElement as HTMLElement,
@@ -37,7 +34,12 @@ export const boxModelBridge = mitt<[BoxRect, BoxLines]>({
           rect.bottom = rect.top + rect.height;
           rect.right = rect.left + rect.width;
         }
-        postMessage(BOX_MODEL_CROSS_IFRAME, [rect, lines], window.parent);
+
+        postMessage(
+          BOX_MODEL_CROSS_IFRAME,
+          [rect, lines],
+          isTopWindow ? topWindow : window.parent,
+        );
       } else {
         next();
       }
