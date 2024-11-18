@@ -1,16 +1,15 @@
 import { mitt } from '../utils/mitt';
-import { onMessage, postMessage } from '../utils/message';
-import { IS_SAME_ORIGIN, OPEN_EDITOR_START_CROSS_IFRAME } from '../constants';
+import { topWindow } from '../utils/getTopWindow';
+import { broadcastMessage, onMessage, postMessage } from '../utils/message';
+import { OPEN_EDITOR_START_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
 export const openEditorStartBridge = mitt({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe && IS_SAME_ORIGIN) {
+    if (crossIframe) {
       onMessage(OPEN_EDITOR_START_CROSS_IFRAME, (args) => {
-        Array.from(window.frames).forEach((frame) => {
-          postMessage(OPEN_EDITOR_START_CROSS_IFRAME, args, frame);
-        });
+        broadcastMessage(OPEN_EDITOR_START_CROSS_IFRAME, args, true);
         openEditorStartBridge.emit(args, true);
       });
     }
@@ -18,8 +17,8 @@ export const openEditorStartBridge = mitt({
   emitMiddlewares: [
     (args, next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && IS_SAME_ORIGIN && !formTopWindow) {
-        postMessage(OPEN_EDITOR_START_CROSS_IFRAME, args, window.top);
+      if (crossIframe && !formTopWindow) {
+        postMessage(OPEN_EDITOR_START_CROSS_IFRAME, args, topWindow);
       } else {
         next();
       }

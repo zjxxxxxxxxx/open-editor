@@ -1,11 +1,8 @@
-import {
-  HTML_INSPECT_ELEMENT,
-  IS_SAME_ORIGIN,
-  IS_TOP_WINDOW,
-} from '../constants';
+import { isTopWindow } from '../utils/getTopWindow';
 import { appendChild, replaceChildren } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';
+import { HTML_INSPECT_ELEMENT } from '../constants';
 import { getOptions } from '../options';
 import { ToggleUI } from './ToggleUI';
 import { OverlayUI } from './OverlayUI';
@@ -16,7 +13,7 @@ export function setupUI() {
   const { crossIframe, displayToggle } = getOptions();
 
   if (
-    (crossIframe && IS_SAME_ORIGIN && !IS_TOP_WINDOW) ||
+    (crossIframe && !isTopWindow) ||
     document.querySelector(HTML_INSPECT_ELEMENT)
   ) {
     return;

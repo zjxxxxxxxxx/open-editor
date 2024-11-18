@@ -2,9 +2,6 @@ export const HTML_INSPECT_ELEMENT = 'open-editor-inspect';
 
 export const IS_CLIENT = typeof window !== 'undefined';
 export const IS_FIREFOX = IS_CLIENT && /firefox/i.test(navigator.userAgent);
-export const IS_TOP_WINDOW = IS_CLIENT && window.top === window;
-export const IS_SAME_ORIGIN =
-  IS_CLIENT && (IS_TOP_WINDOW || window.frameElement != null);
 
 export const CURRENT_INSPECT_ID = Math.random().toString(16).substring(2, 10);
 
