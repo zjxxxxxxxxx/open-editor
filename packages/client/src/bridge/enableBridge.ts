@@ -1,16 +1,15 @@
 import { mitt } from '../utils/mitt';
-import { onMessage, postMessage } from '../utils/message';
-import { ENABLE_CROSS_IFRAME, IS_SAME_ORIGIN } from '../constants';
+import { topWindow } from '../utils/getTopWindow';
+import { broadcastMessage, onMessage, postMessage } from '../utils/message';
+import { ENABLE_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
 export const enableBridge = mitt({
   onBefore() {
     const { crossIframe } = getOptions();
-    if (crossIframe && IS_SAME_ORIGIN) {
+    if (crossIframe) {
       onMessage(ENABLE_CROSS_IFRAME, (args) => {
-        Array.from(window.frames).forEach((frame) => {
-          postMessage(ENABLE_CROSS_IFRAME, args, frame);
-        });
+        broadcastMessage(ENABLE_CROSS_IFRAME, args);
         enableBridge.emit(args, true);
       });
     }
@@ -18,8 +17,8 @@ export const enableBridge = mitt({
   emitMiddlewares: [
     (args, next, formTopWindow) => {
       const { crossIframe } = getOptions();
-      if (crossIframe && IS_SAME_ORIGIN && !formTopWindow) {
-        postMessage(ENABLE_CROSS_IFRAME, args, window.top);
+      if (crossIframe && !formTopWindow) {
+        postMessage(ENABLE_CROSS_IFRAME, args, topWindow);
       } else {
         next();
       }

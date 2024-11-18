@@ -7,9 +7,9 @@ import {
   removeClass,
 } from '../utils/dom';
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
+import { inspectorState } from '../inspector/inspectorState';
 import { off, on } from '../event';
 import { enableBridge, exitBridge } from '../bridge';
-import { isEnable } from '../inspector';
 
 export function ToggleUI() {
   const state = {} as {
@@ -100,7 +100,7 @@ export function ToggleUI() {
   function toggleEnable() {
     // Prevents the click event from being triggered by the end of the drag
     if (!state.dnding) {
-      if (!isEnable) {
+      if (!inspectorState.isEnable) {
         enableBridge.emit();
       } else {
         exitBridge.emit();
