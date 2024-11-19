@@ -1,23 +1,23 @@
-import { enableBridge } from './enableBridge';
-import { exitBridge } from './exitBridge';
-import { activeBridge } from './activeBridge';
-import { sourceBridge } from './sourceBridge';
+import { inspectorEnableBridge } from './inspectorEnableBridge';
+import { inspectorExitBridge } from './inspectorExitBridge';
+import { inspectorActiveBridge } from './inspectorActiveBridge';
+import { codeSourceBridge } from './codeSourceBridge';
 import { boxModelBridge } from './boxModelBridge';
-import { openTreeBridge } from './openTreeBridge';
-import { closeTreeBridge } from './closeTreeBridge';
+import { treeOpenBridge } from './treeOpenBridge';
+import { treeCloseBridge } from './treeCloseBridge';
 import { openEditorBridge } from './openEditorBridge';
 import { openEditorStartBridge } from './openEditorStartBridge';
 import { openEditorEndBridge } from './openEditorEndBridge';
 import { openEditorErrorBridge } from './openEditorErrorBridge';
 
 export function setupBridge() {
-  enableBridge.setup();
-  exitBridge.setup();
-  activeBridge.setup();
-  sourceBridge.setup();
+  inspectorEnableBridge.setup();
+  inspectorExitBridge.setup();
+  inspectorActiveBridge.setup();
+  codeSourceBridge.setup();
   boxModelBridge.setup();
-  openTreeBridge.setup();
-  closeTreeBridge.setup();
+  treeOpenBridge.setup();
+  treeCloseBridge.setup();
   openEditorBridge.setup();
   openEditorStartBridge.setup();
   openEditorEndBridge.setup();
@@ -25,13 +25,13 @@ export function setupBridge() {
 }
 
 export {
-  enableBridge,
-  exitBridge,
-  activeBridge,
-  sourceBridge,
+  inspectorEnableBridge,
+  inspectorExitBridge,
+  inspectorActiveBridge,
+  codeSourceBridge,
   boxModelBridge,
-  openTreeBridge,
-  closeTreeBridge,
+  treeOpenBridge,
+  treeCloseBridge,
   openEditorBridge,
   openEditorStartBridge,
   openEditorEndBridge,

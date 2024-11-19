@@ -1,15 +1,12 @@
 import { isFn, hasOwnProperty } from '@open-editor/shared';
-import type { SourceCodeMeta } from '../';
-import type { ResolveDebug } from '../resolveDebug';
-import {
-  type ReactResolver,
-  createReactResolver,
-} from '../creators/createReactResolver';
-import { resolveForFiber } from './react17';
+import type { CodeSourceMeta } from '.';
+import type { ResolveDebug } from './resolveDebug';
+import { type ReactResolver, createReactResolver } from './createReactResolver';
+import { resolveForFiber } from './resolveReact17';
 
 export function resolveReact15(
   { value: inst }: ResolveDebug,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   if (inst && hasOwnProperty<any, any>(inst, '_debugOwner')) {
@@ -22,7 +19,7 @@ export function resolveReact15(
 let resolver: ReactResolver;
 export function resolveForInstance(
   inst: any | null | undefined,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   setupResolver();

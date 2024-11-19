@@ -1,7 +1,7 @@
 import { isStr, normalizePath } from '@open-editor/shared';
-import type { SourceCodeMeta } from '../index';
-import type { ResolveDebug } from '../resolveDebug';
-import { ensureFileName, isValidFileName } from '../util';
+import type { CodeSourceMeta } from './index';
+import type { ResolveDebug } from './resolveDebug';
+import { ensureFileName, isValidFileName } from './resolveUtil';
 
 export interface VueResolverOptions<T = any> {
   isValid(v?: T): boolean;
@@ -16,7 +16,7 @@ export type VueResolver<T = any> = ReturnType<typeof createVueResolver<T>>;
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   function vueResolver(
     debug: ResolveDebug<T>,
-    tree: Partial<SourceCodeMeta>[],
+    tree: Partial<CodeSourceMeta>[],
     deep: boolean,
   ) {
     const { isValid, getNext, getSource, getFile, getName } = opts;

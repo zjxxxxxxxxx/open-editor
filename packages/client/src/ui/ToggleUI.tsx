@@ -9,7 +9,7 @@ import {
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
 import { inspectorState } from '../inspector/inspectorState';
 import { off, on } from '../event';
-import { enableBridge, exitBridge } from '../bridge';
+import { inspectorEnableBridge, inspectorExitBridge } from '../bridge';
 
 export function ToggleUI() {
   const state = {} as {
@@ -20,13 +20,13 @@ export function ToggleUI() {
     touchable: boolean;
   };
 
-  enableBridge.on(() => {
+  inspectorEnableBridge.on(() => {
     applyStyle(state.button, {
       color: 'var(--cyan)',
     });
   });
 
-  exitBridge.on(() => {
+  inspectorExitBridge.on(() => {
     applyStyle(state.button, {
       color: null,
     });
@@ -101,9 +101,9 @@ export function ToggleUI() {
     // Prevents the click event from being triggered by the end of the drag
     if (!state.dnding) {
       if (!inspectorState.isEnable) {
-        enableBridge.emit();
+        inspectorEnableBridge.emit();
       } else {
-        exitBridge.emit();
+        inspectorExitBridge.emit();
       }
     }
   }

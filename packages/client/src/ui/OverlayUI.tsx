@@ -1,5 +1,9 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
-import { enableBridge, exitBridge, boxModelBridge } from '../bridge';
+import {
+  inspectorEnableBridge,
+  inspectorExitBridge,
+  boxModelBridge,
+} from '../bridge';
 
 export function OverlayUI() {
   const state = {} as {
@@ -9,11 +13,11 @@ export function OverlayUI() {
     padding: HTMLElement;
   };
 
-  enableBridge.on(() => {
+  inspectorEnableBridge.on(() => {
     addClass(state.position, 'oe-overlay-show');
   });
 
-  exitBridge.on(() => {
+  inspectorExitBridge.on(() => {
     removeClass(state.position, 'oe-overlay-show');
   });
 

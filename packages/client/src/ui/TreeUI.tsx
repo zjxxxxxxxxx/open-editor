@@ -5,9 +5,9 @@ import {
   replaceChildren,
   applyStyle,
 } from '../utils/dom';
-import { closeTreeBridge, openEditorBridge, openTreeBridge } from '../bridge';
+import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
-import type { SourceCode, SourceCodeMeta } from '../resolve';
+import type { CodeSource, CodeSourceMeta } from '../resolve';
 import { off, on } from '../event';
 
 export function TreeUI() {
@@ -20,7 +20,7 @@ export function TreeUI() {
     clickable: boolean;
   };
 
-  openTreeBridge.on((source) => {
+  treeOpenBridge.on((source) => {
     applyStyle(state.root, {
       display: 'block',
     });
@@ -30,14 +30,14 @@ export function TreeUI() {
     enableClick();
   });
 
-  closeTreeBridge.on(() => {
+  treeCloseBridge.on(() => {
     applyStyle(state.root, {
       display: 'none',
     });
     removeClass(getHtml(), 'oe-lock-screen');
   });
 
-  function renderTree(source: SourceCode) {
+  function renderTree(source: CodeSource) {
     const hasTree = source.tree.length > 0;
     const content = (
       <>
@@ -60,7 +60,7 @@ export function TreeUI() {
     replaceChildren(state.popupBody, content);
   }
 
-  function buildTree(tree: SourceCodeMeta[]) {
+  function buildTree(tree: CodeSourceMeta[]) {
     const meta = tree.pop()!;
     const tagName = `<${meta.name}>`;
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
@@ -72,16 +72,10 @@ export function TreeUI() {
           title="Click to open in your editor"
           onClick={async () => {
             if (state.clickable) {
-              try {
-                addClass(getHtml(), 'oe-tree-loading');
+              const { once } = getOptions();
+              if (once) treeCloseBridge.emit();
 
-                const { once } = getOptions();
-                if (once) closeTreeBridge.emit();
-
-                openEditorBridge.emit([meta]);
-              } finally {
-                removeClass(getHtml(), 'oe-tree-loading');
-              }
+              openEditorBridge.emit([meta]);
             }
           }}
         >
@@ -113,7 +107,7 @@ export function TreeUI() {
 
   function exit() {
     if (state.clickable) {
-      closeTreeBridge.emit();
+      treeCloseBridge.emit();
     }
   }
 
@@ -122,7 +116,7 @@ export function TreeUI() {
       className="oe-tree"
       ref={(el) => (state.root = el)}
       onClick={exit}
-      onQuickExit={() => closeTreeBridge.emit()}
+      onQuickExit={() => treeCloseBridge.emit()}
     >
       <div
         className="oe-tree-popup"

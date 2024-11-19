@@ -5,17 +5,17 @@ import { CURRENT_INSPECT_ID } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import {
-  closeTreeBridge,
-  enableBridge,
-  exitBridge,
+  treeCloseBridge,
+  inspectorEnableBridge,
+  inspectorExitBridge,
   openEditorBridge,
-  openTreeBridge,
+  treeOpenBridge,
   boxModelBridge,
-  sourceBridge,
+  codeSourceBridge,
   openEditorErrorBridge,
   openEditorStartBridge,
   openEditorEndBridge,
-  activeBridge,
+  inspectorActiveBridge,
 } from '../bridge';
 import { effectStyle, overrideStyle } from './globalStyles';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
@@ -39,14 +39,14 @@ export function setupInspector() {
       e.code === 'KeyO'
     ) {
       if (!inspectorState.isEnable) {
-        enableBridge.emit();
+        inspectorEnableBridge.emit();
       } else {
-        exitBridge.emit();
+        inspectorExitBridge.emit();
       }
     }
   });
 
-  enableBridge.on(async () => {
+  inspectorEnableBridge.on(async () => {
     try {
       const e = new CustomEvent('enableinspector', {
         bubbles: true,
@@ -56,10 +56,10 @@ export function setupInspector() {
       if (dispatchEvent(e)) {
         inspectorState.isEnable = true;
         cleanListeners = setupListeners({
-          onActive: () => activeBridge.emit([CURRENT_INSPECT_ID]),
-          onOpenTree: (el) => openTreeBridge.emit([resolveSource(el, true)]),
+          onActive: () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]),
+          onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
           onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
-          onExitInspect: () => exitBridge.emit(),
+          onExitInspect: () => inspectorExitBridge.emit(),
         });
 
         // Override the default mouse style and touch feedback
@@ -75,7 +75,7 @@ export function setupInspector() {
     }
   });
 
-  exitBridge.on(async () => {
+  inspectorExitBridge.on(async () => {
     try {
       const e = new CustomEvent('exitinspector', {
         bubbles: true,
@@ -99,14 +99,14 @@ export function setupInspector() {
     }
   });
 
-  activeBridge.on((activeId) => {
+  inspectorActiveBridge.on((activeId) => {
     if (activeId !== CURRENT_INSPECT_ID) {
       inspectorState.isRending = false;
       inspectorState.activeEl = null;
       return;
     }
 
-    sourceBridge.emit(
+    codeSourceBridge.emit(
       inspectorState.activeEl
         ? [resolveSource(inspectorState.activeEl)]
         : undefined,
@@ -118,11 +118,11 @@ export function setupInspector() {
     }
   });
 
-  openTreeBridge.on(() => {
+  treeOpenBridge.on(() => {
     inspectorState.isTreeOpen = true;
   });
 
-  closeTreeBridge.on(() => {
+  treeCloseBridge.on(() => {
     inspectorState.isTreeOpen = false;
   });
 

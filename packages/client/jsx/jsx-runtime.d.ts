@@ -20,9 +20,9 @@ declare type EventType<K extends string> = K extends `on${infer F}`
 declare type NativeEvent<K extends string> = HTMLElementEventMap[EventType<K>];
 
 declare type InternalCustomElements = {
-  'open-editor-inspect': React.DetailedHTMLProps<
-    React.HTMLAttributes<HTMLInspectElement>,
-    HTMLInspectElement
+  'open-editor-inspector': React.DetailedHTMLProps<
+    React.HTMLAttributes<HTMLInspectorElement>,
+    HTMLInspectorElement
   >;
 };
 
