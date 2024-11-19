@@ -1,15 +1,12 @@
 import type { ComponentInternalInstance } from '@vue/runtime-core';
-import {
-  type VueResolver,
-  createVueResolver,
-} from '../creators/createVueResolver';
-import type { SourceCodeMeta } from '../index';
-import type { ResolveDebug } from '../resolveDebug';
+import { type VueResolver, createVueResolver } from './createVueResolver';
+import type { CodeSourceMeta } from './index';
+import type { ResolveDebug } from './resolveDebug';
 
 let resolver: VueResolver<ComponentInternalInstance>;
 export function resolveVue3(
   debug: ResolveDebug,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   setupResolver();

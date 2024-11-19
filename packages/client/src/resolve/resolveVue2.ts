@@ -1,14 +1,11 @@
-import {
-  type VueResolver,
-  createVueResolver,
-} from '../creators/createVueResolver';
-import type { SourceCodeMeta } from '../index';
-import type { ResolveDebug } from '../resolveDebug';
+import { type VueResolver, createVueResolver } from './createVueResolver';
+import type { CodeSourceMeta } from './index';
+import type { ResolveDebug } from './resolveDebug';
 
 let resolver: VueResolver;
 export function resolveVue2(
   debug: ResolveDebug,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   const componentInstance = debug.value._vnode.componentInstance;
