@@ -1,6 +1,6 @@
 import { ServerApis } from '@open-editor/shared';
 import { logError } from '../utils/logError';
-import type { CodeSourceMeta } from '../resolve';
+import { type CodeSourceMeta } from '../resolve';
 import { getOptions } from '../options';
 
 export async function openEditor(

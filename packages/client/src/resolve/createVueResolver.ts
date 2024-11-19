@@ -1,6 +1,6 @@
 import { isStr, normalizePath } from '@open-editor/shared';
-import type { CodeSourceMeta } from './index';
-import type { ResolveDebug } from './resolveDebug';
+import { type CodeSourceMeta } from './index';
+import { type ResolveDebug } from './resolveDebug';
 import { ensureFileName, isValidFileName } from './resolveUtil';
 
 export interface VueResolverOptions<T = any> {

@@ -84,8 +84,9 @@ export function setupListeners(opts: SetupListenersOptions) {
   const onExitInspect = withEventFn(opts.onExitInspect);
 
   inspectorState.activeEl = getActiveElement();
-
-  onActive();
+  if (inspectorState.activeEl) {
+    onActive();
+  }
 
   function setupEventListeners() {
     SILENT_EVENTS.forEach((event) => {
