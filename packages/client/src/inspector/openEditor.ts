@@ -1,10 +1,10 @@
 import { ServerApis } from '@open-editor/shared';
 import { logError } from '../utils/logError';
-import type { SourceCodeMeta } from '../resolve';
+import type { CodeSourceMeta } from '../resolve';
 import { getOptions } from '../options';
 
 export async function openEditor(
-  source: SourceCodeMeta,
+  source: CodeSourceMeta,
   dispatch: (e: CustomEvent<URL>) => boolean,
 ): Promise<void> {
   const opts = getOptions();

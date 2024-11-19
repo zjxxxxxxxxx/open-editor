@@ -2,7 +2,7 @@ import { isTopWindow } from '../utils/topWindow';
 import { appendChild, replaceChildren } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';
-import { HTML_INSPECT_ELEMENT } from '../constants';
+import { HTML_INSPECTOR_ELEMENT } from '../constants';
 import { getOptions } from '../options';
 import { ToggleUI } from './ToggleUI';
 import { OverlayUI } from './OverlayUI';
@@ -14,13 +14,13 @@ export function setupUI() {
 
   if (
     (crossIframe && !isTopWindow) ||
-    document.querySelector(HTML_INSPECT_ELEMENT)
+    document.querySelector(HTML_INSPECTOR_ELEMENT)
   ) {
     return;
   }
 
   customElements.define(
-    HTML_INSPECT_ELEMENT,
+    HTML_INSPECTOR_ELEMENT,
     class extends HTMLElement {
       declare readonly shadowRoot: ShadowRoot;
 
@@ -66,5 +66,5 @@ export function setupUI() {
     },
   );
 
-  appendChild(document.body, <HTML_INSPECT_ELEMENT />);
+  appendChild(document.body, <HTML_INSPECTOR_ELEMENT />);
 }

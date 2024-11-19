@@ -1,15 +1,12 @@
 import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
-import {
-  type ReactResolver,
-  createReactResolver,
-} from '../creators/createReactResolver';
-import type { SourceCodeMeta } from '../index';
-import type { ResolveDebug } from '../resolveDebug';
+import { type ReactResolver, createReactResolver } from './createReactResolver';
+import type { CodeSourceMeta } from './index';
+import type { ResolveDebug } from './resolveDebug';
 
 export function resolveReact17(
   { value: fiber }: ResolveDebug<Fiber>,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   resolveForFiber(fiber, tree, deep);
@@ -18,7 +15,7 @@ export function resolveReact17(
 let resolver: ReactResolver<Fiber>;
 export function resolveForFiber(
   fiber: Fiber | null | undefined,
-  tree: Partial<SourceCodeMeta>[],
+  tree: Partial<CodeSourceMeta>[],
   deep = false,
 ) {
   setupResolver();

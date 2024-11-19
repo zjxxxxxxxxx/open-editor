@@ -10,10 +10,10 @@ import {
 import { getDOMRect } from '../utils/getDOMRect';
 import { safeArea } from '../utils/safeArea';
 import {
-  enableBridge,
-  exitBridge,
+  inspectorEnableBridge,
+  inspectorExitBridge,
   boxModelBridge,
-  sourceBridge,
+  codeSourceBridge,
 } from '../bridge';
 
 export function TooltipUI() {
@@ -27,15 +27,15 @@ export function TooltipUI() {
   };
   const pending = mitt();
 
-  enableBridge.on(() => {
+  inspectorEnableBridge.on(() => {
     addClass(state.root, 'oe-tooltip-show');
   });
 
-  exitBridge.on(() => {
+  inspectorExitBridge.on(() => {
     removeClass(state.root, 'oe-tooltip-show');
   });
 
-  sourceBridge.on((source) => {
+  codeSourceBridge.on((source) => {
     state.isPending = true;
 
     // before hidden

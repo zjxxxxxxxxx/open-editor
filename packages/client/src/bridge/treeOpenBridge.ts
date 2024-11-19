@@ -1,16 +1,16 @@
 import { bridge } from '../utils/bridge';
 import { isTopWindow, topWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
-import { resolveSource, type SourceCode } from '../resolve';
-import { OPEN_TREE_CROSS_IFRAME } from '../constants';
+import { resolveSource, type CodeSource } from '../resolve';
+import { TREE_OPEN_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 
-export const openTreeBridge = bridge<[SourceCode]>({
+export const treeOpenBridge = bridge<[CodeSource]>({
   setup() {
     const { crossIframe } = getOptions();
     if (crossIframe) {
-      onMessage<[SourceCode]>(OPEN_TREE_CROSS_IFRAME, (args) => {
-        openTreeBridge.emit(args, isTopWindow);
+      onMessage<[CodeSource]>(TREE_OPEN_CROSS_IFRAME, (args) => {
+        treeOpenBridge.emit(args, isTopWindow);
       });
     }
   },
@@ -27,7 +27,7 @@ export const openTreeBridge = bridge<[SourceCode]>({
         }
 
         postMessage(
-          OPEN_TREE_CROSS_IFRAME,
+          TREE_OPEN_CROSS_IFRAME,
           [source],
           isTopWindow ? topWindow : window.parent,
         );

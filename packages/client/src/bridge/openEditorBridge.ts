@@ -1,4 +1,4 @@
 import { bridge } from '../utils/bridge';
-import type { SourceCodeMeta } from '../resolve';
+import type { CodeSourceMeta } from '../resolve';
 
-export const openEditorBridge = bridge<[SourceCodeMeta | undefined]>();
+export const openEditorBridge = bridge<[CodeSourceMeta | undefined]>();

@@ -1,7 +1,7 @@
 import { normalizePath } from '@open-editor/shared';
 import type { Source } from 'react-reconciler';
-import type { SourceCodeMeta } from '../index';
-import { ensureFileName, isValidFileName } from '../util';
+import type { CodeSourceMeta } from './index';
+import { ensureFileName, isValidFileName } from './resolveUtil';
 
 export interface ReactResolverOptions<T = any> {
   isValid(v?: T): boolean;
@@ -17,7 +17,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   function reactResolver(
     cur: T | null | undefined,
-    tree: Partial<SourceCodeMeta>[],
+    tree: Partial<CodeSourceMeta>[],
     deep: boolean,
   ) {
     while (cur) {

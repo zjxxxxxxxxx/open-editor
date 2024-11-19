@@ -1,7 +1,7 @@
-import { HTML_INSPECT_ELEMENT } from '../constants';
+import { HTML_INSPECTOR_ELEMENT } from '../constants';
 import { getOptions } from '../options';
 
-const INVALID_ELEMEN_TCROSS_IFRAME = [HTML_INSPECT_ELEMENT];
+const INVALID_ELEMEN_TCROSS_IFRAME = [HTML_INSPECTOR_ELEMENT];
 
 const INVALID_ELEMENT = [
   ...INVALID_ELEMEN_TCROSS_IFRAME,

@@ -1,24 +1,24 @@
 import { camelCase } from '@open-editor/shared';
-import { resolveReact17 } from './resolves/react17';
-import { resolveReact15 } from './resolves/react15';
-import { resolveVue3 } from './resolves/vue3';
-import { resolveVue2 } from './resolves/vue2';
+import { resolveReact17 } from './resolveReact17';
+import { resolveReact15 } from './resolveReact15';
+import { resolveVue3 } from './resolveVue3';
+import { resolveVue2 } from './resolveVue2';
 import { resolveDebug } from './resolveDebug';
 
-export interface SourceCodeMeta {
+export interface CodeSourceMeta {
   name: string;
   file: string;
   line: number;
   column: number;
 }
-export interface SourceCode {
+export interface CodeSource {
   el: string;
-  meta?: SourceCodeMeta;
-  tree: SourceCodeMeta[];
+  meta?: CodeSourceMeta;
+  tree: CodeSourceMeta[];
 }
 
-export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
-  const source: SourceCode = {
+export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
+  const source: CodeSource = {
     el: el.localName,
     tree: [],
   };
@@ -42,7 +42,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): SourceCode {
   return source;
 }
 
-export function normalizeMeta(meta: Partial<SourceCodeMeta>) {
+export function normalizeMeta(meta: Partial<CodeSourceMeta>) {
   return {
     name: meta.name ? camelCase(meta.name) : 'Anonymous',
     file: meta.file!,
