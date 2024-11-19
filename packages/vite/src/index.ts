@@ -1,5 +1,5 @@
 import { resolve } from 'node:path';
-import type { ViteDevServer } from 'vite';
+import { type ViteDevServer } from 'vite';
 import {
   CLIENT_MODULE_ID,
   ServerApis,

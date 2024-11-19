@@ -5,7 +5,7 @@ import { setupBridge } from './bridge';
 import { setupInspector } from './inspector';
 import { setupUI } from './ui';
 
-export type { Options };
+export { Options };
 
 export function setupClient(opts: Options) {
   if (IS_CLIENT) {

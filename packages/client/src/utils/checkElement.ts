@@ -10,8 +10,6 @@ const INVALID_ELEMENT = [
   // The `html` check is triggered when the mouse leaves the browser,
   // and filtering is needed to ignore this unexpected check.
   'html',
-  // `iframe` should be left to the internal inspector.
-  'iframe',
 ];
 
 export function checkValidElement(el: HTMLElement | null): el is HTMLElement {

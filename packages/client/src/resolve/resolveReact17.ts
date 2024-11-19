@@ -1,8 +1,8 @@
-import type { Fiber } from 'react-reconciler';
 import { isFn } from '@open-editor/shared';
+import { type Fiber } from 'react-reconciler';
 import { type ReactResolver, createReactResolver } from './createReactResolver';
-import type { CodeSourceMeta } from './index';
-import type { ResolveDebug } from './resolveDebug';
+import { type ResolveDebug } from './resolveDebug';
+import { type CodeSourceMeta } from '.';
 
 export function resolveReact17(
   { value: fiber }: ResolveDebug<Fiber>,

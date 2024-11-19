@@ -5,17 +5,18 @@ import { CURRENT_INSPECT_ID } from '../constants';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
 import {
-  treeCloseBridge,
+  inspectorActiveBridge,
   inspectorEnableBridge,
   inspectorExitBridge,
-  openEditorBridge,
-  treeOpenBridge,
-  boxModelBridge,
+  inspectorRenderBridge,
   codeSourceBridge,
-  openEditorErrorBridge,
+  boxModelBridge,
+  treeOpenBridge,
+  treeCloseBridge,
+  openEditorBridge,
   openEditorStartBridge,
   openEditorEndBridge,
-  inspectorActiveBridge,
+  openEditorErrorBridge,
 } from '../bridge';
 import { effectStyle, overrideStyle } from './globalStyles';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
@@ -31,19 +32,33 @@ export function setupInspector() {
 
   effectStyle.mount();
 
-  on('keydown', (e) => {
-    if (
-      !inspectorState.isTreeOpen &&
-      e.altKey &&
-      e.metaKey &&
-      e.code === 'KeyO'
-    ) {
-      if (!inspectorState.isEnable) {
-        inspectorEnableBridge.emit();
-      } else {
-        inspectorExitBridge.emit();
+  on('mousemove', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
+    capture: true,
+  });
+
+  on(
+    'keydown',
+    (e) => {
+      if (
+        !inspectorState.isTreeOpen &&
+        e.altKey &&
+        e.metaKey &&
+        e.code === 'KeyO'
+      ) {
+        if (!inspectorState.isEnable) {
+          inspectorEnableBridge.emit();
+        } else {
+          inspectorExitBridge.emit();
+        }
       }
-    }
+    },
+    {
+      capture: true,
+    },
+  );
+
+  inspectorActiveBridge.on((activeId) => {
+    inspectorState.isActive = activeId === CURRENT_INSPECT_ID;
   });
 
   inspectorEnableBridge.on(async () => {
@@ -56,7 +71,7 @@ export function setupInspector() {
       if (dispatchEvent(e)) {
         inspectorState.isEnable = true;
         cleanListeners = setupListeners({
-          onActive: () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]),
+          onActive: () => inspectorRenderBridge.emit(),
           onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
           onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
           onExitInspect: () => inspectorExitBridge.emit(),
@@ -99,8 +114,8 @@ export function setupInspector() {
     }
   });
 
-  inspectorActiveBridge.on((activeId) => {
-    if (activeId !== CURRENT_INSPECT_ID) {
+  inspectorRenderBridge.on(() => {
+    if (!inspectorState.isActive) {
       inspectorState.isRending = false;
       inspectorState.activeEl = null;
       return;
@@ -118,13 +133,9 @@ export function setupInspector() {
     }
   });
 
-  treeOpenBridge.on(() => {
-    inspectorState.isTreeOpen = true;
-  });
+  treeOpenBridge.on(() => (inspectorState.isTreeOpen = true));
 
-  treeCloseBridge.on(() => {
-    inspectorState.isTreeOpen = false;
-  });
+  treeCloseBridge.on(() => (inspectorState.isTreeOpen = false));
 
   openEditorBridge.on(async (meta) => {
     try {
@@ -144,13 +155,9 @@ export function setupInspector() {
     }
   });
 
-  openEditorStartBridge.on(() => {
-    addClass(getHtml(), 'oe-loading');
-  });
+  openEditorStartBridge.on(() => addClass(getHtml(), 'oe-loading'));
 
-  openEditorEndBridge.on(() => {
-    removeClass(getHtml(), 'oe-loading');
-  });
+  openEditorEndBridge.on(() => removeClass(getHtml(), 'oe-loading'));
 
   function renderUI() {
     if (inspectorState.isRending) {

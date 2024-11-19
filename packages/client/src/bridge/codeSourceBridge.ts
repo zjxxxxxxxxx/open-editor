@@ -1,7 +1,7 @@
 import { bridge } from '../utils/bridge';
 import { topWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
-import type { CodeSource } from '../resolve';
+import { type CodeSource } from '../resolve';
 import { CODE_SOURCE_CROSS_IFRAME } from '../constants';
 import { getOptions } from '../options';
 

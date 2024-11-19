@@ -1,8 +1,8 @@
 import { isFn, hasOwnProperty } from '@open-editor/shared';
-import type { CodeSourceMeta } from '.';
-import type { ResolveDebug } from './resolveDebug';
+import { type ResolveDebug } from './resolveDebug';
 import { type ReactResolver, createReactResolver } from './createReactResolver';
 import { resolveForFiber } from './resolveReact17';
+import { type CodeSourceMeta } from '.';
 
 export function resolveReact15(
   { value: inst }: ResolveDebug,

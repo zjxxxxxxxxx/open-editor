@@ -7,7 +7,7 @@ import {
 } from '../utils/dom';
 import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
-import type { CodeSource, CodeSourceMeta } from '../resolve';
+import { type CodeSource, type CodeSourceMeta } from '../resolve';
 import { off, on } from '../event';
 
 export function TreeUI() {
