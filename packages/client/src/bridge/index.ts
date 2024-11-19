@@ -1,6 +1,7 @@
+import { inspectorActiveBridge } from './inspectorActiveBridge';
 import { inspectorEnableBridge } from './inspectorEnableBridge';
 import { inspectorExitBridge } from './inspectorExitBridge';
-import { inspectorActiveBridge } from './inspectorActiveBridge';
+import { inspectorRenderBridge } from './inspectorRenderBridge';
 import { codeSourceBridge } from './codeSourceBridge';
 import { boxModelBridge } from './boxModelBridge';
 import { treeOpenBridge } from './treeOpenBridge';
@@ -11,9 +12,10 @@ import { openEditorEndBridge } from './openEditorEndBridge';
 import { openEditorErrorBridge } from './openEditorErrorBridge';
 
 export function setupBridge() {
+  inspectorActiveBridge.setup();
   inspectorEnableBridge.setup();
   inspectorExitBridge.setup();
-  inspectorActiveBridge.setup();
+  inspectorRenderBridge.setup();
   codeSourceBridge.setup();
   boxModelBridge.setup();
   treeOpenBridge.setup();
@@ -25,9 +27,10 @@ export function setupBridge() {
 }
 
 export {
+  inspectorActiveBridge,
   inspectorEnableBridge,
   inspectorExitBridge,
-  inspectorActiveBridge,
+  inspectorRenderBridge,
   codeSourceBridge,
   boxModelBridge,
   treeOpenBridge,

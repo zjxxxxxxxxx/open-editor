@@ -1,6 +1,6 @@
 import { type VueResolver, createVueResolver } from './createVueResolver';
-import type { CodeSourceMeta } from './index';
-import type { ResolveDebug } from './resolveDebug';
+import { type CodeSourceMeta } from './index';
+import { type ResolveDebug } from './resolveDebug';
 
 let resolver: VueResolver;
 export function resolveVue2(

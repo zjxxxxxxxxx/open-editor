@@ -1,5 +1,11 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
 import {
+  type BoxLines,
+  type BoxRect,
+  defaultBoxLines,
+  defaultBoxRect,
+} from '../inspector/getBoxModel';
+import {
   inspectorEnableBridge,
   inspectorExitBridge,
   boxModelBridge,
@@ -15,13 +21,16 @@ export function OverlayUI() {
 
   inspectorEnableBridge.on(() => {
     addClass(state.position, 'oe-overlay-show');
+    updateBoxModel(defaultBoxRect, defaultBoxLines);
   });
 
   inspectorExitBridge.on(() => {
     removeClass(state.position, 'oe-overlay-show');
   });
 
-  boxModelBridge.on((rect, lines) => {
+  boxModelBridge.on(updateBoxModel);
+
+  function updateBoxModel(rect: BoxRect, lines: BoxLines) {
     applyStyle(state.position, {
       width: CSS_util.px(rect.width),
       height: CSS_util.px(rect.height),
@@ -38,7 +47,7 @@ export function OverlayUI() {
         borderLeftWidth: CSS_util.px(line.left),
       });
     }
-  });
+  }
 
   return (
     <div className="oe-overlay" ref={(el) => (state.position = el)}>
