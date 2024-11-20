@@ -7,6 +7,14 @@ import { IS_CLIENT } from '../constants';
 export const topWindow = IS_CLIENT ? getTopWindow() : undefined;
 export const isTopWindow = IS_CLIENT && topWindow === window;
 
+export function whenTopWindow(cb: () => void, feedback?: () => void) {
+  if (isTopWindow) {
+    cb();
+  } else {
+    feedback?.();
+  }
+}
+
 function getTopWindow() {
   let current: Window = window;
   while (current.frameElement) {

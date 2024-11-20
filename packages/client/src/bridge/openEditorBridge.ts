@@ -1,4 +1,5 @@
-import { bridge } from '../utils/bridge';
+import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { type CodeSourceMeta } from '../resolve';
 
-export const openEditorBridge = bridge<[CodeSourceMeta | undefined]>();
+export const openEditorBridge =
+  crossIframeBridge<[CodeSourceMeta | undefined]>();
