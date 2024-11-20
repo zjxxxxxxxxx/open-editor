@@ -58,7 +58,16 @@ export function setupInspector() {
   );
 
   inspectorActiveBridge.on((activeId) => {
-    inspectorState.isActive = activeId === CURRENT_INSPECT_ID;
+    const prevIsActive = inspectorState.isActive;
+    const nextIsActive = (inspectorState.isActive =
+      activeId === CURRENT_INSPECT_ID);
+    if (prevIsActive !== nextIsActive) {
+      if (nextIsActive) {
+        renderUI();
+      } else {
+        inspectorState.activeEl = null;
+      }
+    }
   });
 
   inspectorEnableBridge.on(async () => {
@@ -99,7 +108,7 @@ export function setupInspector() {
       });
       if (dispatchEvent(e)) {
         inspectorState.isEnable = false;
-        inspectorState.isRending = false;
+        inspectorState.isActive = false;
         inspectorState.activeEl = null;
 
         cleanListeners();
@@ -115,21 +124,8 @@ export function setupInspector() {
   });
 
   inspectorRenderBridge.on(() => {
-    if (!inspectorState.isActive) {
-      inspectorState.isRending = false;
-      inspectorState.activeEl = null;
-      return;
-    }
-
-    codeSourceBridge.emit(
-      inspectorState.activeEl
-        ? [resolveSource(inspectorState.activeEl)]
-        : undefined,
-    );
-
-    if (!inspectorState.isRending) {
-      inspectorState.isRending = true;
-      renderUI();
+    if (inspectorState.activeEl) {
+      codeSourceBridge.emit([resolveSource(inspectorState.activeEl)]);
     }
   });
 
@@ -160,14 +156,17 @@ export function setupInspector() {
   openEditorEndBridge.on(() => removeClass(getHtml(), 'oe-loading'));
 
   function renderUI() {
-    if (inspectorState.isRending) {
+    if (inspectorState.isActive) {
       const prevActiveEl = inspectorState.prevActiveEl;
-      const activeEl = (inspectorState.prevActiveEl = inspectorState.activeEl);
-      if (prevActiveEl != null || activeEl != null) {
-        if (inspectorState.activeEl?.isConnected === false) {
+      const nextActiveEl = (inspectorState.prevActiveEl =
+        inspectorState.activeEl);
+      if (prevActiveEl != null || nextActiveEl != null) {
+        if (nextActiveEl?.isConnected === false) {
           inspectorState.activeEl = null;
         }
-
+        if (inspectorState.activeEl == null) {
+          codeSourceBridge.emit();
+        }
         boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
       }
 
