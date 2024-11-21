@@ -21,11 +21,11 @@ export function OverlayUI() {
 
   inspectorEnableBridge.on(() => {
     addClass(state.position, 'oe-overlay-show');
-    updateBoxModel(defaultBoxRect, defaultBoxLines);
   });
 
   inspectorExitBridge.on(() => {
     removeClass(state.position, 'oe-overlay-show');
+    updateBoxModel(defaultBoxRect, defaultBoxLines);
   });
 
   boxModelBridge.on(updateBoxModel);

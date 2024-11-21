@@ -8,7 +8,6 @@ import {
   inspectorActiveBridge,
   inspectorEnableBridge,
   inspectorExitBridge,
-  inspectorRenderBridge,
   codeSourceBridge,
   boxModelBridge,
   treeOpenBridge,
@@ -24,6 +23,7 @@ import { getBoxModel } from './getBoxModel';
 import { openEditor } from './openEditor';
 import { setupListeners } from './setupListeners';
 import { inspectorState } from './inspectorState';
+import { getActiveElement } from './getActiveElement';
 
 export function setupInspector() {
   const opts = getOptions();
@@ -58,15 +58,11 @@ export function setupInspector() {
   );
 
   inspectorActiveBridge.on((activeId) => {
-    const prevIsActive = inspectorState.isActive;
-    const nextIsActive = (inspectorState.isActive =
-      activeId === CURRENT_INSPECT_ID);
-    if (prevIsActive !== nextIsActive) {
-      if (nextIsActive) {
-        renderUI();
-      } else {
-        inspectorState.activeEl = null;
-      }
+    inspectorState.isActive = activeId === CURRENT_INSPECT_ID;
+
+    if (!inspectorState.isActive && inspectorState.isRendering) {
+      inspectorState.isRendering = false;
+      inspectorState.activeEl = null;
     }
   });
 
@@ -79,8 +75,12 @@ export function setupInspector() {
       });
       if (dispatchEvent(e)) {
         inspectorState.isEnable = true;
+        inspectorState.activeEl = getActiveElement();
+
+        renderUI();
+
         cleanListeners = setupListeners({
-          onActive: () => inspectorRenderBridge.emit(),
+          onActive: () => renderUI(),
           onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
           onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
           onExitInspect: () => inspectorExitBridge.emit(),
@@ -108,7 +108,7 @@ export function setupInspector() {
       });
       if (dispatchEvent(e)) {
         inspectorState.isEnable = false;
-        inspectorState.isActive = false;
+        inspectorState.isRendering = false;
         inspectorState.activeEl = null;
 
         cleanListeners();
@@ -120,12 +120,6 @@ export function setupInspector() {
       }
     } catch {
       //
-    }
-  });
-
-  inspectorRenderBridge.on(() => {
-    if (inspectorState.activeEl) {
-      codeSourceBridge.emit([resolveSource(inspectorState.activeEl)]);
     }
   });
 
@@ -156,21 +150,38 @@ export function setupInspector() {
   openEditorEndBridge.on(() => removeClass(getHtml(), 'oe-loading'));
 
   function renderUI() {
-    if (inspectorState.isActive) {
+    if (inspectorState.activeEl) {
+      codeSourceBridge.emit([resolveSource(inspectorState.activeEl)]);
+      boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
+
+      if (!inspectorState.isRendering) {
+        inspectorState.isRendering = true;
+        requestAnimationFrame(rerenderUI);
+      }
+    }
+  }
+
+  function rerenderUI() {
+    if (inspectorState.isRendering) {
       const prevActiveEl = inspectorState.prevActiveEl;
       const nextActiveEl = (inspectorState.prevActiveEl =
         inspectorState.activeEl);
-      if (prevActiveEl != null || nextActiveEl != null) {
+      if (
+        inspectorState.isActive &&
+        (prevActiveEl != null || nextActiveEl != null)
+      ) {
         if (nextActiveEl?.isConnected === false) {
           inspectorState.activeEl = null;
         }
+
         if (inspectorState.activeEl == null) {
           codeSourceBridge.emit();
         }
+
         boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
       }
 
-      requestAnimationFrame(renderUI);
+      requestAnimationFrame(rerenderUI);
     }
   }
 }

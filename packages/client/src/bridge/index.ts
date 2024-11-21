@@ -1,7 +1,6 @@
 import { inspectorActiveBridge } from './inspectorActiveBridge';
 import { inspectorEnableBridge } from './inspectorEnableBridge';
 import { inspectorExitBridge } from './inspectorExitBridge';
-import { inspectorRenderBridge } from './inspectorRenderBridge';
 import { codeSourceBridge } from './codeSourceBridge';
 import { boxModelBridge } from './boxModelBridge';
 import { treeOpenBridge } from './treeOpenBridge';
@@ -15,7 +14,6 @@ export function setupBridge() {
   inspectorActiveBridge.setup();
   inspectorEnableBridge.setup();
   inspectorExitBridge.setup();
-  inspectorRenderBridge.setup();
   codeSourceBridge.setup();
   boxModelBridge.setup();
   treeOpenBridge.setup();
@@ -30,7 +28,6 @@ export {
   inspectorActiveBridge,
   inspectorEnableBridge,
   inspectorExitBridge,
-  inspectorRenderBridge,
   codeSourceBridge,
   boxModelBridge,
   treeOpenBridge,

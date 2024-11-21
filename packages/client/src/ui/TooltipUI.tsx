@@ -31,11 +31,11 @@ export function TooltipUI() {
 
   inspectorEnableBridge.on(() => {
     addClass(state.root, 'oe-tooltip-show');
-    updateSource();
   });
 
   inspectorExitBridge.on(() => {
     removeClass(state.root, 'oe-tooltip-show');
+    updateSource();
   });
 
   codeSourceBridge.on(updateSource);

@@ -7,7 +7,6 @@ import {
   setupClickedElementAttrs,
   cleanClickedElementAttrs,
 } from './clickedElement';
-import { getActiveElement } from './getActiveElement';
 import { inspectorState } from './inspectorState';
 
 export interface SetupListenersOptions {
@@ -82,11 +81,6 @@ export function setupListeners(opts: SetupListenersOptions) {
   const onOpenEditor = withEventFn(opts.onOpenEditor);
   const onOpenTree = withEventFn(opts.onOpenTree);
   const onExitInspect = withEventFn(opts.onExitInspect);
-
-  inspectorState.activeEl = getActiveElement();
-  if (inspectorState.activeEl) {
-    onActive();
-  }
 
   function setupEventListeners() {
     SILENT_EVENTS.forEach((event) => {
