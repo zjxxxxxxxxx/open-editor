@@ -4,12 +4,13 @@ import { on } from '../event';
 import { inspectorState } from './inspectorState';
 
 const mouse = {
+  outBrowser: false,
   x: 0,
   y: 0,
 };
 
 export function getActiveElement() {
-  if (!inspectorState.isActive) {
+  if (!inspectorState.isActive || mouse.outBrowser) {
     return null;
   }
 
@@ -24,6 +25,15 @@ if (IS_CLIENT) {
       (e: PointerEvent) => {
         mouse.x = e.x;
         mouse.y = e.y;
+      },
+      {
+        capture: true,
+      },
+    );
+    on(
+      'mouseout',
+      (e: PointerEvent) => {
+        mouse.outBrowser = e.relatedTarget == null;
       },
       {
         capture: true,
