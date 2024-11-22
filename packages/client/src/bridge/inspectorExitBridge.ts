@@ -1,13 +1,19 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { topWindow } from '../utils/topWindow';
 import { postMessageAll, onMessage, postMessage } from '../utils/message';
-import { INSPECTOR_EXIT_CROSS_IFRAME } from '../constants';
+import { dispatchEvent } from '../utils/dispatchEvent';
+import {
+  EXIT_INSPECTOR_EVENT,
+  INSPECTOR_EXIT_CROSS_IFRAME,
+} from '../constants';
 
 export const inspectorExitBridge = crossIframeBridge({
   setup() {
     onMessage(INSPECTOR_EXIT_CROSS_IFRAME, (args) => {
-      postMessageAll(INSPECTOR_EXIT_CROSS_IFRAME, args);
-      inspectorExitBridge.emit(args, true);
+      if (dispatchEvent(EXIT_INSPECTOR_EVENT)) {
+        postMessageAll(INSPECTOR_EXIT_CROSS_IFRAME, args);
+        inspectorExitBridge.emit(args, true);
+      }
     });
   },
   emitMiddlewares: [
