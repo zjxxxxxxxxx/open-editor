@@ -1,5 +1,4 @@
 import { addClass, getHtml, removeClass } from '../utils/dom';
-import { logError } from '../utils/logError';
 import { on } from '../event';
 import { CURRENT_INSPECT_ID } from '../constants';
 import { getOptions } from '../options';
@@ -15,7 +14,6 @@ import {
   openEditorBridge,
   openEditorStartBridge,
   openEditorEndBridge,
-  openEditorErrorBridge,
 } from '../bridge';
 import { effectStyle, overrideStyle } from './globalStyles';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
@@ -68,32 +66,25 @@ export function setupInspector() {
 
   inspectorEnableBridge.on(async () => {
     try {
-      const e = new CustomEvent('enableinspector', {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
+      inspectorState.isEnable = true;
+      inspectorState.activeEl = getActiveElement();
+
+      renderUI();
+
+      cleanListeners = setupListeners({
+        onActive: () => renderUI(),
+        onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
+        onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
+        onExitInspect: () => inspectorExitBridge.emit(),
       });
-      if (dispatchEvent(e)) {
-        inspectorState.isEnable = true;
-        inspectorState.activeEl = getActiveElement();
 
-        renderUI();
-
-        cleanListeners = setupListeners({
-          onActive: () => renderUI(),
-          onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
-          onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
-          onExitInspect: () => inspectorExitBridge.emit(),
-        });
-
-        // Override the default mouse style and touch feedback
-        overrideStyle.mount();
-        if (opts.disableHoverCSS) {
-          await disableHoverCSS();
-        }
-        // @ts-ignore
-        document.activeElement?.blur();
+      // Override the default mouse style and touch feedback
+      overrideStyle.mount();
+      if (opts.disableHoverCSS) {
+        await disableHoverCSS();
       }
+      // @ts-ignore
+      document.activeElement?.blur();
     } catch {
       //
     }
@@ -101,22 +92,15 @@ export function setupInspector() {
 
   inspectorExitBridge.on(async () => {
     try {
-      const e = new CustomEvent('exitinspector', {
-        bubbles: true,
-        cancelable: true,
-        composed: true,
-      });
-      if (dispatchEvent(e)) {
-        inspectorState.isEnable = false;
-        inspectorState.isRendering = false;
-        inspectorState.activeEl = null;
+      inspectorState.isEnable = false;
+      inspectorState.isRendering = false;
+      inspectorState.activeEl = null;
 
-        cleanListeners();
+      cleanListeners();
 
-        overrideStyle.unmount();
-        if (opts.disableHoverCSS) {
-          await enableHoverCSS();
-        }
+      overrideStyle.unmount();
+      if (opts.disableHoverCSS) {
+        await enableHoverCSS();
       }
     } catch {
       //
@@ -124,29 +108,9 @@ export function setupInspector() {
   });
 
   treeOpenBridge.on(() => (inspectorState.isTreeOpen = true));
-
   treeCloseBridge.on(() => (inspectorState.isTreeOpen = false));
-
-  openEditorBridge.on(async (meta) => {
-    try {
-      openEditorStartBridge.emit();
-
-      if (!meta) {
-        logError('file not found.');
-        openEditorErrorBridge.emit();
-        return;
-      }
-
-      await openEditor(meta, (e) => dispatchEvent(e));
-    } catch {
-      openEditorErrorBridge.emit();
-    } finally {
-      openEditorEndBridge.emit();
-    }
-  });
-
+  openEditorBridge.on((meta) => openEditor(meta));
   openEditorStartBridge.on(() => addClass(getHtml(), 'oe-loading'));
-
   openEditorEndBridge.on(() => removeClass(getHtml(), 'oe-loading'));
 
   function renderUI() {

@@ -1,13 +1,25 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
-import { topWindow } from '../utils/topWindow';
+import { topWindow, whenTopWindow } from '../utils/topWindow';
 import { postMessageAll, onMessage, postMessage } from '../utils/message';
-import { INSPECTOR_ENABLE_CROSS_IFRAME } from '../constants';
+import { dispatchEvent } from '../utils/dispatchEvent';
+import {
+  ENABLE_INSPECTOR_EVENT,
+  INSPECTOR_ENABLE_CROSS_IFRAME,
+} from '../constants';
 
 export const inspectorEnableBridge = crossIframeBridge({
   setup() {
     onMessage(INSPECTOR_ENABLE_CROSS_IFRAME, (args) => {
-      postMessageAll(INSPECTOR_ENABLE_CROSS_IFRAME, args);
-      inspectorEnableBridge.emit(args, true);
+      whenTopWindow(() => {
+        if (dispatchEvent(ENABLE_INSPECTOR_EVENT)) {
+          dispatchEmit();
+        }
+      }, dispatchEmit);
+
+      function dispatchEmit() {
+        postMessageAll(INSPECTOR_ENABLE_CROSS_IFRAME, args);
+        inspectorEnableBridge.emit(args, true);
+      }
     });
   },
   emitMiddlewares: [
