@@ -36,7 +36,7 @@ export interface Options {
    *
    * It only takes effect when the top window and iframe window have the same origin.
    *
-   * @default false
+   * @default true
    */
   crossIframe?: boolean;
   /**
@@ -56,7 +56,7 @@ export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>
     disableHoverCSS: userOpts.disableHoverCSS ?? true,
     ignoreComponents: userOpts.ignoreComponents ?? '/**/node_modules/**/*',
     once: userOpts.once ?? true,
-    crossIframe: userOpts.crossIframe ?? false,
+    crossIframe: userOpts.crossIframe ?? true,
   };
 }
 
