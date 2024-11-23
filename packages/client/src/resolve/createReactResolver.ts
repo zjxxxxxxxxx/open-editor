@@ -45,9 +45,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
     }
   }
 
-  function normalizeSource(
-    source: (Source & { columnNumber?: number }) | null | undefined,
-  ) {
+  function normalizeSource(source: (Source & { columnNumber?: number }) | null | undefined) {
     if (source) {
       source.fileName = ensureFileName(normalizePath(source.fileName));
     }

@@ -7,10 +7,7 @@ import {
 
 export default createCustomEventHandler('rightclick', setupListener);
 
-function setupListener(
-  listener: SetupListenerListener,
-  opts: SetupListenerListenerOptions,
-) {
+function setupListener(listener: SetupListenerListener, opts: SetupListenerListenerOptions) {
   function setup() {
     on('contextmenu', trigger, opts);
 

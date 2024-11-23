@@ -21,9 +21,7 @@ import Notes from './components/Notes.vue';
     <Notes />
   </div>
   <p class="read-the-docs">
-    <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-      Github
-    </a>
+    <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor"> Github </a>
   </p>
 </template>
 

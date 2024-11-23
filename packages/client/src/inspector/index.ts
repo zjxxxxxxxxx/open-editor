@@ -30,19 +30,20 @@ export function setupInspector() {
 
   effectStyle.mount();
 
-  on('mousemove', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
-    capture: true,
-  });
+  on(
+    'mousemove',
+    () => {
+      inspectorActiveBridge.emit([CURRENT_INSPECT_ID]);
+    },
+    {
+      capture: true,
+    },
+  );
 
   on(
     'keydown',
     (e) => {
-      if (
-        !inspectorState.isTreeOpen &&
-        e.altKey &&
-        e.metaKey &&
-        e.code === 'KeyO'
-      ) {
+      if (!inspectorState.isTreeOpen && e.altKey && e.metaKey && e.code === 'KeyO') {
         if (!inspectorState.isEnable) {
           inspectorEnableBridge.emit();
         } else {
@@ -128,12 +129,8 @@ export function setupInspector() {
   function rerenderUI() {
     if (inspectorState.isRendering) {
       const prevActiveEl = inspectorState.prevActiveEl;
-      const nextActiveEl = (inspectorState.prevActiveEl =
-        inspectorState.activeEl);
-      if (
-        inspectorState.isActive &&
-        (prevActiveEl != null || nextActiveEl != null)
-      ) {
+      const nextActiveEl = (inspectorState.prevActiveEl = inspectorState.activeEl);
+      if (prevActiveEl != null || nextActiveEl != null) {
         if (nextActiveEl?.isConnected === false) {
           inspectorState.activeEl = null;
         }

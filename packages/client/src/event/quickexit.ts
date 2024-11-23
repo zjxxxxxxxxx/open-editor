@@ -7,10 +7,7 @@ import {
 
 export default createCustomEventHandler('quickexit', setupListener);
 
-function setupListener(
-  listener: SetupListenerListener,
-  opts: SetupListenerListenerOptions,
-) {
+function setupListener(listener: SetupListenerListener, opts: SetupListenerListenerOptions) {
   function setup() {
     on('keydown', trigger, {
       ...opts,

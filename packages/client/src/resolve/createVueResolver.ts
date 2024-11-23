@@ -14,11 +14,7 @@ export interface VueResolverOptions<T = any> {
 export type VueResolver<T = any> = ReturnType<typeof createVueResolver<T>>;
 
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
-  function vueResolver(
-    debug: ResolveDebug<T>,
-    tree: Partial<CodeSourceMeta>[],
-    deep: boolean,
-  ) {
+  function vueResolver(debug: ResolveDebug<T>, tree: Partial<CodeSourceMeta>[], deep: boolean) {
     const { isValid, getNext, getSource, getFile, getName } = opts;
     const record = new Set<string>();
     let [inst, source] = getAnchor(debug, getSource);
@@ -72,10 +68,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   return vueResolver;
 }
 
-function getAnchor<T = any>(
-  debug: ResolveDebug,
-  getSource: VueResolverOptions<T>['getSource'],
-) {
+function getAnchor<T = any>(debug: ResolveDebug, getSource: VueResolverOptions<T>['getSource']) {
   const source = normalizeSource(debug.el.getAttribute('__source'));
   while (isStr(source)) {
     return [debug.value, source];

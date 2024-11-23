@@ -26,11 +26,7 @@ export function openEditorMiddleware(
 
   return (req, res) => {
     const { query } = parse(req.url ?? '/', true);
-    const {
-      f: file = '',
-      l: line = 1,
-      c: column = 1,
-    } = query as AnyObject<string>;
+    const { f: file = '', l: line = 1, c: column = 1 } = query as AnyObject<string>;
 
     const filename = resolve(rootDir, decodeURIComponent(file));
     if (!existsSync(filename)) {

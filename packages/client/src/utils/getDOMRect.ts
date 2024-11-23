@@ -14,13 +14,9 @@ const IS_COMPUTED =
   !IS_FIREFOX &&
   // Chromium version greater than 127 do not need to be calculated
   // @ts-ignore
-  !navigator.userAgentData?.brands.find(
-    (i) => i.brand === 'Chromium' && +i.version > 127,
-  );
+  !navigator.userAgentData?.brands.find((i) => i.brand === 'Chromium' && +i.version > 127);
 
-export function getDOMRect(
-  target: HTMLElement,
-): Omit<DOMRectReadOnly, 'toJSON'> {
+export function getDOMRect(target: HTMLElement): Omit<DOMRectReadOnly, 'toJSON'> {
   const domRect = target.getBoundingClientRect().toJSON();
   if (IS_COMPUTED) {
     return computedDOMRect(target, domRect);

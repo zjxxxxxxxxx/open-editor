@@ -49,9 +49,7 @@ export interface Options {
 
 let opts: Options;
 
-export function setOptions(
-  userOpts: Partial<Options> & Pick<Options, 'rootDir'>,
-) {
+export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>) {
   opts = {
     ...userOpts,
     displayToggle: userOpts.displayToggle ?? true,

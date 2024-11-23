@@ -5,11 +5,7 @@ import {
   defaultBoxLines,
   defaultBoxRect,
 } from '../inspector/getBoxModel';
-import {
-  inspectorEnableBridge,
-  inspectorExitBridge,
-  boxModelBridge,
-} from '../bridge';
+import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../bridge';
 
 export function OverlayUI() {
   const state = {} as {
@@ -53,10 +49,7 @@ export function OverlayUI() {
     <div className="oe-overlay" ref={(el) => (state.position = el)}>
       <div className="oe-overlay-margin" ref={(el) => (state.margin = el)}>
         <div className="oe-overlay-border" ref={(el) => (state.border = el)}>
-          <div
-            className="oe-overlay-padding"
-            ref={(el) => (state.padding = el)}
-          >
+          <div className="oe-overlay-padding" ref={(el) => (state.padding = el)}>
             <div className="oe-overlay-content" />
           </div>
         </div>

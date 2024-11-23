@@ -1,10 +1,4 @@
-import {
-  addClass,
-  removeClass,
-  getHtml,
-  replaceChildren,
-  applyStyle,
-} from '../utils/dom';
+import { addClass, removeClass, getHtml, replaceChildren, applyStyle } from '../utils/dom';
 import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
@@ -123,17 +117,8 @@ export function TreeUI() {
         ref={(el) => (state.popup = el)}
         onClick={(e) => e.stopPropagation()}
       >
-        <button
-          className="oe-tree-close"
-          ref={(el) => (state.popupClose = el)}
-          onClick={exit}
-        >
-          <svg
-            viewBox="0 0 1024 1024"
-            width="100%"
-            height="100%"
-            fill="currentColor"
-          >
+        <button className="oe-tree-close" ref={(el) => (state.popupClose = el)} onClick={exit}>
+          <svg viewBox="0 0 1024 1024" width="100%" height="100%" fill="currentColor">
             <path d="M569.02728271 509.40447998L877.59753418 817.97473145 820.57025146 872.40649414 512 563.83624268 198.23870849 882.78857422 141.21142578 823.16577148l313.76129151-318.95233154L146.40246582 195.64318847 203.42974854 141.21142578 512 449.78167724 820.57025146 141.21142578 877.59753418 200.83422852 569.02728271 509.40447998z" />
           </svg>
         </button>

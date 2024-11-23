@@ -16,10 +16,7 @@ export function applyAttrs(el: HTMLElement, attrs: AnyObject) {
   }
 }
 
-export function appendChild(
-  el: HTMLElement | ShadowRoot,
-  ...children: HTMLElement[]
-) {
+export function appendChild(el: HTMLElement | ShadowRoot, ...children: HTMLElement[]) {
   for (const child of children) {
     if (child.tagName === Fragment) {
       // @ts-ignore
@@ -30,10 +27,7 @@ export function appendChild(
   }
 }
 
-export function replaceChildren(
-  el: HTMLElement | ShadowRoot,
-  ...children: HTMLElement[]
-) {
+export function replaceChildren(el: HTMLElement | ShadowRoot, ...children: HTMLElement[]) {
   // Unable to handle automatic elimination of Fragment element.
   // if (el.replaceChildren) {
   //   return el.replaceChildren(...children);

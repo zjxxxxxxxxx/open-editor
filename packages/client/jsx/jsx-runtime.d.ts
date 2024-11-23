@@ -13,9 +13,7 @@ declare type EventKey<K extends string> = K extends `on${infer F}${infer _}`
     : false
   : false;
 
-declare type EventType<K extends string> = K extends `on${infer F}`
-  ? Lowercase<F>
-  : never;
+declare type EventType<K extends string> = K extends `on${infer F}` ? Lowercase<F> : never;
 
 declare type NativeEvent<K extends string> = HTMLElementEventMap[EventType<K>];
 
@@ -48,9 +46,7 @@ declare type _IntrinsicElements<ES> = {
 
 declare namespace _JSX {
   type Element = HTMLElement;
-  type IntrinsicElements = _IntrinsicElements<
-    JSX.IntrinsicElements & InternalCustomElements
-  >;
+  type IntrinsicElements = _IntrinsicElements<JSX.IntrinsicElements & InternalCustomElements>;
 }
 
 declare const _Fragment: string;

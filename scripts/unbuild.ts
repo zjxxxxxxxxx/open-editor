@@ -24,26 +24,16 @@ export type BuildOutput =
 export default function buildConfigs() {
   const { exports } = readjson(resolve('./package.json'));
   const builds = <[string, BuildOutput][]>(
-    Object.entries(exports).map(([input, output]) => [
-      normalizeInput(input),
-      output,
-    ])
+    Object.entries(exports).map(([input, output]) => [normalizeInput(input), output])
   );
-  return <RollupOptions[]>(
-    builds.flatMap(([input, output]) => buildConfig(input, output))
-  );
+  return <RollupOptions[]>builds.flatMap(([input, output]) => buildConfig(input, output));
 }
 
 function buildConfig(input: string, output: BuildOutput) {
-  return <RollupOptions[]>(
-    [buildBundles(input, output), buildDTS(input, output)].filter(Boolean)
-  );
+  return <RollupOptions[]>[buildBundles(input, output), buildDTS(input, output)].filter(Boolean);
 }
 
-function buildBundles(
-  input: string,
-  output: BuildOutput,
-): RollupOptions | void {
+function buildBundles(input: string, output: BuildOutput): RollupOptions | void {
   const bundles: OutputOptions[] = [];
 
   if (typeof output === 'string') {

@@ -3,11 +3,7 @@ import { type CodeSourceMeta } from './index';
 import { type ResolveDebug } from './resolveDebug';
 
 let resolver: VueResolver;
-export function resolveVue2(
-  debug: ResolveDebug,
-  tree: Partial<CodeSourceMeta>[],
-  deep = false,
-) {
+export function resolveVue2(debug: ResolveDebug, tree: Partial<CodeSourceMeta>[], deep = false) {
   const componentInstance = debug.value._vnode.componentInstance;
   if (componentInstance) {
     debug.value = componentInstance;

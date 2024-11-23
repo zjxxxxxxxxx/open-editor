@@ -3,10 +3,7 @@ import corsMiddleware from 'cors';
 import { ServerApis } from '@open-editor/shared';
 import { openEditorMiddleware } from './openEditorMiddleware';
 
-export function createApp(options: {
-  rootDir?: string;
-  onOpenEditor?(file: string): void;
-}) {
+export function createApp(options: { rootDir?: string; onOpenEditor?(file: string): void }) {
   const { rootDir, onOpenEditor } = options;
   const app = connect();
 
