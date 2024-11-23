@@ -85,8 +85,7 @@ export default class OpenEditorPlugin {
   private declare options: Options & { port?: number };
 
   constructor(options: Options = {}) {
-    const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } =
-      options;
+    const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } = options;
     this.options = {
       ...options,
       rootDir: normalizePath(rootDir),
@@ -118,8 +117,7 @@ export default class OpenEditorPlugin {
       });
 
       compiler.options.resolve.alias ||= {};
-      compiler.options.resolve.alias[CLIENT_MODULE_ID] =
-        resolvePath(CLIENT_MODULE_ID);
+      compiler.options.resolve.alias[CLIENT_MODULE_ID] = resolvePath(CLIENT_MODULE_ID);
     });
 
     compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {

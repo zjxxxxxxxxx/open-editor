@@ -13,10 +13,7 @@ export const treeOpenBridge = crossIframeBridge<[CodeSource]>({
   emitMiddlewares: [
     ([source], next) => {
       if (window.frameElement) {
-        const { tree } = resolveSource(
-          window.frameElement as HTMLElement,
-          true,
-        );
+        const { tree } = resolveSource(window.frameElement as HTMLElement, true);
         source.tree.push(...tree);
       }
 

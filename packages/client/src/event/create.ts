@@ -7,17 +7,14 @@ export interface CustomEventListenerOptions extends EventListenerOptions {
   target: Target;
 }
 
-export type AddCustomEventListenerOptions<
-  AddCustomEventListenerUserOptions extends AnyObject,
-> = CustomEventListenerOptions &
-  Omit<AddEventListenerOptions, 'passive'> &
-  AddCustomEventListenerUserOptions;
+export type AddCustomEventListenerOptions<AddCustomEventListenerUserOptions extends AnyObject> =
+  CustomEventListenerOptions &
+    Omit<AddEventListenerOptions, 'passive'> &
+    AddCustomEventListenerUserOptions;
 
 export type CustomEventListener = (e: PointerEvent) => void;
 
-export interface CustomEventCache<
-  AddCustomEventListenerUserOptions extends AnyObject,
-> {
+export interface CustomEventCache<AddCustomEventListenerUserOptions extends AnyObject> {
   cb: CustomEventListener;
   opts: AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>;
   stop: () => void;
@@ -26,18 +23,14 @@ export interface CustomEventCache<
 /******** SetupListener ********/
 export type SetupListenerListenerOptions<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
-> = Omit<
-  AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>,
-  'once' | 'signal'
->;
+> = Omit<AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>, 'once' | 'signal'>;
 
 export type SetupListenerListener = (e: PointerEvent) => void;
 
-export type SetupListener<AddCustomEventListenerUserOptions extends AnyObject> =
-  (
-    listener: SetupListenerListener,
-    options: SetupListenerListenerOptions<AddCustomEventListenerUserOptions>,
-  ) => SetupListenerCleanListener;
+export type SetupListener<AddCustomEventListenerUserOptions extends AnyObject> = (
+  listener: SetupListenerListener,
+  options: SetupListenerListenerOptions<AddCustomEventListenerUserOptions>,
+) => SetupListenerCleanListener;
 
 export type SetupListenerCleanListener = () => void;
 
@@ -49,14 +42,8 @@ export type SetupListenerCleanListener = () => void;
  */
 export function createCustomEventHandler<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
->(
-  type: string,
-  setupListener: SetupListener<AddCustomEventListenerUserOptions>,
-) {
-  const targetMap = new WeakMap<
-    Target,
-    CustomEventCache<AddCustomEventListenerUserOptions>[]
-  >();
+>(type: string, setupListener: SetupListener<AddCustomEventListenerUserOptions>) {
+  const targetMap = new WeakMap<Target, CustomEventCache<AddCustomEventListenerUserOptions>[]>();
 
   function addEventListener(
     cb: CustomEventListener,
@@ -86,10 +73,7 @@ export function createCustomEventHandler<
     }
   }
 
-  function removeEventListener(
-    cb: CustomEventListener,
-    opts: CustomEventListenerOptions,
-  ) {
+  function removeEventListener(cb: CustomEventListener, opts: CustomEventListenerOptions) {
     const caches = targetMap.get(opts.target) || [];
     const index = caches.findIndex((cache) => isSameListener(cache, cb, opts));
     if (index !== -1) {

@@ -23,9 +23,7 @@ let glob: ReturnType<typeof outmatch>;
 function filter(fileName: string) {
   const { ignoreComponents } = getOptions();
   if (ignoreComponents) {
-    return !(glob ||= outmatch(ignoreComponents, { excludeDot: true }))(
-      fileName,
-    );
+    return !(glob ||= outmatch(ignoreComponents, { excludeDot: true }))(fileName);
   }
   return true;
 }

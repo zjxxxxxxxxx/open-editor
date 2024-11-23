@@ -21,11 +21,7 @@ export default Vue.extend({
         <img src="../public/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
       <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-        <img
-          src="../public/logo.png"
-          class="logo open-editor"
-          alt="OpenEditor logo"
-        />
+        <img src="../public/logo.png" class="logo open-editor" alt="OpenEditor logo" />
       </a>
     </div>
     <h1>Rollup + Vue2</h1>
@@ -34,9 +30,7 @@ export default Vue.extend({
       <Notes />
     </div>
     <p class="read-the-docs">
-      <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor">
-        Github
-      </a>
+      <a target="_black" href="https://github.com/zjxxxxxxxxx/open-editor"> Github </a>
     </p>
   </div>
 </template>

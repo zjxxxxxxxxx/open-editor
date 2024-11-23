@@ -4,11 +4,7 @@ import { type ResolveDebug } from './resolveDebug';
 import { type CodeSourceMeta } from '.';
 
 let resolver: VueResolver<ComponentInternalInstance>;
-export function resolveVue3(
-  debug: ResolveDebug,
-  tree: Partial<CodeSourceMeta>[],
-  deep = false,
-) {
+export function resolveVue3(debug: ResolveDebug, tree: Partial<CodeSourceMeta>[], deep = false) {
   setupResolver();
   resolver(debug, tree, deep);
 }

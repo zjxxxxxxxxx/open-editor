@@ -13,11 +13,7 @@ export default function App() {
           <img src="/react.svg" className="logo react" alt="React logo" />
         </a>
         <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-          <img
-            src="/logo.png"
-            className="logo open-editor"
-            alt="OpenEditor logo"
-          />
+          <img src="/logo.png" className="logo open-editor" alt="OpenEditor logo" />
         </a>
       </div>
       <h1>Webpack + React</h1>

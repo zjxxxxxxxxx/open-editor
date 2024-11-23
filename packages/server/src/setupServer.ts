@@ -60,10 +60,7 @@ function startServer(server: http.Server) {
           return;
         }
 
-        const port =
-          typeof address === 'string'
-            ? +address.match(/:(\d+)$/)![1]
-            : address.port;
+        const port = typeof address === 'string' ? +address.match(/:(\d+)$/)![1] : address.port;
         resolve(port);
       },
     );

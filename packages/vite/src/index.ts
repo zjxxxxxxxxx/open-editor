@@ -1,11 +1,6 @@
 import { resolve } from 'node:path';
 import { type ViteDevServer } from 'vite';
-import {
-  CLIENT_MODULE_ID,
-  ServerApis,
-  injectClient,
-  normalizePath,
-} from '@open-editor/shared';
+import { CLIENT_MODULE_ID, ServerApis, injectClient, normalizePath } from '@open-editor/shared';
 import { isDev, resolvePath } from '@open-editor/shared/node';
 import { openEditorMiddleware } from '@open-editor/server';
 
@@ -71,9 +66,7 @@ export default function OpenEditorPlugin(options: Options = {}) {
   }
 
   const { onOpenEditor } = options;
-  const rootDir = normalizePath(
-    options.rootDir ? resolve(options.rootDir) : process.cwd(),
-  );
+  const rootDir = normalizePath(options.rootDir ? resolve(options.rootDir) : process.cwd());
 
   return {
     name: 'OpenEditorPlugin',
@@ -89,10 +82,7 @@ export default function OpenEditorPlugin(options: Options = {}) {
     },
     resolveId(id) {
       if (id === CLIENT_MODULE_ID) {
-        return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(
-          /\.js$/,
-          '.mjs',
-        );
+        return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(/\.js$/, '.mjs');
       }
     },
     transform(code: string, id: string) {

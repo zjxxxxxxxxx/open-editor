@@ -1,12 +1,6 @@
 import { clamp } from '@open-editor/shared';
 import { mitt } from '../utils/mitt';
-import {
-  getHtml,
-  CSS_util,
-  applyStyle,
-  addClass,
-  removeClass,
-} from '../utils/dom';
+import { getHtml, CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
 import { getDOMRect } from '../utils/getDOMRect';
 import { safeArea } from '../utils/safeArea';
 import { type BoxRect } from '../inspector/getBoxModel';
@@ -82,11 +76,7 @@ export function TooltipUI() {
       safeArea.top + OFFSET,
       winH - rootH - safeArea.bottom - OFFSET,
     );
-    const left = clamp(
-      rect.left,
-      safeArea.left + OFFSET,
-      winW - rootW - safeArea.right - OFFSET,
-    );
+    const left = clamp(rect.left, safeArea.left + OFFSET, winW - rootW - safeArea.right - OFFSET);
 
     applyStyle(state.root, {
       visibility: 'visible',

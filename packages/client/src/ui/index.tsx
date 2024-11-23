@@ -12,10 +12,7 @@ import { TreeUI } from './TreeUI';
 export function setupUI() {
   const { crossIframe, displayToggle } = getOptions();
 
-  if (
-    (crossIframe && !isTopWindow) ||
-    document.querySelector(HTML_INSPECTOR_ELEMENT)
-  ) {
+  if ((crossIframe && !isTopWindow) || document.querySelector(HTML_INSPECTOR_ELEMENT)) {
     return;
   }
 

@@ -2,8 +2,7 @@ import longpress from './longpress';
 import quickexit from './quickexit';
 import rightclick from './rightclick';
 
-export interface HTMLElementEventWithCustomEventMap
-  extends HTMLElementEventMap {
+export interface HTMLElementEventWithCustomEventMap extends HTMLElementEventMap {
   longpress: PointerEvent;
   quickexit: PointerEvent;
   rightclick: PointerEvent;
