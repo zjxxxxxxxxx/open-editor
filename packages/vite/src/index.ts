@@ -42,7 +42,7 @@ export interface Options {
    *
    * It only takes effect when the top window and iframe window have the same origin.
    *
-   * @default false
+   * @default true
    */
   crossIframe?: boolean;
   /**
