@@ -163,9 +163,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   function onActiveElement(e: PointerEvent) {
     const el = <HTMLElement>(
-      (e.pointerType === 'touch'
-        ? document.elementFromPoint(e.clientX, e.clientY)
-        : e.target)
+      (e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target)
     );
     if (el !== inspectorState.activeEl) {
       inspectorState.activeEl = checkValidElement(el) ? el : null;
@@ -219,13 +217,11 @@ export function setupListeners(opts: SetupListenersOptions) {
 
     const el = <HTMLElement>e.target;
     if (checkClickedElement(el)) {
-      const targetEl = inspectorState.activeEl?.isConnected
-        ? inspectorState.activeEl
-        : el;
-      if (once) onExitInspect();
+      const targetEl = inspectorState.activeEl?.isConnected ? inspectorState.activeEl : el;
 
       inspectorState.activeEl = null;
-      onActive();
+
+      if (once) onExitInspect();
 
       if (e.metaKey || e.type === 'longpress' || e.type === 'keyspace') {
         onOpenTree(targetEl);
@@ -249,10 +245,7 @@ function withEventFn<T extends (...args: any[]) => any>(fn: T) {
 function onSilent(e: Event) {
   // No action is expected on the event when target or relatedTarget
   // is an invalid element.
-  if (
-    checkValidElement((<any>e).target) ||
-    checkValidElement((<any>e).relatedTarget)
-  ) {
+  if (checkValidElement((<any>e).target) || checkValidElement((<any>e).relatedTarget)) {
     if (!CLICK_ATTACHMENT_EVENTS.includes(e.type)) {
       e.preventDefault();
     }

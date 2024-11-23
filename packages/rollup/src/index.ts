@@ -1,12 +1,7 @@
 import { resolve } from 'node:path';
 import { type Plugin } from 'rollup';
 import { isDev, resolvePath } from '@open-editor/shared/node';
-import {
-  CLIENT_MODULE_ID,
-  ENTRY_MATCH_RE,
-  injectClient,
-  normalizePath,
-} from '@open-editor/shared';
+import { CLIENT_MODULE_ID, ENTRY_MATCH_RE, injectClient, normalizePath } from '@open-editor/shared';
 import { setupServer } from '@open-editor/server';
 
 export interface Options {
@@ -79,9 +74,7 @@ const portPromiseCache: AnyObject<Promise<number>> = {};
 /**
  * development only
  */
-export default function OpenEditorPlugin(
-  options: Options = {},
-): Plugin | undefined {
+export default function OpenEditorPlugin(options: Options = {}): Plugin | undefined {
   if (!isDev()) {
     return {
       name: 'OpenEditorPlugin',
@@ -89,9 +82,7 @@ export default function OpenEditorPlugin(
   }
 
   const { onOpenEditor } = options;
-  const rootDir = normalizePath(
-    options.rootDir ? resolve(options.rootDir) : process.cwd(),
-  );
+  const rootDir = normalizePath(options.rootDir ? resolve(options.rootDir) : process.cwd());
 
   let port: number;
 
@@ -107,10 +98,7 @@ export default function OpenEditorPlugin(
     },
     resolveId(id: string) {
       if (id === CLIENT_MODULE_ID) {
-        return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(
-          /\.js$/,
-          '.mjs',
-        );
+        return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(/\.js$/, '.mjs');
       }
     },
     transform(code: string, id: string) {

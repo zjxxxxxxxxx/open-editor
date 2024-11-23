@@ -27,11 +27,7 @@ export default function App() {
           </picture>
         </a>
         <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-          <img
-            src="/logo.png"
-            className="logo open-editor"
-            alt="OpenEditor logo"
-          />
+          <img src="/logo.png" className="logo open-editor" alt="OpenEditor logo" />
         </a>
       </div>
       <h1>Webpack + Nextjs</h1>

@@ -1,11 +1,7 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { isTopWindow, whenTopWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
-import {
-  type BoxLines,
-  type BoxRect,
-  getBoxModel,
-} from '../inspector/getBoxModel';
+import { type BoxLines, type BoxRect, getBoxModel } from '../inspector/getBoxModel';
 import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 
 export const boxModelBridge = crossIframeBridge<[BoxRect, BoxLines]>({

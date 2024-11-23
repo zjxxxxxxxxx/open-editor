@@ -10,10 +10,8 @@ main();
 
 async function main() {
   try {
-    const {
-      playground = await selectPlayground(),
-      script = await selectScript(playground),
-    } = minimist(process.argv.slice(1));
+    const { playground = await selectPlayground(), script = await selectScript(playground) } =
+      minimist(process.argv.slice(1));
 
     consola.info(`Run ${playground}:${script}`);
     exec(`pnpm --filter @playground/${playground} ${script}`);
@@ -37,9 +35,7 @@ async function selectPlayground() {
 }
 
 async function selectScript(playground: string) {
-  const { scripts } = await import(
-    resolve('playground', playground, 'package.json')
-  );
+  const { scripts } = await import(resolve('playground', playground, 'package.json'));
   const { script } = await enquirer.prompt<{
     script: string;
   }>({

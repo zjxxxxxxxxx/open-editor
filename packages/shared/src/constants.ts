@@ -14,18 +14,12 @@ export const ENTRY_MATCH_RE = createMatchRE([
   VUE_3_ESM_PATH,
 ]);
 
-export const ENTRY_ESM_MATCH_RE = createMatchRE([
-  VUE_2_ESM_PATH,
-  VUE_3_ESM_PATH,
-]);
+export const ENTRY_ESM_MATCH_RE = createMatchRE([VUE_2_ESM_PATH, VUE_3_ESM_PATH]);
 
 export const CLIENT_MODULE_ID = '@open-editor/client';
 
 function normalizePath(path: string) {
-  return `/node_modules/${path.replace(/\./g, '\\.')}`.replace(
-    /\//g,
-    '[\\\\/]',
-  );
+  return `/node_modules/${path.replace(/\./g, '\\.')}`.replace(/\//g, '[\\\\/]');
 }
 
 function createMatchRE(paths: string[]) {

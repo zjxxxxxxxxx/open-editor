@@ -1,5 +1,5 @@
-import { join } from 'path';
-import { existsSync, readFileSync } from 'fs';
+import { join } from 'node:path';
+import { existsSync, readFileSync } from 'node:fs';
 import { type Plugin as RollupPlugin } from 'rollup';
 import { traverse, types as t, type Node } from '@babel/core';
 import { parse } from '@babel/parser';
