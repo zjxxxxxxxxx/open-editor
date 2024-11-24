@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "rollup -c -w --environment NODE_ENV:development"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "react": "^15.7.0",
     "react-dom": "^15.7.0"
