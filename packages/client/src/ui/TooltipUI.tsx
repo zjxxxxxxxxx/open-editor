@@ -1,6 +1,6 @@
 import { clamp } from '@open-editor/shared';
 import { mitt } from '../utils/mitt';
-import { getHtml, CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
+import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
 import { getDOMRect } from '../utils/getDOMRect';
 import { safeArea } from '../utils/safeArea';
 import { type BoxRect } from '../inspector/getBoxModel';
@@ -67,7 +67,7 @@ export function TooltipUI() {
       clientWidth: winW,
       // window height excluding the scrollbar height
       clientHeight: winH,
-    } = getHtml();
+    } = document.body;
     const { width: rootW, height: rootH } = getDOMRect(state.root);
 
     const onTopArea = rect.top > rootH + safeArea.top + OFFSET * 2;

@@ -1,30 +1,29 @@
-import { addClass, removeClass, getHtml, replaceChildren, applyStyle } from '../utils/dom';
+import { addClass, removeClass, replaceChildren, applyStyle } from '../utils/dom';
 import { inspectorState } from '../inspector/inspectorState';
 import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
-import { off, on } from '../event';
 
 export function TreeUI() {
+  const { once } = getOptions();
+
   const state = {} as {
     root: HTMLElement;
     overlay: HTMLElement;
     popup: HTMLElement;
     popupClose: HTMLElement;
     popupBody: HTMLElement;
-    clickable: boolean;
   };
 
   treeOpenBridge.on((source) => {
     inspectorState.isTreeOpen = true;
 
+    renderTree(source);
+
     applyStyle(state.root, {
       display: 'block',
     });
-    addClass(getHtml(), 'oe-lock-screen');
-
-    renderTree(source);
-    enableClick();
+    addClass(document.body, 'oe-lock-screen');
   });
 
   treeCloseBridge.on(() => {
@@ -33,7 +32,7 @@ export function TreeUI() {
     applyStyle(state.root, {
       display: 'none',
     });
-    removeClass(getHtml(), 'oe-lock-screen');
+    removeClass(document.body, 'oe-lock-screen');
   });
 
   function renderTree(source: CodeSource) {
@@ -69,13 +68,9 @@ export function TreeUI() {
         <div
           className="oe-tree-node"
           title="Click to open in your editor"
-          onClick={async () => {
-            if (state.clickable) {
-              const { once } = getOptions();
-              if (once) treeCloseBridge.emit();
-
-              openEditorBridge.emit([meta]);
-            }
+          onClick={() => {
+            if (once) treeCloseBridge.emit();
+            openEditorBridge.emit([meta]);
           }}
         >
           {tagName}
@@ -92,29 +87,11 @@ export function TreeUI() {
     );
   }
 
-  // Prevent the display of the component tree by long press, which accidentally triggers the click event
-  function enableClick() {
-    state.clickable = false;
-
-    const enable = () => {
-      state.clickable = true;
-      off('pointerdown', enable);
-    };
-
-    on('pointerdown', enable);
-  }
-
-  function exit() {
-    if (state.clickable) {
-      treeCloseBridge.emit();
-    }
-  }
-
   return (
     <div
       className="oe-tree"
       ref={(el) => (state.root = el)}
-      onClick={exit}
+      onClick={() => treeCloseBridge.emit()}
       onQuickExit={() => treeCloseBridge.emit()}
     >
       <div
@@ -122,7 +99,11 @@ export function TreeUI() {
         ref={(el) => (state.popup = el)}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="oe-tree-close" ref={(el) => (state.popupClose = el)} onClick={exit}>
+        <button
+          className="oe-tree-close"
+          ref={(el) => (state.popupClose = el)}
+          onClick={() => treeCloseBridge.emit()}
+        >
           <svg viewBox="0 0 1024 1024" width="100%" height="100%" fill="currentColor">
             <path d="M569.02728271 509.40447998L877.59753418 817.97473145 820.57025146 872.40649414 512 563.83624268 198.23870849 882.78857422 141.21142578 823.16577148l313.76129151-318.95233154L146.40246582 195.64318847 203.42974854 141.21142578 512 449.78167724 820.57025146 141.21142578 877.59753418 200.83422852 569.02728271 509.40447998z" />
           </svg>
