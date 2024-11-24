@@ -5,15 +5,6 @@ import { onMessage, postMessage } from '../utils/message';
 import { resolveSource, type CodeSource } from '../resolve';
 import { TREE_OPEN_CROSS_IFRAME } from '../constants';
 
-const preventEventOverlay = (
-  <div
-    className="oe-prevent-event-overlay"
-    onPointerMove={() => preventEventOverlay.remove()}
-    onPointerUp={() => preventEventOverlay.remove()}
-    onPointerCancel={() => preventEventOverlay.remove()}
-  />
-);
-
 export const treeOpenBridge = crossIframeBridge<[CodeSource]>({
   setup() {
     onMessage<[CodeSource]>(TREE_OPEN_CROSS_IFRAME, (args) => {
@@ -22,7 +13,16 @@ export const treeOpenBridge = crossIframeBridge<[CodeSource]>({
   },
   emitMiddlewares: [
     (_, next) => {
+      const preventEventOverlay = (
+        <div
+          className="oe-prevent-event-overlay"
+          onPointerMove={() => preventEventOverlay.remove()}
+          onPointerUp={() => preventEventOverlay.remove()}
+          onPointerCancel={() => preventEventOverlay.remove()}
+        />
+      );
       appendChild(document.body, preventEventOverlay);
+
       next();
     },
     ([source], next) => {
