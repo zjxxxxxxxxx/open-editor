@@ -6,6 +6,9 @@
     "build": "next build",
     "preview": "next start"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "next": "13.4.19",
     "react": "18.2.0",
