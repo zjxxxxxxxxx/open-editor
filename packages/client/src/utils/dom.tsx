@@ -1,9 +1,5 @@
 import { Fragment } from '../../jsx/jsx-runtime';
 
-export function getHtml() {
-  return document.documentElement;
-}
-
 export function applyAttrs(el: HTMLElement, attrs: AnyObject) {
   for (const prop of Object.keys(attrs)) {
     const val = attrs[prop];

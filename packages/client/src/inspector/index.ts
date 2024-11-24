@@ -1,4 +1,4 @@
-import { addClass, getHtml, removeClass } from '../utils/dom';
+import { addClass, removeClass } from '../utils/dom';
 import { on } from '../event';
 import { CURRENT_INSPECT_ID } from '../constants';
 import {
@@ -47,6 +47,6 @@ export function setupInspector() {
   inspectorEnableBridge.on(inspectorEnable);
   inspectorExitBridge.on(inspectorExit);
   openEditorBridge.on(openEditor);
-  openEditorStartBridge.on(() => addClass(getHtml(), 'oe-loading'));
-  openEditorEndBridge.on(() => removeClass(getHtml(), 'oe-loading'));
+  openEditorStartBridge.on(() => addClass(document.body, 'oe-loading'));
+  openEditorEndBridge.on(() => removeClass(document.body, 'oe-loading'));
 }

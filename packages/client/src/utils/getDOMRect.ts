@@ -1,5 +1,6 @@
+import { hasOwnProperty } from '@open-editor/shared';
 import { IS_CLIENT, IS_FIREFOX } from '../constants';
-import { computedStyle, getHtml } from './dom';
+import { computedStyle } from './dom';
 
 /**
  * In most browsers, the return value of [getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
@@ -9,7 +10,7 @@ import { computedStyle, getHtml } from './dom';
  */
 const IS_COMPUTED =
   IS_CLIENT &&
-  'zoom' in getHtml().style &&
+  hasOwnProperty(document.body.style, 'zoom') &&
   // Firefox does not need to calculate
   !IS_FIREFOX &&
   // Chromium version greater than 127 do not need to be calculated

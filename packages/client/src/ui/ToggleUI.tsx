@@ -1,5 +1,5 @@
 import { clamp } from '@open-editor/shared';
-import { getHtml, CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
+import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
 import { inspectorState } from '../inspector/inspectorState';
 import { off, on } from '../event';
@@ -10,7 +10,6 @@ export function ToggleUI() {
     root: HTMLElement;
     button: HTMLElement;
     dnding: boolean;
-    active: boolean;
     touchable: boolean;
   };
 
@@ -74,7 +73,7 @@ export function ToggleUI() {
   }
 
   function updatePosTop() {
-    const { clientHeight: winH } = getHtml();
+    const { clientHeight: winH } = document.body;
     const { offsetHeight: toggleH } = state.root;
 
     const cachePosY = +localStorage['oe-pt'] || 0;
