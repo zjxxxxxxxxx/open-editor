@@ -11,9 +11,9 @@ import { renderUI } from './renderUI';
 let cleanListeners: (() => void) | null = null;
 
 export async function inspectorEnable() {
-  const opts = getOptions();
-
   try {
+    const { disableHoverCSS: isDisableHoverCSS } = getOptions();
+
     inspectorState.isEnable = true;
     inspectorState.activeEl = getActiveElement();
 
@@ -26,11 +26,13 @@ export async function inspectorEnable() {
       onExitInspect: () => inspectorExitBridge.emit(),
     });
 
-    // Override the default mouse style and touch feedback
-    overrideStyle.mount();
-    if (opts.disableHoverCSS) {
+    if (isDisableHoverCSS) {
       await disableHoverCSS();
     }
+
+    // Override the default mouse style and touch feedback
+    overrideStyle.mount();
+
     // @ts-ignore
     document.activeElement?.blur();
   } catch {
@@ -39,9 +41,9 @@ export async function inspectorEnable() {
 }
 
 export async function inspectorExit() {
-  const opts = getOptions();
-
   try {
+    const { disableHoverCSS: isDisableHoverCSS } = getOptions();
+
     inspectorState.isEnable = false;
     inspectorState.isRendering = false;
     inspectorState.activeEl = null;
@@ -51,10 +53,14 @@ export async function inspectorExit() {
       cleanListeners = null;
     }
 
-    overrideStyle.unmount();
-    if (opts.disableHoverCSS) {
+    if (isDisableHoverCSS) {
       await enableHoverCSS();
     }
+
+    overrideStyle.unmount();
+
+    // @ts-ignore
+    document.activeElement?.blur();
   } catch {
     //
   }
