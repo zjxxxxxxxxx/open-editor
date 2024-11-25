@@ -3,16 +3,94 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "pnpm install"
+      "command": "pnpm install:ci"
     },
     {
       "name": "Build packages",
       "command": "pnpm build"
-    },
-    {
-      "name": "Create tasks",
-      "command": "pnpm tasks"
     }
   ],
-  "tasks": {}
+  "tasks": {
+    "rollup-react15": {
+      "name": "Preview @playground/rollup-react15",
+      "command": "pnpm --filter @playground/rollup-react15 dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 3001,
+        "prLink": "direct"
+      }
+    },
+    "rollup-vue2": {
+      "name": "Preview @playground/rollup-vue2",
+      "command": "pnpm --filter @playground/rollup-vue2 dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3002,
+        "prLink": "direct"
+      }
+    },
+    "vite-nuxt": {
+      "name": "Preview @playground/vite-nuxt",
+      "command": "pnpm --filter @playground/vite-nuxt dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3003,
+        "prLink": "direct"
+      }
+    },
+    "vite-react": {
+      "name": "Preview @playground/vite-react",
+      "command": "pnpm --filter @playground/vite-react dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3004,
+        "prLink": "direct"
+      }
+    },
+    "vite-vue": {
+      "name": "Preview @playground/vite-vue",
+      "command": "pnpm --filter @playground/vite-vue dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3005,
+        "prLink": "direct"
+      }
+    },
+    "webpack-nextjs": {
+      "name": "Preview @playground/webpack-nextjs",
+      "command": "pnpm --filter @playground/webpack-nextjs dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3006,
+        "prLink": "direct"
+      }
+    },
+    "webpack-nuxt": {
+      "name": "Preview @playground/webpack-nuxt",
+      "command": "pnpm --filter @playground/webpack-nuxt dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3007,
+        "prLink": "direct"
+      }
+    },
+    "webpack-react": {
+      "name": "Preview @playground/webpack-react",
+      "command": "pnpm --filter @playground/webpack-react dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3008,
+        "prLink": "direct"
+      }
+    },
+    "webpack-vue": {
+      "name": "Preview @playground/webpack-vue",
+      "command": "pnpm --filter @playground/webpack-vue dev",
+      "runAtStart": false,
+      "preview": {
+        "port": 3009,
+        "prLink": "direct"
+      }
+    }
+  }
 }
