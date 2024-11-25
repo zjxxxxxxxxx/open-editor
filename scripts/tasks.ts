@@ -10,8 +10,9 @@ const names = readdirSync(resolve('playground'));
 names.flatMap((name) => {
   const task = `@playground/${name}`;
   taskJson.tasks[name] = {
-    name: `Run ${task}`,
+    name: `Preview ${task}`,
     command: `pnpm --filter ${task} dev`,
   };
 });
+
 writejson(TASKS_PATH, taskJson);
