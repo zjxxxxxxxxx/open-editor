@@ -16,9 +16,8 @@ export const treeOpenBridge = crossIframeBridge<[CodeSource]>({
       const preventEventOverlay = (
         <div
           className="oe-prevent-event-overlay"
-          onPointerMove={() => preventEventOverlay.remove()}
           onPointerUp={() => preventEventOverlay.remove()}
-          onPointerCancel={() => preventEventOverlay.remove()}
+          onPointerOut={() => preventEventOverlay.remove()}
         />
       );
       appendChild(document.body, preventEventOverlay);
