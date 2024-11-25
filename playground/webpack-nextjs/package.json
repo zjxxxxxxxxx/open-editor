@@ -2,7 +2,7 @@
   "private": true,
   "name": "@playground/webpack-nextjs",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 4005",
     "build": "next build",
     "preview": "next start"
   },

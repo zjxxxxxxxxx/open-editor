@@ -20,4 +20,7 @@ export default defineNuxtConfig({
   webpack: {
     plugins: [new OpenEditorWebpackPlugin(), VueSource()],
   },
+  devServer: {
+    port: 4006,
+  },
 });
