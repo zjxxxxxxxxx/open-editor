@@ -8,11 +8,12 @@ const taskJson = readjson(TASKS_PATH);
 const names = readdirSync(resolve('playground'));
 
 let port = 3000;
-names.flatMap((name) => {
+names.flatMap((name, index) => {
   const task = `@playground/${name}`;
   taskJson.tasks[name] = {
     name: `Run ${task}`,
     command: `pnpm --filter ${task} dev`,
+    runAtStart: index === 0,
     preview: {
       port: ++port,
       prLink: 'direct',
