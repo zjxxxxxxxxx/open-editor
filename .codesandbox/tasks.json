@@ -3,16 +3,49 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "pnpm install"
+      "command": "pnpm install:ci"
     },
     {
       "name": "Build packages",
       "command": "pnpm build"
-    },
-    {
-      "name": "Create tasks",
-      "command": "pnpm tasks"
     }
   ],
-  "tasks": {}
+  "tasks": {
+    "rollup-react15": {
+      "name": "Preview @playground/rollup-react15",
+      "command": "pnpm --filter @playground/rollup-react15 dev"
+    },
+    "rollup-vue2": {
+      "name": "Preview @playground/rollup-vue2",
+      "command": "pnpm --filter @playground/rollup-vue2 dev"
+    },
+    "vite-nuxt": {
+      "name": "Preview @playground/vite-nuxt",
+      "command": "pnpm --filter @playground/vite-nuxt dev"
+    },
+    "vite-react": {
+      "name": "Preview @playground/vite-react",
+      "command": "pnpm --filter @playground/vite-react dev"
+    },
+    "vite-vue": {
+      "name": "Preview @playground/vite-vue",
+      "command": "pnpm --filter @playground/vite-vue dev"
+    },
+    "webpack-nextjs": {
+      "name": "Preview @playground/webpack-nextjs",
+      "command": "pnpm --filter @playground/webpack-nextjs dev"
+    },
+    "webpack-nuxt": {
+      "name": "Preview @playground/webpack-nuxt",
+      "command": "pnpm --filter @playground/webpack-nuxt dev"
+    },
+    "webpack-react": {
+      "name": "Preview @playground/webpack-react",
+      "command": "pnpm --filter @playground/webpack-react dev"
+    },
+    "webpack-vue": {
+      "name": "Preview @playground/webpack-vue",
+      "command": "pnpm --filter @playground/webpack-vue dev"
+    }
+  }
 }
