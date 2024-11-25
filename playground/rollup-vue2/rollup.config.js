@@ -9,16 +9,7 @@ import vue from 'rollup-plugin-vue';
 import OpenEditor from '@open-editor/rollup';
 import { liveServer } from 'rollup-plugin-live-server';
 
-const extensions = [
-  '.js',
-  '.jsx',
-  '.ts',
-  '.tsx',
-  '.mjs',
-  '.cjs',
-  '.vue',
-  '.json',
-];
+const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.vue', '.json'];
 
 export default {
   input: 'src/main.ts',
@@ -48,7 +39,7 @@ export default {
     image(),
     OpenEditor(),
     liveServer({
-      port: 3000,
+      port: 4001,
       wait: 1000,
     }),
   ],

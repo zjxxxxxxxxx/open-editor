@@ -8,6 +8,6 @@ export default defineConfig({
   plugins: [VueSource(), vue(), OpenEditor()],
   server: {
     host: '0.0.0.0',
-    port: 3000,
+    port: 4004,
   },
 });

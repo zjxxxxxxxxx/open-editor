@@ -50,7 +50,7 @@ export default {
     }),
     OpenEditor(),
     liveServer({
-      port: 3000,
+      port: 4000,
       wait: 1000,
     }),
   ],

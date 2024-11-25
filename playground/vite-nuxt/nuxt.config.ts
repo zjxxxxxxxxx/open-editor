@@ -19,4 +19,7 @@ export default defineNuxtConfig({
   vite: {
     plugins: [OpenEditor(), VueSource()],
   },
+  devServer: {
+    port: 4002,
+  },
 });
