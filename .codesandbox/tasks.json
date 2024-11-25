@@ -8,11 +8,80 @@
     {
       "name": "Build packages",
       "command": "pnpm build"
-    },
-    {
-      "name": "Create tasks",
-      "command": "pnpm tasks"
     }
   ],
-  "tasks": {}
+  "tasks": {
+    "rollup-react15": {
+      "name": "Run @playground/rollup-react15",
+      "command": "pnpm --filter @playground/rollup-react15 dev",
+      "preview": {
+        "port": 3001,
+        "prLink": "direct"
+      }
+    },
+    "rollup-vue2": {
+      "name": "Run @playground/rollup-vue2",
+      "command": "pnpm --filter @playground/rollup-vue2 dev",
+      "preview": {
+        "port": 3002,
+        "prLink": "direct"
+      }
+    },
+    "vite-nuxt": {
+      "name": "Run @playground/vite-nuxt",
+      "command": "pnpm --filter @playground/vite-nuxt dev",
+      "preview": {
+        "port": 3003,
+        "prLink": "direct"
+      }
+    },
+    "vite-react": {
+      "name": "Run @playground/vite-react",
+      "command": "pnpm --filter @playground/vite-react dev",
+      "preview": {
+        "port": 3004,
+        "prLink": "direct"
+      }
+    },
+    "vite-vue": {
+      "name": "Run @playground/vite-vue",
+      "command": "pnpm --filter @playground/vite-vue dev",
+      "preview": {
+        "port": 3005,
+        "prLink": "direct"
+      }
+    },
+    "webpack-nextjs": {
+      "name": "Run @playground/webpack-nextjs",
+      "command": "pnpm --filter @playground/webpack-nextjs dev",
+      "preview": {
+        "port": 3006,
+        "prLink": "direct"
+      }
+    },
+    "webpack-nuxt": {
+      "name": "Run @playground/webpack-nuxt",
+      "command": "pnpm --filter @playground/webpack-nuxt dev",
+      "preview": {
+        "port": 3007,
+        "prLink": "direct"
+      }
+    },
+    "webpack-react": {
+      "name": "Run @playground/webpack-react",
+      "command": "pnpm --filter @playground/webpack-react dev",
+      "preview": {
+        "port": 3008,
+        "prLink": "direct"
+      }
+    },
+    "webpack-vue": {
+      "name": "Run @playground/webpack-vue",
+      "command": "pnpm --filter @playground/webpack-vue dev",
+      "preview": {
+        "port": 3009,
+        "prLink": "direct"
+      }
+    }
+  }
 }
