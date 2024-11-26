@@ -17,7 +17,10 @@ import { inspectorState } from './inspectorState';
 export function setupInspector() {
   effectStyle.mount();
 
-  on('mousemove', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
+  on('pointerdown', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
+    capture: true,
+  });
+  on('pointermove', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
     capture: true,
   });
 
