@@ -21,7 +21,8 @@
 
 不论您是一个`React`开发者， 还是一个`Vue`开发者，又或者是一个`React`、`Vue`双料开发者，这款开发工具都可以帮助到您。它能够帮您省去大量查找代码的时间，使您能够更加专心的编写代码。无论在`React`还是`Vue`中，它都能够达到完全相同的效果。
 
-![image](./public/demo.gif)
+[↓↓↓ 点击这里打开 StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
+[![image](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
 
 > 仅在 development 生效，需要 Node.js 版本 14+。
 
