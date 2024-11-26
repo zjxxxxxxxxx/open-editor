@@ -21,7 +21,8 @@
 
 Whether you are a `React` developer, a `Vue` developer, or a developer who uses both `React` and `Vue`, this development tool can help you. It can save you a lot of time searching for code and allow you to focus more on writing code. It can achieve the same effect in both `React` and `Vue`.
 
-![image](./public/demo.gif)
+[↓↓↓ Click here to open StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
+[![image](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
 
 > Valid only during development, requires Node.js version 14+.
 
