@@ -1,19 +1,9 @@
 {
   "$schema": "https://codesandbox.io/schemas/tasks.json",
-  "setupTasks": [
-    {
-      "name": "Install Dependencies",
-      "command": "pnpm install:ci"
-    },
-    {
-      "name": "Build packages",
-      "command": "pnpm build"
-    }
-  ],
   "tasks": {
     "rollup-react15": {
       "name": "Preview @playground/rollup-react15",
-      "command": "pnpm --filter @playground/rollup-react15 dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/rollup-react15 dev",
       "runAtStart": true,
       "preview": {
         "port": 4000,
@@ -22,7 +12,7 @@
     },
     "rollup-vue2": {
       "name": "Preview @playground/rollup-vue2",
-      "command": "pnpm --filter @playground/rollup-vue2 dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/rollup-vue2 dev",
       "runAtStart": true,
       "preview": {
         "port": 4001,
@@ -31,7 +21,7 @@
     },
     "vite-nuxt": {
       "name": "Preview @playground/vite-nuxt",
-      "command": "pnpm --filter @playground/vite-nuxt dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/vite-nuxt dev",
       "runAtStart": true,
       "preview": {
         "port": 4002,
@@ -40,7 +30,7 @@
     },
     "vite-react": {
       "name": "Preview @playground/vite-react",
-      "command": "pnpm --filter @playground/vite-react dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/vite-react dev",
       "runAtStart": true,
       "preview": {
         "port": 4003,
@@ -49,7 +39,7 @@
     },
     "vite-vue": {
       "name": "Preview @playground/vite-vue",
-      "command": "pnpm --filter @playground/vite-vue dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/vite-vue dev",
       "runAtStart": true,
       "preview": {
         "port": 4004,
@@ -58,7 +48,7 @@
     },
     "webpack-nextjs": {
       "name": "Preview @playground/webpack-nextjs",
-      "command": "pnpm --filter @playground/webpack-nextjs dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/webpack-nextjs dev",
       "runAtStart": true,
       "preview": {
         "port": 4005,
@@ -67,7 +57,7 @@
     },
     "webpack-nuxt": {
       "name": "Preview @playground/webpack-nuxt",
-      "command": "pnpm --filter @playground/webpack-nuxt dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/webpack-nuxt dev",
       "runAtStart": true,
       "preview": {
         "port": 4006,
@@ -76,7 +66,7 @@
     },
     "webpack-react": {
       "name": "Preview @playground/webpack-react",
-      "command": "pnpm --filter @playground/webpack-react dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/webpack-react dev",
       "runAtStart": true,
       "preview": {
         "port": 4007,
@@ -85,7 +75,7 @@
     },
     "webpack-vue": {
       "name": "Preview @playground/webpack-vue",
-      "command": "pnpm --filter @playground/webpack-vue dev",
+      "command": "pnpm install:ci & pnpm build && pnpm --filter @playground/webpack-vue dev",
       "runAtStart": true,
       "preview": {
         "port": 4008,
