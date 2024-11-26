@@ -21,27 +21,12 @@ export interface BoxRect extends BoxLine {
   height: number;
 }
 
-export const defaultBoxRect: BoxRect = {
-  width: 0,
-  height: 0,
-  top: 0,
-  right: 0,
-  left: 0,
-  bottom: 0,
-};
-
-export const defaultBoxLines: BoxLines = {
-  margin: defaultBoxRect,
-  border: defaultBoxRect,
-  padding: defaultBoxRect,
-};
-
 const IS_BORDER_WITH_ZOOM = !IS_FIREFOX;
 
 export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   // When an invalid element or invisible element is encountered, empty is returned.
   if (!checkValidElement(el) || !checkVisibility(el)) {
-    return [defaultBoxRect, defaultBoxLines];
+    return [getDefaultBoxRect(), getDefaultBoxLines()];
   }
 
   const {
@@ -114,4 +99,23 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
       },
     },
   ];
+}
+
+export function getDefaultBoxRect(): BoxRect {
+  return {
+    width: 0,
+    height: 0,
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  };
+}
+
+export function getDefaultBoxLines(): BoxLines {
+  return {
+    margin: getDefaultBoxRect(),
+    border: getDefaultBoxRect(),
+    padding: getDefaultBoxRect(),
+  };
 }
