@@ -1,5 +1,24 @@
 # @open-editor/client
 
+## 0.9.1
+
+### Patch Changes
+
+- [#272](https://github.com/zjxxxxxxxxx/open-editor/pull/272) [`8f188e8`](https://github.com/zjxxxxxxxxx/open-editor/commit/8f188e8f065229443d565d6badffca3c40dc043f) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix custom events
+
+- [#275](https://github.com/zjxxxxxxxxx/open-editor/pull/275) [`ae71a89`](https://github.com/zjxxxxxxxxx/open-editor/commit/ae71a89bcbde786f5693419d39bf488f98bf25af) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix click event penetration
+
+- [#288](https://github.com/zjxxxxxxxxx/open-editor/pull/288) [`7a7d147`](https://github.com/zjxxxxxxxxx/open-editor/commit/7a7d1473da10fad313a4b6d41223f4410a766e82) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix box model default value
+
+- [#266](https://github.com/zjxxxxxxxxx/open-editor/pull/266) [`730739e`](https://github.com/zjxxxxxxxxx/open-editor/commit/730739e0c293777b8de51f0cdd0e085f591a313c) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix activation status error
+
+- [#274](https://github.com/zjxxxxxxxxx/open-editor/pull/274) [`e986c1e`](https://github.com/zjxxxxxxxxx/open-editor/commit/e986c1e58e98f0e6861f5a4a0cddca7e2b7e7bb5) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Cross iframe is enabled by default
+
+- [#270](https://github.com/zjxxxxxxxxx/open-editor/pull/270) [`6740f1c`](https://github.com/zjxxxxxxxxx/open-editor/commit/6740f1c14488913747d7fc14b4f43a3a24d58402) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix active element rendering exception
+
+- Updated dependencies []:
+  - @open-editor/shared@0.9.1
+
 ## 0.9.0
 
 ### Minor Changes
