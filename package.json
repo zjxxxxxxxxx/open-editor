@@ -14,7 +14,7 @@
     "play": "pnpm start --script=dev",
     "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
-    "create-codesandbox-tasks": "esno scripts/create-codesandbox-tasks.ts",
+    "tasks": "esno scripts/create-codesandbox-tasks.ts",
     "postinstall": "simple-git-hooks",
     "release": "run-s build publish:ci",
     "test": "turbo run test",

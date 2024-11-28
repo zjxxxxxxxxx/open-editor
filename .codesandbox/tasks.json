@@ -11,7 +11,7 @@
     },
     {
       "name": "Create tasks",
-      "command": "pnpm create-codesandbox-tasks"
+      "command": "pnpm tasks"
     }
   ],
   "tasks": {}
