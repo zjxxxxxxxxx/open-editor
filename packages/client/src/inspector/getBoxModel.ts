@@ -26,7 +26,7 @@ const IS_BORDER_WITH_ZOOM = !IS_FIREFOX;
 export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   // When an invalid element or invisible element is encountered, empty is returned.
   if (!checkValidElement(el) || !checkVisibility(el)) {
-    return [getDefaultBoxRect(), getDefaultBoxLines()];
+    return getDefaultBoxModel();
   }
 
   const {
@@ -48,9 +48,9 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
 
   // Negative values will cause the position to shift and should be ignored.
   const marginTop = withZoom(Math.max(get('margin-top'), 0));
-  const marginLeft = withZoom(Math.max(get('margin-left'), 0));
   const marginRight = withZoom(Math.max(get('margin-right'), 0));
   const marginBottom = withZoom(Math.max(get('margin-bottom'), 0));
+  const marginLeft = withZoom(Math.max(get('margin-left'), 0));
 
   const borderTop = withZoom(get('border-top'), IS_BORDER_WITH_ZOOM);
   const borderRight = withZoom(get('border-right'), IS_BORDER_WITH_ZOOM);
@@ -70,52 +70,46 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   const positionHeight = height + marginTop + marginBottom;
 
   return [
+    createBoxRect(
+      positionWidth,
+      positionHeight,
+      positionTop,
+      positionRight,
+      positionBottom,
+      positionLeft,
+    ),
     {
-      width: positionWidth,
-      height: positionHeight,
-      top: positionTop,
-      right: positionRight,
-      bottom: positionBottom,
-      left: positionLeft,
-    },
-    {
-      margin: {
-        top: marginTop,
-        right: marginRight,
-        left: marginLeft,
-        bottom: marginBottom,
-      },
-      border: {
-        top: borderTop,
-        right: borderRight,
-        left: borderLeft,
-        bottom: borderBottom,
-      },
-      padding: {
-        top: paddingTop,
-        right: paddingRight,
-        left: paddingLeft,
-        bottom: paddingBottom,
-      },
+      margin: createBoxLine(marginTop, marginRight, marginBottom, marginLeft),
+      border: createBoxLine(borderTop, borderRight, borderBottom, borderLeft),
+      padding: createBoxLine(paddingTop, paddingRight, paddingBottom, paddingLeft),
     },
   ];
 }
 
-export function getDefaultBoxRect(): BoxRect {
+export function getDefaultBoxModel(): [BoxRect, BoxLines] {
+  return [
+    createBoxRect(),
+    {
+      margin: createBoxLine(),
+      border: createBoxLine(),
+      padding: createBoxLine(),
+    },
+  ];
+}
+
+function createBoxRect(width = 0, height = 0, top = 0, right = 0, bottom = 0, left = 0): BoxRect {
   return {
-    width: 0,
-    height: 0,
-    top: 0,
-    right: 0,
-    left: 0,
-    bottom: 0,
+    width,
+    height,
+    ...createBoxLine(top, right, bottom, left),
   };
 }
 
-export function getDefaultBoxLines(): BoxLines {
+function createBoxLine(top = 0, right = 0, bottom = 0, left = 0): BoxLine {
   return {
-    margin: getDefaultBoxRect(),
-    border: getDefaultBoxRect(),
-    padding: getDefaultBoxRect(),
+    top,
+    right,
+    bottom,
+    left,
   };
 }

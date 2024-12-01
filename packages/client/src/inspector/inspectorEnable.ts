@@ -1,6 +1,7 @@
 import { inspectorExitBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { resolveSource } from '../resolve';
+import { CURRENT_INSPECT_ID } from '../constants';
 import { setupListeners } from './setupListeners';
 import { disableHoverCSS, enableHoverCSS } from './disableHoverCSS';
 import { getActiveElement } from './getActiveElement';
@@ -21,7 +22,7 @@ export async function inspectorEnable() {
 
     cleanListeners = setupListeners({
       onActive: () => renderUI(),
-      onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
+      onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true), CURRENT_INSPECT_ID]),
       onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
       onExitInspect: () => inspectorExitBridge.emit(),
     });

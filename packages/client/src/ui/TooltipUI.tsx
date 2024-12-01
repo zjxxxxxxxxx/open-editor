@@ -62,12 +62,8 @@ export function TooltipUI() {
   }
 
   function updateRect(rect: BoxRect) {
-    const {
-      // window width excluding the scrollbar width
-      clientWidth: winW,
-      // window height excluding the scrollbar height
-      clientHeight: winH,
-    } = document.body;
+    // window (width|height) excluding the scrollbar (width|height)
+    const { clientWidth: winW, clientHeight: winH } = document.documentElement;
     const { width: rootW, height: rootH } = getDOMRect(state.root);
 
     const onTopArea = rect.top > rootH + safeArea.top + OFFSET * 2;

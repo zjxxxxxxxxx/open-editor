@@ -25,7 +25,7 @@
     "install:ci": "pnpm install --ignore-scripts"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=18"
   },
   "packageManager": "pnpm@9.0.0",
   "keywords": [

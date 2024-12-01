@@ -4,7 +4,7 @@ import consola from 'consola';
 import enquirer from 'enquirer';
 import minimist from 'minimist';
 
-import { exec } from './utils';
+import { exec, readjson } from './utils';
 
 main();
 
@@ -22,7 +22,7 @@ async function main() {
 }
 
 async function selectPlayground() {
-  const playgrounds = readdirSync(resolve('playground'));
+  const playgrounds = readdirSync(resolve('playgrounds'));
   const { playground } = await enquirer.prompt<{
     playground: string;
   }>({
@@ -35,7 +35,7 @@ async function selectPlayground() {
 }
 
 async function selectScript(playground: string) {
-  const { scripts } = await import(resolve('playground', playground, 'package.json'));
+  const { scripts } = readjson(resolve('playgrounds', playground, 'package.json'));
   const { script } = await enquirer.prompt<{
     script: string;
   }>({

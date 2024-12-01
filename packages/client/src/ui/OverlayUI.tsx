@@ -1,10 +1,5 @@
 import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
-import {
-  type BoxLines,
-  type BoxRect,
-  getDefaultBoxLines,
-  getDefaultBoxRect,
-} from '../inspector/getBoxModel';
+import { type BoxLines, type BoxRect, getDefaultBoxModel } from '../inspector/getBoxModel';
 import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../bridge';
 
 export function OverlayUI() {
@@ -21,7 +16,7 @@ export function OverlayUI() {
 
   inspectorExitBridge.on(() => {
     removeClass(state.position, 'oe-overlay-show');
-    updateBoxModel(getDefaultBoxRect(), getDefaultBoxLines());
+    updateBoxModel(...getDefaultBoxModel());
   });
 
   boxModelBridge.on(updateBoxModel);
