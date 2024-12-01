@@ -84,8 +84,8 @@ interface Options {
 
 ## Playgrounds
 
-| Source code                                                                                | Online trial                                                                                        |
-| ------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) |
-| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)     | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)   |
-| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)  |
+| Source code                                                                                 | Online trial                                                                                        |
+| ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react) | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-react) |
+| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-vue)     | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-vue)   |
+| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-nuxt)   | [StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playground/vite-nuxt)  |
