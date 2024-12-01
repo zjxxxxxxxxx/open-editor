@@ -4,34 +4,36 @@ import { appendChild } from '../utils/dom';
 import { onMessage, postMessage } from '../utils/message';
 import { getOptions } from '../options';
 import { resolveSource, type CodeSource } from '../resolve';
-import { TREE_OPEN_CROSS_IFRAME } from '../constants';
+import { CURRENT_INSPECT_ID, TREE_OPEN_CROSS_IFRAME } from '../constants';
 import { on, off } from '../event';
 
-export const treeOpenBridge = crossIframeBridge<[CodeSource]>({
+export const treeOpenBridge = crossIframeBridge<[CodeSource, string]>({
   setup() {
-    onMessage<[CodeSource]>(TREE_OPEN_CROSS_IFRAME, (args) => {
+    onMessage<[CodeSource, string]>(TREE_OPEN_CROSS_IFRAME, (args) => {
       treeOpenBridge.emit(args, isTopWindow);
     });
   },
   emitMiddlewares: [
-    (_, next) => {
-      const { once } = getOptions();
+    ([, activeId], next) => {
+      if (activeId === CURRENT_INSPECT_ID) {
+        const { once } = getOptions();
 
-      const overlay = <div className="oe-prevent-event-overlay" />;
-      const eventOpts = {
-        target: once ? overlay : window,
-        capture: true,
-      };
+        const overlay = <div className="oe-prevent-event-overlay" />;
+        const eventOpts = {
+          target: once ? overlay : window,
+          capture: true,
+        };
 
-      const remove = () => {
-        off('pointerup', remove, eventOpts);
-        off('pointerout', remove, eventOpts);
-        overlay.remove();
-      };
-      on('pointerup', remove, eventOpts);
-      on('pointerout', remove, eventOpts);
+        const remove = () => {
+          off('pointerup', remove, eventOpts);
+          off('pointerout', remove, eventOpts);
+          overlay.remove();
+        };
+        on('pointerup', remove, eventOpts);
+        on('pointerout', remove, eventOpts);
 
-      appendChild(document.body, overlay);
+        appendChild(document.body, overlay);
+      }
 
       next();
     },
