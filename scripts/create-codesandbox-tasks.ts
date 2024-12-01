@@ -5,7 +5,7 @@ import { readjson, writejson } from './utils';
 const TASKS_PATH = resolve('.codesandbox/tasks.json');
 
 const taskJson = readjson(TASKS_PATH);
-const names = readdirSync(resolve('playground'));
+const names = readdirSync(resolve('playgrounds'));
 
 let port = 4000;
 names.flatMap((name) => {
@@ -13,10 +13,10 @@ names.flatMap((name) => {
   taskJson.tasks[name] = {
     name: `Preview ${task}`,
     command: `pnpm --filter ${task} dev`,
-    runAtStart: false,
+    runAtStart: true,
     preview: {
       port: port++,
-      prLink: 'devtool',
+      prLink: 'direct',
     },
   };
 });
