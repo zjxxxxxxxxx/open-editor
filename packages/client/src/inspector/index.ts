@@ -23,7 +23,6 @@ export function setupInspector() {
   on('pointermove', () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]), {
     capture: true,
   });
-
   on(
     'keydown',
     (e) => {

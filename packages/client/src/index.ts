@@ -8,7 +8,9 @@ import { setupUI } from './ui';
 export { Options };
 
 export function setupClient(opts: Options) {
-  if (IS_CLIENT) {
+  if (IS_CLIENT && !window.__OPEN_EDITOR_SETUPED__) {
+    window.__OPEN_EDITOR_SETUPED__ = true;
+
     on('DOMContentLoaded', () => {
       setOptions(opts);
       setupBridge();
