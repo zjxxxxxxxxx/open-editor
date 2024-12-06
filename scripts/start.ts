@@ -1,10 +1,17 @@
 import { resolve } from 'node:path';
-import { readdirSync } from 'node:fs';
 import consola from 'consola';
 import enquirer from 'enquirer';
 import minimist from 'minimist';
 
-import { exec, readjson } from './utils';
+import {
+  exec,
+  playgrounds,
+  projectRoot,
+  readjson,
+  rollupRoot,
+  viteRoot,
+  webpackRoot,
+} from './utils';
 
 main();
 
@@ -12,6 +19,24 @@ async function main() {
   try {
     const { playground = await selectPlayground(), script = await selectScript(playground) } =
       minimist(process.argv.slice(1));
+
+    let packagePath: string;
+    if (playground.includes('rollup')) {
+      packagePath = rollupRoot;
+    } else if (playground.includes('vite')) {
+      packagePath = viteRoot;
+    } else {
+      packagePath = webpackRoot;
+    }
+
+    consola.info(`Link ${packagePath}`);
+    exec(
+      [
+        `cd ${resolve(projectRoot, `playgrounds/${playground}`)}`,
+        `pnpm link ${packagePath}`,
+        `cd ${projectRoot}`,
+      ].join(' && '),
+    );
 
     consola.info(`Run ${playground}:${script}`);
     exec(`pnpm --filter @playground/${playground} ${script}`);
@@ -22,7 +47,6 @@ async function main() {
 }
 
 async function selectPlayground() {
-  const playgrounds = readdirSync(resolve('playgrounds'));
   const { playground } = await enquirer.prompt<{
     playground: string;
   }>({

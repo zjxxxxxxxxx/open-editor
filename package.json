@@ -2,7 +2,8 @@
   "private": true,
   "name": "@open-editor/monorepo",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "playgrounds/*"
   ],
   "type": "module",
   "description": "🚀 A web devtools for fast find source code.",

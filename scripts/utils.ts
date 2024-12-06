@@ -1,6 +1,6 @@
 import { isPromise } from 'node:util/types';
 import { ExecSyncOptions, execSync } from 'node:child_process';
-import { PathOrFileDescriptor, readFileSync, writeFileSync } from 'node:fs';
+import { PathOrFileDescriptor, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath, URL } from 'node:url';
 import { resolve } from 'node:path';
 
@@ -10,6 +10,14 @@ export const projectRoot = joinURLToPath(import.meta.url, '../');
 export const clientRoot = resolve(projectRoot, 'packages/client');
 // Package shared root
 export const sharedRoot = resolve(projectRoot, 'packages/shared');
+// Package rollup root
+export const rollupRoot = resolve(projectRoot, 'packages/rollup');
+// Package vite root
+export const viteRoot = resolve(projectRoot, 'packages/vite');
+// Package webpack root
+export const webpackRoot = resolve(projectRoot, 'packages/webpack');
+
+export const playgrounds = readdirSync(resolve(projectRoot, 'playgrounds'));
 
 export function joinURLToPath(url: string, relative: string) {
   return fileURLToPath(new URL(relative, url));
