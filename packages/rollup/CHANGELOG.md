@@ -1,5 +1,14 @@
 # @open-editor/rollup
 
+## 0.9.2
+
+### Patch Changes
+
+- Updated dependencies [[`59d33af`](https://github.com/zjxxxxxxxxx/open-editor/commit/59d33afc2960ec8aa3c08d56dfce52ae4aeb9577), [`af47d57`](https://github.com/zjxxxxxxxxx/open-editor/commit/af47d57f327353f3b0d4cd6b82fe8bf0640d99d8)]:
+  - @open-editor/client@0.9.2
+  - @open-editor/server@0.9.2
+  - @open-editor/shared@0.9.2
+
 ## 0.9.1
 
 ### Patch Changes
