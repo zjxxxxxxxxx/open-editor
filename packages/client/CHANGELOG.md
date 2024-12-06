@@ -1,5 +1,16 @@
 # @open-editor/client
 
+## 0.9.2
+
+### Patch Changes
+
+- [#291](https://github.com/zjxxxxxxxxx/open-editor/pull/291) [`59d33af`](https://github.com/zjxxxxxxxxx/open-editor/commit/59d33afc2960ec8aa3c08d56dfce52ae4aeb9577) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix event mask layer event not triggered
+
+- [#293](https://github.com/zjxxxxxxxxx/open-editor/pull/293) [`af47d57`](https://github.com/zjxxxxxxxxx/open-editor/commit/af47d57f327353f3b0d4cd6b82fe8bf0640d99d8) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix prevent event overlay compatibility with once option
+
+- Updated dependencies []:
+  - @open-editor/shared@0.9.2
+
 ## 0.9.1
 
 ### Patch Changes

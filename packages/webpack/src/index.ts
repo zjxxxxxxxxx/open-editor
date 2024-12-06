@@ -82,7 +82,7 @@ const portPromiseCache: AnyObject<Promise<number>> = {};
  * development only
  */
 export default class OpenEditorPlugin {
-  private declare options: Options & { port?: number };
+  declare private options: Options & { port?: number };
 
   constructor(options: Options = {}) {
     const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } = options;
