@@ -6,13 +6,23 @@
       "command": "pnpm install:ci"
     },
     {
-      "name": "Build packages",
+      "name": "Build Packages",
       "command": "pnpm build"
     },
     {
-      "name": "Create tasks",
+      "name": "Create Tasks",
       "command": "pnpm tasks"
     }
   ],
-  "tasks": {}
+  "tasks": {
+    "vite-react": {
+      "name": "Preview vite-react",
+      "command": "pnpm --filter @playground/vite-react dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4003,
+        "prLink": "direct"
+      }
+    }
+  }
 }

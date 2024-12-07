@@ -2,12 +2,15 @@ import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { isTopWindow, whenTopWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
 import { type BoxLines, type BoxRect, getBoxModel } from '../inspector/getBoxModel';
+import { inspectorState } from '../inspector/inspectorState';
 import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 
 export const boxModelBridge = crossIframeBridge<[BoxRect, BoxLines]>({
   setup() {
     onMessage<[BoxRect, BoxLines]>(BOX_MODEL_CROSS_IFRAME, (args) => {
-      boxModelBridge.emit(args, isTopWindow);
+      if (inspectorState.isEnable) {
+        boxModelBridge.emit(args, isTopWindow);
+      }
     });
   },
   emitMiddlewares: [
