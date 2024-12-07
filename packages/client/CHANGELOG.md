@@ -1,5 +1,14 @@
 # @open-editor/client
 
+## 0.9.3
+
+### Patch Changes
+
+- [#300](https://github.com/zjxxxxxxxxx/open-editor/pull/300) [`31ddb51`](https://github.com/zjxxxxxxxxx/open-editor/commit/31ddb51848a6603ac832e8a84b86769fdd8c7caa) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix for non-enabled state triggering rendering
+
+- Updated dependencies []:
+  - @open-editor/shared@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes
