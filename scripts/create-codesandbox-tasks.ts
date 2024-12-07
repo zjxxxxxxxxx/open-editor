@@ -10,10 +10,9 @@ function main() {
 
   let port = 4000;
   playgrounds.forEach((name) => {
-    const task = `@playground/${name}`;
     taskJson.tasks[name] = {
-      name: `Preview ${task}`,
-      command: `pnpm --filter ${task} dev`,
+      name: `Preview ${name}`,
+      command: `pnpm --filter @playground/${name} dev`,
       runAtStart: true,
       preview: {
         port: port++,
