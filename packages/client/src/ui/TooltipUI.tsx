@@ -13,7 +13,8 @@ import {
 } from '../bridge';
 
 export function TooltipUI() {
-  const OFFSET = 6;
+  const RENDER_RESERVE_SIZE = 4;
+
   const state = {} as {
     root: HTMLElement;
     tag: HTMLElement;
@@ -48,7 +49,7 @@ export function TooltipUI() {
     // before hidden
     applyStyle(state.root, {
       visibility: 'hidden',
-      transform: CSS_util.translate(OFFSET, OFFSET),
+      transform: CSS_util.translate(RENDER_RESERVE_SIZE, RENDER_RESERVE_SIZE),
     });
 
     if (source?.meta) {
@@ -66,17 +67,21 @@ export function TooltipUI() {
     const { clientWidth: winW, clientHeight: winH } = document.documentElement;
     const { width: rootW, height: rootH } = getDOMRect(state.root);
 
-    const onTopArea = rect.top > rootH + safeArea.top + OFFSET * 2;
-    const top = clamp(
-      onTopArea ? rect.top - rootH - OFFSET : rect.bottom + OFFSET,
-      safeArea.top + OFFSET,
-      winH - rootH - safeArea.bottom - OFFSET,
-    );
-    const left = clamp(rect.left, safeArea.left + OFFSET, winW - rootW - safeArea.right - OFFSET);
+    const minRenderX = safeArea.left + RENDER_RESERVE_SIZE;
+    const maxRenderX = winW - rootW - safeArea.right - RENDER_RESERVE_SIZE;
+    const renderX = clamp(rect.left, minRenderX, maxRenderX);
+
+    const minAvailableY = rootH + safeArea.top + RENDER_RESERVE_SIZE * 2;
+    const isRenderOnTop = rect.top > minAvailableY;
+    const renderOnTopY = rect.top - rootH - RENDER_RESERVE_SIZE;
+    const renderOnBottomY = rect.bottom + RENDER_RESERVE_SIZE;
+    const minRenderY = safeArea.top + RENDER_RESERVE_SIZE;
+    const maxRenderY = winH - rootH - safeArea.bottom - RENDER_RESERVE_SIZE;
+    const renderY = clamp(isRenderOnTop ? renderOnTopY : renderOnBottomY, minRenderY, maxRenderY);
 
     applyStyle(state.root, {
       visibility: 'visible',
-      transform: CSS_util.translate(left, top),
+      transform: CSS_util.translate(renderX, renderY),
     });
   }
 

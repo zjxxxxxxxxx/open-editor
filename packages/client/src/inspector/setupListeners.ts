@@ -162,12 +162,14 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   function onActiveElement(e: PointerEvent) {
-    const el = <HTMLElement>(
-      (e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target)
-    );
-    if (el !== inspectorState.activeEl) {
-      inspectorState.activeEl = checkValidElement(el) ? el : null;
-      onActive();
+    if (inspectorState.isEnable && !inspectorState.isTreeOpen) {
+      const el = <HTMLElement>(
+        (e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target)
+      );
+      if (el !== inspectorState.activeEl) {
+        inspectorState.activeEl = checkValidElement(el) ? el : null;
+        onActive();
+      }
     }
   }
 

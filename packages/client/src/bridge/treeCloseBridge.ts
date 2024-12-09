@@ -1,19 +1,23 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
-import { topWindow, whenTopWindow } from '../utils/topWindow';
-import { onMessage, postMessage } from '../utils/message';
+import { isTopWindow, topWindow } from '../utils/topWindow';
+import { onMessage, postMessage, postMessageAll } from '../utils/message';
+import { preventEventOverlay } from '../utils/preventEventOverlay';
 import { TREE_CLOSE_CROSS_IFRAME } from '../constants';
 
-export const treeCloseBridge = crossIframeBridge({
+export const treeCloseBridge = crossIframeBridge<[boolean?]>({
   setup() {
-    onMessage(TREE_CLOSE_CROSS_IFRAME, (args) => {
-      treeCloseBridge.emit(args, true);
+    onMessage<[boolean?]>(TREE_CLOSE_CROSS_IFRAME, (args) => {
+      const isFormTopWindow = (args[0] ||= isTopWindow);
+      if (isFormTopWindow) {
+        postMessageAll(TREE_CLOSE_CROSS_IFRAME, args);
+        preventEventOverlay.unmount();
+      }
+      treeCloseBridge.emit(args, isFormTopWindow);
     });
   },
   emitMiddlewares: [
-    (args, next) => {
-      whenTopWindow(next, () => {
-        postMessage(TREE_CLOSE_CROSS_IFRAME, args, topWindow);
-      });
+    (args) => {
+      postMessage(TREE_CLOSE_CROSS_IFRAME, args, topWindow);
     },
   ],
 });

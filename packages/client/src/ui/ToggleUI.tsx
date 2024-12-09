@@ -25,15 +25,12 @@ export function ToggleUI() {
     });
   });
 
-  on('resize', updatePosTop);
-  on('resize', updateSize);
-
   function startDnD() {
     state.dnding = true;
 
     addClass(state.root, 'oe-toggle-dnd');
 
-    on('pointermove', changePosTop);
+    on('pointermove', changePosition);
     on('pointerup', stopDnD);
   }
 
@@ -43,13 +40,13 @@ export function ToggleUI() {
 
     removeClass(state.root, 'oe-toggle-dnd');
 
-    off('pointermove', changePosTop);
+    off('pointermove', changePosition);
     off('pointerup', stopDnD);
   }
 
-  function changePosTop(e: PointerEvent) {
+  function changePosition(e: PointerEvent) {
     localStorage['oe-pt'] = e.clientY;
-    updatePosTop();
+    updatePosition();
   }
 
   function updateSize() {
@@ -66,21 +63,18 @@ export function ToggleUI() {
     }
   }
 
-  function updatePosRight() {
-    applyStyle(state.root, {
-      right: CSS_util.px(safeArea.right),
-    });
-  }
-
-  function updatePosTop() {
-    const { clientHeight: winH } = document.body;
+  function updatePosition() {
+    const { innerHeight: winH } = window;
     const { offsetHeight: toggleH } = state.root;
 
-    const cachePosY = +localStorage['oe-pt'] || 0;
-    const safePosY = clamp(cachePosY - toggleH / 2, safeArea.top, winH - toggleH - safeArea.bottom);
+    const cacheY = +localStorage['oe-pt'] || 0;
+    const minRenderY = safeArea.top;
+    const maxRenderY = winH - toggleH - safeArea.bottom;
+    const renderY = clamp(cacheY - toggleH / 2, minRenderY, maxRenderY);
 
     applyStyle(state.root, {
-      top: CSS_util.px(safePosY),
+      top: CSS_util.px(renderY),
+      right: CSS_util.px(safeArea.right),
     });
   }
 
@@ -100,11 +94,9 @@ export function ToggleUI() {
       <div
         className="oe-toggle"
         ref={(el) => (state.root = el)}
-        // Prevent screen scrolling caused by dragging buttons
-        // in Firefox browser
+        // Prevent screen scrolling caused by dragging buttons in Firefox browser
         onTouchMove={(e) => e.preventDefault()}
-        // Prevent the default behavior of contextmenu triggered
-        // by long pressing the screen on mobile devices
+        // Prevent the default behavior of contextmenu triggered by long pressing the screen on mobile devices
         onContextMenu={(e) => e.preventDefault()}
       >
         <div className="oe-toggle-overlay" />
@@ -122,8 +114,11 @@ export function ToggleUI() {
       </div>
     );
   } finally {
-    updatePosTop();
+    updatePosition();
+    safeAreaObserver.on(updatePosition);
+    on('resize', updatePosition);
+
     updateSize();
-    safeAreaObserver.on(updatePosRight);
+    on('resize', updateSize);
   }
 }

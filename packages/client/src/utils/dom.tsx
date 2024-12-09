@@ -55,8 +55,8 @@ export function checkVisibility(el: HTMLElement) {
   // }
 
   while (el) {
-    const get = computedStyle(el);
-    if (get('display', false) === 'none') {
+    const display = createStyleGetter(el)('display', false);
+    if (display === 'none') {
       return false;
     }
     el = el.parentElement!;
@@ -85,20 +85,20 @@ export function applyStyle(
   Object.assign(el.style, ...styles);
 }
 
-export function computedStyle(el: HTMLElement) {
+export function createStyleGetter(el: HTMLElement) {
   const style = getComputedStyle(el, null);
   // @ts-ignore
-  function get(property: string): number;
-  function get(property: string, toNumber: boolean): number | string;
-  function get(property: string, toNumber: true): number;
-  function get(property: string, toNumber: false): string;
-  function get(property: any, toNumber = true) {
+  function getStyle(property: string): number;
+  function getStyle(property: string, toNumber: boolean): number | string;
+  function getStyle(property: string, toNumber: true): number;
+  function getStyle(property: string, toNumber: false): string;
+  function getStyle(property: any, toNumber = true) {
     let value = style.getPropertyValue(property);
     // @ts-ignore
     if (toNumber) value = CSS_util.pv(value) || 0;
     return value;
   }
-  return get;
+  return getStyle;
 }
 
 export function addClass(el: HTMLElement, className: string) {

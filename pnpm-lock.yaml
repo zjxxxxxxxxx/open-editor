@@ -230,7 +230,7 @@ importers:
         version: 7.26.0(@babel/core@7.26.0)
       '@open-editor/rollup':
         specifier: latest
-        version: 0.9.1
+        version: link:../../packages/rollup
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.26.0)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -347,7 +347,7 @@ importers:
     devDependencies:
       '@open-editor/vite':
         specifier: latest
-        version: 0.9.1
+        version: link:../../packages/vite
       '@types/react':
         specifier: ^18.2.15
         version: 18.3.12
@@ -400,7 +400,7 @@ importers:
     devDependencies:
       '@open-editor/webpack':
         specifier: latest
-        version: 0.9.1
+        version: link:../../packages/webpack
       '@types/node':
         specifier: 20.5.6
         version: 20.5.6

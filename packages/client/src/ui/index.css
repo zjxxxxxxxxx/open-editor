@@ -2,13 +2,13 @@
   --text-color: #ffffff;
   --text-color2: #dddddd;
   --bg-color: #2c2c2e;
-  --bg-color-opt: #2c2c2ee6;
+  --bg-color-opt: #2c2c2eeb;
   --bg-color2: #6c6c6e;
   --cyan: #4df9fa;
   --red: #ff335c;
   --red-light: #ff335c33;
   --shadow: 0 0 1px var(--bg-color2);
-  --filter: blur(8px);
+  --filter: blur(10px);
 
   --overlay-margin: #f6b26ba8;
   --overlay-border: #ffe599a8;
@@ -188,7 +188,6 @@
   width: 100vw;
   height: 100vh;
   backdrop-filter: var(--filter);
-  touch-action: none;
 }
 .oe-tree-popup {
   position: fixed;
@@ -245,7 +244,7 @@
   max-width: var(--w);
   max-height: var(--h);
   white-space: nowrap;
-  overflow: auto;
+  overflow: scroll;
   scrollbar-width: none;
 }
 .oe-tree-content::-webkit-scrollbar {
@@ -253,6 +252,11 @@
 }
 .oe-tree-content > .oe-tree-tree {
   margin-left: -10px;
+}
+.oe-tree-content,
+.oe-tree-content * {
+  touch-action: manipulation;
+  -webkit-overflow-scrolling: touch;
 }
 .oe-tree-item {
   position: relative;

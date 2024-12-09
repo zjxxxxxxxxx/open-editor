@@ -1,4 +1,5 @@
 import { camelCase } from '@open-editor/shared';
+import { CURRENT_INSPECT_ID } from '../constants';
 import { resolveReact17 } from './resolveReact17';
 import { resolveReact15 } from './resolveReact15';
 import { resolveVue3 } from './resolveVue3';
@@ -12,6 +13,7 @@ export interface CodeSourceMeta {
   column: number;
 }
 export interface CodeSource {
+  id: string;
   el: string;
   meta?: CodeSourceMeta;
   tree: CodeSourceMeta[];
@@ -19,6 +21,7 @@ export interface CodeSource {
 
 export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
   const source: CodeSource = {
+    id: CURRENT_INSPECT_ID,
     el: el.localName,
     tree: [],
   };
