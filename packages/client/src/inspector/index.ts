@@ -5,11 +5,13 @@ import {
   inspectorActiveBridge,
   inspectorEnableBridge,
   inspectorExitBridge,
+  treeOpenBridge,
+  treeCloseBridge,
   openEditorBridge,
   openEditorStartBridge,
   openEditorEndBridge,
 } from '../bridge';
-import { effectStyle } from './globalStyles';
+import { effectStyle, overrideStyle } from './globalStyles';
 import { openEditor } from './openEditor';
 import { inspectorEnable, inspectorExit } from './inspectorEnable';
 import { inspectorState } from './inspectorState';
@@ -48,6 +50,18 @@ export function setupInspector() {
   });
   inspectorEnableBridge.on(inspectorEnable);
   inspectorExitBridge.on(inspectorExit);
+  treeOpenBridge.on(() => {
+    inspectorState.isTreeOpen = true;
+    if (!inspectorState.isEnable) {
+      overrideStyle.mount();
+    }
+  });
+  treeCloseBridge.on(() => {
+    inspectorState.isTreeOpen = false;
+    if (!inspectorState.isEnable) {
+      overrideStyle.unmount();
+    }
+  });
   openEditorBridge.on(openEditor);
   openEditorStartBridge.on(() => addClass(document.body, 'oe-loading'));
   openEditorEndBridge.on(() => removeClass(document.body, 'oe-loading'));

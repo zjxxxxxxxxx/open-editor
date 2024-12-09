@@ -1,5 +1,4 @@
 import { addClass, removeClass, replaceChildren, applyStyle } from '../utils/dom';
-import { inspectorState } from '../inspector/inspectorState';
 import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
@@ -16,8 +15,6 @@ export function TreeUI() {
   };
 
   treeOpenBridge.on((source) => {
-    inspectorState.isTreeOpen = true;
-
     renderTree(source);
 
     applyStyle(state.root, {
@@ -27,8 +24,6 @@ export function TreeUI() {
   });
 
   treeCloseBridge.on(() => {
-    inspectorState.isTreeOpen = false;
-
     applyStyle(state.root, {
       display: 'none',
     });

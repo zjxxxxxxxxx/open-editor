@@ -1,6 +1,6 @@
 import { hasOwnProperty } from '@open-editor/shared';
 import { IS_CLIENT, IS_FIREFOX } from '../constants';
-import { computedStyle } from './dom';
+import { createStyleGetter } from './dom';
 
 /**
  * In most browsers, the return value of [getBoundingClientRect](https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect)
@@ -36,7 +36,7 @@ function computedDOMRect(target: HTMLElement, domRect: DOMRect) {
 export function getCompositeZoom(target: HTMLElement) {
   let zoom = 1;
   while (target) {
-    zoom *= computedStyle(target)('zoom');
+    zoom *= createStyleGetter(target)('zoom');
     target = target.parentElement!;
   }
   return zoom;

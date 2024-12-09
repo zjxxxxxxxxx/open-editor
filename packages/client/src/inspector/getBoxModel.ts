@@ -1,4 +1,4 @@
-import { computedStyle, checkVisibility } from '../utils/dom';
+import { createStyleGetter, checkVisibility } from '../utils/dom';
 import { checkValidElement } from '../utils/checkElement';
 import { getDOMRect, getCompositeZoom } from '../utils/getDOMRect';
 import { IS_FIREFOX } from '../constants';
@@ -39,7 +39,7 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
     bottom,
     left,
   } = getDOMRect(el);
-  const get = computedStyle(el);
+  const getStyle = createStyleGetter(el);
 
   const zoom = getCompositeZoom(el);
   function withZoom(value: number, use = true) {
@@ -47,20 +47,20 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   }
 
   // Negative values will cause the position to shift and should be ignored.
-  const marginTop = withZoom(Math.max(get('margin-top'), 0));
-  const marginRight = withZoom(Math.max(get('margin-right'), 0));
-  const marginBottom = withZoom(Math.max(get('margin-bottom'), 0));
-  const marginLeft = withZoom(Math.max(get('margin-left'), 0));
+  const marginTop = withZoom(Math.max(getStyle('margin-top'), 0));
+  const marginRight = withZoom(Math.max(getStyle('margin-right'), 0));
+  const marginBottom = withZoom(Math.max(getStyle('margin-bottom'), 0));
+  const marginLeft = withZoom(Math.max(getStyle('margin-left'), 0));
 
-  const borderTop = withZoom(get('border-top'), IS_BORDER_WITH_ZOOM);
-  const borderRight = withZoom(get('border-right'), IS_BORDER_WITH_ZOOM);
-  const borderBottom = withZoom(get('border-bottom'), IS_BORDER_WITH_ZOOM);
-  const borderLeft = withZoom(get('border-left'), IS_BORDER_WITH_ZOOM);
+  const borderTop = withZoom(getStyle('border-top'), IS_BORDER_WITH_ZOOM);
+  const borderRight = withZoom(getStyle('border-right'), IS_BORDER_WITH_ZOOM);
+  const borderBottom = withZoom(getStyle('border-bottom'), IS_BORDER_WITH_ZOOM);
+  const borderLeft = withZoom(getStyle('border-left'), IS_BORDER_WITH_ZOOM);
 
-  const paddingTop = withZoom(get('padding-top'));
-  const paddingRight = withZoom(get('padding-right'));
-  const paddingBottom = withZoom(get('padding-bottom'));
-  const paddingLeft = withZoom(get('padding-left'));
+  const paddingTop = withZoom(getStyle('padding-top'));
+  const paddingRight = withZoom(getStyle('padding-right'));
+  const paddingBottom = withZoom(getStyle('padding-bottom'));
+  const paddingLeft = withZoom(getStyle('padding-left'));
 
   const positionTop = top - marginTop;
   const positionRight = right + marginRight;
