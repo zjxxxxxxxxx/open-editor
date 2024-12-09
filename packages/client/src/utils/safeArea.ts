@@ -1,15 +1,17 @@
 import { createGlobalStyle } from '../utils/createGlobalStyle';
 import { on } from '../event';
 import { IS_CLIENT } from '../constants';
-import { computedStyle } from './dom';
+import { createStyleGetter } from './dom';
 import { mitt } from './mitt';
 
-export interface SafeAreaValue {
+export interface SafeArea {
   top: number;
   right: number;
   bottom: number;
   left: number;
 }
+
+export const safeAreaObserver = mitt<[SafeArea]>();
 
 const safeAreaCSS = css`
   :root {
@@ -19,39 +21,30 @@ const safeAreaCSS = css`
     --oe-sail: env(safe-area-inset-left);
   }
 `;
-const safeAreaStyle = createGlobalStyle(safeAreaCSS);
 
-export let safeArea: SafeAreaValue;
+export let safeArea: SafeArea;
 
-export const safeAreaObserver = mitt<[SafeAreaValue]>();
-
-initSafeArea();
-
-function initSafeArea() {
-  if (IS_CLIENT) {
-    on('DOMContentLoaded', () => {
-      safeAreaStyle.mount();
-      on('resize', detectionScreen);
-      updateValue();
-    });
-  }
+if (IS_CLIENT) {
+  initValue();
 }
 
-let portrait: boolean;
-function detectionScreen() {
-  const { outerWidth: w, outerHeight: h } = window;
-  if (portrait !== (portrait = w < h)) {
+function initValue() {
+  on('DOMContentLoaded', () => {
+    createGlobalStyle(safeAreaCSS).mount();
     updateValue();
-    safeAreaObserver.emit(safeArea);
-  }
+    on('change', updateValue, {
+      target: matchMedia('(orientation: portrait)'),
+    });
+  });
 }
 
 function updateValue() {
-  const get = computedStyle(document.body);
+  const getStyle = createStyleGetter(document.body);
   safeArea = {
-    top: get('--oe-sait'),
-    right: get('--oe-sair'),
-    bottom: get('--oe-saib'),
-    left: get('--oe-sail'),
+    top: getStyle('--oe-sait'),
+    right: getStyle('--oe-sair'),
+    bottom: getStyle('--oe-saib'),
+    left: getStyle('--oe-sail'),
   };
+  safeAreaObserver.emit(safeArea);
 }
