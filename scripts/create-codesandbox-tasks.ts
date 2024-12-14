@@ -1,13 +1,12 @@
 import { resolve } from 'node:path';
 import { execSync } from 'node:child_process';
-import { playgrounds, readjson, writejson } from './utils';
-
-const TASKS_PATH = resolve('.codesandbox/tasks.json');
+import { playgrounds, projectRoot, readjson, writejson } from './utils';
 
 main();
 
 function main() {
-  const taskJson = readjson(TASKS_PATH);
+  const taskPath = resolve(projectRoot, '.codesandbox/tasks.json');
+  const taskJson = readjson(taskPath);
 
   let port = 4000;
   playgrounds.forEach((name) => {
@@ -22,14 +21,18 @@ function main() {
     };
   });
 
-  writejson(TASKS_PATH, taskJson);
+  writejson(taskPath, taskJson);
 
   saveChanges();
 }
 
 function saveChanges() {
-  execSync('git config user.email "954270063@qq.com"');
-  execSync('git config user.name "zjxxxxxxxxx"');
+  const [userName, userEmail] = readjson(resolve(projectRoot, 'package.json'))
+    .author.replace(/<|>/g, '')
+    .split(' ');
+
+  execSync(`git config user.name '${userName}'`);
+  execSync(`git config user.email '${userEmail}'`);
   execSync('git add .');
   execSync(`git commit -m 'save changes: ${Date.now()}'`);
 }
