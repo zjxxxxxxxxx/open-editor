@@ -24,6 +24,12 @@ function main() {
 
   writejson(TASKS_PATH, taskJson);
 
+  saveChanges();
+}
+
+function saveChanges() {
+  execSync('git config --global user.email "954270063@qq.com"');
+  execSync('git config --global user.name "zjxxxxxxxxx"');
   execSync('git add .');
-  execSync(`git commit -m 'Timestamp of temporary changes: ${Date.now()}'`);
+  execSync(`git commit -m 'save changes: ${Date.now()}'`);
 }
