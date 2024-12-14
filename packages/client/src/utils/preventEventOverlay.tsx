@@ -3,7 +3,7 @@ import { getOptions } from '../options';
 import { appendChild } from './dom';
 import { isTopWindow } from './topWindow';
 
-let unmount: () => void;
+let unmount: (() => void) | null = null;
 
 export const preventEventOverlay = {
   mount() {
@@ -16,15 +16,17 @@ export const preventEventOverlay = {
     };
 
     unmount = () => {
-      off('pointerdown', unmount, eventOpts);
-      off('pointerup', unmount, eventOpts);
-      off('pointerout', unmount, eventOpts);
+      off('pointerdown', unmount!, eventOpts);
+      off('pointerup', unmount!, eventOpts);
+      off('pointerout', unmount!, eventOpts);
 
       if (isTopWindow) {
-        off('pointermove', unmount, eventOpts);
+        off('pointermove', unmount!, eventOpts);
       }
 
       overlay.remove();
+
+      unmount = null;
     };
 
     on('pointerdown', unmount, eventOpts);

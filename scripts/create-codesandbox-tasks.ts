@@ -1,4 +1,5 @@
 import { resolve } from 'node:path';
+import { execSync } from 'node:child_process';
 import { playgrounds, readjson, writejson } from './utils';
 
 const TASKS_PATH = resolve('.codesandbox/tasks.json');
@@ -22,4 +23,7 @@ function main() {
   });
 
   writejson(TASKS_PATH, taskJson);
+
+  execSync('git add .');
+  execSync(`git commit -m 'Timestamp of temporary changes: ${Date.now()}'`);
 }
