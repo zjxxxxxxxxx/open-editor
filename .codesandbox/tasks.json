@@ -2,15 +2,15 @@
   "$schema": "https://codesandbox.io/schemas/tasks.json",
   "setupTasks": [
     {
-      "name": "Install Dependencies",
+      "name": "Install dependencies",
       "command": "pnpm install:ci"
     },
     {
-      "name": "Build Packages",
+      "name": "Build packages",
       "command": "pnpm build"
     },
     {
-      "name": "Create Tasks",
+      "name": "Create tasks",
       "command": "pnpm tasks"
     }
   ],

@@ -39,28 +39,22 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
     bottom,
     left,
   } = getDOMRect(el);
-  const getStyle = createStyleGetter(el);
+  const getStyle = createGetStyle(el);
 
-  const zoom = getCompositeZoom(el);
-  function withZoom(value: number, use = true) {
-    return use ? value * zoom : value;
-  }
+  const marginTop = getStyle('margin-top');
+  const marginRight = getStyle('margin-right');
+  const marginBottom = getStyle('margin-bottom');
+  const marginLeft = getStyle('margin-left');
 
-  // Negative values will cause the position to shift and should be ignored.
-  const marginTop = withZoom(Math.max(getStyle('margin-top'), 0));
-  const marginRight = withZoom(Math.max(getStyle('margin-right'), 0));
-  const marginBottom = withZoom(Math.max(getStyle('margin-bottom'), 0));
-  const marginLeft = withZoom(Math.max(getStyle('margin-left'), 0));
+  const borderTop = getStyle('border-top', IS_BORDER_WITH_ZOOM);
+  const borderRight = getStyle('border-right', IS_BORDER_WITH_ZOOM);
+  const borderBottom = getStyle('border-bottom', IS_BORDER_WITH_ZOOM);
+  const borderLeft = getStyle('border-left', IS_BORDER_WITH_ZOOM);
 
-  const borderTop = withZoom(getStyle('border-top'), IS_BORDER_WITH_ZOOM);
-  const borderRight = withZoom(getStyle('border-right'), IS_BORDER_WITH_ZOOM);
-  const borderBottom = withZoom(getStyle('border-bottom'), IS_BORDER_WITH_ZOOM);
-  const borderLeft = withZoom(getStyle('border-left'), IS_BORDER_WITH_ZOOM);
-
-  const paddingTop = withZoom(getStyle('padding-top'));
-  const paddingRight = withZoom(getStyle('padding-right'));
-  const paddingBottom = withZoom(getStyle('padding-bottom'));
-  const paddingLeft = withZoom(getStyle('padding-left'));
+  const paddingTop = getStyle('padding-top');
+  const paddingRight = getStyle('padding-right');
+  const paddingBottom = getStyle('padding-bottom');
+  const paddingLeft = getStyle('padding-left');
 
   const positionTop = top - marginTop;
   const positionRight = right + marginRight;
@@ -86,6 +80,16 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   ];
 }
 
+function createGetStyle(el: HTMLElement) {
+  const getStyle = createStyleGetter(el);
+  const zoom = getCompositeZoom(el);
+  return (prop: string, useZoom = true) => {
+    // Need to ensure [value >= 0].
+    const value = Math.max(getStyle(prop), 0);
+    return useZoom ? value * zoom : value;
+  };
+}
+
 export function getDefaultBoxModel(): [BoxRect, BoxLines] {
   return [
     createBoxRect(),
@@ -101,7 +105,10 @@ function createBoxRect(width = 0, height = 0, top = 0, right = 0, bottom = 0, le
   return {
     width,
     height,
-    ...createBoxLine(top, right, bottom, left),
+    top,
+    right,
+    bottom,
+    left,
   };
 }
 
