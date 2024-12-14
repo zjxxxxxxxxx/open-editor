@@ -23,6 +23,69 @@
         "port": 4003,
         "prLink": "direct"
       }
+    },
+    "rollup-react15": {
+      "name": "Preview rollup-react15",
+      "command": "pnpm --filter @playground/rollup-react15 dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4000,
+        "prLink": "direct"
+      }
+    },
+    "rollup-vue2": {
+      "name": "Preview rollup-vue2",
+      "command": "pnpm --filter @playground/rollup-vue2 dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4001,
+        "prLink": "direct"
+      }
+    },
+    "vite-nuxt": {
+      "name": "Preview vite-nuxt",
+      "command": "pnpm --filter @playground/vite-nuxt dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4002,
+        "prLink": "direct"
+      }
+    },
+    "vite-vue": {
+      "name": "Preview vite-vue",
+      "command": "pnpm --filter @playground/vite-vue dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4004,
+        "prLink": "direct"
+      }
+    },
+    "webpack-nextjs": {
+      "name": "Preview webpack-nextjs",
+      "command": "pnpm --filter @playground/webpack-nextjs dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4005,
+        "prLink": "direct"
+      }
+    },
+    "webpack-react": {
+      "name": "Preview webpack-react",
+      "command": "pnpm --filter @playground/webpack-react dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4006,
+        "prLink": "direct"
+      }
+    },
+    "webpack-vue": {
+      "name": "Preview webpack-vue",
+      "command": "pnpm --filter @playground/webpack-vue dev",
+      "runAtStart": true,
+      "preview": {
+        "port": 4007,
+        "prLink": "direct"
+      }
     }
   }
 }

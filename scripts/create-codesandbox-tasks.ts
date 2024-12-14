@@ -28,8 +28,8 @@ function main() {
 }
 
 function saveChanges() {
-  execSync('git config --global user.email "954270063@qq.com"');
-  execSync('git config --global user.name "zjxxxxxxxxx"');
+  execSync('git config user.email "954270063@qq.com"');
+  execSync('git config user.name "zjxxxxxxxxx"');
   execSync('git add .');
   execSync(`git commit -m 'save changes: ${Date.now()}'`);
 }
