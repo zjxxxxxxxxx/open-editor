@@ -4,9 +4,9 @@ import { onMessage, postMessage } from '../utils/message';
 import { type CodeSourceMeta } from '../resolve';
 import { OPEN_EDITOR_CROSS_IFRAME } from '../constants';
 
-export const openEditorBridge = crossIframeBridge<[CodeSourceMeta | undefined]>({
+export const openEditorBridge = crossIframeBridge<[CodeSourceMeta?]>({
   setup() {
-    onMessage<[CodeSourceMeta | undefined]>(OPEN_EDITOR_CROSS_IFRAME, (args) => {
+    onMessage<[CodeSourceMeta?]>(OPEN_EDITOR_CROSS_IFRAME, (args) => {
       openEditorBridge.emit(args, true);
     });
   },

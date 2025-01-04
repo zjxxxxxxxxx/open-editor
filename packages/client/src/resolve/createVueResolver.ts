@@ -1,7 +1,7 @@
 import { isStr, normalizePath } from '@open-editor/shared';
-import { type CodeSourceMeta } from './index';
 import { type ResolveDebug } from './resolveDebug';
 import { ensureFileName, isValidFileName } from './resolveUtil';
+import { type CodeSourceMeta } from '.';
 
 export interface VueResolverOptions<T = any> {
   isValid(v?: T): boolean;

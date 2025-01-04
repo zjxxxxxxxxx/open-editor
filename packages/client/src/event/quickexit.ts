@@ -1,9 +1,9 @@
-import { off, on } from './index';
 import {
   type SetupListenerListener,
   type SetupListenerListenerOptions,
   createCustomEventHandler,
 } from './create';
+import { off, on } from '.';
 
 export default createCustomEventHandler('quickexit', setupListener);
 

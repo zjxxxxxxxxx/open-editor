@@ -1,6 +1,6 @@
 export function mitt<Args extends unknown[] = []>() {
   const fns = new Set<(...args: Args) => void>();
-  const mitter = {
+  return {
     get isEmpty() {
       return fns.size === 0;
     },
@@ -8,18 +8,20 @@ export function mitt<Args extends unknown[] = []>() {
       fns.add(fn);
     },
     once(fn: (...args: Args) => void) {
-      const once = (...args: Args) => {
-        mitter.off(once);
+      const wrap = (...args: Args) => {
+        fns.delete(wrap);
         fn(...args);
       };
-      mitter.on(once);
+      fns.add(wrap);
     },
     off(fn: (...args: Args) => void) {
       fns.delete(fn);
+    },
+    clear() {
+      fns.clear();
     },
     emit(...args: Args) {
       fns.forEach((fn) => fn(...args));
     },
   };
-  return mitter;
 }

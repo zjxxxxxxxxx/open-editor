@@ -75,6 +75,7 @@ export function TooltipUI() {
     const isRenderOnTop = rect.top > minAvailableY;
     const renderOnTopY = rect.top - rootH - RENDER_RESERVE_SIZE;
     const renderOnBottomY = rect.bottom + RENDER_RESERVE_SIZE;
+
     const minRenderY = safeArea.top + RENDER_RESERVE_SIZE;
     const maxRenderY = winH - rootH - safeArea.bottom - RENDER_RESERVE_SIZE;
     const renderY = clamp(isRenderOnTop ? renderOnTopY : renderOnBottomY, minRenderY, maxRenderY);

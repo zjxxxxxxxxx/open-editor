@@ -7,6 +7,8 @@ let unmount: (() => void) | null = null;
 
 export const preventEventOverlay = {
   mount() {
+    if (unmount) return;
+
     const { once } = getOptions();
 
     const overlay = <div className="oe-prevent-event-overlay" />;

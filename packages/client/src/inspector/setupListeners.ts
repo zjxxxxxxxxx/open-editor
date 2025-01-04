@@ -237,11 +237,11 @@ export function setupListeners(opts: SetupListenersOptions) {
 }
 
 function withEventFn<T extends (...args: any[]) => any>(fn: T) {
-  function wrappedEventFn(...args: Parameters<T>): ReturnType<T> {
+  function wrapedEventFn(...args: Parameters<T>): ReturnType<T> {
     cleanClickedElementAttrs();
     return fn(...args);
   }
-  return wrappedEventFn;
+  return wrapedEventFn;
 }
 
 function onSilent(e: Event) {

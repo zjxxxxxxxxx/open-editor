@@ -1,4 +1,4 @@
-import { on, off } from './index';
+import { on, off } from '.';
 
 /******** CustomEvent ********/
 export type Target = HTMLElement | Window;
