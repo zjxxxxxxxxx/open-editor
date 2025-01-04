@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.9.3
+
+### Patch Changes
+
+- [#302](https://github.com/zjxxxxxxxxx/open-editor/pull/302) [`04f16de`](https://github.com/zjxxxxxxxxx/open-editor/commit/04f16dec84eed3e0d3072566bdc462ea33ad2886) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix mobile scrolling not working
+
+- [#300](https://github.com/zjxxxxxxxxx/open-editor/pull/300) [`31ddb51`](https://github.com/zjxxxxxxxxx/open-editor/commit/31ddb51848a6603ac832e8a84b86769fdd8c7caa) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Fix for non-enabled state triggering rendering
+
+- [#306](https://github.com/zjxxxxxxxxx/open-editor/pull/306) [`524cab4`](https://github.com/zjxxxxxxxxx/open-editor/commit/524cab45a3955f045412afa897fcee4014f23e5b) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - Add jsx mark
+
+- Updated dependencies []:
+  - @open-editor/shared@0.9.3
+
 ## 0.9.2
 
 ### Patch Changes
