@@ -1,7 +1,7 @@
 import { normalizePath } from '@open-editor/shared';
 import { type Source } from 'react-reconciler';
-import { type CodeSourceMeta } from './index';
 import { ensureFileName, isValidFileName } from './resolveUtil';
+import { type CodeSourceMeta } from '.';
 
 export interface ReactResolverOptions<T = any> {
   isValid(v?: T): boolean;

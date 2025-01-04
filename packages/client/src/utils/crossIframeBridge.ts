@@ -10,16 +10,19 @@ export function crossIframeBridge<Args extends unknown[] = []>(
   opts: CrossIframeBridgeOptions<Args> = {},
 ) {
   const { setup, emitMiddlewares } = opts;
-  const mitter = mitt<Args>();
+  const bridge = mitt<Args>();
 
-  let init = false;
+  let inited = false;
 
   return {
-    ...mitter,
+    ...bridge,
+    get isEmpty() {
+      return bridge.isEmpty;
+    },
     setup() {
       const { crossIframe } = getOptions();
-      if (crossIframe && !init) {
-        init = true;
+      if (crossIframe && !inited) {
+        inited = true;
         setup?.();
       }
     },
@@ -30,12 +33,12 @@ export function crossIframeBridge<Args extends unknown[] = []>(
 
       const { crossIframe } = getOptions();
       if (crossIframe && !immediate && emitMiddlewares?.length) {
-        const stack = [...emitMiddlewares, () => mitter.emit(...args!)];
+        const stack = [...emitMiddlewares, () => bridge.emit(...args!)];
         (function next() {
           stack.shift()!(args!, next);
         })();
       } else {
-        mitter.emit(...args!);
+        bridge.emit(...args!);
       }
     },
   };

@@ -1,9 +1,9 @@
-import { on, off } from './index';
 import {
   type SetupListenerListener,
   type SetupListenerListenerOptions,
   createCustomEventHandler,
 } from './create';
+import { on, off } from '.';
 
 export default createCustomEventHandler('rightclick', setupListener);
 
