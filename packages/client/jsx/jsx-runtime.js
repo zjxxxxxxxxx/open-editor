@@ -1,6 +1,7 @@
 import { on } from '../src/event';
 
 const FRAGMENT_TYPE = 'INTERNAL_VIRTUAL_FRAGMENT';
+const JSX_MARK = '__oe_jsx';
 
 const svgNS = 'http://www.w3.org/2000/svg';
 const svgTypes = {
@@ -15,11 +16,10 @@ function jsx(type, props) {
     return type(props);
   }
 
-  const el = svgTypes[type]
-    ? document.createElementNS(svgNS, type)
-    : document.createElement(type);
+  const el = svgTypes[type] ? document.createElementNS(svgNS, type) : document.createElement(type);
 
   if (type !== FRAGMENT_TYPE) {
+    el.setAttribute(JSX_MARK, '');
     if (className) el.className = className;
     if (style) Object.assign(el.style, style);
     for (const prop of Object.keys(attrs)) {
