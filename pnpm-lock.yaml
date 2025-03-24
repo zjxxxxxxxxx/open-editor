@@ -347,7 +347,7 @@ importers:
     devDependencies:
       '@open-editor/vite':
         specifier: latest
-        version: 0.9.2
+        version: link:../../packages/vite
       '@types/react':
         specifier: ^18.2.15
         version: 18.3.16

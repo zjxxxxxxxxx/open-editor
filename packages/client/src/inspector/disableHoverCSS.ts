@@ -1,3 +1,8 @@
+interface AsyncTask<T> extends Promise<T> {
+  resolve: (value: T | PromiseLike<T>) => void;
+  reject: (reason?: any) => void;
+}
+
 const DISABLE_RE = /:hover/g;
 const DISABLE_TOKEN = ':oe-disable-hover';
 
@@ -63,11 +68,6 @@ function visitCSS(visitor: (css: string) => string) {
 function replaceRule(sheet: CSSStyleSheet, text: string) {
   sheet.deleteRule(0);
   sheet.insertRule(text, sheet.cssRules.length);
-}
-
-interface AsyncTask<T> extends Promise<T> {
-  resolve: (value: T | PromiseLike<T>) => void;
-  reject: (reason?: any) => void;
 }
 
 function createFrameChecker(frameDuration: number) {

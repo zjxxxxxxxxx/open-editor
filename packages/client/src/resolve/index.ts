@@ -12,6 +12,7 @@ export interface CodeSourceMeta {
   line: number;
   column: number;
 }
+
 export interface CodeSource {
   id: string;
   el: string;
