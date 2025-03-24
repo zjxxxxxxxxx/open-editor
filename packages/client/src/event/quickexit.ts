@@ -1,13 +1,16 @@
 import {
-  type SetupListenerListener,
-  type SetupListenerListenerOptions,
-  createCustomEventHandler,
+  type SetupDispatcherListener,
+  type SetupDispatcherListenerOptions,
+  createCustomEventDispatcher,
 } from './create';
 import { off, on } from '.';
 
-export default createCustomEventHandler('quickexit', setupListener);
+export default createCustomEventDispatcher('quickexit', setupQuickexitDispatcher);
 
-function setupListener(listener: SetupListenerListener, opts: SetupListenerListenerOptions) {
+function setupQuickexitDispatcher(
+  listener: SetupDispatcherListener,
+  opts: SetupDispatcherListenerOptions,
+) {
   function setup() {
     on('keydown', trigger, {
       ...opts,

@@ -77,6 +77,7 @@ iframe {
   width: 240px;
   height: 42px;
   border: none;
+  border-radius: 8px;
 }
 
 a {
@@ -144,9 +145,14 @@ kbd {
 }
 
 .app {
-  max-width: 1280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
   margin: 0 auto;
   padding: 2rem;
+  max-width: 1280px;
+  min-height: calc(100vh - 4rem);
   text-align: center;
 }
 

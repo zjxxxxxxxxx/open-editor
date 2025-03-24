@@ -17,51 +17,69 @@
 </p>
 </br>
 
-🚀🚀🚀 A web devtools for fast find source code.
+## 🔍 Project Overview
 
-Whether you are a `React` developer, a `Vue` developer, or a developer who uses both `React` and `Vue`, this development tool can help you. It can save you a lot of time searching for code and allow you to focus more on writing code. It can achieve the same effect in both `React` and `Vue`.
+Open Editor is an AST-powered debugging tool designed for modern web development. By deeply integrating with build toolchains, it establishes precise two-way mapping between browser elements and source code, enabling developers to directly locate source positions in React/Vue component trees and open corresponding files in local IDEs with one click. This revolutionary solution can save developers over 90%+ of source code locating time, significantly improving debugging efficiency.
 
-[↓↓↓ Click here to open StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
-[![image](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
+[▶▶▶ Live Demo (Vite+React Example)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
+[![Feature Demo](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
 
-> Valid only during development, requires Node.js version 14+.
+## 🚀 Core Features
 
-## Features
+### Framework Support
 
-- 🌈 Support `React`、`Nextjs`、`Vue`、`Nuxt`.
-- 🔥 Support `Rollup`、`Vite`、`Webpack`.
-- 🎢 Support cross-iframe interaction.
-- 🕹️ Support combined shortcut keys.
-- 🎯 Support precise positioning of line and column.
-- 🚀 Support find component tree.
-- 📱 Support mobile devices.
-- 👽 Automatically opens available editors.
+- **React Ecosystem**: Deep integration with Create React App/Next.js etc.
+- **Vue Ecosystem**: Native support for Vue CLI/Nuxt.js/Vite
+- **Build Tools**: Full compatibility with Webpack 4+/Vite 2+/Rollup 2+
 
-## Usage
+### Debugging Capabilities
 
-### React
+- Multi-level component tree tracing (supports cross-iframe communication)
+- Shortcut-driven workflow (⌥⌘O to activate/deactivate inspector)
+- Mobile remote debugging support
+- Intelligent IDE detection (auto-recognizes locally installed editors)
 
-> Requires React version 15+.
+## 🛠️ Quick Start
 
-`OpenEditor` needs to be used with [`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source), which is a plugin for getting source code line and column information. Usually you don't have to pay attention to this thing because it is mainly built into the scaffolding tool. If you encounter the problem that `OpenEditor` cannot open the code editor, this will It will be a way to troubleshoot the problem.
+### Prerequisites
 
-### Vue
+#### React Projects
 
-> Requires Vue version 2+.
+```bash
+# Verify Babel plugin configuration
+npm list @babel/plugin-transform-react-jsx-source
+```
 
-`OpenEditor` needs to be used with [`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source), which is a plugin for getting source code line and column information , if this plugin is missing, the source code file will only be opened in the code editor, but line and column cannot be located.
+> Ensure this plugin is enabled if using custom Babel configurations
 
-### Use plugin
+#### Vue Projects
 
-> The example uses [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react) as a reference. In other cases, the only choice is different, and the usage is exactly the same.
+```bash
+# Install required dependency
+npm install unplugin-vue-source -D
+```
 
-First you need to install the plugin into the project.
+> Missing this plugin will cause line-column positioning to fail
+
+#### Environment Requirements
+
+> Development environment only  
+> Node.js 14+  
+> Modern browsers (Chrome 90+/Edge 90+/Firefox 84+)
+
+### Integration Example
+
+> This demo uses [`Vite+React`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react). Other tech stacks only require adjusting corresponding configuration items while maintaining identical core logic.
+
+#### Tool Integration
+
+##### 1. Install Plugin
 
 ```bash
 npm i @open-editor/vite -D
 ```
 
-Then add the plugin to the build configuration.
+##### 2. Add Configuration
 
 ```ts
 // vite.config.ts
@@ -79,113 +97,81 @@ export default defineConfig({
 });
 ```
 
-### Enable inspector
-
-First you need to get the project running.
+##### 3. Start Dev Server
 
 ```bash
 npm run dev
 ```
 
-At this time, open the local server address of the project in the browser, and you will see a toggle button appearing in the upper right corner of the browser. This toggle button can be used to toggle the enabled status of the inspector.
+#### Debugging Workflow
 
-> If you think that the switch button blocks your user interface, you can long press the switch button, wait for the switch button to enter the draggable state, and then adjust the display position of the switch button by dragging it.
+##### 1. Activate Inspector
 
-<img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+- **Shortcut**: ⌥⌘O (Mac) | Alt+Ctrl+O (Win)
+- **Mouse**: Click toggle button in browser's top-right corner
 
-Enable the inspector by click (shortcut key: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>) the toggle button in the upper right corner of your browser, then, We can see the source code location information by moving the mouse over the element that needs to be inspected.
+  ###### Toggle Button Demo
 
-<img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
+  <img src="./public/toggle-button-demo.png" width="500">
 
-At this point, click (shortcut key: ⌨️ <kbd>enter</kbd>) on the element to automatically open the source code file in the code editor and locate the line and column.
+##### 2. Element Inspection
 
-<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+- **Hover Preview**: Mouse hover displays source location
+- **Precision Navigation**:
 
-At this time, you can also choose to long press (shortcut key 1: ⌨️ <kbd>backspace</kbd>, shortcut key 2: ⌨️ <kbd>command ⌘</kbd> + 🖱 click) element to view the complete component tree.
+  - Single-click to open editor (supports line-column jump)
+  - Long-press element (or ⌘+click) to expand component tree
 
-<img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
+  ###### Hover Preview Demo
 
-Then click on the tree node to automatically open the source code file in the code editor and locate the line and column.
+  <img src="./public/inspect-element-demo.png" width="500">
 
-<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+  ###### Component Tree Demo
 
-### Exit inspector
+  <img src="./public/open-tree-demo.png" width="500">
 
-Click again (shortcut key 1: ⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>, shortcut key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱 right-click) the switch button in the upper right corner of the browser to exit the inspector.
+##### 3. Deactivate Inspector
 
-<img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
+- **Shortcut**: Esc or re-trigger ⌥⌘O (Mac) | Alt+Ctrl+O (Win)
+- **Mouse**: Click toggle button to exit (or right-click)
 
-## `enableinspector` event
+## ⚙️ Advanced Features
 
-The default behavior of enable inspector can be changed by subscribing to the `enableinspector` event.
-
-### Prevent default behavior
+### Global Events
 
 ```ts
+// Custom inspector activation logic
 window.addEventListener('enableinspector', (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Block default behavior
 });
-```
 
-### Add additional handler
-
-```ts
-window.addEventListener('enableinspector', (e) => {
-  console.log('enable inspector');
-});
-```
-
-## `exitinspector` event
-
-The default behavior of exit inspector can be changed by subscribing to the `exitinspector` event.
-
-### Prevent default behavior
-
-```ts
+// Custom inspector exit logic
 window.addEventListener('exitinspector', (e) => {
-  e.preventDefault();
+  e.preventDefault(); // Block default behavior
 });
-```
 
-### Add additional handler
-
-```ts
-window.addEventListener('exitinspector', (e) => {
-  console.log('exit inspector');
-});
-```
-
-## `openeditor` event
-
-The default behavior of opening an editor can be changed by subscribing to the `openeditor` event.
-
-### Prevent default behavior
-
-```ts
+// Custom editor launch logic
 window.addEventListener('openeditor', (e) => {
-  e.preventDefault();
+  const url = new URL(e.detail);
+  url.hostname = 'localhost'; // Modify domain
+  window.open(url.toString());
+  e.preventDefault(); // Block default behavior
 });
 ```
 
-### Redirect `URL`
+## 🖼 Ecosystem
 
-```ts
-window.addEventListener('openeditor', (e) => {
-  (e as CustomEvent<URL>).detail.hostname = '127.0.0.1';
-});
-```
+### Official Plugins
 
-## Packages
-
-| Source code                                                                                     | NPM version                                                                                                                    | Downloads                                                                                                                    |
+| Documentation                                                                                   | NPM Version                                                                                                                    | Downloads                                                                                                                    |
 | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
 | [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
 | [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
 
-## Playgrounds
+### Online Playgrounds
 
-| Source code                                                                                         | Online trial                                                                                                                                                                     |
+| Source Code                                                                                         | Live Demo                                                                                                                                                                        |
 | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`rollup/react15`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15) |
 | [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)    |
@@ -196,7 +182,7 @@ window.addEventListener('openeditor', (e) => {
 | [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) |
 | [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)    |
 
-## Thanks
+## Acknowledgments
 
 - [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
 - [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)

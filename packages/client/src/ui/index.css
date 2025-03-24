@@ -157,6 +157,7 @@
 }
 .oe-tooltip-content {
   padding: 12px 20px;
+  max-width: 300px;
   background: var(--bg-color-opt);
   backdrop-filter: var(--filter);
 }
@@ -205,9 +206,9 @@
   position: absolute;
   top: 4px;
   right: 4px;
-  padding: 8px;
-  width: 20px;
-  height: 20px;
+  padding: 7px;
+  width: 18px;
+  height: 18px;
   color: var(--text-color);
   background: transparent;
   border: none;
