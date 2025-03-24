@@ -3,13 +3,18 @@ import { mitt } from './mitt';
 
 export interface CrossIframeBridgeOptions<Args extends unknown[] = []> {
   setup?: () => void;
-  emitMiddlewares?: ((args: Args, next: () => void) => void)[];
+  emitMiddlewares?: CrossIframeBridgeMiddleware<Args>[];
 }
+
+export type CrossIframeBridgeMiddleware<Args extends unknown[] = []> = (
+  args: Args,
+  next: () => void,
+) => void;
 
 export function crossIframeBridge<Args extends unknown[] = []>(
   opts: CrossIframeBridgeOptions<Args> = {},
 ) {
-  const { setup, emitMiddlewares } = opts;
+  const { setup, emitMiddlewares = [] } = opts;
   const bridge = mitt<Args>();
 
   let inited = false;
@@ -32,14 +37,15 @@ export function crossIframeBridge<Args extends unknown[] = []>(
       }
 
       const { crossIframe } = getOptions();
-      if (crossIframe && !immediate && emitMiddlewares?.length) {
-        const stack = [...emitMiddlewares, () => bridge.emit(...args!)];
-        (function next() {
-          stack.shift()!(args!, next);
-        })();
-      } else {
-        bridge.emit(...args!);
+      const stack: CrossIframeBridgeMiddleware<Args>[] = [() => bridge.emit(...args!)];
+
+      if (crossIframe && !immediate && emitMiddlewares.length) {
+        stack.unshift(...emitMiddlewares);
       }
+
+      (function next() {
+        stack.shift()!(args!, next);
+      })();
     },
   };
 }

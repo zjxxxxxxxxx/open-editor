@@ -1,13 +1,16 @@
 import {
-  type SetupListenerListener,
-  type SetupListenerListenerOptions,
-  createCustomEventHandler,
+  type SetupDispatcherListener,
+  type SetupDispatcherListenerOptions,
+  createCustomEventDispatcher,
 } from './create';
 import { on, off } from '.';
 
-export default createCustomEventHandler('rightclick', setupListener);
+export default createCustomEventDispatcher('rightclick', setupRightclickDispatcher);
 
-function setupListener(listener: SetupListenerListener, opts: SetupListenerListenerOptions) {
+function setupRightclickDispatcher(
+  listener: SetupDispatcherListener,
+  opts: SetupDispatcherListenerOptions,
+) {
   function setup() {
     on('contextmenu', trigger, opts);
 

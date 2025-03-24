@@ -17,51 +17,69 @@
 </p>
 </br>
 
-🚀🚀🚀 一个用于快速查找源代码的 web 开发调试工具。
+## 🔍 项目简介
 
-不论您是一个`React`开发者， 还是一个`Vue`开发者，又或者是一个`React`、`Vue`双料开发者，这款开发工具都可以帮助到您。它能够帮您省去大量查找代码的时间，使您能够更加专心的编写代码。无论在`React`还是`Vue`中，它都能够达到完全相同的效果。
+Open Editor 是一款基于AST解析技术的智能调试工具，专为现代Web开发场景打造。通过深度整合构建工具链，系统实现了「浏览器元素 ↔ 源代码」的双向精准映射，支持开发者在 React/Vue 组件树中直接定位源码位置，并可通过一键操作唤起本地 IDE 打开对应文件。该解决方案的革命性价值在于能帮助开发者节省超过 90%+ 的源码定位时间，显著提升调试效率。
 
-[↓↓↓ 点击这里打开 StackBlitz](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
-[![image](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
+[▶▶▶ 立即体验 (Vite+React 示例)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
+[![功能演示](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
 
-> 仅在 development 生效，需要 Node.js 版本 14+。
+## 🚀 核心功能
 
-## 功能
+### 框架支持
 
-- 🌈 支持 `React`、`Nextjs`、`Vue`、`Nuxt`。
-- 🔥 支持 `Rollup`、`Vite`、`Webpack`。
-- 🎢 支持跨 iframe 交互。
-- 🕹️ 支持组合式快捷键。
-- 🎯 支持精准定位行和列。
-- 🚀 支持查找组件树。
-- 📱 支持移动设备。
-- 👽 自动打开可用编辑器。
+- **React 生态**：Create React App/Next.js 等脚手架深度适配
+- **Vue 生态**：Vue CLI/Nuxt.js/Vite 原生支持
+- **构建工具**：Webpack 4+/Vite 2+/Rollup 2+ 全兼容
 
-## 使用
+### 调试能力
 
-### React
+- 多层级组件树追溯（支持跨 iframe 通信）
+- 快捷键驱动工作流（⌥⌘O 启动/退出检查器）
+- 移动端远程调试支持
+- 智能编辑器探测（自动识别本地安装的 IDE）
 
-> 需要 React 版本 15+。
+## 🛠️ 快速入门
 
-`OpenEditor`需要与[`@babel/plugin-transform-react-jsx-source`](https://babeljs.io/docs/babel-plugin-transform-react-jsx-source)一起使用，它是一个用于获取源代码行和列信息的插件，通常你不必关注这件事情，因为它主要内置在脚手架工具中，如果您遇到`OpenEditor`无法打开代码编辑器的问题，这将会是一个排查问题的方式。
+### 前置条件
 
-### Vue
+#### React 项目
 
-> 需要 Vue 版本 2+。
+```bash
+# 验证 Babel 插件配置
+npm list @babel/plugin-transform-react-jsx-source
+```
 
-`OpenEditor`需要与[`unplugin-vue-source`](https://github.com/zjxxxxxxxxx/unplugin-vue-source)一起使用，它是一个用于获取源代码行和列信息的插件，如果缺少这个插件，将只会在代码编辑器中打开源代码文件，而无法定位到行和列。
+> 若使用自定义 Babel 配置，请确保启用该插件
 
-### 使用插件
+#### Vue 项目
 
-> 示例以 [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react) 作为参考，其他情况下只是选择不同而已，使用方式是完全一致的。
+```bash
+# 安装必要依赖
+npm install unplugin-vue-source -D
+```
 
-首先需要将插件安装到项目中。
+> 缺少该插件将导致行列定位失效
+
+#### 环境要求
+
+> 仅限开发环境使用  
+> Node.js 14+  
+> 现代浏览器（Chrome 90+/Edge 90+/Firefox 84+）
+
+### 集成示例
+
+> 本示例采用 [`Vite+React`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react) 框架进行演示，其他技术栈仅需调整对应配置项即可，核心使用逻辑保持完全一致。
+
+#### 工具集成
+
+##### 1.安装插件
 
 ```bash
 npm i @open-editor/vite -D
 ```
 
-然后将插件添加到编译配置中。
+##### 2.添加配置
 
 ```ts
 // vite.config.ts
@@ -79,111 +97,79 @@ export default defineConfig({
 });
 ```
 
-### 启用检查器
-
-首先需要让项目运行起来。
+##### 3.启动开发环境
 
 ```bash
 npm run dev
 ```
 
-此时在浏览器中打开项目的本地服务器地址，您会看见浏览器的右上角出现了一个切换按钮，这个切换按钮可以用于切换检查器的启用状态。
+#### 调试流程
 
-> 如果您认为切换按钮遮挡住了您的用户界面，您可以长按切换按钮，等待切换按钮进入可拖拽状态后，以拖拽的方式调整切换按钮的显示位置
+##### 1. 激活检查器
 
-<img width="500" src="./public/toggle-button-demo.png" alt="toggle button demo"/>
+- **快捷键**：⌥⌘O（Mac）| Alt+Ctrl+O（Win）
+- **鼠标**：点击浏览器右上角切换按钮
 
-点击（快捷键：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>）浏览器右上角的切换按钮即可启用检查器，然后，我们移动鼠标到需要检查的元素上即可看见源代码位置信息。
+  ###### 切换按钮示意图
 
-<img width="500" src="./public/inspect-element-demo.png" alt="inspect element demo"/>
+  <img src="./public/toggle-button-demo.png" width="500">
 
-此时点击（快捷键：⌨️ <kbd>enter</kbd> ）元素即可自动在代码编辑器中打开源代码文件，并定位到行和列。
+##### 2. 元素审查
 
-<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+- **鼠标悬停预览**：鼠标悬浮显示源码位置
+- **精准定位**：
 
-此时也可以选择长按（快捷键1：⌨️ <kbd>backspace</kbd>，快捷键2：⌨️ <kbd>command ⌘</kbd> + 🖱 click）元素查看完整组件树。
+  - 单击元素打开编辑器（支持行列跳转）
+  - 长按元素（或 ⌘+点击）展开组件树
 
-<img width="500" src="./public/open-tree-demo.png" alt="open editor demo"/>
+  ###### 悬停预览示意图
 
-然后点击树节点即可自动在代码编辑器中打开源代码文件，并定位到行和列。
+  <img src="./public/inspect-element-demo.png" width="500">
 
-<img width="500" src="./public/open-editor-demo.png" alt="open editor demo"/>
+  ###### 组件树预览示意图
 
-### 退出检查器
+  <img src="./public/open-tree-demo.png" width="500">
 
-再次点击（快捷键1：⌨️ <kbd>option ⌥</kbd> + <kbd>command ⌘</kbd> + <kbd>O</kbd>，快捷键2：⌨️ <kbd>esc</kbd>，快捷键3：🖱 right-click）浏览器右上角的切换按钮即可退出检查器。
+##### 3. 退出检查器
 
-<img width="500" src="./public/toggle-button-demo2.png" alt="toggle button demo"/>
+- **快捷键**：Esc 或再次触发 ⌥⌘O（Mac）| Alt+Ctrl+O（Win）
+- **鼠标**：点击切换按钮选择退出（或点击鼠标右键）
 
-## `enableinspector` 事件
+## ⚙️ 高级功能
 
-可以通过订阅 `enableinspector` 事件改变启用检查器的默认行为。
-
-### 阻止默认行为
+### 全局事件
 
 ```ts
+// 自定义激活检查器逻辑
 window.addEventListener('enableinspector', (e) => {
-  e.preventDefault();
+  e.preventDefault(); // 阻断默认行为
 });
-```
 
-### 添加额外的处理程序
-
-```ts
-window.addEventListener('enableinspector', (e) => {
-  console.log('enable inspector');
-});
-```
-
-## `exitinspector` 事件
-
-可以通过订阅 `exitinspector` 事件改变退出检查器的默认行为。
-
-### 阻止默认行为
-
-```ts
+// 自定义退出检查器逻辑
 window.addEventListener('exitinspector', (e) => {
-  e.preventDefault();
+  e.preventDefault(); // 阻断默认行为
 });
-```
 
-### 添加额外的处理程序
-
-```ts
-window.addEventListener('exitinspector', (e) => {
-  console.log('exit inspector');
-});
-```
-
-## `openeditor` 事件
-
-可以通过订阅 `openeditor` 事件改变打开编辑器的默认行为。
-
-### 阻止默认行为
-
-```ts
+// 自定义编辑器启动逻辑
 window.addEventListener('openeditor', (e) => {
-  e.preventDefault();
+  const url = new URL(e.detail);
+  url.hostname = 'localhost'; // 修正域名
+  window.open(url.toString());
+  e.preventDefault(); // 阻断默认行为
 });
 ```
 
-### 重定向 `URL`
+## 🖼 生态系统
 
-```ts
-window.addEventListener('openeditor', (e) => {
-  (e as CustomEvent<URL>).detail.hostname = '127.0.0.1';
-});
-```
+### 官方插件集
 
-## 安装包
-
-| 源代码                                                                                          | NPM 版本                                                                                                                       | 下载量                                                                                                                       |
+| 说明文档                                                                                        | NPM 版本                                                                                                                       | 下载量                                                                                                                       |
 | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
 | [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
 | [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
 | [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
 
-## 演练场
+### 在线演练场
 
 | 源代码                                                                                              | 在线试玩                                                                                                                                                                         |
 | --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

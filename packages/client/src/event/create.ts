@@ -20,29 +20,29 @@ export interface CustomEventCache<AddCustomEventListenerUserOptions extends AnyO
   stop: () => void;
 }
 
-/******** SetupListener ********/
-export type SetupListenerListenerOptions<
+/******** SetupDispatcher ********/
+export type SetupDispatcherListenerOptions<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
 > = Omit<AddCustomEventListenerOptions<AddCustomEventListenerUserOptions>, 'once' | 'signal'>;
 
-export type SetupListenerListener = (e: PointerEvent) => void;
+export type SetupDispatcherListener = (e: PointerEvent) => void;
 
-export type SetupListener<AddCustomEventListenerUserOptions extends AnyObject> = (
-  listener: SetupListenerListener,
-  options: SetupListenerListenerOptions<AddCustomEventListenerUserOptions>,
-) => SetupListenerCleanListener;
+export type SetupDispatcher<AddCustomEventListenerUserOptions extends AnyObject> = (
+  listener: SetupDispatcherListener,
+  options: SetupDispatcherListenerOptions<AddCustomEventListenerUserOptions>,
+) => SetupDispatcherCleanListener;
 
-export type SetupListenerCleanListener = () => void;
+export type SetupDispatcherCleanListener = () => void;
 
 /**
- * Create a custom event handler
+ * Create a custom event dispatcher
  *
- * @param type event type
- * @param setupListener setup event listener
+ * @param type custom event type
+ * @param setupDispatcher setup custom event dispatcher
  */
-export function createCustomEventHandler<
+export function createCustomEventDispatcher<
   AddCustomEventListenerUserOptions extends AnyObject = AnyObject,
->(type: string, setupListener: SetupListener<AddCustomEventListenerUserOptions>) {
+>(type: string, setupDispatcher: SetupDispatcher<AddCustomEventListenerUserOptions>) {
   const targetMap = new WeakMap<Target, CustomEventCache<AddCustomEventListenerUserOptions>[]>();
 
   function addEventListener(
@@ -58,9 +58,9 @@ export function createCustomEventHandler<
         removeEventListener(cb, opts);
       };
       if (signal) on('abort', remove, { target: signal });
-      const stop = setupListener((e) => {
-        if (signal?.aborted) return;
+      const stop = setupDispatcher((e) => {
         if (once) remove();
+        if (signal?.aborted) return;
         const evt = new PointerEvent(type, e);
         Object.defineProperty(evt, 'target', {
           value: e.target,

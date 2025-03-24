@@ -1,15 +1,15 @@
 import {
-  type SetupListenerListener,
-  type SetupListenerListenerOptions,
-  createCustomEventHandler,
+  type SetupDispatcherListener,
+  type SetupDispatcherListenerOptions,
+  createCustomEventDispatcher,
 } from './create';
 import { off, on } from '.';
 
-export default createCustomEventHandler('longpress', setupListener);
+export default createCustomEventDispatcher('longpress', setupLongpressDispatcher);
 
-function setupListener(
-  listener: SetupListenerListener,
-  opts: SetupListenerListenerOptions<{
+function setupLongpressDispatcher(
+  listener: SetupDispatcherListener,
+  opts: SetupDispatcherListenerOptions<{
     wait?: number;
   }>,
 ) {
