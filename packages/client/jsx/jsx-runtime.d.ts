@@ -1,54 +1,97 @@
-declare type UnionCharacter<T extends string> = T extends `${infer F}${infer R}`
-  ? F | UnionCharacter<R>
+/**
+ * 将字符串类型解构为单个字符的联合类型
+ * @example
+ * StringToCharUnion<'ABC'> → 'A' | 'B' | 'C'
+ */
+declare type StringToCharUnion<T extends string> = T extends `${infer First}${infer Rest}`
+  ? First | StringToCharUnion<Rest>
   : never;
 
-declare type UppercaseLetter = UnionCharacter<'ABCDEFGHIJKLMNOPQRSTUVWXYZ'>;
+/** 所有大写字母的联合类型（A-Z） */
+declare type UppercaseLetters = StringToCharUnion<'ABCDEFGHIJKLMNOPQRSTUVWXYZ'>;
 
-declare type NativeElement<P> =
-  P extends React.DetailedHTMLProps<infer _, infer T> ? T : HTMLElement;
+/**
+ * 从React元素属性中提取对应的原生DOM元素类型
+ * @example
+ * ExtractNativeElement<ButtonHTMLAttributes<HTMLButtonElement>> → HTMLButtonElement
+ */
+declare type ExtractNativeElement<Props> =
+  Props extends React.DetailedHTMLProps<infer _, infer Element> ? Element : HTMLElement;
 
-declare type EventKey<K extends string> = K extends `on${infer F}${infer _}`
-  ? F extends UppercaseLetter
+/**
+ * 判断属性名是否符合React事件命名规范（onXxx形式且X大写）
+ * @example
+ * IsValidReactEventKey<'onClick'> → true
+ */
+declare type IsValidReactEventKey<Key extends string> = Key extends `on${infer Head}${infer _}`
+  ? Head extends UppercaseLetters
     ? true
     : false
   : false;
 
-declare type EventType<K extends string> = K extends `on${infer F}` ? Lowercase<F> : never;
+/**
+ * 从React事件属性名中提取浏览器原生事件类型名
+ * @example
+ * ExtractNativeEventType<'onClick'> → 'click'
+ */
+declare type ExtractNativeEventType<Key extends string> = Key extends `on${infer Event}`
+  ? Lowercase<Event>
+  : never;
 
-declare type NativeEvent<K extends string> = HTMLElementEventMap[EventType<K>];
+/**
+ * 根据React事件属性名映射到对应的原生DOM事件类型
+ * @example
+ * MapReactEventToNative<'onClick'> → MouseEvent
+ */
+declare type MapReactEventToNative<Key extends string> =
+  HTMLElementEventMap[ExtractNativeEventType<Key>];
 
-declare type InternalCustomElements = {
+/** 自定义Web Component元素属性扩展 */
+declare type CustomElementsRegistry = {
+  /** 编辑器审查器组件属性 */
   'open-editor-inspector': React.DetailedHTMLProps<
     React.HTMLAttributes<HTMLInspectorElement>,
     HTMLInspectorElement
   >;
 };
 
-declare type _Node = HTMLElement | string | number | false | null | undefined;
+/** 允许的子元素类型集合 */
+declare type ValidChildNode = HTMLElement | string | number | boolean | null | undefined;
 
-declare type _Element<P> = {
-  [K in keyof P]: K extends 'children'
-    ? _Node[]
-    : K extends 'ref'
-      ? (el: NativeElement<P>) => void
-      : EventKey<K> extends true
-        ? (e: NativeEvent<K>) => void
-        : P[K];
+/** 处理React元素属性的类型转换逻辑 */
+declare type ElementPropsTransformer<Props> = {
+  [K in keyof Props]: K extends 'children' // 处理children属性
+    ? ValidChildNode[]
+    : // 处理ref回调函数
+      K extends 'ref'
+      ? (instance: ExtractNativeElement<Props> | null) => void
+      : // 处理React标准事件属性
+        IsValidReactEventKey<K> extends true
+        ? (event: MapReactEventToNative<K>) => void
+        : Props[K];
 } & {
-  onLongPress?(e: PointerEvent): void;
-  onQuickExit?(e: PointerEvent): void;
-  onRightClick?(e: PointerEvent): void;
+  /** 长按事件（非标准事件扩展） */
+  onLongPress?(event: PointerEvent): void;
+  /** 快速退出事件（自定义交互逻辑） */
+  onQuickExit?(event: PointerEvent): void;
+  /** 右键点击事件（扩展标准点击行为） */
+  onRightClick?(event: PointerEvent): void;
 };
 
-declare type _IntrinsicElements<ES> = {
-  [E in keyof ES]: _Element<ES[E]>;
+/** 合并标准HTML元素与自定义元素属性 */
+declare type MergedIntrinsicElements<Elements> = {
+  [E in keyof Elements]: ElementPropsTransformer<Elements[E]>;
 };
 
-declare namespace _JSX {
+/** 增强型JSX命名空间定义 */
+declare namespace EnhancedJSX {
+  /** 元素类型约束 */
   type Element = HTMLElement;
-  type IntrinsicElements = _IntrinsicElements<JSX.IntrinsicElements & InternalCustomElements>;
+  /** 合并原生与自定义元素类型 */
+  type IntrinsicElements = MergedIntrinsicElements<JSX.IntrinsicElements & CustomElementsRegistry>;
 }
 
-declare const _Fragment: string;
+/** 自定义Fragment组件标识 */
+declare const CustomFragment: string;
 
-export { _JSX as JSX, _Fragment as Fragment };
+export { EnhancedJSX as JSX, CustomFragment as Fragment };

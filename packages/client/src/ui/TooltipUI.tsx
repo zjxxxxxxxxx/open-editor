@@ -1,6 +1,6 @@
 import { clamp } from '@open-editor/shared';
 import { mitt } from '../utils/mitt';
-import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
+import { CssUtils, applyStyle, addClass, removeClass } from '../utils/dom';
 import { getDOMRect } from '../utils/getDOMRect';
 import { safeArea } from '../utils/safeArea';
 import { type BoxRect } from '../inspector/getBoxModel';
@@ -12,92 +12,149 @@ import {
   codeSourceBridge,
 } from '../bridge';
 
+/**
+ * 工具提示组件状态定义
+ */
+interface TooltipUIState {
+  /** 根容器DOM元素 */
+  root: HTMLElement;
+  /** 显示元素标签的DOM节点 */
+  tag: HTMLElement;
+  /** 显示组件名称的DOM节点 */
+  comp: HTMLElement;
+  /** 显示文件路径的DOM节点 */
+  file: HTMLElement;
+  /** 标识是否处于更新挂起状态 */
+  isPending: boolean;
+}
+
+/**
+ * 工具提示组件UI
+ */
 export function TooltipUI() {
+  // 渲染保留边距，防止元素紧贴窗口边缘
   const RENDER_RESERVE_SIZE = 4;
 
-  const state = {} as {
-    root: HTMLElement;
-    tag: HTMLElement;
-    comp: HTMLElement;
-    file: HTMLElement;
-    isPending: boolean;
-  };
+  // 组件状态管理
+  const state = {} as TooltipUIState;
   const pending = mitt();
 
-  inspectorEnableBridge.on(() => {
-    addClass(state.root, 'oe-tooltip-show');
-  });
+  // 初始化事件监听
+  initEventHandlers();
 
-  inspectorExitBridge.on(() => {
+  /**
+   * 初始化所有事件监听器
+   */
+  function initEventHandlers() {
+    inspectorEnableBridge.on(handleInspectorEnable);
+    inspectorExitBridge.on(handleInspectorExit);
+    codeSourceBridge.on(updateSource);
+    boxModelBridge.on(handleBoxModelUpdate);
+  }
+
+  /**
+   * 处理检查器激活事件
+   */
+  function handleInspectorEnable() {
+    addClass(state.root, 'oe-tooltip-show');
+  }
+
+  /**
+   * 处理检查器退出事件
+   */
+  function handleInspectorExit() {
     removeClass(state.root, 'oe-tooltip-show');
     updateSource();
-  });
+  }
 
-  codeSourceBridge.on(updateSource);
-
-  boxModelBridge.on((rect) => {
+  /**
+   * 处理盒子模型更新事件
+   */
+  function handleBoxModelUpdate(rect: BoxRect) {
+    const executor = () => updateRect(rect);
     if (state.isPending) {
-      pending.once(() => updateRect(rect));
+      pending.once(executor);
     } else {
-      updateRect(rect);
+      executor();
     }
-  });
+  }
 
+  /**
+   * 更新代码源信息
+   * @param source 代码源数据，包含元素和元数据信息
+   */
   function updateSource(source?: CodeSource) {
     state.isPending = true;
 
-    // before hidden
+    // 隐藏元素并保留渲染空间
     applyStyle(state.root, {
       visibility: 'hidden',
-      transform: CSS_util.translate(RENDER_RESERVE_SIZE, RENDER_RESERVE_SIZE),
+      transform: CssUtils.translate(RENDER_RESERVE_SIZE, RENDER_RESERVE_SIZE),
     });
 
     if (source?.meta) {
+      // 更新DOM元素内容
       state.tag.textContent = `${source.el} in `;
       state.comp.textContent = `<${source.meta.name}>`;
       state.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
 
+      // 解除挂起状态并执行待处理任务
       state.isPending = false;
       pending.emit();
     }
   }
 
+  /**
+   * 更新工具提示位置
+   * @param rect 目标元素的边界矩形信息
+   */
   function updateRect(rect: BoxRect) {
-    // window (width|height) excluding the scrollbar (width|height)
     const { clientWidth: winW, clientHeight: winH } = document.documentElement;
     const { width: rootW, height: rootH } = getDOMRect(state.root);
 
-    const minRenderX = safeArea.left + RENDER_RESERVE_SIZE;
-    const maxRenderX = winW - rootW - safeArea.right - RENDER_RESERVE_SIZE;
-    const renderX = clamp(rect.left, minRenderX, maxRenderX);
+    // 计算X轴渲染位置
+    const renderX = calculateRenderX(winW, rootW, rect.left);
 
-    const minAvailableY = rootH + safeArea.top + RENDER_RESERVE_SIZE * 2;
-    const isRenderOnTop = rect.top > minAvailableY;
-    const renderOnTopY = rect.top - rootH - RENDER_RESERVE_SIZE;
-    const renderOnBottomY = rect.bottom + RENDER_RESERVE_SIZE;
+    // 计算Y轴渲染位置
+    const renderY = calculateRenderY(winH, rootH, rect);
 
-    const minRenderY = safeArea.top + RENDER_RESERVE_SIZE;
-    const maxRenderY = winH - rootH - safeArea.bottom - RENDER_RESERVE_SIZE;
-    const renderY = clamp(isRenderOnTop ? renderOnTopY : renderOnBottomY, minRenderY, maxRenderY);
-
+    // 应用最终样式
     applyStyle(state.root, {
       visibility: 'visible',
-      transform: CSS_util.translate(renderX, renderY),
+      transform: CssUtils.translate(renderX, renderY),
     });
   }
 
+  /**
+   * 计算X轴渲染坐标
+   */
+  function calculateRenderX(winWidth: number, rootWidth: number, targetLeft: number) {
+    const minX = safeArea.left + RENDER_RESERVE_SIZE;
+    const maxX = winWidth - rootWidth - safeArea.right - RENDER_RESERVE_SIZE;
+    return clamp(targetLeft, minX, maxX);
+  }
+
+  /**
+   * 计算Y轴渲染坐标
+   */
+  function calculateRenderY(winHeight: number, rootHeight: number, rect: BoxRect) {
+    const minAvailableY = rootHeight + safeArea.top + RENDER_RESERVE_SIZE * 2;
+    const isTopPosition = rect.top > minAvailableY;
+    const targetY = isTopPosition
+      ? rect.top - rootHeight - RENDER_RESERVE_SIZE
+      : rect.bottom + RENDER_RESERVE_SIZE;
+
+    const minY = safeArea.top + RENDER_RESERVE_SIZE;
+    const maxY = winHeight - rootHeight - safeArea.bottom - RENDER_RESERVE_SIZE;
+    return clamp(targetY, minY, maxY);
+  }
+
   return (
-    <div className="oe-tooltip" ref={(el) => (state.root = el)}>
+    <div className="oe-tooltip" ref={(el) => (state.root = el!)}>
       <div className="oe-tooltip-content">
-        <span className="oe-tooltip-tag" ref={(el) => (state.tag = el)}>
-          {/* el textContent */}
-        </span>
-        <span className="oe-tooltip-comp" ref={(el) => (state.comp = el)}>
-          {/* comp textContent */}
-        </span>
-        <span className="oe-tooltip-file" ref={(el) => (state.file = el)}>
-          {/* file textContent */}
-        </span>
+        <span className="oe-tooltip-tag" ref={(el) => (state.tag = el!)} />
+        <span className="oe-tooltip-comp" ref={(el) => (state.comp = el!)} />
+        <span className="oe-tooltip-file" ref={(el) => (state.file = el!)} />
       </div>
     </div>
   );
