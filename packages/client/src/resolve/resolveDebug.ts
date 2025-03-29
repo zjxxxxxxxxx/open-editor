@@ -1,4 +1,4 @@
-import { hasOwnProperty } from '@open-editor/shared';
+import { hasOwn } from '@open-editor/shared';
 import { checkValidElement } from '../utils/checkElement';
 
 /**
@@ -58,12 +58,12 @@ function detectFrameworkKey(el: HTMLElement): string | undefined {
 
 // Vue3组件检测
 function detectVue3(el: HTMLElement) {
-  return hasOwnProperty(el, VUE3_COMPONENT_KEY) ? VUE3_COMPONENT_KEY : undefined;
+  return hasOwn(el, VUE3_COMPONENT_KEY) ? VUE3_COMPONENT_KEY : undefined;
 }
 
 // Vue2组件检测
 function detectVue2(el: HTMLElement) {
-  return hasOwnProperty(el, VUE2_COMPONENT_KEY) ? VUE2_COMPONENT_KEY : undefined;
+  return hasOwn(el, VUE2_COMPONENT_KEY) ? VUE2_COMPONENT_KEY : undefined;
 }
 
 // React 17+ Fiber节点检测

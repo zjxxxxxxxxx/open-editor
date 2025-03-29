@@ -8,65 +8,73 @@ import {
 import { isDev, resolvePath as _resolvePath } from '@open-editor/shared/node';
 import { setupServer } from '@open-editor/server';
 
+/**
+ * 插件配置选项
+ */
 export interface Options {
   /**
-   * source rootDir path
+   * 源码根目录路径
    *
-   * @default process.cwd()
+   * @默认值 process.cwd()
    */
   rootDir?: string;
+
   /**
-   * render the toggle into the browser
+   * 在浏览器中显示调试开关
    *
-   * @default true
+   * @默认值 true
    */
   displayToggle?: boolean;
+
   /**
-   * Disable hover effect from CSS when inspector is enabled
+   * 禁用启用检查器时的CSS悬停效果
    *
-   * @default true
+   * @默认值 true
    */
   disableHoverCSS?: boolean;
+
   /**
-   * Ignoring components in some directories, using glob pattern syntax for match
+   * 忽略指定目录的组件（使用glob模式语法匹配）
    *
-   * @see https://en.wikipedia.org/wiki/Glob_(programming)
+   * @默认值 '\/**\/node_modules\/**\/*'
    *
-   * @default '\/**\/node_modules\/**\/*'
+   * @参考 https://en.wikipedia.org/wiki/Glob_(programming)
    */
   ignoreComponents?: string | string[];
+
   /**
-   * exit the check after opening the editor or component tree
+   * 打开编辑器或组件树后退出检查
    *
-   * @default true
+   * @默认值 true
    */
   once?: boolean;
+
   /**
-   * Enable interaction between multiple iframes to be promoted to the top-level window.
+   * 启用跨iframe交互（仅在顶层窗口和iframe窗口同源时生效）
    *
-   * It only takes effect when the top window and iframe window have the same origin.
-   *
-   * @default true
+   * @默认值 true
    */
   crossIframe?: boolean;
+
   /**
-   * Internal server configuration
+   * 内部服务器配置
    */
   server?: {
     /**
-     * enable https
+     * 启用HTTPS配置
      *
-     * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+     * @参考 https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
      */
     https?: {
       key: string;
       cert: string;
     };
   };
+
   /**
-   * custom openEditor handler
+   * 自定义编辑器打开处理器
    *
-   * @default 'launch-editor'
+   * @默认值 'launch-editor'
    */
   onOpenEditor?(file: string): void;
 }
@@ -76,56 +84,87 @@ const resolvePath = (path: string) => _resolvePath(path, import.meta.url);
 const PLUGIN_NAME = 'OpenEditorPlugin';
 const LOADER_PATH = resolvePath('./transform');
 
-const portPromiseCache: AnyObject<Promise<number>> = {};
+// 端口号缓存对象（键：配置缓存键，值：端口号Promise）
+const portPromiseCache: Record<string, Promise<number>> = {};
 
 /**
- * development only
+ * 开发环境专用的Webpack插件
+ *
+ * @说明 该插件用于在开发环境下提供组件调试能力，
+ *       自动注入调试客户端并启动调试服务器
  */
 export default class OpenEditorPlugin {
-  declare private options: Options & { port?: number };
+  private options: Options & { port?: number };
 
   constructor(options: Options = {}) {
-    const { rootDir = options.rootDir ?? process.cwd(), onOpenEditor } = options;
+    // 初始化配置参数
     this.options = {
+      rootDir: normalizePath(options.rootDir ?? process.cwd()),
       ...options,
-      rootDir: normalizePath(rootDir),
-      onOpenEditor,
     };
   }
 
+  /**
+   * Webpack插件入口方法
+   *
+   * @流程说明
+   * 1. 配置模块解析规则
+   * 2. 设置客户端模块别名
+   * 3. 启动调试服务器
+   */
   apply(compiler: webpack.Compiler) {
     if (!isDev()) return;
 
+    // 环境准备完成后配置模块规则
     compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
       compiler.options.module.rules.push({
         test: /[\\/]node_modules[\\/]/,
         include: ENTRY_MATCH_RE,
-        use: (data: AnyObject) => {
-          const { resource, compiler } = data;
-          if (!compiler || compiler === 'client') {
-            return {
-              options: {
-                ...this.options,
-                isCommonjs: !ENTRY_ESM_MATCH_RE.test(resource),
-              },
-              loader: LOADER_PATH,
-            };
-          }
-
-          return [];
-        },
+        use: (data: any) => this.handleLoaderConfiguration(data),
       });
 
+      // 配置客户端模块别名
       compiler.options.resolve.alias ||= {};
       compiler.options.resolve.alias[CLIENT_MODULE_ID] = resolvePath(CLIENT_MODULE_ID);
     });
 
+    // 编译开始时启动调试服务器
     compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
-      const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
-      this.options.port = await (portPromiseCache[cacheKey] ||= setupServer({
-        ...this.options,
-        ...(this.options.server ?? {}),
-      }));
+      await this.startDebugServer();
     });
+  }
+
+  /**
+   * 处理加载器配置
+   */
+  private handleLoaderConfiguration(data: any) {
+    const { resource, compiler } = data;
+
+    // 仅处理客户端编译
+    if (!compiler || compiler === 'client') {
+      return {
+        options: {
+          ...this.options,
+          isCommonjs: !ENTRY_ESM_MATCH_RE.test(resource),
+        },
+        loader: LOADER_PATH,
+      };
+    }
+
+    return [];
+  }
+
+  /**
+   * 启动调试服务器
+   */
+  private async startDebugServer() {
+    // 生成配置缓存键
+    const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
+
+    // 重用或创建新的服务器实例
+    this.options.port = await (portPromiseCache[cacheKey] ||= setupServer({
+      ...this.options,
+      ...(this.options.server ?? {}),
+    }));
   }
 }

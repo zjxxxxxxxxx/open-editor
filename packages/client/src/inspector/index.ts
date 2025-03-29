@@ -1,4 +1,3 @@
-// 导入工具模块
 import { addClass, removeClass } from '../utils/dom';
 import { on } from '../event';
 import { CURRENT_INSPECT_ID } from '../constants';
