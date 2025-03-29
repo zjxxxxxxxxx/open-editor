@@ -1,4 +1,4 @@
-import { isFn, hasOwnProperty } from '@open-editor/shared';
+import { isFn, hasOwn } from '@open-editor/shared';
 import { type ResolveDebug } from './resolveDebug';
 import { type ReactResolver, createReactResolver } from './createReactResolver';
 import { resolveForFiber } from './resolveReact17';
@@ -21,7 +21,7 @@ export function resolveReact15(
   deep = false,
 ) {
   // 分支处理不同React版本的调试信息
-  if (inst && hasOwnProperty(inst, '_debugOwner')) {
+  if (inst && hasOwn(inst, '_debugOwner')) {
     // React 16+ 使用 Fiber 架构，调用专用解析器
     resolveForFiber(inst as any, tree, deep);
   } else {

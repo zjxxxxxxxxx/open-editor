@@ -65,14 +65,7 @@ export function getBoxModel(el: HTMLElement | null): [BoxRect, BoxLines] {
   const position = calculatePositionMetrics(domeRect, margin);
 
   return [
-    createBoxRect(
-      position.width,
-      position.height,
-      position.top,
-      position.right,
-      position.bottom,
-      position.left,
-    ),
+    position,
     {
       margin,
       border,
@@ -158,14 +151,14 @@ function getPaddingValues(getStyle: Function): BoxLine {
  * @param margin - 外边距数据
  */
 function calculatePositionMetrics(rect: Omit<DOMRectReadOnly, 'toJSON'>, margin: BoxLine) {
-  return {
-    top: rect.top - margin.top,
-    right: rect.right + margin.right,
-    bottom: rect.bottom + margin.bottom,
-    left: rect.left - margin.left,
-    width: rect.width + margin.left + margin.right,
-    height: rect.height + margin.top + margin.bottom,
-  };
+  return createBoxRect(
+    rect.width + margin.left + margin.right,
+    rect.height + margin.top + margin.bottom,
+    rect.top - margin.top,
+    rect.right + margin.right,
+    rect.bottom + margin.bottom,
+    rect.left - margin.left,
+  );
 }
 
 /**

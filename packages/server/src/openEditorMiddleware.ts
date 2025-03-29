@@ -3,52 +3,119 @@ import { resolve } from 'node:path';
 import { parse } from 'node:url';
 import connect from 'connect';
 import openEditor from 'launch-editor';
+import { ServerResponse } from 'node:http';
 
 export interface OpenEditorMiddlewareOptions {
   /**
-   * source rootDir path
+   * 项目根目录路径
    *
-   * @default process.cwd()
+   * @remarks
+   * 用于解析文件相对路径的基础目录
+   *
+   * @defaultValue process.cwd()
    */
   rootDir?: string;
+
   /**
-   * custom openEditor handler
+   * 自定义编辑器打开处理器
    *
-   * @default 'launch-editor'
+   * @remarks
+   * 默认使用 launch-editor 库实现
+   * 可通过此参数覆盖默认行为
    */
   onOpenEditor?(file: string): void;
 }
 
+/**
+ * 创建编辑器中间件
+ *
+ * @param options - 中间件配置选项
+ * @returns connect中间件处理函数
+ */
 export function openEditorMiddleware(
-  options: OpenEditorMiddlewareOptions,
+  options: OpenEditorMiddlewareOptions = {},
 ): connect.NextHandleFunction {
   const { rootDir = process.cwd(), onOpenEditor = openEditor } = options;
 
   return (req, res) => {
-    const { query } = parse(req.url ?? '/', true);
-    const { f: file = '', l: line = 1, c: column = 1 } = query as AnyObject<string>;
+    try {
+      // 解析请求参数
+      const { query } = parse(req.url ?? '/', true);
+      const {
+        f: file = 'unknown',
+        l: line = '1',
+        c: column = '1',
+      } = query as Record<string, string>;
 
-    const filename = resolve(rootDir, decodeURIComponent(file));
-    if (!existsSync(filename)) {
-      res.statusCode = 404;
-      res.end(sendMessage(`file '${filename}' not found`));
-      return;
-    }
-    if (!statSync(filename).isFile()) {
-      res.statusCode = 500;
-      res.end(sendMessage(`'${filename}' is not a valid file`));
-      return;
-    }
+      // 验证必要参数
+      if (!file) {
+        sendErrorResponse(res, 400, '缺少文件路径参数');
+        return;
+      }
 
-    if (req.headers.referer) {
-      onOpenEditor(`${filename}:${line}:${column}`);
-    }
+      // 处理文件路径
+      const filename = resolve(rootDir, decodeURIComponent(file));
 
-    res.setHeader('Content-Type', 'application/javascript;charset=UTF-8');
-    res.end(readFileSync(filename, 'utf-8'));
+      // 验证文件有效性
+      if (!validateFile(filename, res)) return;
+
+      // 触发编辑器打开
+      if (req.headers.referer) {
+        handleOpenEditor(filename, line, column, onOpenEditor);
+      }
+
+      // 返回文件内容
+      sendFileContent(res, filename);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      sendErrorResponse(res, 500, `服务器内部错误: ${errorMessage}`);
+    }
   };
 }
 
-function sendMessage(msg: string) {
-  return `[@open-editor/server] ${msg}.`;
+/**
+ * 验证文件有效性
+ */
+function validateFile(filename: string, res: ServerResponse): boolean {
+  if (!existsSync(filename)) {
+    sendErrorResponse(res, 404, `文件 '${filename}' 不存在`);
+    return false;
+  }
+  if (!statSync(filename).isFile()) {
+    sendErrorResponse(res, 400, `'${filename}' 不是有效文件`);
+    return false;
+  }
+  return true;
+}
+
+/**
+ * 处理编辑器打开逻辑
+ */
+function handleOpenEditor(
+  filename: string,
+  line: string,
+  column: string,
+  handler: (file: string) => void,
+): void {
+  try {
+    handler(`${filename}:${line}:${column}`);
+  } catch (error) {
+    console.error('[编辑器错误]', error);
+  }
+}
+
+/**
+ * 发送文件内容响应
+ */
+function sendFileContent(res: ServerResponse, filename: string): void {
+  res.setHeader('Content-Type', 'application/javascript;charset=UTF-8');
+  res.end(readFileSync(filename, 'utf-8'));
+}
+
+/**
+ * 统一错误响应处理
+ */
+function sendErrorResponse(res: ServerResponse, code: number, message: string): void {
+  res.statusCode = code;
+  res.end(`[@open-editor/server] ${message}`);
 }

@@ -96,7 +96,7 @@ function jsx(type, props) {
   const element = createElement(type, { className, style });
 
   // 设置元素属性（Fragment不处理属性）
-  if (element instanceof Element) {
+  if (type !== FRAGMENT_TYPE) {
     setElementAttributes(element, attrs);
     if (ref) ref(element);
   }

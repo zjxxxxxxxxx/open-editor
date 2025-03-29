@@ -1,4 +1,4 @@
-import { hasOwnProperty } from '@open-editor/shared';
+import { hasOwn } from '@open-editor/shared';
 import { IS_CLIENT } from '../constants';
 import { createStyleGetter } from './dom';
 
@@ -71,7 +71,7 @@ function checkComputedNeeded(): boolean {
   if (name === 'firefox' || name === 'safari') return false;
 
   // 检测zoom样式支持
-  if (!hasOwnProperty(document.body.style, 'zoom')) return false;
+  if (!hasOwn(document.body.style, 'zoom')) return false;
 
   // Chromium内核版本判断 (含Edge)
   const chromiumVersion = chromiumBase || version;
