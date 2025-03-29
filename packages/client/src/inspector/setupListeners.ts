@@ -9,18 +9,26 @@ import {
 } from './clickedElement';
 import { inspectorState } from './inspectorState';
 
+// 配置项接口：定义监听器生命周期回调
 export interface SetupListenersOptions {
-  onActive(): void;
-  onOpenEditor(el: HTMLElement): void;
-  onOpenTree(el: HTMLElement): void;
-  onExitInspect(): void;
+  /** 元素激活时触发的渲染回调 */
+  onActive: () => void;
+  /** 打开元素树时触发的桥接事件 */
+  onOpenTree: (el: HTMLElement) => void;
+  /** 打开编辑器时触发的桥接事件 */
+  onOpenEditor: (el: HTMLElement) => void;
+  /** 退出检查模式时触发的桥接事件 */
+  onExitInspect: () => void;
 }
 
 /**
- * Events that need to be blocked
+ * 需要阻止默认行为的事件列表
+ * 原理：
+ * - 阻止这些事件的默认行为和冒泡，避免与检查器操作产生冲突
+ * - 包含鼠标、触摸、指针、拖拽、表单等各类交互事件
  */
 const SILENT_EVENTS = [
-  // mouse
+  // 鼠标事件
   'mousedown',
   'mouseenter',
   'mouseleave',
@@ -28,12 +36,12 @@ const SILENT_EVENTS = [
   'mouseout',
   'mouseover',
   'mouseup',
-  // touch
+  // 触摸事件
   'touchstart',
   'touchend',
   'touchcancel',
   'touchmove',
-  // pointer
+  // 指针事件
   'pointercancel',
   'pointerdown',
   'pointerenter',
@@ -42,7 +50,7 @@ const SILENT_EVENTS = [
   'pointerout',
   'pointerover',
   'pointerup',
-  // drag
+  // 拖拽事件
   'drag',
   'dragend',
   'dragenter',
@@ -50,7 +58,7 @@ const SILENT_EVENTS = [
   'dragover',
   'dragstart',
   'drop',
-  // form
+  // 表单事件
   'focus',
   'focusin',
   'focusout',
@@ -60,197 +68,173 @@ const SILENT_EVENTS = [
   'input',
   'change',
   'select',
-  // others
+  // 其他事件
   'dbclick',
 ];
 
 /**
- * Blocking the default behavior of touchstart and touchend in
- * Safari will result in the inability to trigger click events
+ * 点击相关事件白名单
+ * 说明：Safari浏览器中阻止touchstart/touchend的默认行为会导致点击事件失效
  */
 const CLICK_ATTACHMENT_EVENTS = ['touchstart', 'touchend'];
 
 /**
- * Keys for quick interaction
+ * 快捷操作按键列表
+ * 功能：用于触发快速交互的键盘按键
  */
 const SHORTCUT_KEYS = ['Enter', 'Space'];
 
+/**
+ * 初始化事件监听系统
+ * 核心逻辑：
+ * 1. 注册全局事件监听器
+ * 2. 管理检查器状态
+ * 3. 处理跨iframe场景
+ */
 export function setupListeners(opts: SetupListenersOptions) {
   const { once, crossIframe } = getOptions();
-  const onActive = withEventFn(opts.onActive);
-  const onOpenEditor = withEventFn(opts.onOpenEditor);
-  const onOpenTree = withEventFn(opts.onOpenTree);
-  const onExitInspect = withEventFn(opts.onExitInspect);
 
-  function setupEventListeners() {
-    SILENT_EVENTS.forEach((event) => {
-      on(event, onSilent, {
-        capture: true,
-        passive: false,
-      });
-    });
+  // 包装回调函数：执行前清理点击元素属性
+  const onActive = withEventWrapper(opts.onActive);
+  const onOpenEditor = withEventWrapper(opts.onOpenEditor);
+  const onOpenTree = withEventWrapper(opts.onOpenTree);
+  const onExitInspect = withEventWrapper(opts.onExitInspect);
 
-    // The click event on the window does not run, but the click
-    // event on the document does.
-    on('click', onInspect, {
-      capture: true,
-      target: document,
-    });
-    on('pointerdown', setupClickedElementAttrs, {
-      capture: true,
-    });
-    on('pointermove', onActiveElement, {
-      capture: true,
-    });
-    on('pointerover', onEnterScreen, {
-      capture: true,
-    });
-    on('pointerout', onLeaveScreen, {
-      capture: true,
-    });
-    on('longpress', onInspect, {
-      capture: true,
-    });
-    on('quickexit', onExitInspect, {
-      capture: true,
-    });
-    on('keydown', onKeydown, {
-      capture: true,
-    });
-    on('keyup', onKeyup, {
-      capture: true,
-    });
+  // 核心交互事件
+  const events = [
+    { type: 'click', handler: handleInspect, target: document },
+    { type: 'pointerdown', handler: setupClickedElementAttrs },
+    { type: 'pointermove', handler: handleActiveElement },
+    { type: 'pointerover', handler: handleEnterScreen },
+    { type: 'pointerout', handler: handleLeaveScreen },
+    { type: 'longpress', handler: handleInspect },
+    { type: 'quickexit', handler: onExitInspect },
+    { type: 'keydown', handler: handleKeyDown },
+    { type: 'keyup', handler: handleKeyUp },
+  ];
 
-    return cleanEventListeners;
+  // 注册带配置的事件监听
+  registerCoreEvents();
+
+  /** 统一注册事件 */
+  function registerCoreEvents() {
+    manageEventListeners(on);
   }
 
-  function cleanEventListeners() {
-    SILENT_EVENTS.forEach((event) => {
-      off(event, onSilent, {
+  /** 统一注销事件 */
+  function unregisterCoreEvents() {
+    manageEventListeners(off);
+  }
+
+  /**
+   * 管理事件监听器的统一入口
+   */
+  function manageEventListeners(operationType: typeof on | typeof off) {
+    SILENT_EVENTS.forEach((event) => operationType(event, handleSilentEvent, { capture: true }));
+
+    // 第一步：处理基础指针事件（兼容所有环境）
+    events.forEach(({ type, handler, target }) => {
+      // 使用统一配置：捕获阶段监听 + 指定事件目标
+      operationType(type, handler, {
+        target,
         capture: true,
       });
     });
-
-    off('click', onInspect, {
-      capture: true,
-      target: document,
-    });
-    off('pointerdown', setupClickedElementAttrs, {
-      capture: true,
-    });
-    off('pointermove', onActiveElement, {
-      capture: true,
-    });
-    off('pointerover', onEnterScreen, {
-      capture: true,
-    });
-    off('pointerout', onLeaveScreen, {
-      capture: true,
-    });
-    off('longpress', onInspect, {
-      capture: true,
-    });
-    off('quickexit', onExitInspect, {
-      capture: true,
-    });
-    off('keydown', onKeydown, {
-      capture: true,
-    });
-    off('keyup', onKeyup, {
-      capture: true,
-    });
   }
 
-  function onActiveElement(e: PointerEvent) {
-    if (inspectorState.isEnable && !inspectorState.isTreeOpen) {
-      const el = <HTMLElement>(
-        (e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target)
-      );
-      if (el !== inspectorState.activeEl) {
-        inspectorState.activeEl = checkValidElement(el) ? el : null;
-        onActive();
-      }
+  /** 处理活动元素变化 */
+  function handleActiveElement(e: PointerEvent) {
+    if (!inspectorState.isEnable || inspectorState.isTreeOpen) return;
+
+    // 根据设备类型获取目标元素
+    const targetEl = (
+      e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target
+    ) as HTMLElement;
+
+    const validEl = checkValidElement(targetEl) ? targetEl : null;
+    if (validEl !== inspectorState.activeEl) {
+      inspectorState.activeEl = validEl;
+      onActive();
     }
   }
 
-  function onEnterScreen(e: PointerEvent) {
-    // On mobile devices, getting focus when the screen is first touched
+  /** 处理进入屏幕事件（移动端触控） */
+  function handleEnterScreen(e: PointerEvent) {
     if (e.pointerType === 'touch') {
-      onActiveElement(e);
+      handleActiveElement(e); // 移动端首次触摸时获取焦点
     }
   }
 
-  function onLeaveScreen(e: PointerEvent) {
-    if (crossIframe && !isTopWindow) {
-      return;
-    }
-    // On PC devices, focus is lost when the mouse leaves the browser window
-    if (e.pointerType === 'mouse' && e.relatedTarget == null) {
+  /** 处理离开屏幕事件 */
+  function handleLeaveScreen(e: PointerEvent) {
+    if (crossIframe && !isTopWindow) return;
+
+    // PC端鼠标移出窗口时清空焦点
+    if (e.pointerType === 'mouse' && !e.relatedTarget) {
       inspectorState.activeEl = null;
       onActive();
     }
   }
 
-  function onKeydown(e: KeyboardEvent) {
-    if (inspectorState.activeEl && SHORTCUT_KEYS.includes(e.code)) {
-      Object.defineProperty(e, 'type', {
-        get() {
-          return `key${e.code}`.toLowerCase();
-        },
-      });
-      Object.defineProperty(e, 'target', {
-        get() {
-          return inspectorState.activeEl;
-        },
-      });
-      setupClickedElementAttrs(e);
-      onInspect(e as unknown as PointerEvent);
-    }
+  /** 处理键盘按下事件 */
+  function handleKeyDown(e: KeyboardEvent) {
+    if (!inspectorState.activeEl || !SHORTCUT_KEYS.includes(e.code)) return;
+
+    // 动态修改事件对象属性
+    redefineEventProperty(e, 'type', () => `key${e.code}`.toLowerCase());
+    redefineEventProperty(e, 'target', () => inspectorState.activeEl);
+
+    setupClickedElementAttrs(e);
+    handleInspect(e as unknown as PointerEvent);
   }
 
-  function onKeyup(e: KeyboardEvent) {
+  /** 处理键盘释放事件 */
+  function handleKeyUp(e: KeyboardEvent) {
     if (SHORTCUT_KEYS.includes(e.code)) {
       cleanClickedElementAttrs();
     }
   }
 
-  function onInspect(e: PointerEvent) {
-    onSilent(e);
+  /** 处理元素检查事件 */
+  function handleInspect(e: PointerEvent) {
+    handleSilentEvent(e);
 
-    const el = <HTMLElement>e.target;
-    if (checkClickedElement(el)) {
-      const targetEl = inspectorState.activeEl?.isConnected ? inspectorState.activeEl : el;
+    const targetEl = e.target as HTMLElement;
+    if (checkClickedElement(targetEl)) {
+      const finalEl = inspectorState.activeEl?.isConnected ? inspectorState.activeEl : targetEl;
 
       inspectorState.activeEl = null;
-
       if (once) onExitInspect();
 
-      if (e.metaKey || e.type === 'longpress' || e.type === 'keyspace') {
-        onOpenTree(targetEl);
-      } else {
-        onOpenEditor(targetEl);
-      }
+      // 根据操作类型触发不同回调
+      const openMethod = e.metaKey || e.type === 'longpress' ? onOpenTree : onOpenEditor;
+      openMethod(finalEl);
     }
   }
 
-  return setupEventListeners();
+  return unregisterCoreEvents;
 }
 
-function withEventFn<T extends (...args: any[]) => any>(fn: T) {
-  function wrapedEventFn(...args: Parameters<T>): ReturnType<T> {
+/** 事件回调包装器：确保执行前清理元素属性 */
+function withEventWrapper<T extends (...args: any[]) => any>(fn: T) {
+  return function wrappedFn(...args: Parameters<T>): ReturnType<T> {
     cleanClickedElementAttrs();
     return fn(...args);
-  }
-  return wrapedEventFn;
+  };
 }
 
-function onSilent(e: Event) {
-  // No action is expected on the event when target or relatedTarget
-  // is an invalid element.
-  if (checkValidElement((<any>e).target) || checkValidElement((<any>e).relatedTarget)) {
+/** 静默事件处理：阻止默认行为和冒泡 */
+function handleSilentEvent(e: Event) {
+  const isValidTarget = [e.target, (e as any).relatedTarget].some(checkValidElement);
+  if (isValidTarget) {
     if (!CLICK_ATTACHMENT_EVENTS.includes(e.type)) {
       e.preventDefault();
     }
     e.stopPropagation();
   }
+}
+
+/** 动态重定义事件属性 */
+function redefineEventProperty(e: Event, prop: keyof Event, getter: () => any) {
+  Object.defineProperty(e, prop, { get: getter });
 }
