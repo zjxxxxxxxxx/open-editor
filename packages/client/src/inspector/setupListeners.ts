@@ -127,17 +127,42 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   /**
-   * 管理事件监听器的统一入口
+   * 事件监听器管理中心（策略模式实现）
+   *
+   * 实现特性：
+   * 1. 统一管理两类事件监听：
+   *    - 静默事件(SILENT_EVENTS)：需要强制捕获阶段处理的基础系统级事件
+   *    - 业务事件(events)：可配置监听目标的交互事件
+   * 2. 支持动态切换监听状态（绑定/解绑）
+   *
+   * @param operationType 操作策略选择器
+   *     使用 'on' 启用事件监听 | 'off' 移除事件监听
+   *
+   * 实现要点：
+   * 1. 静默事件处理逻辑：
+   *    - 始终在捕获阶段触发（capture: true）
+   *    - 使用统一的事件处理器(handleSilentEvent)
+   *    - 无特定监听目标（默认window对象）
+   *
+   * 2. 业务事件处理逻辑：
+   *    - 支持自定义监听目标（target 配置项）
+   *    - 捕获阶段监听保证处理优先级（capture: true）
+   *    - 每个事件类型对应独立处理器(handler)
+   *
+   * 设计优势：
+   *  - 通过策略模式消除重复代码
+   *  - 配置与执行逻辑解耦
+   *  - 类型安全的事件操作接口
    */
   function manageEventListeners(operationType: typeof on | typeof off) {
+    /* 系统级静默事件处理（固定策略） */
     SILENT_EVENTS.forEach((event) => operationType(event, handleSilentEvent, { capture: true }));
 
-    // 第一步：处理基础指针事件（兼容所有环境）
+    /* 可配置业务事件处理（动态策略） */
     events.forEach(({ type, handler, target }) => {
-      // 使用统一配置：捕获阶段监听 + 指定事件目标
       operationType(type, handler, {
-        target,
-        capture: true,
+        target, // 支持 window/document/特定元素
+        capture: true, // 确保在事件捕获阶段处理
       });
     });
   }
