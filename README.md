@@ -19,7 +19,7 @@
 
 ## 🔍 Project Overview
 
-Open Editor is an AST-powered debugging tool designed for modern web development. By deeply integrating with build toolchains, it establishes precise two-way mapping between browser elements and source code, enabling developers to directly locate source positions in React/Vue component trees and open corresponding files in local IDEs with one click. This revolutionary solution can save developers over 90%+ of source code locating time, significantly improving debugging efficiency.
+Open Editor is an intelligent debugging tool based on AST parsing technology, designed for modern web development. Through deep integration with build toolchains, it achieves bidirectional precise mapping between `browser elements ↔ source code`, allowing developers to directly locate source positions in React/Vue component trees and open corresponding files in local IDEs with one click. This revolutionary solution can save developers over 90%+ of source code locating time, significantly improving debugging efficiency.
 
 [▶▶▶ Live Demo (Vite+React Example)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![Feature Demo](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -28,16 +28,28 @@ Open Editor is an AST-powered debugging tool designed for modern web development
 
 ### Framework Support
 
-- **React Ecosystem**: Deep integration with Create React App/Next.js etc.
-- **Vue Ecosystem**: Native support for Vue CLI/Nuxt.js/Vite
+- **React Ecosystem**: Deep adaptation for Create React App/Next.js etc.
+- **Vue Ecosystem**: Deep adaptation for Vue CLI/Nuxt.js/Vite etc.
 - **Build Tools**: Full compatibility with Webpack 4+/Vite 2+/Rollup 2+
 
 ### Debugging Capabilities
 
 - Multi-level component tree tracing (supports cross-iframe communication)
-- Shortcut-driven workflow (⌥⌘O to activate/deactivate inspector)
+- Shortcut-driven workflow (⌥⌘O to toggle inspector)
 - Mobile remote debugging support
 - Intelligent IDE detection (auto-recognizes locally installed editors)
+
+### Environment Requirements
+
+- **Exclusive Mode**: Development environment only
+- **Runtime Requirements**:
+  - Node.js 14+
+  - Modern browsers (latest stable version of any):
+    - Google Chrome ≥ 89 (Mar 2021)
+    - Mozilla Firefox ≥ 85 (Jan 2021)
+    - Microsoft Edge ≥ 90 (Apr 2021)
+    - Apple Safari ≥ 14 (Sep 2020)
+- **Security Protocol**: Requires TLS 1.2/1.3
 
 ## 🛠️ Quick Start
 
@@ -50,7 +62,7 @@ Open Editor is an AST-powered debugging tool designed for modern web development
 npm list @babel/plugin-transform-react-jsx-source
 ```
 
-> Ensure this plugin is enabled if using custom Babel configurations
+> Ensure this plugin is enabled if using custom Babel config
 
 #### Vue Projects
 
@@ -59,17 +71,11 @@ npm list @babel/plugin-transform-react-jsx-source
 npm install unplugin-vue-source -D
 ```
 
-> Missing this plugin will cause line-column positioning to fail
-
-#### Environment Requirements
-
-> Development environment only  
-> Node.js 14+  
-> Modern browsers (Chrome 90+/Edge 90+/Firefox 84+)
+> Required for accurate line/column positioning
 
 ### Integration Example
 
-> This demo uses [`Vite+React`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react). Other tech stacks only require adjusting corresponding configuration items while maintaining identical core logic.
+> Demonstrated with `Vite+React` ([source](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react)). Configuration varies by tech stack, but core logic remains consistent.
 
 #### Tool Integration
 
@@ -108,7 +114,7 @@ npm run dev
 ##### 1. Activate Inspector
 
 - **Shortcut**: ⌥⌘O (Mac) | Alt+Ctrl+O (Win)
-- **Mouse**: Click toggle button in browser's top-right corner
+- **Mouse**: Click browser toolbar toggle
 
   ###### Toggle Button Demo
 
@@ -116,11 +122,11 @@ npm run dev
 
 ##### 2. Element Inspection
 
-- **Hover Preview**: Mouse hover displays source location
-- **Precision Navigation**:
+- **Hover Preview**: Display source location on hover
+- **Precise Navigation**:
 
-  - Single-click to open editor (supports line-column jump)
-  - Long-press element (or ⌘+click) to expand component tree
+  - Click to open in editor (with line/column)
+  - Long-press (or ⌘+click) to view component tree
 
   ###### Hover Preview Demo
 
@@ -130,27 +136,27 @@ npm run dev
 
   <img src="./public/open-tree-demo.png" width="500">
 
-##### 3. Deactivate Inspector
+##### 3. Exit Inspector
 
-- **Shortcut**: Esc or re-trigger ⌥⌘O (Mac) | Alt+Ctrl+O (Win)
-- **Mouse**: Click toggle button to exit (or right-click)
+- **Shortcut**: Esc or re-trigger ⌥⌘O/Alt+Ctrl+O
+- **Mouse**: Click toggle button or right-click
 
 ## ⚙️ Advanced Features
 
 ### Global Events
 
 ```ts
-// Custom inspector activation logic
+// Custom inspector activation
 window.addEventListener('enableinspector', (e) => {
   e.preventDefault(); // Block default behavior
 });
 
-// Custom inspector exit logic
+// Custom inspector exit
 window.addEventListener('exitinspector', (e) => {
   e.preventDefault(); // Block default behavior
 });
 
-// Custom editor launch logic
+// Custom editor launch
 window.addEventListener('openeditor', (e) => {
   const url = new URL(e.detail);
   url.hostname = 'localhost'; // Modify domain

@@ -3,33 +3,45 @@ import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
 
+interface TreeUIState {
+  /** 根容器元素 */
+  root: HTMLElement;
+  /** 弹出层容器 */
+  popup: HTMLElement;
+  /** 关闭按钮元素 */
+  popupClose: HTMLElement;
+  /** 弹出层内容区域 */
+  popupBody: HTMLElement;
+}
+
+/** 组件树UI展示组件 */
 export function TreeUI() {
   const { once } = getOptions();
+  const state = {} as TreeUIState;
 
-  const state = {} as {
-    root: HTMLElement;
-    overlay: HTMLElement;
-    popup: HTMLElement;
-    popupClose: HTMLElement;
-    popupBody: HTMLElement;
-  };
+  // 初始化事件监听
+  initEventListeners();
 
-  treeOpenBridge.on((source) => {
+  /** 初始化所有事件监听 */
+  function initEventListeners() {
+    treeOpenBridge.on(handleTreeOpen);
+    treeCloseBridge.on(handleTreeClose);
+  }
+
+  /** 处理树形结构打开事件 */
+  function handleTreeOpen(source: CodeSource) {
     renderTree(source);
-
-    applyStyle(state.root, {
-      display: 'block',
-    });
+    applyStyle(state.root, { display: 'block' });
     addClass(document.body, 'oe-lock-screen');
-  });
+  }
 
-  treeCloseBridge.on(() => {
-    applyStyle(state.root, {
-      display: 'none',
-    });
+  /** 处理树形结构关闭事件 */
+  function handleTreeClose() {
+    applyStyle(state.root, { display: 'none' });
     removeClass(document.body, 'oe-lock-screen');
-  });
+  }
 
+  /** 渲染组件树内容 */
   function renderTree(source: CodeSource) {
     const hasTree = source.tree.length > 0;
     const content = (
@@ -39,38 +51,37 @@ export function TreeUI() {
           {`<ComponentTree>`}
         </div>
         <div className="oe-tree-content">
-          {hasTree ? buildTree(source.tree) : '>> not found 😭.'}
+          {hasTree ? buildTree(source.tree) : '>> 未找到组件树 😭'}
         </div>
       </>
     );
 
-    if (hasTree) {
-      removeClass(state.popup, 'oe-tree-error');
-    } else {
-      addClass(state.popup, 'oe-tree-error');
-    }
+    // 根据是否有数据设置错误状态
+    const popupClass = hasTree ? 'oe-tree-error' : '';
+    hasTree ? removeClass(state.popup, popupClass) : addClass(state.popup, popupClass);
 
     replaceChildren(state.popupBody, content);
   }
 
+  /** 递归构建树形结构 */
   function buildTree(tree: CodeSourceMeta[]) {
     const meta = tree.pop()!;
     const tagName = `<${meta.name}>`;
     const fileName = `${meta.file}:${meta.line}:${meta.column}`;
 
     return (
-      <div className="oe-tree-item">
+      <div className="oe-tree-item" key={meta.name}>
+        {/* 树节点元素 */}
         <div
           className="oe-tree-node"
-          title="Click to open in your editor"
-          onClick={() => {
-            if (once) treeCloseBridge.emit();
-            openEditorBridge.emit([meta]);
-          }}
+          title="点击在编辑器中打开"
+          onClick={() => handleNodeClick(meta)}
         >
           {tagName}
           <span className="oe-tree-file">{fileName}</span>
         </div>
+
+        {/* 递归渲染子树 */}
         {tree.length > 0 && (
           <>
             <div className="oe-tree-line" />
@@ -82,30 +93,38 @@ export function TreeUI() {
     );
   }
 
+  /** 处理节点点击事件 */
+  function handleNodeClick(meta: CodeSourceMeta) {
+    if (once) treeCloseBridge.emit();
+    openEditorBridge.emit([meta]);
+  }
+
   return (
     <div
       className="oe-tree"
-      ref={(el) => (state.root = el)}
+      ref={(el) => (state.root = el!)}
       onClick={() => treeCloseBridge.emit()}
       onQuickExit={() => treeCloseBridge.emit()}
     >
+      {/* 弹出层容器 */}
       <div
         className="oe-tree-popup"
-        ref={(el) => (state.popup = el)}
+        ref={(el) => (state.popup = el!)}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* 关闭按钮 */}
         <button
           className="oe-tree-close"
-          ref={(el) => (state.popupClose = el)}
+          ref={(el) => (state.popupClose = el!)}
           onClick={() => treeCloseBridge.emit()}
         >
-          <svg viewBox="0 0 1024 1024" width="100%" height="100%" fill="currentColor">
+          <svg viewBox="0 0 1024 1024" fill="currentColor">
             <path d="M569.02728271 509.40447998L877.59753418 817.97473145 820.57025146 872.40649414 512 563.83624268 198.23870849 882.78857422 141.21142578 823.16577148l313.76129151-318.95233154L146.40246582 195.64318847 203.42974854 141.21142578 512 449.78167724 820.57025146 141.21142578 877.59753418 200.83422852 569.02728271 509.40447998z" />
           </svg>
         </button>
-        <div className="oe-tree-body" ref={(el) => (state.popupBody = el)}>
-          {/* tree element insert here */}
-        </div>
+
+        {/* 内容区域 */}
+        <div className="oe-tree-body" ref={(el) => (state.popupBody = el!)} />
       </div>
     </div>
   );

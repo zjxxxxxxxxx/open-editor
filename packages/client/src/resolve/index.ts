@@ -6,51 +6,101 @@ import { resolveVue3 } from './resolveVue3';
 import { resolveVue2 } from './resolveVue2';
 import { resolveDebug } from './resolveDebug';
 
+/**
+ * 源码元数据结构定义
+ */
 export interface CodeSourceMeta {
+  /** 组件/节点名称（经过驼峰化处理） */
   name: string;
+  /** 源代码文件绝对路径 */
   file: string;
+  /** 代码行号（1-based） */
   line: number;
+  /** 代码列号（1-based） */
   column: number;
 }
 
+/**
+ * 调试源码信息结构
+ */
 export interface CodeSource {
+  /** 当前检测会话ID */
   id: string;
+  /** 目标DOM元素标签名 */
   el: string;
+  /** 首条有效元数据（快捷访问） */
   meta?: CodeSourceMeta;
+  /** 完整的组件层级溯源数据 */
   tree: CodeSourceMeta[];
 }
+/**
+ * 框架解析器映射表
+ * 根据调试属性特征匹配对应的框架解析器
+ */
+const FRAME_RESOLVERS = {
+  __reactFiber: resolveReact17, // React 17+ Fiber架构
+  __reactInternal: resolveReact15, // React 15 内部实例
+  __vueParent: resolveVue3, // Vue 3 父组件链
+  __vue: resolveVue2, // Vue 2 实例
+} as const;
 
+/**
+ * 解析DOM元素的源码定位信息
+ * @param el - 目标DOM元素
+ * @param deep - 是否深度解析组件树
+ * @returns 包含源码定位信息的对象
+ *
+ * 实现流程：
+ * 1. 初始化基础数据结构
+ * 2. 提取元素调试信息
+ * 3. 根据调试信息特征选择解析器
+ * 4. 执行框架特定的源码解析
+ * 5. 标准化元数据格式
+ * 6. 设置主元数据引用
+ */
 export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
+  // 初始化返回数据结构
   const source: CodeSource = {
     id: CURRENT_INSPECT_ID,
     el: el.localName,
     tree: [],
   };
 
-  const debug = resolveDebug(el);
-  if (debug) {
-    if (debug.key.startsWith('__reactFiber')) {
-      resolveReact17(debug, source.tree, deep);
-    } else if (debug.key.startsWith('__reactInternal')) {
-      resolveReact15(debug, source.tree, deep);
-    } else if (debug.key.startsWith('__vueParent')) {
-      resolveVue3(debug, source.tree, deep);
-    } else if (debug.key.startsWith('__vue')) {
-      resolveVue2(debug, source.tree, deep);
-    }
+  // 提取元素的调试元数据（参考Vue/React调试属性）
+  const debugInfo = resolveDebug(el);
+  if (!debugInfo) return source;
+
+  // 根据调试属性特征匹配解析器
+  const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
+
+  if (resolverKey) {
+    // 执行对应框架的源码解析
+    FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
   }
 
+  // 标准化所有元数据格式
   source.tree = source.tree.map(normalizeMeta);
+  // 设置首个有效元数据为主要引用
   source.meta = source.tree[0];
 
   return source;
 }
 
-export function normalizeMeta(meta: Partial<CodeSourceMeta>) {
+/**
+ * 元数据标准化处理器
+ * @param meta - 原始元数据
+ * @returns 标准化后的元数据对象
+ *
+ * 处理逻辑：
+ * 1. 组件名称驼峰化
+ * 2. 文件路径校验
+ * 3. 行列号默认值处理（源码行列号从1开始）
+ */
+export function normalizeMeta(meta: CodeSourceMeta): CodeSourceMeta {
   return {
-    name: meta.name ? camelCase(meta.name) : 'Anonymous',
-    file: meta.file!,
-    line: meta.line || 1,
-    column: meta.column || 1,
+    name: camelCase(meta.name), // 统一命名规范
+    file: meta.file || 'unknown', // 文件路径兜底处理
+    line: meta.line || 1, // 确保最小行号为1
+    column: meta.column || 1, // 确保最小列号为1
   };
 }

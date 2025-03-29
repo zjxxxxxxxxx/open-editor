@@ -6,95 +6,144 @@ import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
 import css from './css';
-import { clientRoot, readjson } from './utils';
+import { clientRoot, readJSON } from './utils';
 
-const __DEV__ = '__DEV__' in process.env;
-const __TARGET__ = process.env.__TARGET__ || 'es6';
+/**
+ * 开发环境标识，通过 process.env.__DEV__ 注入
+ */
+const IS_DEV = '__DEV__' in process.env;
 
-const isClient = clientRoot === resolve();
+/**
+ * 构建目标环境，默认使用 es6
+ */
+const TARGET = process.env.__TARGET__ || 'es6';
 
-export type BuildOutput =
-  | string
-  | {
-      require?: string;
-      import?: string;
-      types?: string;
-    };
+/**
+ * 判断是否为客户端构建
+ */
+const isClientBuild = clientRoot === resolve();
 
-export default function buildConfigs() {
-  const { exports } = readjson(resolve('./package.json'));
-  const builds = <[string, BuildOutput][]>(
-    Object.entries(exports).map(([input, output]) => [normalizeInput(input), output])
+/**
+ * 构建输出配置类型定义
+ */
+interface BuildOutput {
+  /**
+   * CommonJS 格式输出路径
+   */
+  require?: string;
+
+  /**
+   * ESM 格式输出路径
+   */
+  import?: string;
+
+  /**
+   * 类型声明文件输出路径
+   */
+  types?: string;
+}
+
+/**
+ * 生成 Rollup 配置入口函数
+ */
+export default function createRollupConfigs(): RollupOptions[] {
+  const packageJsonPath = resolve('./package.json');
+  const { exports } = readJSON(packageJsonPath);
+
+  // 转换 exports 配置为配置项数组
+  const configEntries = Object.entries(exports).map(([inputPath, outputConfig]) => [
+    normalizeInputPath(inputPath),
+    outputConfig,
+  ]) as [string, BuildOutput][];
+
+  // 生成所有构建配置
+  return configEntries.flatMap(([inputPath, outputConfig]) =>
+    generateBuildConfig(inputPath, outputConfig),
   );
-  return <RollupOptions[]>builds.flatMap(([input, output]) => buildConfig(input, output));
 }
 
-function buildConfig(input: string, output: BuildOutput) {
-  return <RollupOptions[]>[buildBundles(input, output), buildDTS(input, output)].filter(Boolean);
+/**
+ * 生成单个构建配置（包含代码包和类型声明）
+ */
+function generateBuildConfig(
+  inputPath: string,
+  outputConfig: BuildOutput | string,
+): RollupOptions[] {
+  return [
+    generateBundleConfig(inputPath, outputConfig),
+    generateTypeDeclarationConfig(inputPath, outputConfig),
+  ].filter(Boolean) as RollupOptions[];
 }
 
-function buildBundles(input: string, output: BuildOutput): RollupOptions | void {
-  const bundles: OutputOptions[] = [];
+/**
+ * 生成代码包构建配置
+ */
+function generateBundleConfig(
+  inputPath: string,
+  outputConfig: BuildOutput | string,
+): RollupOptions | undefined {
+  const outputFormats: OutputOptions[] = [];
 
-  if (typeof output === 'string') {
-    bundles.push({
-      file: output,
+  // 处理字符串类型的输出配置
+  if (typeof outputConfig === 'string') {
+    outputFormats.push({
+      file: outputConfig,
       format: 'esm',
-      sourcemap: __DEV__,
+      sourcemap: IS_DEV,
     });
   } else {
-    if (output.require) {
-      bundles.push({
-        file: output.require,
+    // 处理对象类型的输出配置
+    if (outputConfig.require) {
+      outputFormats.push({
+        file: outputConfig.require,
         format: 'cjs',
-        sourcemap: __DEV__,
+        sourcemap: IS_DEV,
       });
     }
 
-    if (output.import) {
-      bundles.push({
-        file: output.import,
+    if (outputConfig.import) {
+      outputFormats.push({
+        file: outputConfig.import,
         format: 'esm',
-        sourcemap: __DEV__,
+        sourcemap: IS_DEV,
       });
     }
   }
 
-  if (bundles.length) {
-    return {
-      input,
-      output: bundles,
-      external(source) {
-        return /^@?[a-z]/.test(source);
-      },
-      plugins: [
-        ...(isClient
-          ? [
-              css({
-                sourcemap: __DEV__,
-              }),
-            ]
-          : []),
-        nodeResolve(),
-        commonjs(),
-        esbuild({
-          target: __TARGET__,
-          minifySyntax: !__DEV__,
-          minifyWhitespace: !__DEV__,
-          minifyIdentifiers: false,
-          jsxImportSource: join(clientRoot, './jsx'),
-        }),
-      ],
-    };
-  }
+  if (outputFormats.length === 0) return;
+
+  return {
+    input: inputPath,
+    output: outputFormats,
+    external: (source) => /^@?[a-z]/.test(source), // 排除外部依赖
+    plugins: [
+      // 客户端构建时添加 CSS 处理
+      ...(isClientBuild ? [css({ sourcemap: IS_DEV })] : []),
+      nodeResolve(),
+      commonjs(),
+      esbuild({
+        target: TARGET,
+        minifySyntax: !IS_DEV,
+        minifyWhitespace: !IS_DEV,
+        minifyIdentifiers: false,
+        jsxImportSource: join(clientRoot, './jsx'), // 自定义 JSX 导入路径
+      }),
+    ],
+  };
 }
 
-function buildDTS(input: string, output: BuildOutput): RollupOptions | void {
-  if (typeof output === 'object' && output.types) {
+/**
+ * 生成类型声明文件配置
+ */
+function generateTypeDeclarationConfig(
+  inputPath: string,
+  outputConfig: BuildOutput | string,
+): RollupOptions | undefined {
+  if (typeof outputConfig === 'object' && outputConfig.types) {
     return {
-      input,
+      input: inputPath,
       output: {
-        file: output.types,
+        file: outputConfig.types,
         format: 'esm',
         sourcemap: false,
       },
@@ -103,7 +152,11 @@ function buildDTS(input: string, output: BuildOutput): RollupOptions | void {
   }
 }
 
-function normalizeInput(input: string) {
-  const filename = input.replace(/^\.\/?/, '') || 'index';
+/**
+ * 标准化入口路径
+ * @example './index' -> './src/index.ts'
+ */
+function normalizeInputPath(rawPath: string) {
+  const filename = rawPath.replace(/^\.\/?/, '') || 'index';
   return `./src/${filename}.ts`;
 }

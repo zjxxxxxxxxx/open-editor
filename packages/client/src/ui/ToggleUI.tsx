@@ -1,108 +1,137 @@
 import { clamp } from '@open-editor/shared';
-import { CSS_util, applyStyle, addClass, removeClass } from '../utils/dom';
+import { CssUtils, applyStyle, addClass, removeClass } from '../utils/dom';
 import { safeArea, safeAreaObserver } from '../utils/safeArea';
 import { inspectorState } from '../inspector/inspectorState';
 import { off, on } from '../event';
 import { inspectorEnableBridge, inspectorExitBridge } from '../bridge';
 
+/**
+ * 组件状态接口
+ */
+interface ToggleUIState {
+  /**
+   * 根容器元素
+   */
+  root: HTMLElement;
+  /**
+   * 操作按钮元素
+   */
+  button: HTMLElement;
+  /**
+   * 是否正在拖拽中
+   */
+  dnding: boolean;
+  /**
+   * 是否支持触摸操作
+   */
+  touchable: boolean;
+}
+
 export function ToggleUI() {
-  const state = {} as {
-    root: HTMLElement;
-    button: HTMLElement;
-    dnding: boolean;
-    touchable: boolean;
-  };
+  const state = {} as ToggleUIState;
 
+  // 监听检查器启用事件
   inspectorEnableBridge.on(() => {
-    applyStyle(state.button, {
-      color: 'var(--cyan)',
-    });
+    applyStyle(state.button, { color: 'var(--cyan)' });
   });
 
+  // 监听检查器退出事件
   inspectorExitBridge.on(() => {
-    applyStyle(state.button, {
-      color: null,
-    });
+    applyStyle(state.button, { color: null });
   });
 
+  /**
+   * 开始拖拽操作
+   */
   function startDnD() {
     state.dnding = true;
-
     addClass(state.root, 'oe-toggle-dnd');
-
     on('pointermove', changePosition);
     on('pointerup', stopDnD);
   }
 
+  /**
+   * 结束拖拽操作
+   */
   function stopDnD() {
-    // Modify when the click e is complete
+    // 延迟状态更新确保点击事件完成
     setTimeout(() => (state.dnding = false));
-
     removeClass(state.root, 'oe-toggle-dnd');
-
     off('pointermove', changePosition);
     off('pointerup', stopDnD);
   }
 
+  /**
+   * 更新按钮位置
+   * @param e 指针事件对象
+   */
   function changePosition(e: PointerEvent) {
     localStorage['oe-pt'] = e.clientY;
     updatePosition();
   }
 
+  /**
+   * 切换检查器状态
+   */
+  function toggleEnable() {
+    // 防止拖拽结束后误触发点击
+    if (!state.dnding) {
+      if (inspectorState.isEnable) {
+        inspectorExitBridge.emit();
+      } else {
+        inspectorEnableBridge.emit();
+      }
+    }
+  }
+
+  /**
+   * 更新按钮尺寸（适配触摸屏）
+   */
   function updateSize() {
     const touchable =
       'maxTouchPoints' in navigator ? navigator.maxTouchPoints > 0 : 'ontouchstart' in window;
+
     if (state.touchable !== touchable) {
-      // Display larger button on the touch screen
-      if (touchable) {
-        addClass(state.root, 'oe-toggle-touch');
-      } else {
-        removeClass(state.root, 'oe-toggle-touch');
-      }
+      touchable
+        ? addClass(state.root, 'oe-toggle-touch')
+        : removeClass(state.root, 'oe-toggle-touch');
       state.touchable = touchable;
     }
   }
 
+  /**
+   * 更新按钮定位
+   */
   function updatePosition() {
     const { innerHeight: winH } = window;
     const { offsetHeight: toggleH } = state.root;
-
     const cacheY = +localStorage['oe-pt'] || 0;
+
+    // 计算安全显示区域
     const minRenderY = safeArea.top;
     const maxRenderY = winH - toggleH - safeArea.bottom;
     const renderY = clamp(cacheY - toggleH / 2, minRenderY, maxRenderY);
 
     applyStyle(state.root, {
-      top: CSS_util.px(renderY),
-      right: CSS_util.px(safeArea.right),
+      top: CssUtils.numberToPx(renderY),
+      right: CssUtils.numberToPx(safeArea.right),
     });
-  }
-
-  function toggleEnable() {
-    // Prevents the click event from being triggered by the end of the drag
-    if (!state.dnding) {
-      if (!inspectorState.isEnable) {
-        inspectorEnableBridge.emit();
-      } else {
-        inspectorExitBridge.emit();
-      }
-    }
   }
 
   try {
     return (
       <div
         className="oe-toggle"
-        ref={(el) => (state.root = el)}
-        // Prevent screen scrolling caused by dragging buttons in Firefox browser
+        ref={(el) => (state.root = el!)}
+        // 阻止Firefox拖动时的默认滚动行为
         onTouchMove={(e) => e.preventDefault()}
-        // Prevent the default behavior of contextmenu triggered by long pressing the screen on mobile devices
+        // 阻止移动端长按触发菜单
         onContextMenu={(e) => e.preventDefault()}
       >
         <div className="oe-toggle-overlay" />
         <button
           className="oe-toggle-button"
-          ref={(el) => (state.button = el)}
+          ref={(el) => (state.button = el!)}
           onClick={toggleEnable}
           onLongPress={startDnD}
         >
@@ -114,6 +143,7 @@ export function ToggleUI() {
       </div>
     );
   } finally {
+    // 组件挂载后的初始化操作
     updatePosition();
     safeAreaObserver.on(updatePosition);
     on('resize', updatePosition);
