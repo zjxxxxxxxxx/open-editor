@@ -19,7 +19,7 @@
 
 ## 🔍 Project Overview
 
-Open Editor is an intelligent debugging tool based on AST parsing technology, designed for modern web development. Through deep integration with build toolchains, it achieves bidirectional precise mapping between `browser elements ↔ source code`, allowing developers to directly locate source positions in React/Vue component trees and open corresponding files in local IDEs with one click. This revolutionary solution can save developers over 90%+ of source code locating time, significantly improving debugging efficiency.
+`Open Editor` is a front-end debugging tool specifically designed for modern web development. By deeply integrating with build toolchains, it achieves precise two-way mapping between browser elements and source code. This solution not only enables developers to directly locate source code positions within React/Vue component trees, but also automatically launches local IDEs to open corresponding files. This innovative approach helps developers save over 90% of source code navigation time, significantly improving debugging efficiency.
 
 [▶▶▶ Live Demo (Vite+React Example)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![Feature Demo](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -28,28 +28,29 @@ Open Editor is an intelligent debugging tool based on AST parsing technology, de
 
 ### Framework Support
 
-- **React Ecosystem**: Deep adaptation for Create React App/Next.js etc.
-- **Vue Ecosystem**: Deep adaptation for Vue CLI/Nuxt.js/Vite etc.
-- **Build Tools**: Full compatibility with Webpack 4+/Vite 2+/Rollup 2+
+- **React Ecosystem**: Deep integration with modern scaffolds like Create React App/Next.js
+- **Vue Ecosystem**: Full support for development solutions like Vue CLI/Nuxt.js/Vite
+- **Build Tools**: Full compatibility with Webpack 4+/Vite 2+/Rollup 2+ systems
 
 ### Debugging Capabilities
 
-- Multi-level component tree tracing (supports cross-iframe communication)
-- Shortcut-driven workflow (⌥⌘O to toggle inspector)
-- Mobile remote debugging support
-- Intelligent IDE detection (auto-recognizes locally installed editors)
+- 🕵️ Multi-level component tree tracing (Supports cross-iframe communication scenarios)
+- ⌨️ Hotkey-driven workflow (⌥⌘O to launch debugger, ESC to exit inspection mode)
+- 📱 Mobile remote debugging (Requires same LAN as desktop)
+- 🔍 Intelligent IDE detection (Auto-recognizes local IDEs like VS Code/WebStorm)
+- 🚫 Zero-intrusion design (No SDK import or configuration required)
 
-### Environment Requirements
+### Environment Support
 
-- **Exclusive Mode**: Development environment only
+- **Exclusive Mode**: Development environment-only features (Auto-disabled in production)
 - **Runtime Requirements**:
-  - Node.js 14+
-  - Modern browsers (latest stable version of any):
-    - Google Chrome ≥ 89 (Mar 2021)
-    - Mozilla Firefox ≥ 85 (Jan 2021)
-    - Microsoft Edge ≥ 90 (Apr 2021)
-    - Apple Safari ≥ 14 (Sep 2020)
-- **Security Protocol**: Requires TLS 1.2/1.3
+  - Node.js 14+ runtime (LTS version recommended)
+  - Modern browser requirements (Latest stable version of any):
+    - Google Chrome ≥ 89 (Released 03/2021)
+    - Mozilla Firefox ≥ 85 (Released 01/2021)
+    - Microsoft Edge ≥ 90 (Released 04/2021)
+    - Apple Safari ≥ 14 (Released 09/2020)
+- **Security Protocol**: Enforced TLS 1.2/1.3 encryption
 
 ## 🛠️ Quick Start
 
@@ -113,33 +114,44 @@ npm run dev
 
 ##### 1. Activate Inspector
 
-- **Shortcut**: ⌥⌘O (Mac) | Alt+Ctrl+O (Win)
-- **Mouse**: Click browser toolbar toggle
+- Keyboard shortcuts:
+  - macOS: Option + Command + O
+  - Windows: Alt + Ctrl + O
+- Mouse operation:
+  - Click toggle button in browser toolbar
 
-  ###### Toggle Button Demo
+###### Toggle Button Example
 
-  <img src="./public/toggle-button-demo.png" width="500">
+<img src="./public/toggle-button-demo.png" width="500" alt="Toggle Button State Comparison">
 
 ##### 2. Element Inspection
 
-- **Hover Preview**: Display source location on hover
-- **Precise Navigation**:
+- Hover preview:
+  - Mouse hover displays source location (with file/line/column info)
+- Precise positioning:
+  - Click element to jump directly in editor (auto line/column positioning)
+  - Deep inspection mode:
+    - macOS: Command + Click element to expand component tree
+    - Windows: Ctrl + Click element to expand component tree
+    - Long press element (300ms) to expand component tree
 
-  - Click to open in editor (with line/column)
-  - Long-press (or ⌘+click) to view component tree
+###### Hover Preview Demo
 
-  ###### Hover Preview Demo
+<img src="./public/inspect-element-demo.png" width="500" alt="Hover Positioning Demo">
 
-  <img src="./public/inspect-element-demo.png" width="500">
+###### Component Tree Preview
 
-  ###### Component Tree Demo
-
-  <img src="./public/open-tree-demo.png" width="500">
+<img src="./public/open-tree-demo.png" width="500" alt="Component Tree Structure Display">
 
 ##### 3. Exit Inspector
 
-- **Shortcut**: Esc or re-trigger ⌥⌘O/Alt+Ctrl+O
-- **Mouse**: Click toggle button or right-click
+- Keyboard shortcuts:
+  - Universal: Esc
+  - macOS: Press again Option + Command + O
+  - Windows: Press again Alt + Ctrl + O
+- Mouse operations:
+  - Click toggle button to close inspection mode
+  - Right-click blank area of the page
 
 ## ⚙️ Advanced Features
 
@@ -158,9 +170,9 @@ window.addEventListener('exitinspector', (e) => {
 
 // Custom editor launch
 window.addEventListener('openeditor', (e) => {
-  const url = new URL(e.detail);
+  const url = e.detail;
   url.hostname = 'localhost'; // Modify domain
-  window.open(url.toString());
+  fetch(url);
   e.preventDefault(); // Block default behavior
 });
 ```
@@ -188,8 +200,10 @@ window.addEventListener('openeditor', (e) => {
 | [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) |
 | [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)    |
 
-## Acknowledgments
+## Special Thanks
 
-- [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector)
-- [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector)
-- [launch-editor](https://github.com/yyx990803/launch-editor)
+This project is inspired and aided by the following outstanding open-source projects:
+
+- [react-dev-inspector](https://github.com/zthxxx/react-dev-inspector) - Indispensable tool for React component debugging
+- [vite-plugin-vue-inspector](https://github.com/webfansplz/vite-plugin-vue-inspector) - Vue component debugging solution
+- [launch-editor](https://github.com/yyx990803/launch-editor) - Core implementation for editor quick location

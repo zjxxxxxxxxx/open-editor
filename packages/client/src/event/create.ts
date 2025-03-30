@@ -1,12 +1,10 @@
 import { on, off } from '.';
 
-//#region 类型定义区
 /**
  * 可绑定事件的目标元素类型
  */
 export type Target = HTMLElement | Window;
 
-//#region 自定义事件相关类型
 /**
  * 自定义事件监听器配置项
  */
@@ -47,9 +45,7 @@ export interface CustomEventCache<AddCustomEventListenerUserOptions extends AnyO
    */
   stop: () => void;
 }
-//#endregion
 
-//#region 事件分发器相关类型
 /**
  * 事件分发器监听器配置项
  */
@@ -74,10 +70,7 @@ export type SetupDispatcher<AddCustomEventListenerUserOptions extends AnyObject>
  * 清理事件分发的函数类型
  */
 export type SetupDispatcherCleanListener = () => void;
-//#endregion
-//#endregion
 
-//#region 核心功能实现
 /**
  * 创建自定义事件分发器
  * @param type - 自定义事件类型名称
@@ -164,4 +157,3 @@ export function createCustomEventDispatcher<
 
   return { addEventListener, removeEventListener };
 }
-//#endregion

@@ -3,7 +3,7 @@ import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
 
-interface TreeUIState {
+interface TreeUIElements {
   /** 根容器元素 */
   root: HTMLElement;
   /** 弹出层容器 */
@@ -17,7 +17,7 @@ interface TreeUIState {
 /** 组件树UI展示组件 */
 export function TreeUI() {
   const { once } = getOptions();
-  const state = {} as TreeUIState;
+  const elements = {} as TreeUIElements;
 
   // 初始化事件监听
   initEventListeners();
@@ -31,13 +31,13 @@ export function TreeUI() {
   /** 处理树形结构打开事件 */
   function handleTreeOpen(source: CodeSource) {
     renderTree(source);
-    applyStyle(state.root, { display: 'block' });
+    applyStyle(elements.root, { display: 'block' });
     addClass(document.body, 'oe-lock-screen');
   }
 
   /** 处理树形结构关闭事件 */
   function handleTreeClose() {
-    applyStyle(state.root, { display: 'none' });
+    applyStyle(elements.root, { display: 'none' });
     removeClass(document.body, 'oe-lock-screen');
   }
 
@@ -58,9 +58,9 @@ export function TreeUI() {
 
     // 根据是否有数据设置错误状态
     const popupClass = hasTree ? 'oe-tree-error' : '';
-    hasTree ? removeClass(state.popup, popupClass) : addClass(state.popup, popupClass);
+    hasTree ? removeClass(elements.popup, popupClass) : addClass(elements.popup, popupClass);
 
-    replaceChildren(state.popupBody, content);
+    replaceChildren(elements.popupBody, content);
   }
 
   /** 递归构建树形结构 */
@@ -102,20 +102,20 @@ export function TreeUI() {
   return (
     <div
       className="oe-tree"
-      ref={(el) => (state.root = el!)}
+      ref={(el) => (elements.root = el!)}
       onClick={() => treeCloseBridge.emit()}
       onQuickExit={() => treeCloseBridge.emit()}
     >
       {/* 弹出层容器 */}
       <div
         className="oe-tree-popup"
-        ref={(el) => (state.popup = el!)}
+        ref={(el) => (elements.popup = el!)}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 关闭按钮 */}
         <button
           className="oe-tree-close"
-          ref={(el) => (state.popupClose = el!)}
+          ref={(el) => (elements.popupClose = el!)}
           onClick={() => treeCloseBridge.emit()}
         >
           <svg viewBox="0 0 1024 1024" fill="currentColor">
@@ -124,7 +124,7 @@ export function TreeUI() {
         </button>
 
         {/* 内容区域 */}
-        <div className="oe-tree-body" ref={(el) => (state.popupBody = el!)} />
+        <div className="oe-tree-body" ref={(el) => (elements.popupBody = el!)} />
       </div>
     </div>
   );

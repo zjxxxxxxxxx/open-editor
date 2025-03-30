@@ -1,14 +1,25 @@
+import { camelCase, normalizePath } from '@open-editor/shared';
 import outmatch from 'outmatch';
 import { getOptions } from '../options';
+import { CodeSourceMeta } from '.';
 
 /**
- * 浏览器环境路径处理工具
- * 实现路径标准化、文件名校验等安全功能
+ * 元数据标准化处理器
+ * @param meta - 原始元数据
+ * @returns 标准化后的元数据对象
+ *
+ * 处理逻辑：
+ * 1. 组件名称驼峰化
+ * 2. 文件路径校验
+ * 3. 行列号默认值处理（源码行列号从1开始）
  */
-
-// 浏览器路径分隔符标准化（统一为斜杠）
-function normalizePath(path: string) {
-  return path.replace(/\\/g, '/');
+export function normalizeMeta(meta: Partial<CodeSourceMeta>): CodeSourceMeta {
+  return {
+    name: meta.name ? camelCase(meta.name) : 'AnonymousComponent', // 统一命名规范
+    file: meta.file || 'unknown', // 文件路径兜底处理
+    line: meta.line || 1, // 确保最小行号为1
+    column: meta.column || 1, // 确保最小列号为1
+  };
 }
 
 /**

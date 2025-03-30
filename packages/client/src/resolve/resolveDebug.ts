@@ -6,6 +6,7 @@ import { checkValidElement } from '../utils/checkElement';
  * @template T 调试值的类型
  */
 export type ResolveDebug<T = any> = {
+  framework: 'react' | 'vue'; // 框架类型
   el: HTMLElement; // DOM元素节点
   key: string; // 框架注入的调试属性键名
   value?: T | null; // 调试属性值
@@ -34,7 +35,12 @@ export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
     if (frameworkKey) {
       const debugValue = (el as any)[frameworkKey];
       if (debugValue) {
-        return { el, key: frameworkKey, value: debugValue };
+        return {
+          framework: frameworkKey.includes('react') ? 'react' : 'vue',
+          el,
+          key: frameworkKey,
+          value: debugValue,
+        };
       }
     }
 

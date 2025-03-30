@@ -17,7 +17,7 @@ let resolver: VueResolver;
  * 3. 通过__source属性获取源码元数据
  * 4. 支持异步组件和动态组件解析
  */
-export function resolveVue2(debug: ResolveDebug, tree: Partial<CodeSourceMeta>[], deep = false) {
+export function resolveVue2(debug: ResolveDebug, tree: CodeSourceMeta[], deep?: boolean) {
   // 获取真正的组件实例（处理抽象节点情况）
   const componentInstance = debug.value._vnode?.componentInstance;
   if (componentInstance) {
@@ -44,16 +44,16 @@ function initializeResolver() {
      * 验证有效组件实例
      * 原理：通过$vnode属性判断是否为真实Vue组件
      */
-    isValid(inst) {
-      return !!inst?.$vnode;
+    isValid(node) {
+      return !!node?.$vnode;
     },
 
     /**
      * 获取父级组件实例
      * 注意与$parent的区别：此处返回的是直接父级，而非根实例
      */
-    getNext(inst) {
-      return inst.$parent; // 遵循Vue组件层级结构
+    getNext(node) {
+      return node.$parent; // 遵循Vue组件层级结构
     },
 
     /**
@@ -62,8 +62,8 @@ function initializeResolver() {
      * 1. 查找组件props中的__source（Babel插件注入）
      * 2. 向上遍历父组件直到找到有效源码信息
      */
-    getSource(inst) {
-      let current = inst;
+    getSource(node) {
+      let current = node;
       while (current) {
         const source = current.$props?.__source; // JSX编译注入的源码信息
         if (source) return source;
@@ -78,8 +78,8 @@ function initializeResolver() {
      * 2. 回退到options.__file（Vue CLI项目）
      * 3. 最终使用组件构造函数名
      */
-    getFile(inst) {
-      const ctor = getComponentConstructor(inst);
+    getFile(node) {
+      const ctor = getComponentConstructor(node);
       return ctor.__file || ctor.options?.__file;
     },
 
@@ -89,8 +89,8 @@ function initializeResolver() {
      * 1. 注册的组件名（components选项）
      * 2. 文件名称（当使用单文件组件时）
      */
-    getName(inst) {
-      const ctor = getComponentConstructor(inst);
+    getName(node) {
+      const ctor = getComponentConstructor(node);
       return ctor.options.name;
     },
   });
@@ -101,7 +101,7 @@ function initializeResolver() {
    * 通过componentOptions.Ctor获取原始构造函数
    * 处理Vue.extend生成的构造函数
    */
-  function getComponentConstructor(inst: any) {
-    return inst.$vnode.componentOptions.Ctor;
+  function getComponentConstructor(node: any) {
+    return node.$vnode.componentOptions.Ctor;
   }
 }
