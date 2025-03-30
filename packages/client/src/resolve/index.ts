@@ -1,4 +1,3 @@
-import { camelCase } from '@open-editor/shared';
 import { CURRENT_INSPECT_ID } from '../constants';
 import { resolveReact17 } from './resolveReact17';
 import { resolveReact15 } from './resolveReact15';
@@ -55,8 +54,7 @@ const FRAME_RESOLVERS = {
  * 2. 提取元素调试信息
  * 3. 根据调试信息特征选择解析器
  * 4. 执行框架特定的源码解析
- * 5. 标准化元数据格式
- * 6. 设置主元数据引用
+ * 5. 设置主元数据引用
  */
 export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
   // 初始化返回数据结构
@@ -78,29 +76,8 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
     FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
   }
 
-  // 标准化所有元数据格式
-  source.tree = source.tree.map(normalizeMeta);
   // 设置首个有效元数据为主要引用
   source.meta = source.tree[0];
 
   return source;
-}
-
-/**
- * 元数据标准化处理器
- * @param meta - 原始元数据
- * @returns 标准化后的元数据对象
- *
- * 处理逻辑：
- * 1. 组件名称驼峰化
- * 2. 文件路径校验
- * 3. 行列号默认值处理（源码行列号从1开始）
- */
-export function normalizeMeta(meta: CodeSourceMeta): CodeSourceMeta {
-  return {
-    name: camelCase(meta.name), // 统一命名规范
-    file: meta.file || 'unknown', // 文件路径兜底处理
-    line: meta.line || 1, // 确保最小行号为1
-    column: meta.column || 1, // 确保最小列号为1
-  };
 }

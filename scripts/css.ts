@@ -1,139 +1,174 @@
-import { join } from 'node:path';
-import { existsSync, readFileSync } from 'node:fs';
+/* -------------------------- 模块导入 -------------------------- */
+// Node.js 核心模块
+import { join } from 'node:path'; // 路径处理
+import { existsSync, readFileSync } from 'node:fs'; // 文件系统操作
+
+// Rollup 插件类型
 import { type Plugin as RollupPlugin } from 'rollup';
+
+// Babel 核心工具
 import { traverse, types as t, type Node } from '@babel/core';
-import { parse } from '@babel/parser';
+import { parse } from '@babel/parser'; // AST 解析器
+
+// 源码操作库（支持 sourcemap）
 import MagicString from 'magic-string';
-import postcss from 'postcss';
-import autoprefixer from 'autoprefixer';
-import minifySelectors from 'postcss-minify-selectors';
-import discardComments from 'postcss-discard-comments';
+
+// PostCSS 生态
+import postcss from 'postcss'; // CSS 处理器
+import autoprefixer from 'autoprefixer'; // 自动前缀
+import minifySelectors from 'postcss-minify-selectors'; // 选择器压缩
+import discardComments from 'postcss-discard-comments'; // 注释清理
 
 /* -------------------------- 常量定义 -------------------------- */
-const TAG_NAME = 'css'; // CSS模板标签标识
-const NEWLINE_RE = /[\n\f\r]+/g; // 匹配换行符
-const BEFORE_SPACES_RE = /\s+([{};:!])/g; // 匹配符号前多余空格
-const AFTER_SPACES_RE = /([{};:,])\s+/g; // 匹配符号后多余空格
+const TAG_NAME = 'css'; // CSS 模板标签标识符（用于匹配 css`...` 语法）
+const NEWLINE_RE = /[\n\f\r]+/g; // 匹配所有换行符（包括换页符和回车符）
+const BEFORE_SPACES_RE = /\s+([{};:!])/g; // 匹配符号前的多余空格（如 {  ; 前的空格）
+const AFTER_SPACES_RE = /([{};:,])\s+/g; // 匹配符号后的多余空格（如 }  ; 后的空格）
 
 /* -------------------------- 类型定义 -------------------------- */
 export interface Options {
   /**
-   * 是否生成sourcemap
+   * 是否生成 sourcemap
    * @default false
    */
-  sourcemap?: boolean;
+  sourcemap?: boolean; // 控制是否输出源码映射
 }
 
-/* -------------------------- CSS处理器初始化 -------------------------- */
-let processor: postcss.Processor;
-
 /* -------------------------- 核心插件逻辑 -------------------------- */
+/**
+ * Rollup 插件入口函数
+ * @param options - 插件配置项
+ * @returns 符合 Rollup 规范的插件对象
+ */
 export default function cssPlugin(options: Options): RollupPlugin {
-  // 初始化CSS处理器（自动补全+选择器压缩）
-  processor ||= postcss(
-    autoprefixer(),
-    minifySelectors() as postcss.Plugin,
-    discardComments({ removeAll: true }), // 删除所有注释，包括/*!重要注释*/
-  );
-
-  /**
-   * 转换CSS内容
-   * @param raw 原始CSS字符串
-   * @returns 处理后的模板字符串表达式
-   */
-  const transformCssContent = (raw: string) => {
-    const processed = processor
-      .process(raw)
-      .css.replace(NEWLINE_RE, '') // 移除换行
-      .replace(BEFORE_SPACES_RE, '$1') // 清理符号前空格
-      .replace(AFTER_SPACES_RE, '$1'); // 清理符号后空格
-    return `\`${processed.trim()}\``; // 转换为模板字符串
-  };
-
-  /**
-   * 判断JSX元素名称是否匹配
-   * @param node JSX元素节点
-   * @param name 预期名称
-   */
-  const isJsxElementMatch = (node: Node & { name: any }, name: string) =>
-    t.isJSXIdentifier(node.name) && node.name.name === name;
+  const processor = createProcessor(); // 初始化 CSS 处理流水线
 
   return {
-    name: 'rollup:css',
+    name: 'rollup:css', // 插件标识（显示在警告/错误信息中）
 
+    /**
+     * 转换钩子函数
+     * @param code - 源代码内容
+     * @param id - 文件路径标识
+     */
     transform(code, id) {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const ctx = this;
-
-      let magicString: MagicString;
-
-      /**
-       * 延迟初始化MagicString实例
-       */
-      const initMagicString = () => (magicString ||= new MagicString(code));
-
-      // 解析AST（支持JSX和TypeScript语法）
+      const magicString = new MagicString(code); // 创建可编辑源码对象
       const ast = parse(code, {
-        sourceType: 'unambiguous',
-        plugins: id.endsWith('x') ? ['jsx', 'typescript'] : ['typescript'],
+        // 解析为 AST
+        sourceType: 'unambiguous', // 自动判断模块类型
+        plugins: id.endsWith('x')
+          ? ['jsx', 'typescript'] // JSX 文件需要额外插件
+          : ['typescript'], // 普通 TypeScript 文件
       });
 
-      // AST遍历逻辑
-      traverse(ast, {
-        /**
-         * 处理css`...`模板字符串
-         * @example css`.class { color: red; }`
-         */
-        TaggedTemplateExpression({ node }) {
-          if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
-            initMagicString();
-            const { raw } = node.quasi.quasis[0].value;
-            magicString.overwrite(node.start!, node.end!, transformCssContent(raw));
+      // 遍历 AST 并进行转换操作
+      traverse(ast, createAstHandlers(this, magicString, processor, id));
+
+      // 返回处理结果（仅在代码有变更时返回）
+      return magicString.hasChanged()
+        ? {
+            code: magicString.toString(),
+            map: options.sourcemap ? magicString.generateMap() : null, // 按需生成 sourcemap
           }
-        },
+        : null;
+    },
+  };
+}
 
-        /**
-         * 处理<link>标签转换
-         * @example <link rel="stylesheet" href="style.css" />
-         */
-        JSXOpeningElement(path) {
-          const { node } = path;
-          if (!isJsxElementMatch(node, 'link')) return;
+/* -------------------------- CSS处理器配置 -------------------------- */
+/**
+ * 创建 PostCSS 处理流水线
+ * @returns 配置好的 PostCSS 处理器
+ */
+function createProcessor() {
+  return postcss([
+    autoprefixer(), // 自动添加浏览器前缀
+    minifySelectors() as postcss.Plugin, // 压缩 CSS 选择器
+    discardComments({ removeAll: true }), // 清除所有注释（包括 /*! 重要注释 */）
+  ]);
+}
 
-          // 提取link标签属性
-          let rel = '';
-          let href = '';
-          node.attributes.forEach((attr) => {
-            if (t.isJSXAttribute(attr) && t.isStringLiteral(attr.value)) {
-              if (isJsxElementMatch(attr, 'rel')) {
-                rel = attr.value.value;
-              } else if (isJsxElementMatch(attr, 'href')) {
-                href = join(id, '../', attr.value.value);
-              }
-            }
-          });
+/* -------------------------- AST遍历处理器 -------------------------- */
+import type { TransformPluginContext } from 'rollup';
 
-          // 转换样式表链接为内联样式
-          if (rel === 'stylesheet' && existsSync(href)) {
-            initMagicString();
-            const rawCss = readFileSync(href, 'utf-8');
-            magicString.overwrite(
-              node.start!,
-              node.end!,
-              `<style type="text/css">{${transformCssContent(rawCss)}}</style>`,
-            );
-            ctx.addWatchFile(href); // 添加文件监听
-          }
-        },
+/**
+ * 创建 AST 转换处理器
+ * @param ctx - Rollup 插件上下文（用于报错/监听文件）
+ * @param magicString - 源码操作对象
+ * @param processor - PostCSS 处理器
+ * @param id - 当前文件路径
+ */
+function createAstHandlers(
+  ctx: TransformPluginContext,
+  magicString: MagicString,
+  processor: postcss.Processor,
+  id: string,
+) {
+  return {
+    /**
+     * 处理 css`...` 模板字符串
+     * @example css`.class { color: red; }`
+     */
+    TaggedTemplateExpression({ node }: { node: t.TaggedTemplateExpression }) {
+      if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
+        const { raw } = node.quasi.quasis[0].value; // 获取原始 CSS 内容
+        const processed = processCssContent(raw, processor); // 处理后的 CSS
+        magicString.overwrite(node.start!, node.end!, processed); // 替换源码
+      }
+    },
+
+    /**
+     * 转换 <link> 标签为 <style> 标签
+     * @example <link rel="stylesheet" href="style.css" />
+     */
+    JSXOpeningElement(path: { node: t.JSXOpeningElement }) {
+      const { node } = path;
+      if (!isJsxElementMatch(node, 'link')) return; // 过滤非 link 标签
+
+      let rel = '';
+      let href = '';
+      // 遍历属性获取 rel 和 href
+      node.attributes.forEach((attr) => {
+        if (t.isJSXAttribute(attr) && t.isStringLiteral(attr.value)) {
+          if (isJsxElementMatch(attr, 'rel')) rel = attr.value.value;
+          if (isJsxElementMatch(attr, 'href')) href = join(id, '../', attr.value.value); // 解析相对路径
+        }
       });
 
-      // 返回处理结果
-      if (magicString!) {
-        return {
-          code: magicString.toString(),
-          map: options.sourcemap ? magicString.generateMap() : null,
-        };
+      // 处理样式表链接
+      if (rel === 'stylesheet' && existsSync(href)) {
+        const rawCss = readFileSync(href, 'utf-8'); // 读取 CSS 文件内容
+        const processed = `<style type="text/css">{${processCssContent(rawCss, processor)}}</style>`;
+        magicString.overwrite(node.start!, node.end!, processed); // 替换为 style 标签
+        ctx.addWatchFile(href); // 添加文件监听依赖
       }
     },
   };
+}
+
+/* -------------------------- 工具函数 -------------------------- */
+/**
+ * 判断 JSX 元素是否匹配指定标签名
+ * @param node - AST 节点
+ * @param name - 目标标签名
+ */
+function isJsxElementMatch(node: Node & { name: any }, name: string) {
+  return t.isJSXIdentifier(node.name) && node.name.name === name;
+}
+
+/**
+ * CSS 内容处理流水线
+ * @param raw - 原始 CSS 内容
+ * @param processor - PostCSS 处理器
+ * @returns 处理后的 CSS 字符串（已压缩优化）
+ */
+function processCssContent(raw: string, processor: postcss.Processor) {
+  return `\`${
+    processor
+      .process(raw)
+      .css.replace(NEWLINE_RE, '') // 移除所有换行符
+      .replace(BEFORE_SPACES_RE, '$1') // 清理符号前多余空格
+      .replace(AFTER_SPACES_RE, '$1') // 清理符号后多余空格
+      .trim() // 去除首尾空格
+  }\``; // 转换为模板字符串
 }

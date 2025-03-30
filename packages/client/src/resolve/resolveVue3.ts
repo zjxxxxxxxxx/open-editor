@@ -18,7 +18,7 @@ let resolver: VueResolver<ComponentInternalInstance>;
  * 3. 依赖__file和__name等编译时元数据
  * 4. 支持Suspense和Teleport等内置组件
  */
-export function resolveVue3(debug: ResolveDebug, tree: Partial<CodeSourceMeta>[], deep = false) {
+export function resolveVue3(debug: ResolveDebug, tree: CodeSourceMeta[], deep?: boolean) {
   initializeResolver(); // 确保解析器初始化
   resolver(debug, tree, deep);
 }
@@ -40,11 +40,11 @@ function initializeResolver() {
      * 2. 非KeepAlive缓存占位符
      * 3. 排除内置组件（Suspense/Teleport）
      */
-    isValid(inst): inst is ComponentInternalInstance {
+    isValid(node): node is ComponentInternalInstance {
       return (
-        !!inst &&
-        !inst.isDeactivated && // 过滤KeepAlive缓存实例
-        typeof inst.type !== 'symbol'
+        !!node &&
+        !node.isDeactivated && // 过滤KeepAlive缓存实例
+        typeof node.type !== 'symbol'
       ); // 排除内置组件
     },
 
@@ -56,10 +56,10 @@ function initializeResolver() {
      * 2. Suspense边界组件
      * 3. Teleport容器组件
      */
-    getNext(instance) {
-      return instance.parent && '__asyncLoader' in instance.parent.type
-        ? instance.parent.parent // 处理异步组件边界
-        : instance.parent;
+    getNext(node) {
+      return node.parent && '__asyncLoader' in node.parent.type
+        ? node.parent.parent // 处理异步组件边界
+        : node.parent;
     },
 
     /**
@@ -69,8 +69,8 @@ function initializeResolver() {
      * 2. 父组件链中的最近有效源
      * 3. 组件自身的__file元数据
      */
-    getSource(instance) {
-      let current: ComponentInternalInstance | null = instance;
+    getSource(node) {
+      let current: ComponentInternalInstance | null = node;
       while (current) {
         // 处理Suspense包裹的异步组件
         const rawSource =
@@ -88,8 +88,8 @@ function initializeResolver() {
     /**
      * 获取组件文件路径
      */
-    getFile(instance) {
-      return instance.type.__file;
+    getFile(node) {
+      return node.type.__file;
     },
 
     /**

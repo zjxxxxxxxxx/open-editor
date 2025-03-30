@@ -6,9 +6,9 @@ import { off, on } from '../event';
 import { inspectorEnableBridge, inspectorExitBridge } from '../bridge';
 
 /**
- * 组件状态接口
+ * 组件元素引用集合
  */
-interface ToggleUIState {
+interface ToggleUIElements {
   /**
    * 根容器元素
    */
@@ -17,6 +17,12 @@ interface ToggleUIState {
    * 操作按钮元素
    */
   button: HTMLElement;
+}
+
+/**
+ * 组件状态接口
+ */
+interface ToggleUIState {
   /**
    * 是否正在拖拽中
    */
@@ -28,16 +34,17 @@ interface ToggleUIState {
 }
 
 export function ToggleUI() {
+  const elements = {} as ToggleUIElements;
   const state = {} as ToggleUIState;
 
   // 监听检查器启用事件
   inspectorEnableBridge.on(() => {
-    applyStyle(state.button, { color: 'var(--cyan)' });
+    applyStyle(elements.button, { color: 'var(--cyan)' });
   });
 
   // 监听检查器退出事件
   inspectorExitBridge.on(() => {
-    applyStyle(state.button, { color: null });
+    applyStyle(elements.button, { color: null });
   });
 
   /**
@@ -45,7 +52,7 @@ export function ToggleUI() {
    */
   function startDnD() {
     state.dnding = true;
-    addClass(state.root, 'oe-toggle-dnd');
+    addClass(elements.root, 'oe-toggle-dnd');
     on('pointermove', changePosition);
     on('pointerup', stopDnD);
   }
@@ -56,7 +63,7 @@ export function ToggleUI() {
   function stopDnD() {
     // 延迟状态更新确保点击事件完成
     setTimeout(() => (state.dnding = false));
-    removeClass(state.root, 'oe-toggle-dnd');
+    removeClass(elements.root, 'oe-toggle-dnd');
     off('pointermove', changePosition);
     off('pointerup', stopDnD);
   }
@@ -93,8 +100,8 @@ export function ToggleUI() {
 
     if (state.touchable !== touchable) {
       touchable
-        ? addClass(state.root, 'oe-toggle-touch')
-        : removeClass(state.root, 'oe-toggle-touch');
+        ? addClass(elements.root, 'oe-toggle-touch')
+        : removeClass(elements.root, 'oe-toggle-touch');
       state.touchable = touchable;
     }
   }
@@ -104,7 +111,7 @@ export function ToggleUI() {
    */
   function updatePosition() {
     const { innerHeight: winH } = window;
-    const { offsetHeight: toggleH } = state.root;
+    const { offsetHeight: toggleH } = elements.root;
     const cacheY = +localStorage['oe-pt'] || 0;
 
     // 计算安全显示区域
@@ -112,7 +119,7 @@ export function ToggleUI() {
     const maxRenderY = winH - toggleH - safeArea.bottom;
     const renderY = clamp(cacheY - toggleH / 2, minRenderY, maxRenderY);
 
-    applyStyle(state.root, {
+    applyStyle(elements.root, {
       top: CssUtils.numberToPx(renderY),
       right: CssUtils.numberToPx(safeArea.right),
     });
@@ -122,7 +129,7 @@ export function ToggleUI() {
     return (
       <div
         className="oe-toggle"
-        ref={(el) => (state.root = el!)}
+        ref={(el) => (elements.root = el!)}
         // 阻止Firefox拖动时的默认滚动行为
         onTouchMove={(e) => e.preventDefault()}
         // 阻止移动端长按触发菜单
@@ -131,7 +138,7 @@ export function ToggleUI() {
         <div className="oe-toggle-overlay" />
         <button
           className="oe-toggle-button"
-          ref={(el) => (state.button = el!)}
+          ref={(el) => (elements.button = el!)}
           onClick={toggleEnable}
           onLongPress={startDnD}
         >

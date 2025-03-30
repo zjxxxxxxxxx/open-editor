@@ -13,11 +13,11 @@ import { type CodeSourceMeta } from '.';
  * 4. 通过_debugOwner建立组件层级关系
  */
 export function resolveReact17(
-  { value: fiber }: ResolveDebug<Fiber>,
-  tree: Partial<CodeSourceMeta>[],
-  deep = false,
+  { value: node }: ResolveDebug<Fiber>,
+  tree: CodeSourceMeta[],
+  deep?: boolean,
 ) {
-  resolveForFiber(fiber, tree, deep);
+  resolveForFiber(node, tree, deep);
 }
 
 // 解析器单例（惰性初始化）
@@ -36,8 +36,8 @@ let resolver: ReactResolver<Fiber>;
  */
 export function resolveForFiber(
   fiber: Fiber | null | undefined,
-  tree: Partial<CodeSourceMeta>[],
-  deep = false,
+  tree: CodeSourceMeta[],
+  deep?: boolean,
 ) {
   initializeResolver(); // 确保解析器初始化
   resolver(fiber, tree, deep);

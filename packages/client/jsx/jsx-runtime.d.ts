@@ -61,7 +61,7 @@ declare type ValidChildNode = HTMLElement | string | number | boolean | null | u
 /** 处理React元素属性的类型转换逻辑 */
 declare type ElementPropsTransformer<Props> = {
   [K in keyof Props]: K extends 'children' // 处理children属性
-    ? ValidChildNode[]
+    ? ValidChildNode | ValidChildNode[]
     : // 处理ref回调函数
       K extends 'ref'
       ? (instance: ExtractNativeElement<Props> | null) => void

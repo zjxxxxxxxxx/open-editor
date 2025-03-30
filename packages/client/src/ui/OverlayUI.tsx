@@ -5,7 +5,7 @@ import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../b
 /**
  * 叠加层元素引用集合
  */
-export interface OverlayElements {
+interface OverlayUIElements {
   /**
    * 定位层容器元素
    * 用于控制整体位置和尺寸
@@ -34,12 +34,7 @@ export interface OverlayElements {
  */
 export function OverlayUI() {
   // 组件元素引用存储
-  const elements: OverlayElements = {
-    position: null!,
-    margin: null!,
-    border: null!,
-    padding: null!,
-  };
+  const elements: OverlayUIElements = {} as OverlayUIElements;
 
   // 初始化事件监听
   initBridgeListeners();
@@ -76,7 +71,7 @@ export function OverlayUI() {
 
     // 遍历更新各区域边框样式
     Object.keys(lines).forEach((key) => {
-      const element = elements[key as keyof OverlayElements];
+      const element = elements[key as keyof OverlayUIElements];
       const lineData = lines[key as keyof BoxLines];
 
       applyStyle(element, {

@@ -13,9 +13,9 @@ import {
 } from '../bridge';
 
 /**
- * 工具提示组件状态定义
+ * 工具提示组件元素引用集合
  */
-interface TooltipUIState {
+interface TooltipUIElements {
   /** 根容器DOM元素 */
   root: HTMLElement;
   /** 显示元素标签的DOM节点 */
@@ -24,6 +24,12 @@ interface TooltipUIState {
   comp: HTMLElement;
   /** 显示文件路径的DOM节点 */
   file: HTMLElement;
+}
+
+/**
+ * 工具提示组件状态定义
+ */
+interface TooltipUIState {
   /** 标识是否处于更新挂起状态 */
   isPending: boolean;
 }
@@ -35,7 +41,7 @@ export function TooltipUI() {
   // 渲染保留边距，防止元素紧贴窗口边缘
   const RENDER_RESERVE_SIZE = 4;
 
-  // 组件状态管理
+  const elements = {} as TooltipUIElements;
   const state = {} as TooltipUIState;
   const pending = mitt();
 
@@ -56,14 +62,14 @@ export function TooltipUI() {
    * 处理检查器激活事件
    */
   function handleInspectorEnable() {
-    addClass(state.root, 'oe-tooltip-show');
+    addClass(elements.root, 'oe-tooltip-show');
   }
 
   /**
    * 处理检查器退出事件
    */
   function handleInspectorExit() {
-    removeClass(state.root, 'oe-tooltip-show');
+    removeClass(elements.root, 'oe-tooltip-show');
     updateSource();
   }
 
@@ -87,16 +93,16 @@ export function TooltipUI() {
     state.isPending = true;
 
     // 隐藏元素并保留渲染空间
-    applyStyle(state.root, {
+    applyStyle(elements.root, {
       visibility: 'hidden',
       transform: CssUtils.translate(RENDER_RESERVE_SIZE, RENDER_RESERVE_SIZE),
     });
 
     if (source?.meta) {
       // 更新DOM元素内容
-      state.tag.textContent = `${source.el} in `;
-      state.comp.textContent = `<${source.meta.name}>`;
-      state.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
+      elements.tag.textContent = `${source.el} in `;
+      elements.comp.textContent = `<${source.meta.name}>`;
+      elements.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
 
       // 解除挂起状态并执行待处理任务
       state.isPending = false;
@@ -110,7 +116,7 @@ export function TooltipUI() {
    */
   function updateRect(rect: BoxRect) {
     const { clientWidth: winW, clientHeight: winH } = document.documentElement;
-    const { width: rootW, height: rootH } = getDOMRect(state.root);
+    const { width: rootW, height: rootH } = getDOMRect(elements.root);
 
     // 计算X轴渲染位置
     const renderX = calculateRenderX(winW, rootW, rect.left);
@@ -119,7 +125,7 @@ export function TooltipUI() {
     const renderY = calculateRenderY(winH, rootH, rect);
 
     // 应用最终样式
-    applyStyle(state.root, {
+    applyStyle(elements.root, {
       visibility: 'visible',
       transform: CssUtils.translate(renderX, renderY),
     });
@@ -150,11 +156,11 @@ export function TooltipUI() {
   }
 
   return (
-    <div className="oe-tooltip" ref={(el) => (state.root = el!)}>
+    <div className="oe-tooltip" ref={(el) => (elements.root = el!)}>
       <div className="oe-tooltip-content">
-        <span className="oe-tooltip-tag" ref={(el) => (state.tag = el!)} />
-        <span className="oe-tooltip-comp" ref={(el) => (state.comp = el!)} />
-        <span className="oe-tooltip-file" ref={(el) => (state.file = el!)} />
+        <span className="oe-tooltip-tag" ref={(el) => (elements.tag = el!)} />
+        <span className="oe-tooltip-comp" ref={(el) => (elements.comp = el!)} />
+        <span className="oe-tooltip-file" ref={(el) => (elements.file = el!)} />
       </div>
     </div>
   );
