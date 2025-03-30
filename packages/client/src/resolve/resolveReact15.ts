@@ -16,17 +16,17 @@ import { type CodeSourceMeta } from '.';
  * 3. 通过 _owner 属性实现组件树层级关联
  */
 export function resolveReact15(
-  { value: inst }: ResolveDebug,
-  tree: Partial<CodeSourceMeta>[],
+  { value: instanceOrFiber }: ResolveDebug,
+  tree: CodeSourceMeta[],
   deep = false,
 ) {
   // 分支处理不同React版本的调试信息
-  if (inst && hasOwn(inst, '_debugOwner')) {
+  if (instanceOrFiber && hasOwn(instanceOrFiber, '_debugOwner')) {
     // React 16+ 使用 Fiber 架构，调用专用解析器
-    resolveForFiber(inst as any, tree, deep);
+    resolveForFiber(instanceOrFiber as any, tree, deep);
   } else {
     // React 15 及更早版本处理逻辑
-    resolveForInstance(inst, tree, deep);
+    resolveForInstance(instanceOrFiber, tree, deep);
   }
 }
 
@@ -46,8 +46,8 @@ let resolver: ReactResolver;
  */
 export function resolveForInstance(
   instance: any | null | undefined,
-  tree: Partial<CodeSourceMeta>[],
-  deep = false,
+  tree: CodeSourceMeta[],
+  deep?: boolean,
 ) {
   initializeResolver(); // 确保解析器初始化
   resolver(instance, tree, deep); // 执行实际解析逻辑

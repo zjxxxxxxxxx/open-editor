@@ -8,6 +8,71 @@ type BrowserInfo = {
   chromiumBase?: number;
 };
 
+const NEED_COMPUTED = IS_CLIENT ? checkComputedNeeded() : false;
+
+/** 获取元素经过zoom校正后的边界矩形 */
+export function getDOMRect(target: HTMLElement): Omit<DOMRectReadOnly, 'toJSON'> {
+  const rect = target.getBoundingClientRect().toJSON();
+  return NEED_COMPUTED ? computedDOMRect(target, rect) : rect;
+}
+
+/** 计算zoom补偿后的矩形尺寸 */
+function computedDOMRect(target: HTMLElement, baseRect: DOMRect): DOMRect {
+  const zoomRate = getCompositeZoom(target);
+
+  if (zoomRate !== 1) {
+    // 使用几何变换代替循环操作
+    const { x, y, width, height } = baseRect;
+    const matrix = new DOMMatrix().translate(x, y).scale(zoomRate, zoomRate).translate(-x, -y);
+
+    return new DOMRect(
+      matrix.m41 + x * (zoomRate - 1),
+      matrix.m42 + y * (zoomRate - 1),
+      width * zoomRate,
+      height * zoomRate,
+    );
+  }
+  return baseRect;
+}
+
+/** 获取元素及其祖先链的复合缩放率 */
+export function getCompositeZoom(target: HTMLElement): number {
+  let zoom = 1;
+  let currentElement: HTMLElement | null = target;
+
+  while (currentElement) {
+    // 优化样式获取性能
+    const zoomValue = createStyleGetter(currentElement)('zoom');
+    zoom *= zoomValue || 1;
+
+    // 安全遍历父元素
+    currentElement = currentElement.parentElement;
+
+    // 防止无限循环 (兼容Shadow DOM)
+    if (currentElement?.tagName === 'HTML') break;
+  }
+
+  return zoom;
+}
+
+/** 判断是否需要手动计算缩放补偿 */
+function checkComputedNeeded(): boolean {
+  if (!IS_CLIENT) return false;
+
+  // 获取浏览器特征信息
+  const { name, version, chromiumBase } = getBrowserInfo();
+
+  // 排除不支持zoom的浏览器
+  if (name === 'firefox' || name === 'safari') return false;
+
+  // 检测zoom样式支持
+  if (!hasOwn(document.body.style, 'zoom')) return false;
+
+  // Chromium内核版本判断 (含Edge)
+  const chromiumVersion = chromiumBase || version;
+  return chromiumVersion <= 127; // 兼容Chromium内核<=127的浏览器
+}
+
 /** 浏览器版本嗅探器 (兼容所有主流浏览器) */
 function getBrowserInfo(): BrowserInfo {
   const ua = navigator.userAgent;
@@ -58,69 +123,4 @@ function getBrowserInfo(): BrowserInfo {
   }
 
   return browserInfo;
-}
-
-/** 判断是否需要手动计算缩放补偿 */
-function checkComputedNeeded(): boolean {
-  if (!IS_CLIENT) return false;
-
-  // 获取浏览器特征信息
-  const { name, version, chromiumBase } = getBrowserInfo();
-
-  // 排除不支持zoom的浏览器
-  if (name === 'firefox' || name === 'safari') return false;
-
-  // 检测zoom样式支持
-  if (!hasOwn(document.body.style, 'zoom')) return false;
-
-  // Chromium内核版本判断 (含Edge)
-  const chromiumVersion = chromiumBase || version;
-  return chromiumVersion <= 127; // 兼容Chromium内核<=127的浏览器
-}
-
-const NEED_COMPUTED = IS_CLIENT ? checkComputedNeeded() : false;
-
-/** 获取元素经过zoom校正后的边界矩形 */
-export function getDOMRect(target: HTMLElement): Omit<DOMRectReadOnly, 'toJSON'> {
-  const rect = target.getBoundingClientRect().toJSON();
-  return NEED_COMPUTED ? computedDOMRect(target, rect) : rect;
-}
-
-/** 计算zoom补偿后的矩形尺寸 */
-function computedDOMRect(target: HTMLElement, baseRect: DOMRect): DOMRect {
-  const zoomRate = getCompositeZoom(target);
-
-  if (zoomRate !== 1) {
-    // 使用几何变换代替循环操作
-    const { x, y, width, height } = baseRect;
-    const matrix = new DOMMatrix().translate(x, y).scale(zoomRate, zoomRate).translate(-x, -y);
-
-    return new DOMRect(
-      matrix.m41 + x * (zoomRate - 1),
-      matrix.m42 + y * (zoomRate - 1),
-      width * zoomRate,
-      height * zoomRate,
-    );
-  }
-  return baseRect;
-}
-
-/** 获取元素及其祖先链的复合缩放率 */
-export function getCompositeZoom(target: HTMLElement): number {
-  let zoom = 1;
-  let currentElement: HTMLElement | null = target;
-
-  while (currentElement) {
-    // 优化样式获取性能
-    const zoomValue = createStyleGetter(currentElement)('zoom');
-    zoom *= zoomValue || 1;
-
-    // 安全遍历父元素
-    currentElement = currentElement.parentElement;
-
-    // 防止无限循环 (兼容Shadow DOM)
-    if (currentElement?.tagName === 'HTML') break;
-  }
-
-  return zoom;
 }
