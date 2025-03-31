@@ -5,18 +5,20 @@ import { inspectorState } from '../inspector/inspectorState';
 import { type CodeSource } from '../resolve';
 import { CODE_SOURCE_CROSS_IFRAME } from '../constants';
 
+export type CodeSourceBridgeArgs = [CodeSource?];
+
 /**
  * 创建跨iframe的代码源通信桥接器
  * 使用中间件模式处理消息收发逻辑
  */
-export const codeSourceBridge = crossIframeBridge<[CodeSource?]>({
+export const codeSourceBridge = crossIframeBridge<CodeSourceBridgeArgs>({
   /**
    * 初始化桥接器配置
    * 设置消息监听和处理逻辑
    */
   setup() {
     // 注册跨iframe消息监听器
-    onMessage<[CodeSource?]>(
+    onMessage<CodeSourceBridgeArgs>(
       CODE_SOURCE_CROSS_IFRAME,
       /**
        * 处理接收到的消息
