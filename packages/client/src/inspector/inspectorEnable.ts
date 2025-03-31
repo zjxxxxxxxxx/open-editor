@@ -47,7 +47,6 @@ export async function inspectorEnable() {
     // @ts-ignore 主动解除焦点兼容处理
     document.activeElement?.blur();
   } catch (e) {
-    console.log(e);
     // 静默处理初始化异常
   }
 }

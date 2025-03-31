@@ -5,18 +5,20 @@ import { preventEventOverlay } from '../utils/preventEventOverlay';
 import { resolveSource, type CodeSource } from '../resolve';
 import { TREE_OPEN_CROSS_IFRAME } from '../constants';
 
+export type TreeOpenBridgeArgs = [CodeSource, boolean?];
+
 /**
  * 树形结构打开事件桥接器
  * 处理跨iframe的树形结构打开事件通信
  */
-export const treeOpenBridge = crossIframeBridge<[CodeSource, boolean?]>({
+export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
   /**
    * 初始化配置
    * 监听打开事件并初始化资源
    */
   setup() {
     // 注册全局事件监听
-    onMessage<[CodeSource, boolean?]>(TREE_OPEN_CROSS_IFRAME, (args) => {
+    onMessage<TreeOpenBridgeArgs>(TREE_OPEN_CROSS_IFRAME, (args) => {
       // 参数处理：判断事件来源层级
       const isFromTopWindow = (args[1] ||= isTopWindow);
 

@@ -5,19 +5,21 @@ import { type BoxLines, type BoxRect, getBoxModel } from '../inspector/getBoxMod
 import { inspectorState } from '../inspector/inspectorState';
 import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 
+export type BoxModelBridgeArgs = [BoxRect, BoxLines];
+
 /**
  * 跨iframe的盒模型计算桥接器
  *
  * @property {Function} setup 初始化桥接器设置
  * @property {Array<Function>} emitMiddlewares 消息发送中间件数组
  */
-export const boxModelBridge = crossIframeBridge<[BoxRect, BoxLines]>({
+export const boxModelBridge = crossIframeBridge<BoxModelBridgeArgs>({
   /**
    * 初始化消息监听
    * 当接收到盒模型计算请求时，仅在检查器启用状态下触发事件
    */
   setup() {
-    onMessage<[BoxRect, BoxLines]>(BOX_MODEL_CROSS_IFRAME, (args) => {
+    onMessage<BoxModelBridgeArgs>(BOX_MODEL_CROSS_IFRAME, (args) => {
       if (inspectorState.isEnable) {
         boxModelBridge.emit(args, isTopWindow);
       }

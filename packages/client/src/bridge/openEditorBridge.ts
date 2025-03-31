@@ -4,17 +4,19 @@ import { onMessage, postMessage } from '../utils/message';
 import { type CodeSourceMeta } from '../resolve';
 import { OPEN_EDITOR_CROSS_IFRAME } from '../constants';
 
+export type OpenEditorBridgeArgs = [CodeSourceMeta?];
+
 /**
  * 创建跨iframe编辑器桥接实例
  * 使用泛型约束参数类型为包含可选CodeSourceMeta的元组
  */
-export const openEditorBridge = crossIframeBridge<[CodeSourceMeta?]>({
+export const openEditorBridge = crossIframeBridge<OpenEditorBridgeArgs>({
   /**
    * 初始化桥接配置
    * 监听来自其他iframe的编辑器打开请求
    */
   setup() {
-    onMessage<[CodeSourceMeta?]>(OPEN_EDITOR_CROSS_IFRAME, (args) => {
+    onMessage<OpenEditorBridgeArgs>(OPEN_EDITOR_CROSS_IFRAME, (args) => {
       openEditorBridge.emit(args, true);
     });
   },

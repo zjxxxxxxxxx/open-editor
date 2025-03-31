@@ -4,18 +4,20 @@ import { onMessage, postMessage, postMessageAll } from '../utils/message';
 import { preventEventOverlay } from '../utils/preventEventOverlay';
 import { TREE_CLOSE_CROSS_IFRAME } from '../constants';
 
+export type TreeCloseBridgeArgs = [boolean?];
+
 /**
  * 树形结构关闭事件桥接器
  * 处理跨iframe的树形结构关闭事件通信
  */
-export const treeCloseBridge = crossIframeBridge<[boolean?]>({
+export const treeCloseBridge = crossIframeBridge<TreeCloseBridgeArgs>({
   /**
    * 初始化配置
    * 监听关闭事件并执行清理操作
    */
   setup() {
     // 注册全局事件监听
-    onMessage<[boolean?]>(TREE_CLOSE_CROSS_IFRAME, (args) => {
+    onMessage<TreeCloseBridgeArgs>(TREE_CLOSE_CROSS_IFRAME, (args) => {
       // 参数处理：判断事件来源层级
       const isFromTopWindow = (args[0] ||= isTopWindow);
 
