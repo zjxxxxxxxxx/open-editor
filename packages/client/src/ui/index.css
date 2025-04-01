@@ -37,18 +37,6 @@
   --filter: blur(10px);
 
   /**
-   * 布局覆盖层配色
-   * - 外边距区域
-   * - 边框区域
-   * - 内边距区域
-   * - 内容区域
-   */
-  --overlay-margin: #f6b26ba8;
-  --overlay-border: #ffe599a8;
-  --overlay-padding: #93c47d8c;
-  --overlay-content: #6fa7dca8;
-
-  /**
    * 层级管理配置
    * - 覆盖层基础层级
    * - 切换按钮层级
@@ -178,35 +166,14 @@
 /* ======================== 布局覆盖层模块 ======================== */
 .oe-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: var(--z-index-overlay);
   display: none;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
-  will-change: width, height, transform;
-
-  * {
-    box-sizing: border-box;
-    width: 100%;
-    height: 100%;
-    border: 0px solid;
-    will-change: width, height, border;
-  }
 }
 
-/* 各区域颜色定义 */
-.oe-overlay-margin {
-  border-color: var(--overlay-margin);
-}
-.oe-overlay-border {
-  border-color: var(--overlay-border);
-}
-.oe-overlay-padding {
-  border-color: var(--overlay-padding);
-}
-.oe-overlay-content {
-  background: var(--overlay-content);
-}
 .oe-overlay-show {
   display: block;
 }
