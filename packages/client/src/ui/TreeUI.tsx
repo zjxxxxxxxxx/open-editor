@@ -16,6 +16,9 @@ interface TreeUIElements {
 
 /** 组件树UI展示组件 */
 export function TreeUI() {
+  // 样式常量（避免硬编码）
+  const LOCK_SCREEN_CLASS = 'oe-lock-screen';
+
   const { once } = getOptions();
   const elements = {} as TreeUIElements;
 
@@ -32,13 +35,13 @@ export function TreeUI() {
   function handleTreeOpen(source: CodeSource) {
     renderTree(source);
     applyStyle(elements.root, { display: 'block' });
-    addClass(document.body, 'oe-lock-screen');
+    addClass(document.body, LOCK_SCREEN_CLASS);
   }
 
   /** 处理树形结构关闭事件 */
   function handleTreeClose() {
     applyStyle(elements.root, { display: 'none' });
-    removeClass(document.body, 'oe-lock-screen');
+    removeClass(document.body, LOCK_SCREEN_CLASS);
   }
 
   /** 渲染组件树内容 */

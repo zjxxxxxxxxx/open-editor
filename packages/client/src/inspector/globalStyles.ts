@@ -1,4 +1,4 @@
-import { createGlobalStyle } from '../utils/createGlobalStyle';
+import { createStyleController } from '../utils/createStyleController';
 
 /**
  * 全局样式覆盖模块
@@ -20,7 +20,7 @@ const overrideCSS = css`
     -webkit-touch-callout: none !important;
   }
 `;
-export const overrideStyle = createGlobalStyle(overrideCSS);
+export const overrideStyle = createStyleController(overrideCSS);
 
 /**
  * 交互效果样式模块
@@ -50,7 +50,7 @@ const effectCSS = css`
    * - 透明显示但能捕获事件
    * - 最高层级保证覆盖顺序
    */
-  .oe-prevent-event-overlay {
+  .oe-event-blocker {
     /* 定位方式 */
     position: fixed;
     inset: 0; /* 替代top/right/bottom/left声明 */
@@ -62,4 +62,4 @@ const effectCSS = css`
     z-index: 2147483647; /* 32位最大安全整数 */
   }
 `;
-export const effectStyle = createGlobalStyle(effectCSS);
+export const effectStyle = createStyleController(effectCSS);

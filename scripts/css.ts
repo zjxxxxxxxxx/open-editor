@@ -4,7 +4,7 @@ import { join } from 'node:path'; // 路径处理
 import { existsSync, readFileSync } from 'node:fs'; // 文件系统操作
 
 // Rollup 插件类型
-import { type Plugin as RollupPlugin } from 'rollup';
+import { type Plugin as RollupPlugin, type TransformPluginContext } from 'rollup';
 
 // Babel 核心工具
 import { traverse, types as t, type Node } from '@babel/core';
@@ -89,7 +89,6 @@ function createProcessor() {
 }
 
 /* -------------------------- AST遍历处理器 -------------------------- */
-import type { TransformPluginContext } from 'rollup';
 
 /**
  * 创建 AST 转换处理器

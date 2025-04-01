@@ -1,4 +1,4 @@
-import { createGlobalStyle } from '../utils/createGlobalStyle';
+import { createStyleController } from './createStyleController';
 import { on } from '../event';
 import { IS_CLIENT } from '../constants';
 import { createStyleGetter } from './dom';
@@ -47,7 +47,7 @@ function initSafeAreaSystem() {
   // 等待DOM就绪后执行初始化
   on('DOMContentLoaded', () => {
     // 1. 注入全局CSS变量定义
-    createGlobalStyle(safeAreaCSS).mount();
+    createStyleController(safeAreaCSS).mount();
 
     // 2. 计算初始安全区域值
     refreshSafeAreaValues();

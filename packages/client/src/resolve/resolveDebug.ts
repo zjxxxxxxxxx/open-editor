@@ -5,12 +5,12 @@ import { checkValidElement } from '../utils/checkElement';
  * 调试信息解析结果类型
  * @template T 调试值的类型
  */
-export type ResolveDebug<T = any> = {
+export interface ResolveDebug<T = any> {
   framework: 'react' | 'vue'; // 框架类型
   el: HTMLElement; // DOM元素节点
   key: string; // 框架注入的调试属性键名
   value?: T | null; // 调试属性值
-};
+}
 
 // 框架调试属性特征常量
 const REACT_FIBER_PREFIX = '__reactFiber$'; // React 17+ Fiber节点属性前缀
@@ -58,7 +58,7 @@ export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
  * 1. Vue3 -> Vue2 -> React17+ -> React15-16
  * 基于框架流行度和版本新旧排序
  */
-function detectFrameworkKey(el: HTMLElement): string | undefined {
+function detectFrameworkKey(el: HTMLElement) {
   return detectVue3(el) || detectVue2(el) || detectReact17(el) || detectReact15(el);
 }
 
@@ -92,6 +92,6 @@ function detectReact15(el: HTMLElement) {
  * - 用于检测React的版本特定属性，这些属性带有随机哈希后缀
  * - 例如：__reactFiber$aj19x
  */
-function findFrameworkKey(el: HTMLElement, prefix: string): string | undefined {
+function findFrameworkKey(el: HTMLElement, prefix: string) {
   return Object.keys(el).find((key) => key.startsWith(prefix));
 }

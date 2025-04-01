@@ -62,7 +62,7 @@ export function replaceChildren(el: HTMLElement | ShadowRoot, ...children: HTMLE
  * 检测元素可见性（DOM树连接性 + display继承链）
  * @remark 实现与官方草案差异：忽略visibility/content-visibility，专注display检测
  */
-export function checkVisibility(el: HTMLElement): boolean {
+export function checkVisibility(el: HTMLElement) {
   if (!el.isConnected) return false;
 
   let current: HTMLElement | null = el;
@@ -82,17 +82,17 @@ export function checkVisibility(el: HTMLElement): boolean {
  */
 export const CssUtils = {
   /** 数值转像素单位 */
-  numberToPx(value: string | number): string {
+  numberToPx(value: string | number) {
     return `${value}px`;
   },
 
   /** 解析样式值为数字（空值返回0） */
-  parseValue(value: string): number {
+  parseValue(value: string) {
     return Number.parseFloat(value) || 0;
   },
 
   /** 生成translate变换函数 */
-  translate(x: number, y: number): string {
+  translate(x: number, y: number) {
     return `translate(${CssUtils.numberToPx(x)}, ${CssUtils.numberToPx(y)})`;
   },
 };
@@ -133,13 +133,13 @@ export function createStyleGetter(el: HTMLElement) {
  * 安全添加类名（支持空格分隔的多类名）
  * @remark 使用classList代替className操作
  */
-export function addClass(el: HTMLElement, className: string): void {
+export function addClass(el: HTMLElement, className: string) {
   el.classList.add(...className.trim().split(/\s+/));
 }
 
 /**
  * 安全移除类名（支持空格分隔的多类名）
  */
-export function removeClass(el: HTMLElement, className: string): void {
+export function removeClass(el: HTMLElement, className: string) {
   el.classList.remove(...className.trim().split(/\s+/));
 }

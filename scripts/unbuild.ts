@@ -13,6 +13,24 @@ import css from './css';
 import { clientRoot, readJSON } from './utils';
 
 /**
+ * 构建输出配置接口定义
+ */
+export interface BuildOutput {
+  /**
+   * CommonJS 格式输出路径
+   */
+  require?: string;
+  /**
+   * ESM 格式输出路径
+   */
+  import?: string;
+  /**
+   * 类型声明文件输出路径
+   */
+  types?: string;
+}
+
+/**
  * 开发环境标识，通过 webpack.DefinePlugin 等工具注入
  * @default false
  */
@@ -30,24 +48,6 @@ const TARGET = process.env.__TARGET__ || 'es6';
  * @description 通过比较 clientRoot 与当前解析路径是否一致来判断
  */
 const isClientBuild = clientRoot === resolve();
-
-/**
- * 构建输出配置接口定义
- */
-interface BuildOutput {
-  /**
-   * CommonJS 格式输出路径
-   */
-  require?: string;
-  /**
-   * ESM 格式输出路径
-   */
-  import?: string;
-  /**
-   * 类型声明文件输出路径
-   */
-  types?: string;
-}
 
 /**
  * 主入口函数：生成 Rollup 配置数组

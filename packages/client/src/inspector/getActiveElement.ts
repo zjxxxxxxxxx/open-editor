@@ -42,7 +42,7 @@ if (IS_CLIENT) {
  * 2. 当光标移出视口时立即返回null
  * 3. 使用 elementFromPoint API 获取精确元素
  */
-export function getActiveElement(): HTMLElement | null {
+export function getActiveElement() {
   // 双重状态检查确保功能可靠性
   if (!inspectorState.isActive || cursorState.isOutsideViewport) {
     return null;
@@ -66,7 +66,7 @@ export function getActiveElement(): HTMLElement | null {
  * - 通过 mouseout 事件检测光标离开视口
  * - DOMContentLoaded 确保安全初始化
  */
-function initCursorTracking(): void {
+function initCursorTracking() {
   on('DOMContentLoaded', () => {
     // 实时更新光标坐标（高频事件）
     on(

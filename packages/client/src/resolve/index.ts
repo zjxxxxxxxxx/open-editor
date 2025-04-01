@@ -56,7 +56,7 @@ const FRAME_RESOLVERS = {
  * 4. 执行框架特定的源码解析
  * 5. 设置主元数据引用
  */
-export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
+export function resolveSource(el: HTMLElement, deep?: boolean) {
   // 初始化返回数据结构
   const source: CodeSource = {
     id: CURRENT_INSPECT_ID,

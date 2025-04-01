@@ -16,6 +16,9 @@ import { openEditor } from './openEditor';
 import { inspectorEnable, inspectorExit } from './inspectorEnable';
 import { inspectorState } from './inspectorState';
 
+// 加载样式常量（避免硬编码）
+const LOADING_CLASS = 'oe-loading';
+
 /**
  * 初始化检测器核心功能
  *
@@ -25,7 +28,7 @@ import { inspectorState } from './inspectorState';
  * 3. 初始化桥接器通信
  * 4. 管理编辑器加载状态
  */
-export function setupInspector(): void {
+export function setupInspector() {
   // 挂载基础高亮样式
   effectStyle.mount();
 
@@ -47,7 +50,7 @@ export function setupInspector(): void {
  * - pointerdown: 点击激活
  * - pointermove: 悬停激活
  */
-function initPointerEvents(): void {
+function initPointerEvents() {
   const emitActive = () => inspectorActiveBridge.emit([CURRENT_INSPECT_ID]);
 
   on('pointerdown', emitActive, { capture: true });
@@ -60,7 +63,7 @@ function initPointerEvents(): void {
  * 处理检测器模式切换：
  * - Alt + Cmd + O: 切换检测器模式
  */
-function initKeyboardEvents(): void {
+function initKeyboardEvents() {
   on(
     'keydown',
     (e: KeyboardEvent) => {
@@ -80,7 +83,7 @@ function initKeyboardEvents(): void {
  * 2. 组合键 Alt + Cmd + O
  * 3. 键码为KeyO
  */
-function shouldToggleInspector(e: KeyboardEvent): boolean {
+function shouldToggleInspector(e: KeyboardEvent) {
   return !inspectorState.isTreeOpen && e.altKey && e.metaKey && e.code === 'KeyO';
 }
 
@@ -91,7 +94,7 @@ function shouldToggleInspector(e: KeyboardEvent): boolean {
  * - 禁用 → 启用检测器
  * - 启用 → 退出检测器
  */
-function toggleInspectorMode(): void {
+function toggleInspectorMode() {
   if (inspectorState.isEnable) {
     inspectorExitBridge.emit();
   } else {
@@ -107,7 +110,7 @@ function toggleInspectorMode(): void {
  * 2. 树视图展开控制
  * 3. 检测器模式切换
  */
-function initBridgeListeners(): void {
+function initBridgeListeners() {
   inspectorActiveBridge.on(handleActiveChange);
   inspectorEnableBridge.on(inspectorEnable);
   inspectorExitBridge.on(inspectorExit);
@@ -122,7 +125,7 @@ function initBridgeListeners(): void {
  * - 重置渲染状态
  * - 清空激活元素引用
  */
-function handleActiveChange(activeId: string): void {
+function handleActiveChange(activeId: string) {
   inspectorState.isActive = activeId === CURRENT_INSPECT_ID;
 
   if (!inspectorState.isActive && inspectorState.isRendering) {
@@ -137,7 +140,7 @@ function handleActiveChange(activeId: string): void {
  * 当树视图展开且检测器禁用时：
  * 挂载覆盖样式
  */
-function handleTreeOpen(): void {
+function handleTreeOpen() {
   inspectorState.isTreeOpen = true;
   if (!inspectorState.isEnable) {
     overrideStyle.mount();
@@ -150,7 +153,7 @@ function handleTreeOpen(): void {
  * 当树视图关闭且检测器禁用时：
  * 移除覆盖样式
  */
-function handleTreeClose(): void {
+function handleTreeClose() {
   inspectorState.isTreeOpen = false;
   if (!inspectorState.isEnable) {
     overrideStyle.unmount();
@@ -164,8 +167,8 @@ function handleTreeClose(): void {
  * - 开始加载时添加加载样式
  * - 结束加载时移除加载样式
  */
-function initEditorListeners(): void {
+function initEditorListeners() {
   openEditorBridge.on(openEditor);
-  openEditorStartBridge.on(() => addClass(document.body, 'oe-loading'));
-  openEditorEndBridge.on(() => removeClass(document.body, 'oe-loading'));
+  openEditorStartBridge.on(() => addClass(document.body, LOADING_CLASS));
+  openEditorEndBridge.on(() => removeClass(document.body, LOADING_CLASS));
 }
