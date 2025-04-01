@@ -34,6 +34,11 @@ interface ToggleUIState {
 }
 
 export function ToggleUI() {
+  // 拖拽样式常量（避免硬编码）
+  const TOGGLE_DND_CLASS = 'oe-toggle-dnd';
+  // 触摸样式常量（避免硬编码）
+  const TOGGLE_TOUCH_CLASS = 'oe-toggle-touch';
+
   const elements = {} as ToggleUIElements;
   const state = {} as ToggleUIState;
 
@@ -52,7 +57,7 @@ export function ToggleUI() {
    */
   function startDnD() {
     state.dnding = true;
-    addClass(elements.root, 'oe-toggle-dnd');
+    addClass(elements.root, TOGGLE_DND_CLASS);
     on('pointermove', changePosition);
     on('pointerup', stopDnD);
   }
@@ -63,7 +68,7 @@ export function ToggleUI() {
   function stopDnD() {
     // 延迟状态更新确保点击事件完成
     setTimeout(() => (state.dnding = false));
-    removeClass(elements.root, 'oe-toggle-dnd');
+    removeClass(elements.root, TOGGLE_DND_CLASS);
     off('pointermove', changePosition);
     off('pointerup', stopDnD);
   }
@@ -100,8 +105,8 @@ export function ToggleUI() {
 
     if (state.touchable !== touchable) {
       touchable
-        ? addClass(elements.root, 'oe-toggle-touch')
-        : removeClass(elements.root, 'oe-toggle-touch');
+        ? addClass(elements.root, TOGGLE_TOUCH_CLASS)
+        : removeClass(elements.root, TOGGLE_TOUCH_CLASS);
       state.touchable = touchable;
     }
   }

@@ -110,7 +110,7 @@ export function getDefaultBoxModel(): [BoxRect, BoxLines] {
  * 获取四边外边距值
  * @param getStyle - 样式获取函数
  */
-function getMarginValues(getStyle: Function): BoxLine {
+function getMarginValues(getStyle: Function) {
   return createBoxLine(
     getStyle('margin-top'),
     getStyle('margin-right'),
@@ -123,7 +123,7 @@ function getMarginValues(getStyle: Function): BoxLine {
  * 获取四边边框值（特殊处理Firefox缩放）
  * @param getStyle - 样式获取函数
  */
-function getBorderValues(getStyle: Function): BoxLine {
+function getBorderValues(getStyle: Function) {
   return createBoxLine(
     getStyle('border-top', IS_BORDER_WITH_ZOOM),
     getStyle('border-right', IS_BORDER_WITH_ZOOM),
@@ -136,7 +136,7 @@ function getBorderValues(getStyle: Function): BoxLine {
  * 获取四边内边距值
  * @param getStyle - 样式获取函数
  */
-function getPaddingValues(getStyle: Function): BoxLine {
+function getPaddingValues(getStyle: Function) {
   return createBoxLine(
     getStyle('padding-top'),
     getStyle('padding-right'),

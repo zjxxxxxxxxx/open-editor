@@ -3,6 +3,8 @@ import outmatch from 'outmatch';
 import { getOptions } from '../options';
 import { CodeSourceMeta } from '.';
 
+const DEFAULT_COMPONENT_NAME = 'AnonymousComponent';
+const DEFAULT_COMPONENT_FILE = 'unknown';
 /**
  * 元数据标准化处理器
  * @param meta - 原始元数据
@@ -15,8 +17,8 @@ import { CodeSourceMeta } from '.';
  */
 export function normalizeMeta(meta: Partial<CodeSourceMeta>): CodeSourceMeta {
   return {
-    name: meta.name ? camelCase(meta.name) : 'AnonymousComponent', // 统一命名规范
-    file: meta.file || 'unknown', // 文件路径兜底处理
+    name: meta.name ? camelCase(meta.name) : DEFAULT_COMPONENT_NAME, // 统一命名规范
+    file: meta.file || DEFAULT_COMPONENT_FILE, // 文件路径兜底处理
     line: meta.line || 1, // 确保最小行号为1
     column: meta.column || 1, // 确保最小列号为1
   };
@@ -27,7 +29,7 @@ export function normalizeMeta(meta: Partial<CodeSourceMeta>): CodeSourceMeta {
  * @example
  * ensureFileName('/project/src/../../secret.txt') => 'secret.txt'
  */
-export function ensureFileName(filePath: string): string {
+export function ensureFileName(filePath: string) {
   const { rootDir } = getOptions();
   const normalizedRoot = normalizePath(rootDir);
   const normalizedPath = normalizePath(filePath);
@@ -64,27 +66,34 @@ export function isValidFileName(filePath?: string | null): filePath is string {
 }
 
 // 安全字符白名单（参考文件上传过滤实践）
-const SAFE_CHAR_RE = /^[a-z0-9_\-./]+$/i;
+// 允许方括号用于动态路由参数，但限制其闭合结构
+const SAFE_CHAR_RE = /^[a-z0-9_\-./[\]]+$/i;
+// 增加闭合性校验：成对出现且内容合法
+function hasValidBrackets(path: string) {
+  return (
+    (path.match(/$$/g) || []).length === (path.match(/$$/g) || []).length &&
+    !/$$[^\w-]+$$/.test(path)
+  );
+}
 
 /**
  * 项目级忽略规则处理器
  * 结合glob模式和白名单字符校验
  */
 let globMatcher: ReturnType<typeof outmatch> | null = null;
-function applyProjectIgnoreRules(path: string): boolean {
+function applyProjectIgnoreRules(path: string) {
   const { ignoreComponents } = getOptions();
 
   // 基础字符白名单校验
-  if (!SAFE_CHAR_RE.test(path)) return false;
+  if (!SAFE_CHAR_RE.test(path) || !hasValidBrackets(path)) return false;
 
   // 空配置默认放行
   if (!ignoreComponents) return true;
 
   // 惰性初始化glob匹配器（配置浏览器环境参数）
   globMatcher ||= outmatch(ignoreComponents, {
-    separator: '/', // 浏览器路径统一使用斜杠
-    excludeDot: false, // 允许点文件
+    separator: '/',
+    excludeDot: false,
   });
-
   return !globMatcher!(path);
 }

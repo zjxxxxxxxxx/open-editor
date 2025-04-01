@@ -3,11 +3,13 @@ import { topWindow } from '../utils/topWindow';
 import { postMessageAll, onMessage, postMessage } from '../utils/message';
 import { INSPECTOR_ACTIVE_CROSS_IFRAME } from '../constants';
 
+export type InspectorActiveBridgeArgs = [string];
+
 // 创建跨iframe桥接器实例
-export const inspectorActiveBridge = crossIframeBridge<[string]>({
+export const inspectorActiveBridge = crossIframeBridge<InspectorActiveBridgeArgs>({
   setup() {
     // 注册全局消息监听
-    onMessage<[string]>(INSPECTOR_ACTIVE_CROSS_IFRAME, (args) => {
+    onMessage<InspectorActiveBridgeArgs>(INSPECTOR_ACTIVE_CROSS_IFRAME, (args) => {
       // 向所有关联窗口广播消息
       postMessageAll(INSPECTOR_ACTIVE_CROSS_IFRAME, args);
 

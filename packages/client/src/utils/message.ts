@@ -6,7 +6,7 @@ import { on } from '../event';
  * @原理 将消息类型与参数序列化组合，便于接收方识别处理
  * @示例 createMessage('LOG', ['error']) => "@LOG["error"]"
  */
-function createMessage(type: string, args: any[]): string {
+function createMessage(type: string, args: any[]) {
   return `@${type}${JSON.stringify(args)}`;
 }
 
@@ -50,16 +50,10 @@ export function onMessage<Args extends any[] = []>(type: string, callback: (args
 
 /**
  * 发送消息到指定窗口
- * @安全 建议生产环境指定targetOrigin替代'*'
  * @原理 通过结构化消息格式保证数据完整性
  */
-export function postMessage(
-  type: string,
-  args: any[] = [],
-  target: Window = window,
-  targetOrigin: string = '*',
-) {
-  target.postMessage(createMessage(type, args), targetOrigin);
+export function postMessage(type: string, args: any[] = [], target: Window = window) {
+  target.postMessage(createMessage(type, args), '*');
 }
 
 /**
@@ -79,11 +73,8 @@ export function postMessageAll(type: string, args: any[] = [], crossOrigin: bool
       if (crossOrigin || target.document) {
         postMessage(type, args, target);
       }
-    } catch (e) {
-      // 跨域场景降级处理
-      if (crossOrigin) {
-        target.postMessage(createMessage(type, args), '*');
-      }
+    } catch {
+      //
     }
   });
 }

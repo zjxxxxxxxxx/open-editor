@@ -33,6 +33,8 @@ interface OverlayUIElements {
  * 用于高亮显示元素的盒模型结构（margin/border/padding）
  */
 export function OverlayUI() {
+  // 显示样式常量（避免硬编码）
+  const OVERLAY_SHOW_CLASS = 'oe-overlay-show';
   // 组件元素引用存储
   const elements: OverlayUIElements = {} as OverlayUIElements;
 
@@ -43,12 +45,12 @@ export function OverlayUI() {
   function initBridgeListeners() {
     // 启用检测模式时显示叠加层
     inspectorEnableBridge.on(() => {
-      addClass(elements.position, 'oe-overlay-show');
+      addClass(elements.position, OVERLAY_SHOW_CLASS);
     });
 
     // 退出检测模式时隐藏叠加层并重置模型
     inspectorExitBridge.on(() => {
-      removeClass(elements.position, 'oe-overlay-show');
+      removeClass(elements.position, OVERLAY_SHOW_CLASS);
       updateBoxModel(...getDefaultBoxModel());
     });
 

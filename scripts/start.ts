@@ -48,18 +48,17 @@ async function main() {
 
 /**
  * 参数解析器
- * @returns {Promise<{playground: string, script: string}>}
  * 包含 playground 名称和脚本名称的对象
  */
 async function parseArguments() {
   // 使用 minimist 解析命令行参数
   const cliArgs = minimist(process.argv.slice(1));
 
-  return {
-    // 优先使用命令行参数，否则进行交互式选择
-    playground: cliArgs.playground || (await selectPlayground()),
-    script: cliArgs.script || (await selectScript(cliArgs.playground)),
-  };
+  // 优先使用命令行参数，否则进行交互式选择
+  cliArgs.playground ??= await selectPlayground();
+  cliArgs.script ??= await selectScript(cliArgs.playground);
+
+  return cliArgs as unknown as { playground: string; script: string };
 }
 
 /**

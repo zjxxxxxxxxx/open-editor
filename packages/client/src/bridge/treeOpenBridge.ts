@@ -1,7 +1,7 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { isTopWindow, topWindow, whenTopWindow } from '../utils/topWindow';
 import { onMessage, postMessage, postMessageAll } from '../utils/message';
-import { preventEventOverlay } from '../utils/preventEventOverlay';
+import { eventBlocker } from '../utils/eventBlocker';
 import { resolveSource, type CodeSource } from '../resolve';
 import { TREE_OPEN_CROSS_IFRAME } from '../constants';
 
@@ -27,7 +27,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
         // 向所有iframe广播打开事件
         postMessageAll(TREE_OPEN_CROSS_IFRAME, args);
         // 挂载事件遮罩层
-        preventEventOverlay.mount();
+        eventBlocker.activate();
       }
 
       // 触发桥接器事件传播
