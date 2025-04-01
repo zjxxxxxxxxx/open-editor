@@ -15,7 +15,7 @@ const BASE_EVENT_OPTIONS = {
  * // 分发带数据的自定义事件
  * dispatchEvent('user-update', { id: 123, name: 'John' });
  */
-export function dispatchEvent(type: string, detail?: AnyObject): boolean {
+export function dispatchEvent(type: string, detail?: AnyObject) {
   // 合并基础配置与事件数据
   const options = {
     ...BASE_EVENT_OPTIONS,

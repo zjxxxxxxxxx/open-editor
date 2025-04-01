@@ -13,7 +13,7 @@ import { TreeUI } from './TreeUI';
  * 初始化编辑器UI系统
  * 职责：注册自定义元素并挂载到文档主体
  */
-export function setupUI(): void {
+export function setupUI() {
   const { crossIframe } = getOptions();
   // 跨iframe场景下非顶层窗口不初始化
   if (crossIframe && !isTopWindow) return;
@@ -47,7 +47,7 @@ class HTMLInspectorElement extends (IS_CLIENT
    * 初始化Shadow DOM
    * 模式设置为closed防止外部访问
    */
-  private initShadowDOM(): void {
+  private initShadowDOM() {
     Object.defineProperty(this, 'shadowRoot', {
       value: this.attachShadow({ mode: 'closed' }),
     });
@@ -57,7 +57,7 @@ class HTMLInspectorElement extends (IS_CLIENT
    * 元素挂载回调
    * 职责：配置错误处理和子组件渲染
    */
-  public connectedCallback(): void {
+  public connectedCallback() {
     this.setupErrorHandling();
     this.renderUIComponents();
   }
@@ -66,7 +66,7 @@ class HTMLInspectorElement extends (IS_CLIENT
    * 配置错误可视化处理
    * 创建动画警示层并在动画结束后自动移除
    */
-  private setupErrorHandling(): void {
+  private setupErrorHandling() {
     openEditorErrorBridge.on(() => {
       const errorOverlay = <div className="oe-error-overlay" />;
 
@@ -94,7 +94,7 @@ class HTMLInspectorElement extends (IS_CLIENT
    * 渲染子组件树
    * 包含样式表注入和条件渲染控制
    */
-  private renderUIComponents(): void {
+  private renderUIComponents() {
     const { displayToggle } = getOptions();
 
     replaceChildren(

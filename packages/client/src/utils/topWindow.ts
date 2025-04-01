@@ -37,7 +37,7 @@ export function whenTopWindow(yes: () => void, no?: () => void) {
  * 实现原理：通过循环查找父级窗口，直到没有嵌套容器为止
  * 安全限制：受同源策略约束，仅能访问同源父级窗口
  */
-function findTopWindow(): Window {
+function findTopWindow() {
   let currentWindow: Window = window;
 
   // 逐级向上查找，直到找到无父容器的窗口对象

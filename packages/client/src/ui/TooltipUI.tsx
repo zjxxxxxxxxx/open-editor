@@ -38,6 +38,8 @@ interface TooltipUIState {
  * 工具提示组件UI
  */
 export function TooltipUI() {
+  // 样式常量（避免硬编码）
+  const TOOLTIP_SHOW_CLASS = 'oe-tooltip-show';
   // 渲染保留边距，防止元素紧贴窗口边缘
   const RENDER_RESERVE_SIZE = 4;
 
@@ -62,14 +64,14 @@ export function TooltipUI() {
    * 处理检查器激活事件
    */
   function handleInspectorEnable() {
-    addClass(elements.root, 'oe-tooltip-show');
+    addClass(elements.root, TOOLTIP_SHOW_CLASS);
   }
 
   /**
    * 处理检查器退出事件
    */
   function handleInspectorExit() {
-    removeClass(elements.root, 'oe-tooltip-show');
+    removeClass(elements.root, TOOLTIP_SHOW_CLASS);
     updateSource();
   }
 
