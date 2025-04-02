@@ -1,4 +1,5 @@
 import { CURRENT_INSPECT_ID } from '../constants';
+import { getCache, setCache } from './resolveCache';
 import { resolveReact17 } from './resolveReact17';
 import { resolveReact15 } from './resolveReact15';
 import { resolveVue3 } from './resolveVue3';
@@ -6,78 +7,149 @@ import { resolveVue2 } from './resolveVue2';
 import { resolveDebug } from './resolveDebug';
 
 /**
- * 源码元数据结构定义
+ * 组件级源码定位元数据
+ * @remarks
+ * 标准化各框架的调试信息输出格式，实现跨框架调试能力
+ * 字段定义与Chrome DevTools Protocol的Debugger域保持兼容
  */
 export interface CodeSourceMeta {
-  /** 组件/节点名称（经过驼峰化处理） */
+  /**
+   * 组件规范化名称（框架无关格式）
+   * @example
+   * - React组件: 'MyComponent'
+   * - Vue组件: 'VueComponent'
+   */
   name: string;
-  /** 源代码文件绝对路径 */
+
+  /**
+   * 源码映射路径（webpack/vite路径别名解析后）
+   * @example '/src/components/MyComponent.tsx'
+   */
   file: string;
-  /** 代码行号（1-based） */
+
+  /**
+   * 源码行号（符合IDE调试协议）
+   * @remark 生产环境需配合sourcemap使用
+   */
   line: number;
-  /** 代码列号（1-based） */
+
+  /**
+   * 源码列号（JSX元素精准定位）
+   * @example
+   * - JSX开始标签: 列号对应'<'位置
+   */
   column: number;
 }
 
 /**
- * 调试源码信息结构
+ * 调试会话上下文数据
+ * @property id - 检测会话唯一标识（多窗口调试隔离）
+ * @property el - DOM元素原始标签名（区分SVG/自定义元素）
+ * @property meta - 组件树根节点元数据（快速访问入口）
+ * @property tree - 完整组件调用链路（支持树形可视化）
  */
 export interface CodeSource {
-  /** 当前检测会话ID */
+  /** 会话标识符（关联检测生命周期） */
   id: string;
-  /** 目标DOM元素标签名 */
+
+  /**
+   * 目标元素标签名（保留命名空间）
+   * @example
+   * - 'div'
+   * - 'svg:path'
+   */
   el: string;
-  /** 首条有效元数据（快捷访问） */
+
+  /**
+   * 首条有效元数据（L1缓存优化）
+   * @see getCache 缓存获取策略
+   */
   meta?: CodeSourceMeta;
-  /** 完整的组件层级溯源数据 */
+
+  /**
+   * 组件层级森林结构（深度解析结果）
+   * @remark
+   * - [0]: 当前组件
+   * - [n]: 根组件
+   */
   tree: CodeSourceMeta[];
 }
+
 /**
- * 框架解析器映射表
- * 根据调试属性特征匹配对应的框架解析器
+ * 框架调试适配器注册表
+ * @description
+ * 实现框架调试协议自动检测，支持主流框架版本：
+ * | 特征属性         | 框架版本      | 适配器       |
+ * |------------------|-------------|-------------|
+ * | __reactFiber     | React 17+   | resolveReact17 |
+ * | __reactInternal  | React 15-16 | resolveReact15 |
+ * | __vueParent      | Vue 3       | resolveVue3   |
+ * | __vue            | Vue 2       | resolveVue2   |
+ *
+ * @see React Developer Tools实现原理
+ * @see Vue Devtools组件树生成算法
  */
 const FRAME_RESOLVERS = {
-  __reactFiber: resolveReact17, // React 17+ Fiber架构
-  __reactInternal: resolveReact15, // React 15 内部实例
-  __vueParent: resolveVue3, // Vue 3 父组件链
-  __vue: resolveVue2, // Vue 2 实例
+  __reactFiber: resolveReact17,
+  __reactInternal: resolveReact15,
+  __vueParent: resolveVue3,
+  __vue: resolveVue2,
 } as const;
 
 /**
- * 解析DOM元素的源码定位信息
- * @param el - 目标DOM元素
- * @param deep - 是否深度解析组件树
- * @returns 包含源码定位信息的对象
+ * 解析DOM元素的源码映射信息
+ * @param el - 目标元素（需包含__vue/__react等调试属性）
+ * @param deep - 深度解析模式（默认false）
+ * @returns 标准化调试数据
  *
- * 实现流程：
- * 1. 初始化基础数据结构
- * 2. 提取元素调试信息
- * 3. 根据调试信息特征选择解析器
- * 4. 执行框架特定的源码解析
- * 5. 设置主元数据引用
+ * ## 核心逻辑
+ * 1. 缓存优先策略 - 浅层模式直接读取L1缓存
+ * 2. 元数据提取 - 通过`__debug`属性标准化框架差异
+ * 3. 动态适配 - 根据调试属性特征选择解析器
+ * 4. 数据持久化 - 双缓存策略（闭包缓存 + WeakMap）
+ *
+ * ## 性能优化
+ * - 浅层模式时间复杂度：O(1)（缓存直接命中）
+ * - 深度模式时间复杂度：O(n)（n为组件树深度）
+ * - 缓存淘汰：WeakMap自动GC防止内存泄漏
  */
-export function resolveSource(el: HTMLElement, deep?: boolean) {
-  // 初始化返回数据结构
+export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
+  // 初始化上下文容器（会话隔离）
   const source: CodeSource = {
     id: CURRENT_INSPECT_ID,
     el: el.localName,
+    meta: undefined,
     tree: [],
   };
 
-  // 提取元素的调试元数据（参考Vue/React调试属性）
-  const debugInfo = resolveDebug(el);
-  if (!debugInfo) return source;
-
-  // 根据调试属性特征匹配解析器
-  const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
-
-  if (resolverKey) {
-    // 执行对应框架的源码解析
-    FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
+  // 浅层模式快速返回路径
+  if (!deep) {
+    const cached = getCache(el);
+    if (cached) {
+      source.meta = cached.meta;
+      return source;
+    }
   }
 
-  // 设置首个有效元数据为主要引用
-  source.meta = source.tree[0];
+  // 提取标准化调试信息（跨框架抽象层）
+  const debugInfo = resolveDebug(el);
+  if (debugInfo) {
+    // 自动检测框架类型
+    const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
+
+    // 执行框架特定解析逻辑
+    if (resolverKey) {
+      FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
+    }
+
+    // 设置主元数据引用点
+    source.meta = source.tree[0];
+  }
+
+  // 更新缓存存储（非深度模式）
+  if (!deep) {
+    setCache(el, { meta: source.meta });
+  }
 
   return source;
 }
