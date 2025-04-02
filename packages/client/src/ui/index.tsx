@@ -29,12 +29,7 @@ export function setupUI() {
  * 自定义元素类：编辑器检查器容器
  * 职责：管理Shadow DOM及子组件生命周期
  */
-class HTMLInspectorElement extends (IS_CLIENT
-  ? HTMLElement
-  : (class {} as {
-      new (): HTMLElement;
-      prototype: HTMLElement;
-    })) {
+class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeof HTMLElement)) {
   /** Shadow DOM根节点 */
   declare readonly shadowRoot: ShadowRoot;
 

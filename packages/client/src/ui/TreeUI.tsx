@@ -22,11 +22,11 @@ export function TreeUI() {
   const { once } = getOptions();
   const elements = {} as TreeUIElements;
 
-  // 初始化事件监听
-  initEventListeners();
+  // 初始化桥接器事件监听
+  initBridgeListeners();
 
-  /** 初始化所有事件监听 */
-  function initEventListeners() {
+  /** 初始化所有桥接器事件监听 */
+  function initBridgeListeners() {
     treeOpenBridge.on(handleTreeOpen);
     treeCloseBridge.on(handleTreeClose);
   }

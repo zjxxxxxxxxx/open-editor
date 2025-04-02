@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-render overlay using Canvas
+feat(OverlayUI): render overlay using Canvas
