@@ -47,17 +47,17 @@ export function TooltipUI() {
   const state = {} as TooltipUIState;
   const pending = mitt();
 
-  // 初始化事件监听
-  initEventHandlers();
+  // 初始化桥接器事件监听
+  initBridgeListeners();
 
   /**
-   * 初始化所有事件监听器
+   * 初始化所有桥接器事件监听器
    */
-  function initEventHandlers() {
+  function initBridgeListeners() {
     inspectorEnableBridge.on(handleInspectorEnable);
     inspectorExitBridge.on(handleInspectorExit);
     codeSourceBridge.on(updateSource);
-    boxModelBridge.on(handleBoxModelUpdate);
+    boxModelBridge.on(handleRectUpdate);
   }
 
   /**
@@ -78,7 +78,7 @@ export function TooltipUI() {
   /**
    * 处理盒子模型更新事件
    */
-  function handleBoxModelUpdate(rect: BoxRect) {
+  function handleRectUpdate(rect: BoxRect) {
     const executor = () => updateRect(rect);
     if (state.isPending) {
       pending.once(executor);

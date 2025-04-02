@@ -1,4 +1,5 @@
 import { addClass, removeClass } from '../utils/dom';
+import { getDOMRect } from '../utils/getDOMRect';
 import {
   type BoxLine,
   type BoxLines,
@@ -6,14 +7,13 @@ import {
   getDefaultBoxModel,
 } from '../inspector/getBoxModel';
 import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../bridge';
-import { getDOMRect } from '../utils/getDOMRect';
 
-// 开发者工具标准配色规范（RGBA格式实现半透明效果）
+// Chrome 盒模型图层配色系统（RGBA 预乘透明度通道）
 const LAYER_COLORS = {
-  margin: 'rgba(246, 178, 107, 0.66)', // 橙色：margin 区域（透明度 66%）
-  border: 'rgba(255, 229, 152, 0.66)', // 黄色：border 区域
-  padding: 'rgba(137, 196, 125, 0.55)', // 绿色：padding 区域
-  content: 'rgba(111, 168, 220, 0.66)', // 蓝色：content 区域
+  margin: 'rgba(246, 178, 107, 0.66)', // #f6b26b + alpha 0.66 - 盒模型最外层边距区
+  border: 'rgba(255, 229, 152, 0.66)', // #ffe598 + alpha 0.66 - 边框层（含样式继承逻辑）
+  padding: 'rgba(137, 196, 125, 0.55)', // #89c47d + alpha 0.55 - 内边距过渡层
+  content: 'rgba(111, 168, 220, 0.66)', // #6fa8dc + alpha 0.66 - 内容区（Layout 面板同步）
 };
 
 /**
@@ -100,8 +100,21 @@ export function OverlayUI() {
    * @param lines - 盒模型四边数据 {margin, border, padding}
    */
   function updateBoxModel(ctx: CanvasRenderingContext2D, rect: BoxRect, lines: BoxLines) {
+    /**
+     * 清空Canvas绘制区域（带抗锯齿补偿方案）
+     *
+     * 实现说明：
+     * 1. 扩展清除区域：在画布四周各增加1px的清除范围，确保消除以下情况：
+     *    - 抗锯齿产生的半透明边缘残留
+     *    - 坐标偏移导致的亚像素渲染残留
+     *    - 非整数坐标绘制导致的边缘溢出
+     * 2. 参数说明：
+     *    - x/y偏移-1：向画布左上方向扩展清除区域
+     *    - 尺寸+2：覆盖原始尺寸 + 左右/底部各1px的溢出补偿
+     */
+    ctx.clearRect(-1, -1, ctx.canvas.width + 2, ctx.canvas.height + 2);
+
     // 准备渲染环境
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     ctx.save();
 
     // 初始化坐标值（使用对象副本避免污染原始数据）

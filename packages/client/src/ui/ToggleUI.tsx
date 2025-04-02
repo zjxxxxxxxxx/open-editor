@@ -42,15 +42,21 @@ export function ToggleUI() {
   const elements = {} as ToggleUIElements;
   const state = {} as ToggleUIState;
 
-  // 监听检查器启用事件
-  inspectorEnableBridge.on(() => {
-    applyStyle(elements.button, { color: 'var(--cyan)' });
-  });
+  // 初始化桥接器事件监听
+  initBridgeListeners();
 
-  // 监听检查器退出事件
-  inspectorExitBridge.on(() => {
-    applyStyle(elements.button, { color: null });
-  });
+  /** 初始化所有桥接器事件监听 */
+  function initBridgeListeners() {
+    // 监听检查器启用事件
+    inspectorEnableBridge.on(() => {
+      applyStyle(elements.button, { color: 'var(--cyan)' });
+    });
+
+    // 监听检查器退出事件
+    inspectorExitBridge.on(() => {
+      applyStyle(elements.button, { color: null });
+    });
+  }
 
   /**
    * 开始拖拽操作
