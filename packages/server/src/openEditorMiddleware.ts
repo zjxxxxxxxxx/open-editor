@@ -100,7 +100,7 @@ function handleOpenEditor(
   try {
     handler(`${filename}:${line}:${column}`);
   } catch (error) {
-    console.error('[编辑器错误]', error);
+    console.error('[@open-editor/server] 编辑器错误', error);
   }
 }
 

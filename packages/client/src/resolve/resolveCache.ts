@@ -1,3 +1,4 @@
+import { inspectorExitBridge } from '../bridge';
 import { CodeSourceMeta } from '.';
 
 /**
@@ -19,7 +20,6 @@ export type CacheValue = {
  * - 回收机制  : 元素从DOM树移除时自动触发垃圾回收
  * - 容量策略  : 依赖浏览器GC机制动态管理，无需手动清理
  * - 内存安全  : 弱键特性防止内存泄漏，长期未用元素自动释放
- * - 数据防护  : 存储深拷贝数据（建议配合Immutable.js）
  * - 设计优势  : 适合DOM元数据缓存场景，天然防内存溢出
  */
 const cache = new WeakMap<HTMLElement, CacheValue>();
@@ -29,13 +29,36 @@ const cache = new WeakMap<HTMLElement, CacheValue>();
  * @implementation_strategy
  * - 存储机制  : 闭包维护最近访问元素（单节点极简LRU）
  * - 淘汰策略  : 新访问元素自动覆盖前记录（O(1)时间复杂度）
- * - 命中优化  : 实测DOM检查场景可达92%+命中率（生产环境数据）
  * - 容量设计  : 单元素缓存（CPU缓存行64B友好型设计）
  * - 失效验证  : 通过WeakMap引用存在性间接校验缓存有效性
  * - 性能优势  : 避免Map结构哈希计算开销，适合高频访问
  */
-let lastElement: HTMLElement;
+let lastElement: HTMLElement | undefined;
 let lastValue: CacheValue | undefined;
+
+/**
+ * 调试工具退出时的缓存清理协议（L1专用回收策略）
+ * @system_hook
+ * - 触发阶段   : 开发者工具关闭或调试会话终止时
+ * - 作用范围   : 仅清理高频L1缓存，保留L2 WeakMap自然回收机制
+ * - 性能考量   : 避免WeakMap重建开销，符合最小化清理原则
+ *
+ * @rationale
+ * 1. L1敏感性   : 高频缓存直接关联当前调试会话，需即时失效
+ * 2. L2自主性   : WeakMap弱引用特性可自主管理内存，无需干预
+ *
+ * @safety_mechanism
+ * - 指针消毒   : 消除对已卸载DOM元素的强引用
+ * - 状态重置   : 防止残留缓存干扰后续调试会话
+ * - 内存屏障   : 切断L1与可能失效的DOM元素关联
+ */
+inspectorExitBridge.on(() => {
+  // 条件化精准清理（仅在存在活跃缓存时操作）
+  if (lastElement) {
+    lastElement = undefined;
+    lastValue = undefined;
+  }
+});
 
 /**
  * 多级缓存读取管道（三级降级查询）

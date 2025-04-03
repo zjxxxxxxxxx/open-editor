@@ -34,7 +34,7 @@ export function checkClickedElement(element: HTMLElement) {
  * @param event 点击事件对象
  * @description
  * 1. 修改链接元素的href属性为临时属性，阻止默认跳转行为
- * 2. 修改表单元素的disabled属性为临时属性，避免阻止事件冒泡
+ * 2. 修改表单元素的disabled属性为临时属性，避免阻止触发点击事件
  */
 export function setupClickedElementAttrs(event: Event) {
   const targetElement = event.target as HTMLElement;

@@ -5,7 +5,7 @@
 
 A rollup plugin for fast find source code.
 
-> Valid only during development, requires Node.js version 14+.
+[Home](https://github.com/zjxxxxxxxxx/open-editor#readme)
 
 ## Install
 
@@ -31,70 +31,107 @@ export default defineConfig({
 
 ## Options
 
-```ts
-interface Options {
+````ts
+/**
+ * 插件配置选项 | Plugin Configuration Options
+ */
+export interface Options {
   /**
-   * source rootDir path
+   * 源代码根目录路径 | Source code root directory path
    *
-   * @default process.cwd()
+   * @defaultValue `process.cwd()`
+   * @example
+   * ```ts
+   * rootDir: path.resolve(__dirname, 'src')
+   * ```
    */
   rootDir?: string;
+
   /**
-   * render the toggle into the browser
+   * 在浏览器显示切换按钮 | Display toggle button in browser
    *
-   * @default true
+   * @defaultValue `true`
+   * @remarks
+   * 控制是否在页面右下角显示调试开关 | Controls whether to show debug toggle at bottom-right corner
    */
   displayToggle?: boolean;
+
   /**
-   * Disable hover effect from CSS when inspector is enabled
+   * 禁用CSS悬停效果 | Disable CSS hover effects
    *
-   * @default true
+   * @defaultValue `true`
+   * @remarks
+   * 当检查器启用时禁用元素悬停高亮 | Disable element highlighting on hover when inspector is active
    */
   disableHoverCSS?: boolean;
+
   /**
-   * Ignoring components in some directories, using glob pattern syntax for matching
+   * 忽略指定目录的组件 | Ignore components in specified directories
    *
-   * @see https://en.wikipedia.org/wiki/Glob_(programming)
-   *
-   * @default '\/**\/node_modules\/**\/*'
+   * @defaultValue `'\/**\/node_modules\/**\/*'`
+   * @see [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
+   * @remarks
+   * 使用glob模式匹配需要忽略的路径 |
+   * Use glob patterns to match ignored paths
    */
   ignoreComponents?: string | string[];
+
   /**
-   * exit the check after opening the editor or component tree
+   * 单次检查模式 | Single-inspection mode
    *
-   * @default true
+   * @defaultValue `true`
+   * @remarks
+   * 打开编辑器或组件树后自动退出检查状态 | Automatically exit inspection after opening editor or component tree
    */
   once?: boolean;
+
   /**
-   * Enable interaction between multiple iframes to be promoted to the top-level window.
+   * 跨iframe交互支持 | Cross-iframe interaction
    *
-   * It only takes effect when the top window and iframe window have the same origin.
-   *
-   * @default true
+   * @defaultValue `true`
+   * @remarks
+   * 允许在子iframe中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
    */
   crossIframe?: boolean;
+
   /**
-   * Internal server configuration
+   * 服务端配置 | Server Configuration
    */
   server?: {
     /**
-     * enable https
-     *
-     * @see https://nodejs.org/api/tls.html#tls_tls_createsecurecontext_options
+     * HTTPS安全传输层配置 | HTTPS Secure Transport Layer Configuration
+     * @see [TLS Context Options](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions)
+     * @example
+     * {
+     *   key: '/path/to/private.key',
+     *   cert: '/path/to/certificate.pem'
+     * }
      */
     https?: {
+      /**
+       * PEM格式的SSL私钥文件路径 | Path to PEM formatted SSL private key file
+       * @fileMustExist 文件必须存在且可读 | File must exist and be readable
+       */
       key: string;
+
+      /**
+       * PEM格式的SSL证书文件路径 | Path to PEM formatted SSL certificate file
+       * @fileMustExist 文件必须存在且可读 | File must exist and be readable
+       */
       cert: string;
     };
   };
+
   /**
-   * custom openEditor handler
+   * 自定义编辑器打开处理器 | Custom editor opening handler
    *
-   * @default 'launch-editor'
+   * @defaultValue `内置的launch-editor实现 | Built-in launch-editor implementation`
+   * @remarks
+   * 覆盖默认的文件打开逻辑 | Override default file opening behavior
    */
   onOpenEditor?(file: string): void;
 }
-```
+````
 
 ## Playgrounds
 
