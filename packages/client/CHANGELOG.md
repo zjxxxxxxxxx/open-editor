@@ -1,5 +1,18 @@
 # @open-editor/client
 
+## 0.9.4
+
+### Patch Changes
+
+- [#312](https://github.com/zjxxxxxxxxx/open-editor/pull/312) [`0f150f8`](https://github.com/zjxxxxxxxxx/open-editor/commit/0f150f85253d0699bec4ea29af46db72af5a47eb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix(zoom): correct compensation value calculation
+
+- [#315](https://github.com/zjxxxxxxxxx/open-editor/pull/315) [`eba4a8f`](https://github.com/zjxxxxxxxxx/open-editor/commit/eba4a8f333ddaf3cbcee42dda4cc02238443fb96) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat(OverlayUI): render overlay using Canvas
+
+- [#316](https://github.com/zjxxxxxxxxx/open-editor/pull/316) [`3cf28ac`](https://github.com/zjxxxxxxxxx/open-editor/commit/3cf28ac883d1d82a47f070583b1dbf9d329aec91) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - perf(resolveSource): implement dual-layer caching for shallow resolution
+
+- Updated dependencies []:
+  - @open-editor/shared@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes
