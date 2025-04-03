@@ -8,9 +8,6 @@ import { resolveDebug } from './resolveDebug';
 
 /**
  * 组件级源码定位元数据
- * @remarks
- * 标准化各框架的调试信息输出格式，实现跨框架调试能力
- * 字段定义与Chrome DevTools Protocol的Debugger域保持兼容
  */
 export interface CodeSourceMeta {
   /**
@@ -43,13 +40,11 @@ export interface CodeSourceMeta {
 
 /**
  * 调试会话上下文数据
- * @property id - 检测会话唯一标识（多窗口调试隔离）
- * @property el - DOM元素原始标签名（区分SVG/自定义元素）
- * @property meta - 组件树根节点元数据（快速访问入口）
- * @property tree - 完整组件调用链路（支持树形可视化）
  */
 export interface CodeSource {
-  /** 会话标识符（关联检测生命周期） */
+  /**
+   * 检测会话唯一标识（多窗口调试隔离）
+   */
   id: string;
 
   /**
@@ -61,13 +56,12 @@ export interface CodeSource {
   el: string;
 
   /**
-   * 首条有效元数据（L1缓存优化）
-   * @see getCache 缓存获取策略
+   * 组件树根节点元数据（快速访问入口）
    */
   meta?: CodeSourceMeta;
 
   /**
-   * 组件层级森林结构（深度解析结果）
+   * 完整组件调用链路（支持树形可视化）
    * @remark
    * - [0]: 当前组件
    * - [n]: 根组件
@@ -85,9 +79,6 @@ export interface CodeSource {
  * | __reactInternal  | React 15-16 | resolveReact15 |
  * | __vueParent      | Vue 3       | resolveVue3   |
  * | __vue            | Vue 2       | resolveVue2   |
- *
- * @see React Developer Tools实现原理
- * @see Vue Devtools组件树生成算法
  */
 const FRAME_RESOLVERS = {
   __reactFiber: resolveReact17,
@@ -104,7 +95,7 @@ const FRAME_RESOLVERS = {
  *
  * ## 核心逻辑
  * 1. 缓存优先策略 - 浅层模式直接读取L1缓存
- * 2. 元数据提取 - 通过`__debug`属性标准化框架差异
+ * 2. 元数据提取 - 通过 debug 属性标准化框架差异
  * 3. 动态适配 - 根据调试属性特征选择解析器
  * 4. 数据持久化 - 双缓存策略（闭包缓存 + WeakMap）
  *
@@ -122,7 +113,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
     tree: [],
   };
 
-  // 浅层模式快速返回路径
+  // 非深度模式快速返回路径
   if (!deep) {
     const cached = getCache(el);
     if (cached) {

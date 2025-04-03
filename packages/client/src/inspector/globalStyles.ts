@@ -7,7 +7,7 @@ import { createStyleController } from '../utils/createStyleController';
 const overrideCSS = css`
   /* 全局选择器重置 */
   * {
-    /* 禁用系统默认光标样式 */
+    /* 强制系统默认光标样式 */
     cursor: default !important;
 
     /* 禁止用户选中文本/图像 */

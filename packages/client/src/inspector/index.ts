@@ -26,7 +26,7 @@ const LOADING_CLASS = 'oe-loading';
  * 1. 挂载基础效果样式
  * 2. 绑定全局事件监听
  * 3. 初始化桥接器通信
- * 4. 管理编辑器加载状态
+ * 4. 初始化编辑器通信
  */
 export function setupInspector() {
   // 挂载基础高亮样式
@@ -163,9 +163,9 @@ function handleTreeClose() {
 /**
  * 初始化编辑器相关监听
  *
- * 管理编辑器加载状态：
- * - 开始加载时添加加载样式
- * - 结束加载时移除加载样式
+ * 管理编辑器启动状态：
+ * - 开始启动时添加加载样式
+ * - 启动完成时移除加载样式
  */
 function initEditorListeners() {
   openEditorBridge.on(openEditor);

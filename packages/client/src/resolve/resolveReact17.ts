@@ -7,10 +7,8 @@ import { type CodeSourceMeta } from '.';
  * React 17+ Fiber架构核心调试解析器
  *
  * React 17+架构特点：
- * 1. 基于Fiber树的链表结构实现可中断渲染
- * 2. 使用双缓存机制维护current/workInProgress两棵树
- * 3. 通过_debugSource获取Babel编译时注入的源码定位信息
- * 4. 通过_debugOwner建立组件层级关系
+ * - 通过_debugSource获取Babel编译时注入的源码定位信息
+ * - 通过_debugOwner建立组件层级关系
  */
 export function resolveReact17(
   { value: node }: ResolveDebug<Fiber>,

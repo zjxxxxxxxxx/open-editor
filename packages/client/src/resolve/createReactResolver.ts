@@ -4,7 +4,7 @@ import { ensureFileName, isValidFileName, normalizeMeta } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
 /**
- * React组件树解析器配置项
+ * React 解析器配置项
  * @template T 表示React节点类型，默认为任意类型
  */
 export interface ReactResolverOptions<T = any> {
@@ -38,7 +38,7 @@ export interface ReactResolverOptions<T = any> {
 }
 
 /**
- * React解析器类型：由createReactResolver工厂函数返回的解析函数
+ * React 解析器类型
  * @template T React节点类型
  */
 export type ReactResolver<T = any> = ReturnType<typeof createReactResolver<T>>;

@@ -11,9 +11,8 @@ import { type CodeSourceMeta } from '.';
  * @param deep - 是否深度遍历子组件（默认false）
  *
  * React 15 架构特点：
- * 1. 使用栈协调器（Stack Reconciler）同步递归处理组件树
- * 2. 实例通过 _currentElement 关联虚拟DOM元素
- * 3. 通过 _owner 属性实现组件树层级关联
+ * - 实例通过 _currentElement 关联虚拟DOM元素
+ * - 通过 _owner 属性实现组件树层级关联
  */
 export function resolveReact15(
   { value: instanceOrFiber }: ResolveDebug,

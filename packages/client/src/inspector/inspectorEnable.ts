@@ -33,7 +33,7 @@ export async function inspectorEnable() {
 
     // 事件监听设置
     cleanListeners = setupListeners({
-      onActive: () => renderUI(),
+      onActiveElement: () => renderUI(),
       onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
       onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
       onExitInspect: () => inspectorExitBridge.emit(),
@@ -46,7 +46,7 @@ export async function inspectorEnable() {
     // 解除当前焦点状态
     // @ts-ignore 主动解除焦点兼容处理
     document.activeElement?.blur();
-  } catch (e) {
+  } catch {
     // 静默处理初始化异常
   }
 }
@@ -76,10 +76,6 @@ export async function inspectorExit() {
     // 样式恢复
     if (isDisableHoverCSS) await enableHoverCSS();
     overrideStyle.unmount();
-
-    // 解除当前焦点状态
-    // @ts-ignore 主动解除焦点兼容处理
-    document.activeElement?.blur();
   } catch {
     // 静默处理关闭异常
   }
