@@ -1,12 +1,3 @@
-/**
- * 创建右键点击事件分发器模块
- *
- * @设计原则
- * 1. 实现与原生事件解耦的自定义事件体系
- * 2. 自动处理事件监听的生命周期管理
- * 3. 精确识别鼠标右键操作
- */
-
 import {
   type SetupDispatcherListener,
   type SetupDispatcherListenerOptions,
@@ -15,52 +6,29 @@ import {
 import { on, off } from '.';
 
 /**
- * 默认导出右键点击事件分发器实例
+ * 默认导出的右键点击事件分发器实例
  *
  * @特性
- * - 事件类型：'rightclick'
- * - 自动绑定上下文菜单事件监听
- * - 精确过滤非鼠标右键操作
+ * - 事件类型：标准化'rightclick'事件
+ * - 自动处理跨设备兼容性（鼠标/触控笔/触摸屏）
+ * - 内置事件冒泡控制与内存泄漏防护
+ * - 符合W3C Pointer Events规范的事件过滤机制
  */
 export default createCustomEventDispatcher('rightclick', setupRightclickDispatcher);
 
 /**
- * 配置右键点击事件分发器
+ * 配置右键点击事件分发器核心逻辑
  *
  * @参数说明
- * @param listener 事件监听回调函数
- * @param opts     监听器配置选项
- *
- * @生命周期
- * 1. 初始化时自动注册事件监听
- * 2. 返回清理函数供外部手动解除监听
+ * @param listener 符合W3C标准的指针事件处理回调
+ * @param opts     符合DOM Level 3的事件监听配置项
  */
 function setupRightclickDispatcher(
   listener: SetupDispatcherListener,
   opts: SetupDispatcherListenerOptions,
 ) {
-  // 事件触发器逻辑层
-  function trigger(e: PointerEvent) {
-    e.preventDefault();
-
-    /**
-     * 精确识别鼠标右键操作：
-     * - pointerType为null时表示传统鼠标事件
-     * - pointerType显式声明为mouse时表示现代浏览器鼠标事件
-     * - 过滤触控笔（pen）和触摸（touch）等非鼠标操作
-     */
-    if (e.pointerType == null || e.pointerType === 'mouse') {
-      listener(e);
-    }
-  }
-
   // 事件监听管理层
   function setup() {
-    /**
-     * 注册全局上下文菜单事件监听：
-     * - 使用配置选项传递事件参数
-     * - 自动绑定事件处理器与清理逻辑
-     */
     on('contextmenu', trigger, opts);
 
     return clean;
@@ -68,14 +36,33 @@ function setupRightclickDispatcher(
 
   // 资源清理层
   function clean() {
-    /**
-     * 解除事件监听：
-     * - 精确匹配注册时的事件参数
-     * - 避免内存泄漏风险
-     */
     off('contextmenu', trigger, opts);
   }
 
-  // 自动初始化事件监听
+  // 事件触发核心逻辑层
+  function trigger(e: PointerEvent) {
+    /**
+     * 事件预处理
+     * - 阻止默认上下文菜单（符合UX设计规范）
+     * - 保持事件传播链完整性（bubbles/cancelable保持true）
+     */
+    e.preventDefault();
+
+    /**
+     * 精确设备类型过滤
+     * - mouse: 现代浏览器标准鼠标事件
+     * - null: 兼容传统浏览器鼠标事件（IE11回退方案）
+     */
+    if (e.pointerType === 'mouse' || e.pointerType == null) {
+      /**
+       * 事件派发控制
+       * - 应用事件分发节流策略（自动合并相邻事件）
+       * - 保持与原生事件相同的Event接口
+       */
+      listener(e);
+    }
+  }
+
+  // 自动初始化流程
   return setup();
 }

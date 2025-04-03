@@ -20,6 +20,7 @@ export interface VueResolverOptions<T = any> {
   getName(v: T): string | undefined;
 }
 
+// Vue 解析器类型
 export type VueResolver<T = any> = ReturnType<typeof createVueResolver<T>>;
 
 // 开始

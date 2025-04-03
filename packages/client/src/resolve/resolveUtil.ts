@@ -5,6 +5,7 @@ import { CodeSourceMeta } from '.';
 
 const DEFAULT_COMPONENT_NAME = 'AnonymousComponent';
 const DEFAULT_COMPONENT_FILE = 'unknown';
+
 /**
  * 元数据标准化处理器
  * @param meta - 原始元数据
