@@ -1,8 +1,3 @@
-/**
- * 路径解析工具模块
- * 提供跨平台路径解析能力，适配不同操作系统的路径格式
- */
-
 import { createRequire } from 'node:module';
 import { normalizePath } from './normalizePath';
 
