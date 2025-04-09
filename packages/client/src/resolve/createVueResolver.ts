@@ -4,7 +4,8 @@ import { ensureFileName, isValidFileName, normalizeMeta } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
 /**
- * Vue解析器配置项接口
+ * Vue 解析器配置项接口
+ *
  * @template T 实例类型，默认为any
  */
 export interface VueResolverOptions<T = any> {
@@ -58,17 +59,20 @@ export type VueResolver<T = any> = ReturnType<typeof createVueResolver<T>>;
 
 /**
  * 创建Vue组件树解析器
+ *
  * @param opts 解析器配置选项
- * @returns 返回支持深度遍历的Vue组件解析函数
+ *
+ * @returns 返回支持深度遍历的 Vue 组件解析函数
  */
 export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   const { isValid, getNext, getSource, getFile, getName } = opts;
 
   /**
    * 核心解析函数
-   * @param debug 调试信息对象（包含DOM元素和组件实例）
+   *
+   * @param debug 调试信息对象（包含 DOM 元素和组件实例）
    * @param tree 源代码元数据树的引用（用于收集结果）
-   * @param deep 是否深度遍历模式（true时遍历子树）
+   * @param deep 是否深度遍历模式（true 时遍历子树）
    */
   function vueResolver(debug: ResolveDebug<T>, tree: CodeSourceMeta[], deep?: boolean) {
     // 已处理文件记录器（避免重复处理同一文件）
@@ -85,8 +89,10 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
       if (isValidFileName(normalizedFile)) {
         // 阶段3：文件处理分流
         const shouldBreak = currentSource
-          ? processSourceFile(normalizedFile) // 3a：处理带源码信息的文件
-          : processInstanceFile(normalizedFile); // 3b：处理组件关联文件
+          ? // 3a：处理带源码信息的文件
+            processSourceFile(normalizedFile)
+          : // 3b：处理组件关联文件
+            processInstanceFile(normalizedFile);
 
         // 根据处理结果决定是否终止遍历
         if (shouldBreak) return;
@@ -104,7 +110,9 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
     /**
      * 处理带行列信息的源代码文件
+     *
      * @param filePath 规范化后的文件路径（可能含行列号）
+     *
      * @returns 返回是否终止遍历的标识
      */
     function processSourceFile(filePath: string) {
@@ -143,6 +151,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
     /**
      * 添加标准化元数据到结果树
+     *
      * @param instance 当前Vue组件实例
      * @param meta 解析后的路径元数据
      */
@@ -161,8 +170,10 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
   }
 
   /**
-   * 解析遍历锚点（优先使用DOM属性中的源码信息）
+   * 解析遍历锚点（优先使用 DOM 属性中的源码信息）
+   *
    * @param debug 调试信息对象
+   *
    * @returns 返回[起始实例, 源码路径]元组
    */
   function resolveAnchorPoint(debug: ResolveDebug) {
@@ -177,8 +188,10 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
   /**
    * 标准化文件路径（统一格式处理）
+   *
    * @param source 原始路径字符串
-   * @returns 返回处理后的有效路径或undefined
+   *
+   * @returns 返回处理后的有效路径或 undefined
    */
   function normalizeSource(source?: string | null) {
     return source && ensureFileName(normalizePath(source));
@@ -186,7 +199,9 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
   /**
    * 解析路径字符串为结构化元数据
+   *
    * @param source 原始路径（可能含行列号）
+   *
    * @example "src/App.vue:12:8" → { file: 'src/App.vue', line: 12, column: 8 }
    */
   function parseSourcePath(source: string) {
@@ -200,7 +215,9 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
 
   /**
    * 从文件路径提取显示名称
+   *
    * @param filePath 完整文件路径
+   *
    * @example "src/components/Button.vue" → "Button"
    */
   function extractFileName(filePath = '') {

@@ -1,18 +1,22 @@
-// 核心模块导入
-import { resolve } from 'node:path'; // Node.js 路径解析模块
-import consola from 'consola'; // 命令行日志输出工具
-import enquirer from 'enquirer'; // 交互式命令行提示工具
-import minimist from 'minimist'; // 命令行参数解析工具
-import chalk from 'chalk'; // 命令行颜色处理工具
+// Node.js 路径解析模块
+import { resolve } from 'node:path';
+// 命令行日志输出工具
+import consola from 'consola';
+// 交互式命令行提示工具
+import enquirer from 'enquirer';
+// 命令行参数解析工具
+import minimist from 'minimist';
+// 命令行颜色处理工具
+import chalk from 'chalk';
 // 工具函数导入
 import {
-  executeCommand, // 执行 shell 命令的封装函数
-  playgrounds, // 可用的 playground 项目列表
-  projectRoot, // 项目根目录路径
-  readJSON, // 读取 JSON 文件的工具函数
-  rollupRoot, // Rollup 构建工具路径
-  viteRoot, // Vite 构建工具路径
-  webpackRoot, // Webpack 构建工具路径
+  executeCommand,
+  playgrounds,
+  projectRoot,
+  readJSON,
+  rollupRoot,
+  viteRoot,
+  webpackRoot,
 } from './utils';
 
 // 程序主入口
@@ -23,7 +27,6 @@ main();
  * 1. 解析命令行参数
  * 2. 链接选中的 playground 项目
  * 3. 执行选中的脚本
- * @async
  */
 async function main() {
   try {
@@ -47,8 +50,7 @@ async function main() {
 }
 
 /**
- * 参数解析器
- * 包含 playground 名称和脚本名称的对象
+ * 参数解析器（包含 playground 名称和脚本名称的对象）
  */
 async function parseArguments() {
   // 使用 minimist 解析命令行参数
@@ -63,8 +65,11 @@ async function parseArguments() {
 
 /**
  * 构建工具路径决策器
- * @param {string} playground - playground 项目名称（格式：工具名-场景名）
- * @returns {string} 构建工具根路径
+ *
+ * @param playground - playground 项目名称（格式：工具名-场景名）
+ *
+ * @returns  构建工具根路径
+ *
  * @example determineToolkitPath('vite-react') => '/path/to/vite'
  */
 function determineToolkitPath(playground: string): string {
@@ -84,8 +89,9 @@ function determineToolkitPath(playground: string): string {
 
 /**
  * 创建项目软链接
- * @param {string} playground - 项目名称
- * @param {string} toolkitPath - 构建工具路径
+ *
+ * @param playground - 项目名称
+ * @param toolkitPath - 构建工具路径
  */
 function linkPlaygroundProject(playground: string, toolkitPath: string) {
   // 构建 playground 完整路径
@@ -101,8 +107,9 @@ function linkPlaygroundProject(playground: string, toolkitPath: string) {
 
 /**
  * 执行 playground 脚本
- * @param {string} playground - 项目名称
- * @param {string} script - 要执行的脚本名称
+ *
+ * @param playground - 项目名称
+ * @param script - 要执行的脚本名称
  */
 function executePlaygroundScript(playground: string, script: string) {
   console.log();
@@ -113,7 +120,8 @@ function executePlaygroundScript(playground: string, script: string) {
 
 /**
  * 交互式选择 playground 项目
- * @returns {Promise<string>} 用户选择的项目名称
+ *
+ * @returns 用户选择的项目名称
  */
 async function selectPlayground(): Promise<string> {
   const response = await enquirer.prompt<{ playground: string }>({
@@ -130,8 +138,10 @@ async function selectPlayground(): Promise<string> {
 
 /**
  * 交互式选择执行脚本
- * @param {string} playground - 已选择的项目名称
- * @returns {Promise<string>} 用户选择的脚本名称
+ *
+ * @param playground - 已选择的项目名称
+ *
+ * @returns 用户选择的脚本名称
  */
 async function selectScript(playground: string): Promise<string> {
   // 读取目标项目的 package.json
@@ -145,7 +155,8 @@ async function selectScript(playground: string): Promise<string> {
     choices: Object.entries(scripts).map(([name, content]) => ({
       name,
       value: name,
-      message: `${name.padEnd(12)} ${content}`, // 对齐脚本名称和描述
+      // 对齐脚本名称和描述
+      message: `${name.padEnd(12)} ${content}`,
     })),
   });
 

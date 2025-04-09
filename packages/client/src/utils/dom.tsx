@@ -1,15 +1,16 @@
 import { Fragment } from '../../jsx/jsx-runtime';
 
 /**
- * DOM属性操作工具集
- * 包含属性设置、子节点管理、样式处理等常用功能
+ * DOM 属性操作工具集，包含属性设置、子节点管理、样式处理等常用功能
  */
 
 // ====================== 属性操作 ======================
 /**
  * 安全设置元素属性（支持空值自动移除）
+ *
  * @param el 目标元素
  * @param attrs 属性键值对
+ *
  * @example
  * applyAttrs(div, {
  *   'data-id': '123',
@@ -30,9 +31,11 @@ export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
 // ====================== 子节点管理 ======================
 /**
  * 递归追加子节点（支持Fragment解构）
+ *
  * @param el 父容器
  * @param children 子节点数组
- * @remark 使用文档片段优化批量插入性能
+ *
+ * @remarks 使用文档片段优化批量插入性能
  */
 export function appendChild(el: HTMLElement | ShadowRoot, ...children: HTMLElement[]) {
   for (const child of children) {
@@ -46,8 +49,9 @@ export function appendChild(el: HTMLElement | ShadowRoot, ...children: HTMLEleme
 }
 
 /**
- * 安全替换子节点（兼容Shadow DOM）
- * @remark 手动实现而非使用原生replaceChildren，确保浏览器兼容性
+ * 安全替换子节点（兼容 Shadow DOM）
+ *
+ * @remarks 手动实现而非使用原生 replaceChildren，确保浏览器兼容性
  */
 export function replaceChildren(el: HTMLElement | ShadowRoot, ...children: HTMLElement[]) {
   // 批量删除优化：直接清空比逐个删除更高效
@@ -59,8 +63,10 @@ export function replaceChildren(el: HTMLElement | ShadowRoot, ...children: HTMLE
 
 // ====================== 可见性检测 ======================
 /**
- * 检测元素可见性（DOM树连接性 + display继承链）
- * @remark 实现与官方草案差异：忽略visibility/content-visibility，专注display检测
+ * 检测元素可见性（DOM 树连接性 + display 继承链）
+ *
+ * @remarks
+ * 实现与官方草案差异：忽略 visibility/content-visibility，专注 display 检测
  */
 export function checkVisibility(el: HTMLElement) {
   if (!el.isConnected) return false;
@@ -77,8 +83,9 @@ export function checkVisibility(el: HTMLElement) {
 
 // ====================== 样式处理工具 ======================
 /**
- * CSS单位转换工具集
- * @remark 数值转换避免样式字符串拼接错误
+ * CSS 单位转换工具集
+ *
+ * @remarks 数值转换避免样式字符串拼接错误
  */
 export const CssUtils = {
   /** 数值转像素单位 */
@@ -86,12 +93,12 @@ export const CssUtils = {
     return `${value}px`;
   },
 
-  /** 解析样式值为数字（空值返回0） */
+  /** 解析样式值为数字（空值返回 0） */
   parseValue(value: string) {
     return Number.parseFloat(value) || 0;
   },
 
-  /** 生成translate变换函数 */
+  /** 生成 translate 变换函数 */
   translate(x: number, y: number) {
     return `translate(${CssUtils.numberToPx(x)}, ${CssUtils.numberToPx(y)})`;
   },
@@ -99,7 +106,8 @@ export const CssUtils = {
 
 /**
  * 批量应用样式对象
- * @remark 使用Object.assign优化多次样式操作
+ *
+ * @remarks 使用 Object.assign 优化多次样式操作
  */
 export function applyStyle(
   el: HTMLElement,
@@ -110,10 +118,13 @@ export function applyStyle(
 
 /**
  * 创建计算样式获取器
+ *
  * @param toNumber 是否自动转换为数值类型
+ *
  * @example
  * const getStyle = createStyleGetter(div);
- * const width = getStyle('width'); // 返回number类型
+ * // 返回 number 类型
+ * const width = getStyle('width');
  */
 export function createStyleGetter(el: HTMLElement) {
   const computedStyle = window.getComputedStyle(el);
@@ -131,7 +142,9 @@ export function createStyleGetter(el: HTMLElement) {
 // ====================== 类名操作 ======================
 /**
  * 安全添加类名（支持空格分隔的多类名）
- * @remark 使用classList代替className操作
+ *
+ * @remarks
+ * 使用 classList 代替 className 操作
  */
 export function addClass(el: HTMLElement, className: string) {
   el.classList.add(...className.trim().split(/\s+/));

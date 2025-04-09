@@ -3,8 +3,10 @@ import { on } from '../event';
 
 /**
  * 创建带类型标识的消息字符串
- * @原理 将消息类型与参数序列化组合，便于接收方识别处理
- * @示例 createMessage('LOG', ['error']) => "@LOG["error"]"
+ *
+ * 原理：将消息类型与参数序列化组合，便于接收方识别处理
+ *
+ * @example createMessage('LOG', ['error']) => "@LOG["error"]"
  */
 function createMessage(type: string, args: any[]) {
   return `@${type}${JSON.stringify(args)}`;
@@ -12,8 +14,10 @@ function createMessage(type: string, args: any[]) {
 
 /**
  * 解析带类型标识的消息
- * @返回 { type: string, args: any[] } | null
- * @安全 使用try-catch防止恶意数据导致解析失败
+ *
+ * @returns { type: string, args: any[] } | null
+ *
+ * 安全：使用 try-catch 防止恶意数据导致解析失败
  */
 function parseMessage(data: string) {
   try {
@@ -32,9 +36,12 @@ function parseMessage(data: string) {
 
 /**
  * 注册消息监听器
- * @功能 自动过滤并解析指定类型的消息
- * @安全 通过类型前缀校验防止消息劫持
- * @示例 onMessage('UPDATE', (args) => console.log(args))
+ *
+ * 功能：自动过滤并解析指定类型的消息
+ *
+ * 安全：通过类型前缀校验防止消息劫持
+ *
+ * @example onMessage('UPDATE', (args) => console.log(args))
  */
 export function onMessage<Args extends any[] = []>(type: string, callback: (args: Args) => void) {
   on('message', ({ data }) => {
@@ -50,7 +57,8 @@ export function onMessage<Args extends any[] = []>(type: string, callback: (args
 
 /**
  * 发送消息到指定窗口
- * @原理 通过结构化消息格式保证数据完整性
+ *
+ * 原理：通过结构化消息格式保证数据完整性
  */
 export function postMessage(type: string, args: any[] = [], target: Window = window) {
   target.postMessage(createMessage(type, args), '*');
@@ -58,11 +66,13 @@ export function postMessage(type: string, args: any[] = [], target: Window = win
 
 /**
  * 向所有同源子窗口广播消息
- * @安全 crossOrigin=true时可能触发CORS错误
- * @实现 优先尝试安全访问，降级处理跨域场景
+ *
+ * 安全：crossOrigin=true 时可能触发 CORS 错误
+ *
+ * 实现：优先尝试安全访问，降级处理跨域场景
  */
 export function postMessageAll(type: string, args: any[] = [], crossOrigin: boolean = false) {
-  // 兼容性获取iframe窗口对象
+  // 兼容性获取 iframe 窗口对象
   const frames = Array.from(document.querySelectorAll('iframe'))
     .map((iframe) => iframe.contentWindow)
     .filter(Boolean) as Window[];
@@ -74,7 +84,10 @@ export function postMessageAll(type: string, args: any[] = [], crossOrigin: bool
         postMessage(type, args, target);
       }
     } catch {
-      //
+      // 跨越容错处理
+      if (crossOrigin) {
+        postMessage(type, args, target);
+      }
     }
   });
 }

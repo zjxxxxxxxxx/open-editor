@@ -81,6 +81,7 @@ export function ToggleUI() {
 
   /**
    * 更新按钮位置
+   *
    * @param e 指针事件对象
    */
   function changePosition(e: PointerEvent) {
@@ -141,7 +142,7 @@ export function ToggleUI() {
       <div
         className="oe-toggle"
         ref={(el) => (elements.root = el!)}
-        // 阻止Firefox拖动时的默认滚动行为
+        // 阻止拖动时的默认滚动行为
         onTouchMove={(e) => e.preventDefault()}
         // 阻止移动端长按触发菜单
         onContextMenu={(e) => e.preventDefault()}

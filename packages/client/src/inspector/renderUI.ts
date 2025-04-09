@@ -4,7 +4,8 @@ import { getBoxModel } from './getBoxModel';
 import { inspectorState } from './inspectorState';
 
 /**
- * 主渲染入口：触发UI更新并启动渲染循环
+ * 主渲染入口：触发 UI 更新并启动渲染循环
+ *
  * 职责：处理元素激活状态，初始化首帧渲染
  */
 export function renderUI() {
@@ -22,7 +23,8 @@ export function renderUI() {
 }
 
 /**
- * 渲染循环核心：持续更新UI状态
+ * 渲染循环核心：持续更新 UI 状态
+ *
  * 优化点：增加帧率控制，防止过度渲染
  */
 function renderNextFrame() {
