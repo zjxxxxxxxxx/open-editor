@@ -5,7 +5,7 @@ import { INSPECTOR_ACTIVE_CROSS_IFRAME } from '../constants';
 
 export type InspectorActiveBridgeArgs = [string];
 
-// 创建跨iframe桥接器实例
+// 创建跨 iframe 桥接器实例
 export const inspectorActiveBridge = crossIframeBridge<InspectorActiveBridgeArgs>({
   setup() {
     // 注册全局消息监听
@@ -18,14 +18,13 @@ export const inspectorActiveBridge = crossIframeBridge<InspectorActiveBridgeArgs
     });
   },
 
+  /**
+   * 消息发送中间件配置，用于处理消息发送前的逻辑
+   */
   emitMiddlewares: [
-    // 中间件：向顶层窗口发送消息
     (args) => {
-      postMessage(
-        INSPECTOR_ACTIVE_CROSS_IFRAME,
-        args,
-        topWindow, // 指定消息发送目标为顶层窗口
-      );
+      // 中间件：向顶层窗口发送消息
+      postMessage(INSPECTOR_ACTIVE_CROSS_IFRAME, args, topWindow);
     },
   ],
 });

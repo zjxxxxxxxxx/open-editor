@@ -1,23 +1,28 @@
 /* -------------------------- 模块导入 -------------------------- */
-// Node.js 核心模块
-import { join } from 'node:path'; // 路径处理
-import { existsSync, readFileSync } from 'node:fs'; // 文件系统操作
+// 路径处理
+import { join } from 'node:path';
+// 文件系统操作
+import { existsSync, readFileSync } from 'node:fs';
 
 // Rollup 插件类型
 import { type Plugin as RollupPlugin, type TransformPluginContext } from 'rollup';
 
 // Babel 核心工具
 import { traverse, types as t, type Node } from '@babel/core';
-import { parse } from '@babel/parser'; // AST 解析器
+// AST 解析器
+import { parse } from '@babel/parser';
 
 // 源码操作库（支持 sourcemap）
 import MagicString from 'magic-string';
 
-// PostCSS 生态
-import postcss from 'postcss'; // CSS 处理器
-import autoprefixer from 'autoprefixer'; // 自动前缀
-import minifySelectors from 'postcss-minify-selectors'; // 选择器压缩
-import discardComments from 'postcss-discard-comments'; // 注释清理
+// CSS 处理器
+import postcss from 'postcss';
+// 自动前缀
+import autoprefixer from 'autoprefixer';
+// 选择器压缩
+import minifySelectors from 'postcss-minify-selectors';
+// 注释清理
+import discardComments from 'postcss-discard-comments';
 
 /* -------------------------- 常量定义 -------------------------- */
 const TAG_NAME = 'css'; // CSS 模板标签标识符（用于匹配 css`...` 语法）
@@ -28,37 +33,46 @@ const AFTER_SPACES_RE = /([{};:,])\s+/g; // 匹配符号后的多余空格（如
 /* -------------------------- 类型定义 -------------------------- */
 export interface Options {
   /**
-   * 是否生成 sourcemap
+   * 是否生成 sourcemap（控制是否输出源码映射）
+   *
    * @default false
    */
-  sourcemap?: boolean; // 控制是否输出源码映射
+  sourcemap?: boolean;
 }
 
 /* -------------------------- 核心插件逻辑 -------------------------- */
 /**
  * Rollup 插件入口函数
+ *
  * @param options - 插件配置项
+ *
  * @returns 符合 Rollup 规范的插件对象
  */
 export default function cssPlugin(options: Options): RollupPlugin {
-  const processor = createProcessor(); // 初始化 CSS 处理流水线
+  // 初始化 CSS 处理流水线
+  const processor = createProcessor();
 
   return {
-    name: 'rollup:css', // 插件标识（显示在警告/错误信息中）
+    // 插件标识（显示在警告/错误信息中）
+    name: 'rollup:css',
 
     /**
      * 转换钩子函数
+     *
      * @param code - 源代码内容
      * @param id - 文件路径标识
      */
     transform(code, id) {
-      const magicString = new MagicString(code); // 创建可编辑源码对象
+      // 创建可编辑源码对象
+      const magicString = new MagicString(code);
       const ast = parse(code, {
-        // 解析为 AST
-        sourceType: 'unambiguous', // 自动判断模块类型
+        // 自动判断模块类型
+        sourceType: 'unambiguous',
         plugins: id.endsWith('x')
-          ? ['jsx', 'typescript'] // JSX 文件需要额外插件
-          : ['typescript'], // 普通 TypeScript 文件
+          ? // JSX 文件需要额外插件
+            ['jsx', 'typescript']
+          : // 普通 TypeScript 文件
+            ['typescript'],
       });
 
       // 遍历 AST 并进行转换操作
@@ -78,13 +92,17 @@ export default function cssPlugin(options: Options): RollupPlugin {
 /* -------------------------- CSS处理器配置 -------------------------- */
 /**
  * 创建 PostCSS 处理流水线
+ *
  * @returns 配置好的 PostCSS 处理器
  */
 function createProcessor() {
   return postcss([
-    autoprefixer(), // 自动添加浏览器前缀
-    minifySelectors() as postcss.Plugin, // 压缩 CSS 选择器
-    discardComments({ removeAll: true }), // 清除所有注释（包括 /*! 重要注释 */）
+    // 自动添加浏览器前缀
+    autoprefixer(),
+    // 压缩 CSS 选择器
+    minifySelectors() as postcss.Plugin,
+    // 清除所有注释（包括 /*! 重要注释 */）
+    discardComments({ removeAll: true }),
   ]);
 }
 
@@ -92,6 +110,7 @@ function createProcessor() {
 
 /**
  * 创建 AST 转换处理器
+ *
  * @param ctx - Rollup 插件上下文（用于报错/监听文件）
  * @param magicString - 源码操作对象
  * @param processor - PostCSS 处理器
@@ -106,6 +125,7 @@ function createAstHandlers(
   return {
     /**
      * 处理 css`...` 模板字符串
+     *
      * @example css`.class { color: red; }`
      */
     TaggedTemplateExpression({ node }: { node: t.TaggedTemplateExpression }) {
@@ -118,6 +138,7 @@ function createAstHandlers(
 
     /**
      * 转换 <link> 标签为 <style> 标签
+     *
      * @example <link rel="stylesheet" href="style.css" />
      */
     JSXOpeningElement(path: { node: t.JSXOpeningElement }) {
@@ -148,6 +169,7 @@ function createAstHandlers(
 /* -------------------------- 工具函数 -------------------------- */
 /**
  * 判断 JSX 元素是否匹配指定标签名
+ *
  * @param node - AST 节点
  * @param name - 目标标签名
  */
@@ -157,17 +179,22 @@ function isJsxElementMatch(node: Node & { name: any }, name: string) {
 
 /**
  * CSS 内容处理流水线
+ *
  * @param raw - 原始 CSS 内容
  * @param processor - PostCSS 处理器
+ *
  * @returns 处理后的 CSS 字符串（已压缩优化）
  */
 function processCssContent(raw: string, processor: postcss.Processor) {
-  return `\`${
-    processor
-      .process(raw)
-      .css.replace(NEWLINE_RE, '') // 移除所有换行符
-      .replace(BEFORE_SPACES_RE, '$1') // 清理符号前多余空格
-      .replace(AFTER_SPACES_RE, '$1') // 清理符号后多余空格
-      .trim() // 去除首尾空格
-  }\``; // 转换为模板字符串
+  // 转换为模板字符串
+  return `\`${processor
+    .process(raw)
+    // 移除所有换行符
+    .css.replace(NEWLINE_RE, '')
+    // 清理符号前多余空格
+    .replace(BEFORE_SPACES_RE, '$1')
+    // 清理符号后多余空格
+    .replace(AFTER_SPACES_RE, '$1')
+    // 去除首尾空格
+    .trim()}\``;
 }

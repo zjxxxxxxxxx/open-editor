@@ -3,6 +3,7 @@ import { mitt } from './mitt';
 
 /**
  * 跨框架通信桥接器配置项
+ *
  * @template Args 事件参数类型扩展
  */
 export interface CrossIframeBridgeOptions<Args extends unknown[] = []> {
@@ -14,7 +15,9 @@ export interface CrossIframeBridgeOptions<Args extends unknown[] = []> {
 
 /**
  * 中间件函数类型定义
+ *
  * @template Args 事件参数类型扩展
+ *
  * @param args 事件参数数组
  * @param next 执行下一个中间件的函数
  */
@@ -25,7 +28,9 @@ export type CrossIframeBridgeMiddleware<Args extends unknown[] = []> = (
 
 /**
  * 创建跨框架通信桥接器
+ *
  * @param opts 配置选项
+ *
  * @returns 增强型事件总线实例
  */
 export function crossIframeBridge<Args extends unknown[] = []>(
@@ -48,19 +53,20 @@ export function crossIframeBridge<Args extends unknown[] = []>(
     },
 
     /**
-     * 初始化方法
-     * 确保在支持跨框架通信时只执行一次初始化
+     * 初始化方法，确保在支持跨框架通信时只执行一次初始化
      */
     setup() {
       const { crossIframe } = getOptions();
       if (crossIframe && !initialized) {
         initialized = true;
-        setup?.(); // 安全调用可选初始化函数
+        // 安全调用可选初始化函数
+        setup?.();
       }
     },
 
     /**
      * 增强型事件发送方法
+     *
      * @param args 事件参数数组
      * @param immediate 是否跳过中间件直接触发
      */

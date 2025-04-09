@@ -5,33 +5,43 @@ interface AsyncTask<T> extends Promise<T> {
 }
 
 // 样式替换相关常量
-const HOVER_DISABLE_RE = /:hover/g; // 匹配:hover伪类正则
-const HOVER_DISABLE_TOKEN = ':oe-disable-hover'; // 替换占位符
-const HOVER_ENABLE_RE = /:oe-disable-hover/g; // 匹配占位符正则
-const HOVER_ENABLE_TOKEN = ':hover'; // 恢复伪类
+// 匹配 :hover 伪类正则
+const HOVER_DISABLE_RE = /:hover/g;
+// 替换占位符
+const HOVER_DISABLE_TOKEN = ':oe-disable-hover';
+// 匹配 :oe-disable-hover 占位符正则
+const HOVER_ENABLE_RE = /:oe-disable-hover/g;
+// 恢复伪类
+const HOVER_ENABLE_TOKEN = ':hover';
 
-// 禁用所有:hover伪类样式
+// 禁用所有 :hover 伪类样式
 export function disableHoverCSS() {
   return processCSSRules(HOVER_DISABLE_RE, HOVER_DISABLE_TOKEN);
 }
 
-// 恢复被禁用的:hover伪类样式
+// 恢复被禁用的 :hover 伪类样式
 export function enableHoverCSS() {
   return processCSSRules(HOVER_ENABLE_RE, HOVER_ENABLE_TOKEN);
 }
 
-let taskID = 0; // 用于防止并发操作冲突的任务标识
+// 用于防止并发操作冲突的任务标识
+let taskID = 0;
 
 /**
- * 核心处理函数：遍历并修改CSS规则
+ * 核心处理函数：遍历并修改 CSS 规则
+ *
  * @param pattern 需要匹配的正则表达式
  * @param replacement 替换文本内容
- * @returns 返回可手动控制的Promise任务
+ *
+ * @returns 返回可手动控制的 Promise 任务
  */
 function processCSSRules(pattern: RegExp, replacement: string) {
-  const frameChecker = createFrameDurationChecker(1000 / 60); // 每帧16.6ms
-  const asyncTask = createControllablePromise(); // 创建可控Promise
-  const currentTaskID = ++taskID; // 生成唯一任务ID
+  // 每帧 16.6ms
+  const frameChecker = createFrameDurationChecker(1000 / 60);
+  // 创建可控 Promise
+  const asyncTask = createControllablePromise();
+  // 生成唯一任务 ID
+  const currentTaskID = ++taskID;
 
   // 收集所有外部样式表规则
   const externalRules = Array.from(document.styleSheets).flatMap((sheet) => {
@@ -41,7 +51,7 @@ function processCSSRules(pattern: RegExp, replacement: string) {
     return [];
   });
 
-  // 收集所有内联<style>标签
+  // 收集所有内联 <style> 标签
   const inlineStyles = Array.from(document.querySelectorAll('style'));
 
   let ruleIndex = 0;
@@ -83,19 +93,24 @@ function processCSSRules(pattern: RegExp, replacement: string) {
 
 /**
  * 安全更新样式规则
+ *
  * @param sheet 目标样式表
  * @param newRuleText 新规则文本
  */
 function updateStyleRule(sheet: CSSStyleSheet, newRuleText: string) {
   if (sheet.cssRules.length > 0) {
-    sheet.deleteRule(0); // 移除旧规则
+    // 移除旧规则
+    sheet.deleteRule(0);
   }
-  sheet.insertRule(newRuleText, sheet.cssRules.length); // 插入新规则
+  // 插入新规则
+  sheet.insertRule(newRuleText, sheet.cssRules.length);
 }
 
 /**
  * 创建帧时长检查器（避免长时间阻塞主线程）
+ *
  * @param frameDuration 单帧最大时长(ms)
+ *
  * @returns 返回检查当前是否超过帧时长的函数
  */
 function createFrameDurationChecker(frameDuration: number) {
@@ -109,8 +124,9 @@ function createFrameDurationChecker(frameDuration: number) {
 }
 
 /**
- * 创建可手动控制的Promise对象
- * @returns 返回带resolve/reject方法的Promise
+ * 创建可手动控制的 Promise 对象
+ *
+ * @returns 返回带 resolve/reject 方法的 Promise
  */
 function createControllablePromise<T = void>() {
   let resolve!: (value: T | PromiseLike<T>) => void;

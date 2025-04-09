@@ -8,45 +8,52 @@ import { resolveDebug } from './resolveDebug';
 
 /**
  * 组件级源码定位元数据
+ *
  * @description 用于描述组件在源码中的精确位置信息，兼容多框架格式
  */
 export interface CodeSourceMeta {
   /**
    * 组件规范化名称（框架无关格式）
+   *
    * @example
-   * - React组件: 'MyComponent'
-   * - Vue组件: 'VueComponent'
+   * - React 组件: 'MyComponent'
+   * - Vue 组件: 'VueComponent'
    */
   name: string;
   /**
-   * 源码映射路径（已解析webpack/vite路径别名）
+   * 源码映射路径（已解析 webpack/vite 路径别名）
+   *
    * @example 'src/components/MyComponent.tsx'
    */
   file: string;
   /**
-   * 源码行号（符合IDE调试协议）
-   * @remark 生产环境需配合sourcemap使用
+   * 源码行号（符合 IDE 调试协议）
+   *
+   * @remarks 生产环境需配合 sourcemap 使用
    */
   line: number;
   /**
-   * 源码列号（JSX元素精准定位）
+   * 源码列号（JSX 元素精准定位）
+   *
    * @example
-   * - JSX开始标签: 列号对应'<'位置
+   * - JSX 开始标签: 列号对应'<'位置
    */
   column: number;
 }
 
 /**
  * 调试会话上下文数据
+ *
  * @description 包含完整的调试会话信息，支持多窗口隔离调试
  */
 export interface CodeSource {
   /**
-   * 检测会话唯一标识（UUID格式，多窗口隔离）
+   * 检测会话唯一标识（UUID 格式，多窗口隔离）
    */
   id: string;
   /**
-   * 目标元素标签名（保留XML命名空间）
+   * 目标元素标签名（保留 XML 命名空间）
+   *
    * @example
    * - 'div'
    * - 'svg:path'
@@ -58,7 +65,8 @@ export interface CodeSource {
   meta?: CodeSourceMeta;
   /**
    * 完整组件调用链路（支持树形可视化）
-   * @remark
+   *
+   * @remarks
    * - [0]: 当前组件
    * - [n]: 根组件
    */
@@ -67,6 +75,7 @@ export interface CodeSource {
 
 /**
  * 框架调试适配器注册表
+ *
  * @description 实现框架调试协议自动检测，支持主流框架版本
  *
  * | 特征属性         | 框架版本      | 适配器       |
@@ -76,7 +85,7 @@ export interface CodeSource {
  * | __vueParent      | Vue 3       | resolveVue3   |
  * | __vue            | Vue 2       | resolveVue2   |
  *
- * @remark 使用const断言确保类型安全
+ * @remarks 使用 const 断言确保类型安全
  */
 const FRAME_RESOLVERS = {
   __reactFiber: resolveReact17,
@@ -86,21 +95,23 @@ const FRAME_RESOLVERS = {
 } as const;
 
 /**
- * 解析DOM元素的源码映射信息
- * @param el 目标元素（需包含__vue/__react等调试属性）
- * @param deep 深度解析模式（默认false）
+ * 解析 DOM 元素的源码映射信息
+ *
+ * @param el 目标元素（需包含 __vue/__react 等调试属性）
+ * @param deep 深度解析模式（默认 false）
+ *
  * @returns 标准化调试数据
  *
  * @coreLogic
- * 1. 缓存优先策略 - 浅层模式直接读取L1缓存
+ * 1. 缓存优先策略 - 浅层模式直接读取 L1 缓存
  * 2. 元数据提取 - 通过 debug 属性标准化框架差异
  * 3. 动态适配 - 根据调试属性特征选择解析器
  * 4. 数据持久化 - 双缓存策略（闭包缓存 + WeakMap）
  *
  * @performance
  * - 浅层模式时间复杂度：O(1)（缓存直接命中）
- * - 深度模式时间复杂度：O(n)（n为组件树深度）
- * - 内存管理：WeakMap自动GC防止内存泄漏
+ * - 深度模式时间复杂度：O(n)（n 为组件树深度）
+ * - 内存管理：WeakMap 自动 GC 防止内存泄漏
  *
  * @example
  * // 快速获取组件元数据
@@ -112,23 +123,30 @@ const FRAME_RESOLVERS = {
 export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
   // 初始化上下文容器（实现会话隔离）
   const source: CodeSource = {
-    id: CURRENT_INSPECT_ID, // 使用全局唯一会话ID
-    el: el.localName, // 获取带命名空间的标签名
-    meta: undefined, // 延迟初始化元数据
-    tree: [], // 组件树存储容器
+    // 使用全局唯一会话 ID
+    id: CURRENT_INSPECT_ID,
+    // 获取带命名空间的标签名
+    el: el.localName,
+    // 延迟初始化元数据
+    meta: undefined,
+    // 组件树存储容器
+    tree: [],
   };
 
   /**
    * 快速返回路径（非深度模式）
+   *
    * @condition 当满足以下条件时直接返回缓存：
-   * 1. deep参数为false或undefined
+   * 1. deep 参数为 false 或 undefined
    * 2. 缓存中存在有效数据
    */
   if (!deep) {
     const cached = getCache(el);
     if (cached) {
-      source.meta = cached.meta; // 从缓存加载元数据
-      return source; // 提前返回避免后续计算
+      // 从缓存加载元数据
+      source.meta = cached.meta;
+      // 提前返回避免后续计算
+      return source;
     }
   }
 
@@ -137,9 +155,10 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
   if (debugInfo) {
     /**
      * 框架类型自动检测算法
+     *
      * @algorithm
      * 1. 遍历所有已注册框架特征键
-     * 2. 使用String.startsWith进行前缀匹配
+     * 2. 使用 String.startsWith 进行前缀匹配
      * 3. 返回第一个匹配成功的解析器
      */
     const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
@@ -148,10 +167,11 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
     if (resolverKey) {
       /**
        * 框架适配器执行过程
+       *
        * @process
        * 1. 传入标准化调试信息
        * 2. 递归解析组件树（深度模式时）
-       * 3. 填充source.tree数组
+       * 3. 填充 source.tree 数组
        */
       FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
     }
@@ -162,10 +182,11 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
 
   /**
    * 缓存更新策略
+   *
    * @strategy
    * 1. 仅非深度模式更新缓存
    * 2. 避免缓存大型组件树数据
-   * 3. 使用WeakMap自动内存管理
+   * 3. 使用 WeakMap 自动内存管理
    */
   if (!deep) {
     setCache(el, { meta: source.meta });

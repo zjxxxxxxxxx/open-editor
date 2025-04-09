@@ -1,8 +1,3 @@
-/**
- * 客户端初始化模块
- * @模块功能 负责编辑器客户端的整体初始化流程，整合各子系统
- * @核心逻辑 通过单例模式确保全局唯一初始化，采用事件驱动架构协调模块启动顺序
- */
 import { on } from './event';
 import { IS_CLIENT } from './constants';
 import { type Options, setOptions } from './options';
@@ -14,12 +9,14 @@ export { Options };
 
 /**
  * 初始化编辑器客户端
- * @功能说明 执行客户端环境检测、配置注入、模块初始化等启动流程
- * @参数说明
- * @param {Options} opts - 编辑器配置对象，包含各子系统所需参数
- * @执行策略
+ *
+ * @param opts - 编辑器配置对象，包含各子系统所需参数
+ *
+ * 功能说明：执行客户端环境检测、配置注入、模块初始化等启动流程
+ *
+ * 执行策略：
  *   1. 采用单例模式避免重复初始化
- *   2. 在DOM就绪后启动子系统
+ *   2. 在 DOM 就绪后启动子系统
  *   3. 严格的环境检测机制
  */
 export function setupClient(opts: Options) {
@@ -27,7 +24,7 @@ export function setupClient(opts: Options) {
   if (IS_CLIENT && !window.__OPEN_EDITOR_SETUPED__) {
     window.__OPEN_EDITOR_SETUPED__ = true;
 
-    // DOM就绪后执行初始化序列
+    //  DOM 就绪后执行初始化序列
     on('DOMContentLoaded', () => {
       // 配置注入阶段
       setOptions(opts);

@@ -21,8 +21,7 @@ import { boxModelBridge } from './boxModelBridge'; // 盒模型桥接
 /* ---------------------------- 初始化函数 ---------------------------- */
 
 /**
- * 桥接器初始化入口
- * 集中初始化所有功能模块的跨iframe通信能力
+ * 桥接器初始化入口，集中初始化所有功能模块的跨 iframe 通信能力
  */
 export function setupBridge() {
   // 初始化检查器相关模块
@@ -48,18 +47,16 @@ export function setupBridge() {
 /* ---------------------------- 模块导出区域 ---------------------------- */
 
 /**
- * 检查器状态控制桥接器集合
- * 处理检查器组件的激活、启用、退出等状态同步
+ * 检查器状态控制桥接器集合，处理检查器组件的激活、启用、退出等状态同步
  */
 export {
-  inspectorActiveBridge, // 激活状态跨iframe同步
-  inspectorEnableBridge, // 启用状态跨iframe同步
-  inspectorExitBridge, // 退出行为跨iframe通知
+  inspectorActiveBridge, // 激活状态跨 iframe 同步
+  inspectorEnableBridge, // 启用状态跨 iframe 同步
+  inspectorExitBridge, // 退出行为跨 iframe 通知
 };
 
 /**
- * 编辑器生命周期桥接器集合
- * 管理编辑器完整生命周期的事件通信
+ * 编辑器生命周期桥接器集合，管理编辑器完整生命周期的事件通信
  */
 export {
   openEditorBridge, // 主编辑器打开/关闭通信
@@ -69,8 +66,7 @@ export {
 };
 
 /**
- * 结构操作桥接器集合
- * 处理树形结构和盒模型等UI操作通信
+ * 结构操作桥接器集合，处理树形结构和盒模型等 UI 操作通信
  */
 export {
   treeOpenBridge, // 树形结构展开操作通信
@@ -79,9 +75,8 @@ export {
 };
 
 /**
- * 核心数据桥接器
- * 负责代码源数据同步等核心功能
+ * 核心数据桥接器，负责代码源数据同步等核心功能
  */
 export {
-  codeSourceBridge, // 代码源数据跨iframe同步
+  codeSourceBridge, // 代码源数据跨 iframe 同步
 };

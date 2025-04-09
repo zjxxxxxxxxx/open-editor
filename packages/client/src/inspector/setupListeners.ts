@@ -11,22 +11,26 @@ import { inspectorState } from './inspectorState';
 
 /**
  * 监听器生命周期回调配置接口
+ *
  * @remarks
  * 提供检查器不同阶段的回调方法，用于实现跨框架通信和状态更新
  */
 export interface SetupListenersOptions {
   /**
    * 元素激活回调
-   * @param el - 当前激活的DOM元素（null表示无激活元素）
+   *
+   * @param el - 当前激活的 DOM 元素（null 表示无激活元素）
    */
   onActiveElement: (el: HTMLElement | null) => void;
   /**
    * 打开组件树回调
+   *
    * @param el - 需要展示在元素树中的根元素
    */
   onOpenTree: (el: HTMLElement) => void;
   /**
    * 打开编辑器回调
+   *
    * @param el - 需要编辑的目标元素
    */
   onOpenEditor: (el: HTMLElement) => void;
@@ -38,10 +42,11 @@ export interface SetupListenersOptions {
 
 /**
  * 需要静默处理的事件列表
+ *
  * @remarks
  * 阻止这些事件的默认行为和冒泡，避免影响检查器操作：
- * - 覆盖鼠标/触摸/指针/拖拽/表单等6大类事件
- * - 特殊处理Safari的touch事件防止点击失效
+ * - 覆盖鼠标/触摸/指针/拖拽/表单等 6 大类事件
+ * - 特殊处理 Safari 的 touch 事件防止点击失效
  */
 const SILENT_EVENTS = // 鼠标事件（7个）
   (
@@ -60,13 +65,15 @@ const SILENT_EVENTS = // 鼠标事件（7个）
 
 /**
  * 点击关联事件白名单
+ *
  * @remarks
- * Safari特殊处理：阻止这些事件的默认行为会导致点击失效
+ * Safari 特殊处理：阻止这些事件的默认行为会导致点击失效
  */
 const CLICK_ATTACHMENT_EVENTS = new Set(['touchstart', 'touchend']);
 
 /**
  * 快捷键映射表
+ *
  * @remarks
  * 支持通过键盘快速触发操作的按键集合
  */
@@ -74,14 +81,16 @@ const SHORTCUT_KEYS = new Set(['Enter', 'Space']);
 
 /**
  * 初始化全局事件监听系统
+ *
+ * @param opts - 生命周期回调配置
+ *
+ * @returns 解除监听的清理函数
+ *
  * @remarks
  * 核心功能：
  * 1. 实现跨框架的事件通信机制
  * 2. 管理检查器状态机（激活/禁用/元素树模式）
  * 3. 处理用户交互与视图更新的协同
- *
- * @param opts - 生命周期回调配置
- * @returns 解除监听的清理函数
  */
 export function setupListeners(opts: SetupListenersOptions) {
   const { once, crossIframe } = getOptions();
@@ -96,11 +105,12 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 核心事件处理器配置
+   *
    * @remarks
    * 每个配置项包含：
    * - type: 监听的事件类型
    * - handler: 事件处理函数
-   * - target: 事件监听目标（默认为document）
+   * - target: 事件监听目标（默认为 document）
    */
   const coreHandlers = [
     { type: 'click', handler: handleInspect, target: document },
@@ -125,6 +135,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 事件监听管理器
+   *
    * @param operation - 监听操作函数（on/off）
    */
   function manageListeners(operation: typeof on | typeof off) {
@@ -142,6 +153,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理活动元素变化
+   *
    * @param e - 指针事件对象
    */
   function handleActiveElement(e: PointerEvent) {
@@ -155,9 +167,11 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   /**
-   * 获取有效DOM元素
+   * 获取有效 DOM 元素
+   *
    * @param e - 指针事件对象
-   * @returns 通过校验的HTMLElement或null
+   *
+   * @returns 通过校验的 HTMLElement 或 null
    */
   function getValidElement(e: PointerEvent) {
     const element = (
@@ -174,16 +188,19 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理触摸屏进入事件
+   *
    * @param e - 指针事件对象
    */
   function handleEnterScreen(e: PointerEvent) {
     if (e.pointerType === 'touch') {
-      handleActiveElement(e); // 移动端首次触摸时主动触发激活
+      // 移动端首次触摸时主动触发激活
+      handleActiveElement(e);
     }
   }
 
   /**
    * 处理离开屏幕事件
+   *
    * @param e - 指针事件对象
    */
   function handleLeaveScreen(e: PointerEvent) {
@@ -198,6 +215,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理键盘按下事件
+   *
    * @param e - 键盘事件对象
    */
   function handleKeyDown(e: KeyboardEvent) {
@@ -215,16 +233,19 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理按键释放事件
+   *
    * @param e - 键盘事件对象
    */
   function handleKeyUp(e: KeyboardEvent) {
     if (SHORTCUT_KEYS.has(e.code)) {
-      cleanClickedElementAttrs(); // 清理临时属性
+      // 清理临时属性
+      cleanClickedElementAttrs();
     }
   }
 
   /**
    * 元素检查主逻辑
+   *
    * @param e - 指针事件对象
    */
   function handleInspect(e: PointerEvent) {
@@ -234,7 +255,8 @@ export function setupListeners(opts: SetupListenersOptions) {
     if (!checkClickedElement(targetEl)) return;
 
     const finalEl = getFinalElement(targetEl);
-    inspectorState.activeEl = null; // 重置激活状态
+    // 重置激活状态
+    inspectorState.activeEl = null;
 
     // 单次模式自动退出
     if (once) wrappedCallbacks.onExitInspect();
@@ -243,7 +265,9 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 确定最终目标元素
+   *
    * @param fallback - 备选元素
+   *
    * @returns 优先返回已激活的有效元素
    */
   function getFinalElement(fallback: HTMLElement) {
@@ -252,6 +276,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 触发对应回调方法
+   *
    * @param e - 事件对象
    * @param el - 目标元素
    */
@@ -264,6 +289,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
 /**
  * 动态修改事件属性
+ *
  * @remarks
  * 用于统一处理键盘事件到指针事件的转换
  *
@@ -280,7 +306,7 @@ function modifyEventProperties(e: Event, properties: Record<string, () => any>) 
  * 静默事件处理器
  * @remarks
  * 阻止事件传播和默认行为，但需注意：
- * - 在Safari中阻止touch事件默认行为会导致点击失效
+ * - 在 Safari 中阻止 touch 事件默认行为会导致点击失效
  *
  * @param e - 事件对象
  */
@@ -296,17 +322,20 @@ function handleSilentEvent(e: Event) {
 
 /**
  * 回调包装器（带清理功能）
- * @remarks
- * 确保执行回调前清理元素临时属性
  *
  * @param fn - 原始回调函数
+ *
  * @returns 封装后的安全回调
+ *
+ * @remarks
+ * 确保执行回调前清理元素临时属性
  */
 function wrapWithCleanup<T extends (...args: any[]) => any>(
   fn: T,
 ): (...args: Parameters<T>) => ReturnType<T> {
   return function wrapped(...args: Parameters<T>): ReturnType<T> {
-    cleanClickedElementAttrs(); // 统一清理点击属性
+    // 统一清理临时属性
+    cleanClickedElementAttrs();
     return fn(...args);
   };
 }

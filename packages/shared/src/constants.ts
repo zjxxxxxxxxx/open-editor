@@ -25,20 +25,17 @@ const ALL_MODULE_PATHS = [...Object.values(REACT_PATHS), ...Object.values(VUE_PA
 const ESM_MODULE_PATHS = [VUE_PATHS.V2_ESM, VUE_PATHS.V3_ESM];
 
 /**
- * 客户端模块标识常量
- * 用于标识需要特殊处理的编辑器客户端模块
+ * 客户端模块标识常量，用于标识需要特殊处理的编辑器客户端模块
  */
 export const CLIENT_MODULE_ID = '@open-editor/client';
 
 /**
- * 通用模块路径匹配正则表达式
- * 用于检测所有支持的框架模块路径
+ * 通用模块路径匹配正则表达式，用于检测所有支持的框架模块路径
  */
 export const ENTRY_MATCH_RE = createMatchRE(ALL_MODULE_PATHS);
 
 /**
- * ESM 模块路径匹配正则表达式
- * 专门用于检测 ESM 格式的框架模块路径
+ * ESM 模块路径匹配正则表达式，专门用于检测 ESM 格式的框架模块路径
  */
 export const ENTRY_ESM_MATCH_RE = createMatchRE(ESM_MODULE_PATHS);
 
@@ -56,7 +53,9 @@ function normalizePath(path: string) {
 
 /**
  * 正则表达式生成函数
+ *
  * @param paths 经过标准化的路径数组
+ *
  * @returns 合并后的正则表达式，用于匹配模块路径
  */
 function createMatchRE(paths: string[]) {

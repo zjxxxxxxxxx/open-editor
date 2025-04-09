@@ -12,11 +12,11 @@ export interface CursorTracker {
    */
   isOutsideViewport: boolean;
   /**
-   * 光标在视口坐标系中的水平位置（基于clientX）
+   * 光标在视口坐标系中的水平位置（基于 clientX）
    */
   viewportX: number;
   /**
-   * 光标在视口坐标系中的垂直位置（基于clientY）
+   * 光标在视口坐标系中的垂直位置（基于 clientY）
    */
   viewportY: number;
 }
@@ -28,18 +28,18 @@ const cursorState: CursorTracker = {
   viewportY: 0,
 };
 
-// 仅在浏览器环境初始化光标追踪（避免SSR问题）
+// 仅在浏览器环境初始化光标追踪（避免 SSR 问题）
 if (IS_CLIENT) {
   initCursorTracking();
 }
 
 /**
  * 获取当前光标位置下的有效DOM元素
- * @returns 符合校验规则的元素或null
+ * @returns 符合校验规则的元素或 null
  *
  * 实现要点：
  * 1. 依赖 inspectorState 控制功能开关
- * 2. 当光标移出视口时立即返回null
+ * 2. 当光标移出视口时立即返回 null
  * 3. 使用 elementFromPoint API 获取精确元素
  */
 export function getActiveElement() {
@@ -48,7 +48,7 @@ export function getActiveElement() {
     return null;
   }
 
-  // 基于物理坐标获取元素（可能穿透部分CSS效果）
+  // 基于物理坐标获取元素（可能穿透部分 CSS 效果）
   const el = document.elementFromPoint(
     cursorState.viewportX,
     cursorState.viewportY,
