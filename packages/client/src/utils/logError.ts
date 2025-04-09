@@ -1,12 +1,13 @@
 /**
  * 增强型错误记录器（支持跨环境栈追踪）
+ *
  * @param msg - 错误描述信息
  * @param config - 高级配置项
- * @param config.logLevel - 处理方式：'log'记录到控制台，'throw'抛出异常
+ * @param config.logLevel - 处理方式：'log' 记录到控制台，'throw' 抛出异常
  * @param config.errorType - 自定义错误类型（默认使用Error类）
  * @param config.code - 自定义错误分类码
  *
- * @使用示例
+ * @example
  * logError('网络请求超时', { logLevel: 'throw', code: 'NETWORK_ERROR' })
  */
 export function logError(
@@ -26,7 +27,7 @@ export function logError(
 
     // 跨环境栈追踪处理（核心改进点）
     if (typeof Error.captureStackTrace === 'function') {
-      // V8引擎优化方案：精确跳过当前函数栈
+      // V8 引擎优化方案：精确跳过当前函数栈
       Error.captureStackTrace(err, logError);
     } else if (err.stack) {
       // 通用兼容方案：正则过滤当前栈帧
@@ -48,7 +49,8 @@ export function logError(
     component: 'client',
     stackTrace: (new Error().stack || '')
       .split('\n')
-      .slice(2) // 跳过当前调用栈
+      // 跳过当前调用栈
+      .slice(2)
       .map((line) => line.trim()),
     context: {
       userAgent: typeof navigator === 'undefined' ? 'server-side' : navigator.userAgent,
@@ -60,40 +62,14 @@ export function logError(
 }
 
 /**
- * 异步错误处理器（基于Zone.js的改进实现）
- * @param asyncFn - 需要监控的异步函数
- * @param errorHandler - 自定义错误处理器
- */
-export async function asyncErrorHandler<T>(
-  asyncFn: () => Promise<T>,
-  errorHandler?: (err: Error) => void,
-) {
-  try {
-    return await asyncFn();
-  } catch (err) {
-    const error = err instanceof Error ? err : new Error(String(err));
-
-    // 添加异步操作标识
-    (error as any).isAsync = true;
-
-    // 执行统一处理
-    logError(error.message, {
-      logLevel: 'throw',
-      code: 'ASYNC_ERROR',
-    });
-
-    // 自定义处理器回调
-    errorHandler?.(error);
-  }
-}
-
-/**
  * 统一错误消息生成器（支持环境检测）
+ *
  * @param msg - 原始错误描述信息
  * @param errorCode - 自定义错误分类码（默认：CLIENT_ERROR）
+ *
  * @returns 格式化后的错误消息字符串
  *
- * @示例
+ * @example
  * errMsg("组件初始化失败")
  * // 返回 "[@open-editor/client][CLIENT_ERROR] 组件初始化失败 (2025-03-28T08:30:00Z)"
  */

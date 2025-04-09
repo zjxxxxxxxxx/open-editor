@@ -10,12 +10,13 @@ import { TooltipUI } from './TooltipUI';
 import { TreeUI } from './TreeUI';
 
 /**
- * 初始化编辑器UI系统
+ * 初始化编辑器 UI 系统
+ *
  * 职责：注册自定义元素并挂载到文档主体
  */
 export function setupUI() {
   const { crossIframe } = getOptions();
-  // 跨iframe场景下非顶层窗口不初始化
+  // 跨 iframe 场景下非顶层窗口不初始化
   if (crossIframe && !isTopWindow) return;
 
   // 注册自定义元素
@@ -27,7 +28,8 @@ export function setupUI() {
 
 /**
  * 自定义元素类：编辑器检查器容器
- * 职责：管理Shadow DOM及子组件生命周期
+ *
+ * 职责：管理 Shadow DOM 及子组件生命周期
  */
 class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeof HTMLElement)) {
   /** Shadow DOM根节点 */
@@ -39,8 +41,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 初始化Shadow DOM
-   * 模式设置为closed防止外部访问
+   * 初始化 Shadow DOM，模式设置为 closed 防止外部访问
    */
   private initShadowDOM() {
     Object.defineProperty(this, 'shadowRoot', {
@@ -58,8 +59,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 配置错误可视化处理
-   * 创建动画警示层并在动画结束后自动移除
+   * 配置错误可视化处理，创建动画警示层并在动画结束后自动移除
    */
   private setupErrorHandling() {
     openEditorErrorBridge.on(() => {
@@ -86,8 +86,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 渲染子组件树
-   * 包含样式表注入和条件渲染控制
+   * 渲染子组件树，包含样式表注入和条件渲染控制
    */
   private renderUIComponents() {
     const { displayToggle } = getOptions();

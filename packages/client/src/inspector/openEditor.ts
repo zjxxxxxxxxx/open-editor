@@ -8,10 +8,11 @@ import { OPEN_EDITOR_EVENT } from '../constants';
 
 /**
  * 启动编辑器并处理相关生命周期事件
+ *
  * @param meta 源码元信息，包含文件路径、行列号等信息
  */
 export async function openEditor(meta?: CodeSourceMeta) {
-  // 生成编辑器打开URL并触发前置事件
+  // 生成编辑器打开 URL 并触发前置事件
   const openURL = createOpenURL(meta);
   if (!dispatchEvent(OPEN_EDITOR_EVENT, openURL)) return;
 
@@ -40,16 +41,18 @@ export async function openEditor(meta?: CodeSourceMeta) {
 }
 
 /**
- * 生成编辑器打开的请求URL
+ * 生成编辑器打开的请求 URL
+ *
  * @param meta 源码元信息
- * @returns 完整构造的URL对象
+ *
+ * @returns 完整构造的 URL 对象
  */
 export function createOpenURL(meta?: CodeSourceMeta) {
   const opts = getOptions();
   const { protocol, hostname, port } = location;
   const { file = '', line = 1, column = 1 } = meta ?? {};
 
-  // 构造基础URL
+  // 构造基础 URL
   const openURL = new URL(`${protocol}//${hostname}`);
   openURL.pathname = ServerApis.OPEN_EDITOR;
 
@@ -66,6 +69,7 @@ export function createOpenURL(meta?: CodeSourceMeta) {
 
 /**
  * 统一错误处理函数
+ *
  * @param error 原始错误对象
  * @param message 自定义错误信息
  */

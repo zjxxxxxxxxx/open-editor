@@ -288,7 +288,7 @@ importers:
         version: 7.26.0(@babel/core@7.26.0)
       '@open-editor/rollup':
         specifier: latest
-        version: 0.9.2
+        version: link:../../packages/rollup
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.26.0)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -337,7 +337,7 @@ importers:
     devDependencies:
       '@open-editor/vite':
         specifier: latest
-        version: 0.9.3
+        version: link:../../packages/vite
 
   playgrounds/vite-react:
     dependencies:
@@ -403,7 +403,7 @@ importers:
     devDependencies:
       '@open-editor/webpack':
         specifier: latest
-        version: 0.9.2
+        version: link:../../packages/webpack
       '@types/node':
         specifier: 20.5.6
         version: 20.5.6
@@ -3244,60 +3244,6 @@ packages:
     engines: { node: ^14.18.0 || >=16.10.0 }
     peerDependencies:
       vue: ^3.3.4
-
-  '@open-editor/client@0.9.2':
-    resolution:
-      {
-        integrity: sha512-Z5IFMTlBHVR6YuSLp7scJIbVcHpe3dsDJBv/zYBjn6BeiLhjbvAp/QC09xj12YToWZSobv+H1BrGbfZF5JWVpQ==,
-      }
-
-  '@open-editor/client@0.9.3':
-    resolution:
-      {
-        integrity: sha512-6d40HpK6EWeUfHPd4kLgUmQaKSWUGH9+/XrpLaNOsrZOslOYSZO26Z5f7BVUGcI+CK58WjGUvXhMvUyLImJU1Q==,
-      }
-
-  '@open-editor/rollup@0.9.2':
-    resolution:
-      {
-        integrity: sha512-j0sDFjw7aaqOlyLJToUMG6sobpVcoJ18ESZK5bjfjhrjFjRJs/CBrh91GykHMsZqTwLlI7Pwm4JMlxVNOHA6tw==,
-      }
-
-  '@open-editor/server@0.9.2':
-    resolution:
-      {
-        integrity: sha512-pUAJitIRdZJuAd1OGPBWSKYLkc8o4wrfjgviQxQBo/g2Fg6B4IRakslqqmKl8/yEkrnRcYlT6fDslylbJXmN/Q==,
-      }
-
-  '@open-editor/server@0.9.3':
-    resolution:
-      {
-        integrity: sha512-TfDeUVMdjcgPEUmgqAutKsjeRnV8sCj20I/i37Gqvn5D+inVk5o4sdUYIjhQNJSiEyGNfqzhDA+0dinSByPzhw==,
-      }
-
-  '@open-editor/shared@0.9.2':
-    resolution:
-      {
-        integrity: sha512-4dJmxKaBt2/Ne2Nec8OHYBNGVzjKugG8V2PR+ck5My7WYpKuL4FCujlb3SbK4A0dAAM4xNFqcsFR5rFKAeogwQ==,
-      }
-
-  '@open-editor/shared@0.9.3':
-    resolution:
-      {
-        integrity: sha512-MbiwLW+PDnt1WJANpNb1SzIRSplz8A7Ykwt07ePsweg42Kk64lRTGmM2GA9dl9ZTohr/+B7eYnajrMeUWDV8MA==,
-      }
-
-  '@open-editor/vite@0.9.3':
-    resolution:
-      {
-        integrity: sha512-CTs2Ql4DGNh24N8UFItzye8Lyvmn0ORorm8sRmr4foaJkwqbTGGrEAp+JJ57M9NK87s7CrbruhR8c5SCk7AJcg==,
-      }
-
-  '@open-editor/webpack@0.9.2':
-    resolution:
-      {
-        integrity: sha512-SaJ1oQNaE2TiPTqLYlPDTjEiZ0apakU9xXMaPIiBhb22SKM2bmwaafrgkDXUAwstwG5/1lcPK0NC2RMACRtIcQ==,
-      }
 
   '@parcel/watcher-android-arm64@2.5.0':
     resolution:
@@ -20539,62 +20485,6 @@ snapshots:
       - vls
       - vti
       - vue-tsc
-
-  '@open-editor/client@0.9.2':
-    dependencies:
-      '@open-editor/shared': 0.9.2
-      outmatch: 1.0.0
-
-  '@open-editor/client@0.9.3':
-    dependencies:
-      '@open-editor/shared': 0.9.3
-      outmatch: 1.0.0
-
-  '@open-editor/rollup@0.9.2':
-    dependencies:
-      '@open-editor/client': 0.9.2
-      '@open-editor/server': 0.9.2
-      '@open-editor/shared': 0.9.2
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/server@0.9.2':
-    dependencies:
-      '@open-editor/shared': 0.9.2
-      connect: 3.7.0
-      cors: 2.8.5
-      launch-editor: 2.9.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/server@0.9.3':
-    dependencies:
-      '@open-editor/shared': 0.9.3
-      connect: 3.7.0
-      cors: 2.8.5
-      launch-editor: 2.9.1
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/shared@0.9.2': {}
-
-  '@open-editor/shared@0.9.3': {}
-
-  '@open-editor/vite@0.9.3':
-    dependencies:
-      '@open-editor/client': 0.9.3
-      '@open-editor/server': 0.9.3
-      '@open-editor/shared': 0.9.3
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/webpack@0.9.2':
-    dependencies:
-      '@open-editor/client': 0.9.2
-      '@open-editor/server': 0.9.2
-      '@open-editor/shared': 0.9.2
-    transitivePeerDependencies:
-      - supports-color
 
   '@parcel/watcher-android-arm64@2.5.0':
     optional: true

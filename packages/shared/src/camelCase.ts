@@ -15,9 +15,10 @@ const CAMEL_CASE_RE = /(?:(?=^)|(?:[./\-_]+))([a-z])/g;
  * 将字符串转换为驼峰命名格式
  *
  * @param inputStr 需要转换的原始字符串
+ *
  * @returns 转换后的驼峰格式字符串
  *
- * @示例
+ * @example
  * camelCase("hello-world")   => "helloWorld"
  * camelCase("path/to/file")  => "pathToFile"
  */
@@ -27,10 +28,8 @@ export function camelCase(inputStr: string): string {
     /**
      * 正则替换回调函数
      *
-     * @param _match 完整匹配项（本实现中未使用）
+     * @param _ 完整匹配项（本实现中未使用）
      * @param firstLetter 捕获的第一个分组（目标字母）
-     * @param _offset 匹配项在字符串中的偏移量（未使用）
-     * @param _originalStr 原始输入字符串（未使用）
      */
     (_: string, firstLetter: string) => {
       return firstLetter.toUpperCase();

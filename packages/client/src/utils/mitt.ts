@@ -1,10 +1,12 @@
 /**
- * 轻量级事件总线实现（仿mitt设计）
+ * 轻量级事件总线实现（仿 mitt 设计）
+ *
  * 核心功能：事件订阅/发布、一次性监听、批量清理
+ *
  * @template T - 事件参数类型，默认为空数组（无参数事件）
  */
 export function mitt<T extends unknown[] = []>() {
-  // 使用Set存储监听函数，自动处理重复项
+  // 使用 Set 存储监听函数，自动处理重复项
   const listeners = new Set<(...args: T) => void>();
 
   return {
@@ -15,7 +17,9 @@ export function mitt<T extends unknown[] = []>() {
 
     /**
      * 注册持久事件监听
+     *
      * @param handler - 事件处理函数
+     *
      * @example bus.on((msg) => console.log(msg))
      */
     on(handler: (...args: T) => void) {
@@ -24,7 +28,9 @@ export function mitt<T extends unknown[] = []>() {
 
     /**
      * 注册一次性事件监听
+     *
      * @param handler - 仅执行一次的处理函数
+     *
      * @example bus.once((msg) => console.log('首次消息:', msg))
      */
     once(handler: (...args: T) => void) {
@@ -37,6 +43,7 @@ export function mitt<T extends unknown[] = []>() {
 
     /**
      * 移除指定事件监听
+     *
      * @param handler - 需要移除的处理函数
      */
     off(handler: (...args: T) => void) {
@@ -50,7 +57,9 @@ export function mitt<T extends unknown[] = []>() {
 
     /**
      * 触发事件通知
+     *
      * @param args - 传递给监听函数的参数
+     *
      * @example bus.emit('新消息')
      */
     emit(...args: T) {

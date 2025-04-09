@@ -1,9 +1,13 @@
 import { existsSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { parse } from 'node:url';
+import { type ServerResponse } from 'node:http';
 import connect from 'connect';
 import openEditor from 'launch-editor';
-import { ServerResponse } from 'node:http';
+
+const DEFAULE_OPEN_DDITOR = (file: string, errorCallback: (errorMessage: string) => void) => {
+  openEditor(file, (_, errorMessage) => errorCallback(errorMessage));
+};
 
 export interface OpenEditorMiddlewareOptions {
   /**
@@ -12,7 +16,7 @@ export interface OpenEditorMiddlewareOptions {
    * @remarks
    * 用于解析文件相对路径的基础目录
    *
-   * @defaultValue process.cwd()
+   * @default process.cwd()
    */
   rootDir?: string;
 
@@ -23,19 +27,20 @@ export interface OpenEditorMiddlewareOptions {
    * 默认使用 launch-editor 库实现
    * 可通过此参数覆盖默认行为
    */
-  onOpenEditor?(file: string): void;
+  onOpenEditor?(file: string, errorCallback: (errorMessage: string) => void): void;
 }
 
 /**
  * 创建编辑器中间件
  *
  * @param options - 中间件配置选项
+ *
  * @returns connect中间件处理函数
  */
 export function openEditorMiddleware(
   options: OpenEditorMiddlewareOptions = {},
 ): connect.NextHandleFunction {
-  const { rootDir = process.cwd(), onOpenEditor = openEditor } = options;
+  const { rootDir = process.cwd(), onOpenEditor = DEFAULE_OPEN_DDITOR } = options;
 
   return (req, res) => {
     try {
@@ -61,7 +66,9 @@ export function openEditorMiddleware(
 
       // 触发编辑器打开
       if (req.headers.referer) {
-        handleOpenEditor(filename, line, column, onOpenEditor);
+        onOpenEditor(`${filename}:${line}:${column}`, (errorMessage) => {
+          throw new Error(errorMessage || '可能原因有编辑器未启动/编辑器未响应');
+        });
       }
 
       // 返回文件内容
@@ -89,22 +96,6 @@ function validateFile(filename: string, res: ServerResponse): boolean {
 }
 
 /**
- * 处理编辑器打开逻辑
- */
-function handleOpenEditor(
-  filename: string,
-  line: string,
-  column: string,
-  handler: (file: string) => void,
-): void {
-  try {
-    handler(`${filename}:${line}:${column}`);
-  } catch (error) {
-    console.error('[@open-editor/server] 编辑器错误', error);
-  }
-}
-
-/**
  * 发送文件内容响应
  */
 function sendFileContent(res: ServerResponse, filename: string): void {
@@ -117,5 +108,6 @@ function sendFileContent(res: ServerResponse, filename: string): void {
  */
 function sendErrorResponse(res: ServerResponse, code: number, message: string): void {
   res.statusCode = code;
+  res.setHeader('Content-Type', 'text/plain;charset=UTF-8');
   res.end(`[@open-editor/server] ${message}`);
 }

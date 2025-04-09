@@ -9,7 +9,7 @@ export type InspectorExitBridgeArgs = [];
 /**
  * 检查器退出桥接模块
  *
- * 实现跨iframe的事件广播机制，确保在任意iframe中触发的退出事件能同步到所有上下文
+ * 实现跨 iframe 的事件广播机制，确保在任意 iframe 中触发的退出事件能同步到所有上下文
  */
 export const inspectorExitBridge = crossIframeBridge({
   /**
@@ -18,30 +18,19 @@ export const inspectorExitBridge = crossIframeBridge({
    * 功能说明：
    * 1. 监听退出指令消息
    * 2. 验证顶层窗口上下文
-   * 3. 分发事件并广播到所有iframe
+   * 3. 分发事件并广播到所有 iframe
    */
   setup() {
-    // 注册跨iframe消息监听
+    // 注册跨 iframe 消息监听
     onMessage(INSPECTOR_EXIT_CROSS_IFRAME, handleExitEvent);
   },
 
   /**
-   * 事件触发中间件队列
-   *
-   * 执行顺序说明：
-   * 1. 中间件按数组顺序依次执行
-   * 2. 每个中间件接收前序处理结果作为参数
-   * 3. 最终事件会传递到所有注册的监听器
+   * 消息发送中间件配置，用于处理消息发送前的逻辑
    */
   emitMiddlewares: [
-    /**
-     * 基础消息广播中间件
-     *
-     * 功能说明：
-     * 向顶层窗口发送标准化协议格式的消息
-     * 确保所有iframe都能接收到退出指令
-     */
     (args) => {
+      // 确保消息发送到顶层窗口
       postMessage(INSPECTOR_EXIT_CROSS_IFRAME, args, topWindow);
     },
   ],
@@ -49,13 +38,16 @@ export const inspectorExitBridge = crossIframeBridge({
 
 /**
  * 处理退出事件的核心逻辑
+ *
  * @param args 事件参数对象
  */
 function handleExitEvent(args: InspectorExitBridgeArgs) {
   // 验证顶层窗口上下文有效性
   whenTopWindow(
-    () => executeInTopWindow(args), // 顶层窗口上下文中的处理
-    () => executeInSubWindow(args), // 非顶层窗口的降级处理
+    // 顶层窗口上下文中的处理
+    () => executeInTopWindow(args),
+    // 非顶层窗口的降级处理
+    () => executeInSubWindow(args),
   );
 }
 
@@ -78,10 +70,11 @@ function executeInSubWindow(args: InspectorExitBridgeArgs) {
 
 /**
  * 全局事件广播操作
+ *
  * @param args 需要广播的事件参数
  */
 function broadcastExitEvent(args: InspectorExitBridgeArgs) {
-  // 跨iframe全量广播
+  // 跨 iframe 全量广播
   postMessageAll(INSPECTOR_EXIT_CROSS_IFRAME, args);
   // 触发桥接模块的本地事件
   inspectorExitBridge.emit(args, true);

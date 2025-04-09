@@ -6,29 +6,31 @@ import { getOptions } from '../options';
  */
 const ELEMENT_VALIDATION_RULES = {
   /**
-   * 跨iframe模式需要排除的特殊元素
-   * 仅包含自定义检测元素，不包含浏览器原生元素
+   * 跨 iframe 模式需要排除的特殊元素，仅包含自定义检测元素，不包含浏览器原生元素
    */
   crossIframe: new Set([HTML_INSPECTOR_ELEMENT_TAG_NAME]),
 
   /**
-   * 默认模式需要排除的特殊元素
-   * 包含自定义检测元素和浏览器原生元素
+   * 默认模式需要排除的特殊元素，包含自定义检测元素和浏览器原生元素
    */
   default: new Set([
     HTML_INSPECTOR_ELEMENT_TAG_NAME,
-    undefined, // Firefox浏览器中移出视口区域时事件目标为undefined
-    'HTML', // 阻止浏览器视口外区域的HTML元素检测
+    // Firefox 浏览器中移出视口区域时事件目标为 undefined
+    undefined,
+    // 阻止浏览器视口外区域的 HTML 元素检测
+    'HTML',
   ]),
 } as const;
 
 /**
  * 验证元素有效性
- * @param el - 待校验的DOM元素
+ *
+ * @param el - 待校验的 DOM 元素
+ *
  * @returns 是否通过有效性校验
  *
  * 验证流程：
- * 1. 基础存在性校验（非空检查/DOM挂载状态）
+ * 1. 基础存在性校验（非空检查/DOM 挂载状态）
  * 2. 获取元素标签特征
  * 3. 根据运行模式选择校验规则集
  * 4. 执行最终有效性判定

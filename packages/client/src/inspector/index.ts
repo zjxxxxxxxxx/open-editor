@@ -78,7 +78,7 @@ function initKeyboardEvents() {
 /**
  * 判断是否触发模式切换
  *
- * @条件验证：
+ * 条件验证：
  * 1. 元素树未展开
  * 2. 组合键 Alt + Cmd + O
  * 3. 键码为KeyO

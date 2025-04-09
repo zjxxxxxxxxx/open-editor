@@ -2,16 +2,19 @@ import net from 'node:net';
 
 // 端口选择策略配置
 const MIN_PORT_NUMBER = 3000; // 最小可用端口（避免系统保留端口冲突）
-const MAX_PORT_NUMBER = 9000; // 最大探测端口（不超过65535的安全范围）
+const MAX_PORT_NUMBER = 9000; // 最大探测端口（不超过 9000 的安全范围）
 
 /**
  * 智能端口探测控制器
- * @param concurrency - 并发探测数（默认5，建议根据系统负载调整）
- * @param retries - 最大重试次数（默认10，防止无限循环）
+ *
+ * @param concurrency - 并发探测数（默认 5，建议根据系统负载调整）
+ * @param retries - 最大重试次数（默认 10，防止无限循环）
+ *
  * @returns 首个可用的端口号
+ *
  * @throws 当所有尝试失败时抛出错误
  *
- * @算法核心
+ * 算法核心：
  * 1. 批量生成：每次循环生成 concurrency 个随机端口
  * 2. 竞争检测：使用 Promise.race 获取最快响应结果
  * 3. 超时熔断：100ms 未响应的端口视为不可用
@@ -26,7 +29,8 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
     // 创建异步探测任务池
     const promises = ports.map((port) =>
       checkPortNumber(port).then(
-        (available) => (available ? port : null), // 映射可用端口，不可用转为null
+        // 映射可用端口，不可用转为 null
+        (available) => (available ? port : null),
       ),
     );
 
@@ -34,9 +38,10 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
     const result = await Promise.race([
       ...promises,
       // 超时熔断保护：防止僵尸端口阻塞流程
-      new Promise(
-        (resolve) => setTimeout(() => resolve(null), 100), // 100ms 系统级超时阈值
-      ),
+      new Promise((resolve) => {
+        // 100ms 系统级超时阈值
+        setTimeout(() => resolve(null), 100);
+      }),
     ]);
 
     // 成功获取到可用端口则提前返回
@@ -48,7 +53,8 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
 
 /**
  * 端口可用性检测器
- * @原理说明
+ *
+ * 原理说明：
  * 1. 创建临时 TCP 服务尝试绑定端口
  * 2. 成功监听 → 端口可用
  * 3. 监听报错 → 端口被占用
@@ -76,11 +82,13 @@ function checkPortNumber(port: number): Promise<boolean> {
 }
 
 /**
- * 随机端口生成器（四位端口号）
- * @安全策略
+ * 随机端口生成器（四位端口号
+ * ）
+ * 安全策略：
  * - 范围限制：3000-9000 避免系统端口冲突
  * - 随机分布：均匀分布降低重复碰撞概率
- * @优化点
+ *
+ * @optimizations
  * 可升级为基于历史记录的智能生成
  */
 function generatePort(): number {

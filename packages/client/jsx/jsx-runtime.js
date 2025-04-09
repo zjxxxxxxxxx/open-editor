@@ -1,14 +1,11 @@
-/**
- * JSX元素转换核心模块
- * 提供虚拟DOM到真实DOM的转换能力，支持SVG元素和Fragment处理
- */
 import { on } from '../src/event';
 
 // 虚拟节点类型常量
 const FRAGMENT_TYPE = 'INTERNAL_VIRTUAL_FRAGMENT';
-const JSX_MARK = '__oe_jsx'; // DOM元素标记属性
+// DOM 元素标记属性
+const JSX_MARK = '__oe_jsx';
 
-// SVG命名空间及支持的标签类型
+// SVG 命名空间及支持的标签类型
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
 const SVG_TAGS = new Set([
   // 基础形状元素
@@ -75,14 +72,7 @@ const SVG_TAGS = new Set([
 ]);
 
 /**
- * JSX元素创建函数
- * @param {string|Function} type - 元素类型（标签名或组件函数）
- * @param {Object} props - 元素属性对象
- * @param {string} [props.className] - CSS类名
- * @param {Object} [props.style] - 行内样式对象
- * @param {Function} [props.ref] - 元素引用回调
- * @param {Array} [children] - 子元素数组（通过Babel自动填充）
- * @returns {HTMLElement} 生成的DOM元素
+ * JSX 元素创建函数
  */
 function jsx(type, props) {
   const { ref, className, style, children, ...attrs } = props;
@@ -95,7 +85,7 @@ function jsx(type, props) {
   // 创建元素或文档片段
   const element = createElement(type, { className, style });
 
-  // 设置元素属性（Fragment不处理属性）
+  // 设置元素属性（Fragment 不处理属性）
   if (type !== FRAGMENT_TYPE) {
     setElementAttributes(element, attrs);
     if (ref) ref(element);
@@ -110,17 +100,21 @@ function jsx(type, props) {
 }
 
 /**
- * 创建基础DOM元素
- * @param {string} tagName - 元素标签名
- * @param {Object} options - 创建选项
- * @returns {Element} 创建的DOM元素
+ * 创建基础 DOM 元素
+ *
+ * @param tagName - 元素标签名
+ * @param options - 创建选项
+ *
+ * @returns 创建的 DOM 元素
  */
 function createElement(tagName, { className, style }) {
   const element = SVG_TAGS.has(tagName)
     ? document.createElementNS(SVG_NAMESPACE, tagName)
     : document.createElement(tagName);
 
-  element.setAttribute(JSX_MARK, ''); // 设置标记属性
+  // 设置标记属性
+  element.setAttribute(JSX_MARK, '');
+
   if (className) element.className = className;
   if (style) Object.assign(element.style, style);
 
@@ -129,14 +123,15 @@ function createElement(tagName, { className, style }) {
 
 /**
  * 设置元素属性及事件监听
- * @param {Element} element - 目标元素
- * @param {Object} attrs - 属性键值对
+ *
+ * @param element - 目标元素
+ * @param attrs - 属性键值对
  */
 function setElementAttributes(element, attrs) {
   for (const [prop, value] of Object.entries(attrs)) {
     if (value == null) continue;
 
-    if (isEventAttribute(prop)) {
+    if (/^on[A-Z]/.test(prop)) {
       const eventType = prop.slice(2).toLowerCase();
       on(eventType, value, { target: element });
     } else {
@@ -147,8 +142,9 @@ function setElementAttributes(element, attrs) {
 
 /**
  * 递归追加子节点
- * @param {Node} parent - 父节点
- * @param {Array} children - 子节点数组
+ *
+ * @param parent - 父节点
+ * @param children - 子节点数组
  */
 function appendChildren(parent, children) {
   for (const child of children) {
@@ -164,15 +160,6 @@ function appendChildren(parent, children) {
       parent.appendChild(document.createTextNode(child.toString()));
     }
   }
-}
-
-/**
- * 判断是否是事件属性
- * @param {string} prop - 属性名
- * @returns {boolean}
- */
-function isEventAttribute(prop) {
-  return /^on[A-Z]/.test(prop);
 }
 
 // 导出模块接口

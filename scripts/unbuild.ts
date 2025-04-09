@@ -32,27 +32,32 @@ export interface BuildOutput {
 
 /**
  * 开发环境标识，通过 webpack.DefinePlugin 等工具注入
+ *
  * @default false
  */
 const IS_DEV = '__DEV__' in process.env;
 
 /**
  * 构建目标环境配置
+ *
  * @default 'es6'
+ *
  * @example 'es2015' | 'esnext'
  */
 const TARGET = process.env.__TARGET__ || 'es6';
 
 /**
  * 判断当前是否为客户端构建模式
+ *
  * @description 通过比较 clientRoot 与当前解析路径是否一致来判断
  */
 const isClientBuild = clientRoot === resolve();
 
 /**
  * 主入口函数：生成 Rollup 配置数组
- * @function createRollupConfigs
- * @returns {RollupOptions[]} Rollup 配置数组
+ *
+ * @returns Rollup 配置数组
+ *
  * @description
  * 1. 读取 package.json 的 exports 配置
  * 2. 将 exports 转换为标准化的配置项数组
@@ -78,10 +83,11 @@ export default function createRollupConfigs(): RollupOptions[] {
 
 /**
  * 生成单个构建配置（包含代码包和类型声明）
- * @function generateBuildConfig
- * @param {string} inputPath - 入口文件路径
- * @param {BuildOutput | string} outputConfig - 输出配置
- * @returns {RollupOptions[]} 包含代码包和类型声明的配置数组
+ *
+ * @param inputPath - 入口文件路径
+ * @param outputConfig - 输出配置
+ *
+ * @returns 包含代码包和类型声明的配置数组
  */
 function generateBuildConfig(
   inputPath: string,
@@ -95,10 +101,12 @@ function generateBuildConfig(
 
 /**
  * 生成代码包构建配置
- * @function generateBundleConfig
- * @param {string} inputPath - 入口文件路径
- * @param {BuildOutput | string} outputConfig - 输出配置
- * @returns {RollupOptions | undefined} Rollup 配置对象
+ *
+ * @param inputPath - 入口文件路径
+ * @param outputConfig - 输出配置
+ *
+ * @returns Rollup 配置对象
+ *
  * @description
  * 支持两种输出配置格式：
  * 1. 字符串形式：直接指定 ESM 输出路径
@@ -114,15 +122,17 @@ function generateBundleConfig(
   if (typeof outputConfig === 'string') {
     outputFormats.push({
       file: outputConfig,
+      // ESM 格式
       format: 'esm',
-      sourcemap: IS_DEV, // 开发环境生成 sourcemap
+      sourcemap: IS_DEV,
     });
   } else {
     // 处理对象类型的输出配置
     if (outputConfig.require) {
       outputFormats.push({
         file: outputConfig.require,
-        format: 'cjs', // CommonJS 格式
+        // CommonJS 格式
+        format: 'cjs',
         sourcemap: IS_DEV,
       });
     }
@@ -130,7 +140,8 @@ function generateBundleConfig(
     if (outputConfig.import) {
       outputFormats.push({
         file: outputConfig.import,
-        format: 'esm', // ESM 格式
+        // ESM 格式
+        format: 'esm',
         sourcemap: IS_DEV,
       });
     }
@@ -139,9 +150,11 @@ function generateBundleConfig(
   if (outputFormats.length === 0) return;
 
   return {
-    input: inputPath, // 入口文件路径
-    output: outputFormats, // 输出格式配置
-    // 外部依赖排除规则（匹配所有以字母开头或@开头的依赖）
+    // 入口文件路径
+    input: inputPath,
+    // 输出格式配置
+    output: outputFormats,
+    // 外部依赖排除规则（匹配所有以字母开头或 @ 开头的依赖）
     external: (source) => /^@?[a-z]/.test(source),
     plugins: [
       // 客户端构建时添加 CSS 处理插件
@@ -152,11 +165,16 @@ function generateBundleConfig(
       commonjs(),
       // ESBuild 插件配置
       esbuild({
-        target: TARGET, // 编译目标
-        minifySyntax: !IS_DEV, // 生产环境启用语法简化
-        minifyWhitespace: !IS_DEV, // 生产环境启用空格压缩
-        minifyIdentifiers: false, // 保持标识符不变
-        jsxImportSource: join(clientRoot, './jsx'), // 自定义 JSX 导入路径
+        // 编译目标
+        target: TARGET,
+        // 生产环境启用语法简化
+        minifySyntax: !IS_DEV,
+        // 生产环境启用空格压缩
+        minifyWhitespace: !IS_DEV,
+        // 保持标识符不变
+        minifyIdentifiers: false,
+        // 自定义 JSX 导入路径
+        jsxImportSource: join(clientRoot, './jsx'),
       }),
     ],
   };
@@ -164,9 +182,11 @@ function generateBundleConfig(
 
 /**
  * 生成类型声明文件配置
- * @param {string} inputPath - 入口文件路径
- * @param {BuildOutput | string} outputConfig - 输出配置
- * @returns {RollupOptions | undefined} Rollup 配置对象
+ *
+ * @param inputPath - 入口文件路径
+ * @param outputConfig - 输出配置
+ *
+ * @returns Rollup 配置对象
  */
 function generateTypeDeclarationConfig(
   inputPath: string,
@@ -177,26 +197,33 @@ function generateTypeDeclarationConfig(
       input: inputPath,
       output: {
         file: outputConfig.types,
-        format: 'esm', // 类型声明文件使用 ESM 格式
-        sourcemap: false, // 类型声明不生成 sourcemap
+        // 类型声明文件使用 ESM 格式
+        format: 'esm',
+        // 类型声明不生成 sourcemap
+        sourcemap: false,
       },
-      plugins: [dts()], // 使用 dts 插件生成类型声明
+      plugins: [
+        // 使用 dts 插件生成类型声明
+        dts(),
+      ],
     };
   }
 }
 
 /**
  * 标准化入口路径转换器
- * @function normalizeInputPath
- * @param {string} rawPath - 原始路径
- * @returns {string} 标准化后的路径
+ *
+ * @param rawPath - 原始路径
+ *
+ * @returns 标准化后的路径
+ *
  * @example
  * './index'    => './src/index.ts'
  * 'utils'      => './src/utils.ts'
  * './lib/main' => './src/lib/main.ts'
  */
 function normalizeInputPath(rawPath: string) {
-  // 移除开头的./或/，默认使用 index 作为文件名
+  // 移除开头的 ./ 或 /，默认使用 index 作为文件名
   const filename = rawPath.replace(/^\.\/?/, '') || 'index';
   // 转换为 src 目录下的 TypeScript 文件路径
   return `./src/${filename}.ts`;

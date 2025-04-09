@@ -4,13 +4,11 @@ import { onMessage, postMessage } from '../utils/message';
 import { OPEN_EDITOR_ERROR_CROSS_IFRAME } from '../constants';
 
 /**
- * 编辑器错误桥接器实例
- * 处理跨iframe的编辑器错误事件通信
+ * 编辑器错误桥接器实例，处理跨 iframe 的编辑器错误事件通信
  */
 export const openEditorErrorBridge = crossIframeBridge({
   /**
-   * 初始化配置
-   * 监听错误事件并触发桥接事件
+   * 初始化配置，监听错误事件并触发桥接事件
    */
   setup() {
     // 注册错误事件监听
@@ -21,12 +19,12 @@ export const openEditorErrorBridge = crossIframeBridge({
   },
 
   /**
-   * 消息发送中间件配置
-   * 处理消息发送前的逻辑校验
+   * 消息发送中间件配置，处理消息发送前的逻辑校验
    */
   emitMiddlewares: [
     /**
      * 中间件处理逻辑：窗口状态校验
+     *
      * @param args 事件参数对象
      * @param next 后续处理回调
      */

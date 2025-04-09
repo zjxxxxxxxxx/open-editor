@@ -3,8 +3,10 @@ import { normalizePath } from './normalizePath';
 
 /**
  * 解析规范化后的模块路径
+ *
  * @param path 需要解析的原始路径
  * @param url 基准路径，用于创建自定义 require 上下文
+ *
  * @returns 经过规范化处理的完整模块路径
  */
 export function resolvePath(

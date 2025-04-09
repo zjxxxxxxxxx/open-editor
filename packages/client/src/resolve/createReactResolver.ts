@@ -5,33 +5,41 @@ import { type CodeSourceMeta } from '.';
 
 /**
  * React 解析器配置项
- * @template T 表示React节点类型，默认为任意类型
+ * @template T 表示 React 节点类型，默认为任意类型
  */
 export interface ReactResolverOptions<T = any> {
   /**
    * 节点有效性验证函数
+   *
    * @param v 待验证的节点
+   *
    * @returns 返回该节点是否有效的布尔值
    */
   isValid(v?: T): boolean;
 
   /**
    * 获取后续关联节点
+   *
    * @param v 当前节点
-   * @returns 返回下一个关联节点或null/undefined
+   *
+   * @returns 返回下一个关联节点或 null/undefined
    */
   getNext(v: T): T | null | undefined;
 
   /**
    * 获取源代码定位信息
+   *
    * @param v 当前节点
+   *
    * @returns 返回包含文件名、行列号的源代码信息对象
    */
   getSource(v: T): (Source & { columnNumber?: number }) | null | undefined;
 
   /**
    * 获取节点显示名称
+   *
    * @param v 当前节点
+   *
    * @returns 返回组件的展示名称
    */
   getName(v: T): string | undefined;
@@ -39,25 +47,30 @@ export interface ReactResolverOptions<T = any> {
 
 /**
  * React 解析器类型
- * @template T React节点类型
+ *
+ * @template T React 节点类型
  */
 export type ReactResolver<T = any> = ReturnType<typeof createReactResolver<T>>;
 
 /**
- * 创建React组件树解析器（工厂函数）
+ * 创建 React 组件树解析器（工厂函数）
+ *
+ * @template T React 节点类型
+ *
+ * @param opts 解析器配置项
+ *
+ * @returns 返回组件树解析函数
+ *
  * --------------------------------------------------
  * 工作流程：
  * 1. 接收配置项初始化解析器
- * 2. 通过reactResolver函数遍历组件树
+ * 2. 通过 reactResolver 函数遍历组件树
  * 3. 对每个节点执行：
  *    a. 标准化源代码路径
  *    b. 验证节点有效性
  *    c. 提取元数据
  *    d. 根据模式决定遍历深度
  * --------------------------------------------------
- * @template T React节点类型
- * @param opts 解析器配置项
- * @returns 返回组件树解析函数
  */
 export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
   // 解构配置方法
@@ -65,6 +78,11 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   /**
    * 核心解析函数
+   *
+   * @param currentNode 当前处理的节点（初始为根节点）
+   * @param tree 元数据存储树（用于收集结果）
+   * @param deep 是否启用深度遍历模式
+   *
    * --------------------------------------------------
    * 遍历逻辑：
    * 1. 循环处理当前节点链
@@ -75,21 +93,18 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
    *       - 非深度模式：收集元数据后立即返回
    *       - 深度模式：继续遍历子节点
    * --------------------------------------------------
-   * @param currentNode 当前处理的节点（初始为根节点）
-   * @param tree 元数据存储树（用于收集结果）
-   * @param deep 是否启用深度遍历模式
    */
   function reactResolver(
     currentNode: T | null | undefined,
     tree: CodeSourceMeta[],
     deep?: boolean,
   ) {
-    // 使用while循环遍历同级节点链
+    // 使用 while 循环遍历同级节点链
     while (currentNode) {
       // 步骤1：标准化源码信息
       const normalizedSource = normalizeSourceInfo(getSource(currentNode));
 
-      // 步骤2：获取下一个待处理节点（初始为当前节点的next）
+      // 步骤2：获取下一个待处理节点（初始为当前节点的 next）
       let nextNode = getNext(currentNode);
 
       // 判断是否为有效源代码路径
@@ -114,14 +129,17 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   /**
    * 源代码信息标准化处理器
+   *
+   * @param source 原始源码信息
+   *
+   * @returns 标准化后的源码信息对象
+   *
    * --------------------------------------------------
    * 处理逻辑：
    * 1. 统一路径分隔符为斜杠(/)
    * 2. 确保文件名有效性
    * 3. 保留行列号信息
    * --------------------------------------------------
-   * @param source 原始源码信息
-   * @returns 标准化后的源码信息对象
    */
   function normalizeSourceInfo(source: (Source & { columnNumber?: number }) | null | undefined) {
     if (!source) return source;
@@ -135,14 +153,17 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   /**
    * 有效节点过滤器
+   *
+   * @param initialNode 过滤起始节点
+   *
+   * @returns 第一个通过有效性验证的节点
+   *
    * --------------------------------------------------
    * 遍历逻辑：
    * 1. 从初始节点开始遍历
    * 2. 跳过无效节点直到找到第一个有效节点
    * 3. 返回有效节点或undefined
    * --------------------------------------------------
-   * @param initialNode 过滤起始节点
-   * @returns 第一个通过有效性验证的节点
    */
   function getValidNextNode(initialNode: T | null | undefined) {
     let node = initialNode;
@@ -155,15 +176,17 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
 
   /**
    * 元数据收集器
+   *
+   * @param node 目标节点
+   * @param source 标准化源码信息
+   * @param tree 结果树引用
+   *
    * --------------------------------------------------
    * 数据组装过程：
    * 1. 从节点获取显示名称
    * 2. 组合标准化后的源码定位信息
    * 3. 推入结果树前进行数据规范化
    * --------------------------------------------------
-   * @param node 目标节点
-   * @param source 标准化源码信息
-   * @param tree 结果树引用
    */
   function addSourceMetadata(
     node: T,

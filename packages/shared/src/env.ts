@@ -1,6 +1,8 @@
 /**
  * 判断当前是否处于开发环境
- * @returns {boolean} 返回环境检测结果
+ *
+ * @returns  返回环境检测结果
+ *
  * @example
  * // 当 process.env.NODE_ENV 未设置或设置为 development 时
  * isDev(); // => true

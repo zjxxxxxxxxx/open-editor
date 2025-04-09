@@ -39,7 +39,8 @@ export interface Options {
   /**
    * 源代码根目录路径 | Source code root directory path
    *
-   * @defaultValue `process.cwd()`
+   * @default `process.cwd()`
+   *
    * @example
    * ```ts
    * rootDir: path.resolve(__dirname, 'src')
@@ -50,16 +51,18 @@ export interface Options {
   /**
    * 在浏览器显示切换按钮 | Display toggle button in browser
    *
-   * @defaultValue `true`
+   * @default `true`
+   *
    * @remarks
    * 控制是否在页面右下角显示调试开关 | Controls whether to show debug toggle at bottom-right corner
    */
   displayToggle?: boolean;
 
   /**
-   * 禁用CSS悬停效果 | Disable CSS hover effects
+   * 禁用 CSS 悬停效果 | Disable CSS hover effects
    *
-   * @defaultValue `true`
+   * @default `true`
+   *
    * @remarks
    * 当检查器启用时禁用元素悬停高亮 | Disable element highlighting on hover when inspector is active
    */
@@ -68,40 +71,44 @@ export interface Options {
   /**
    * 忽略指定目录的组件 | Ignore components in specified directories
    *
-   * @defaultValue `'\/**\/node_modules\/**\/*'`
+   * @default `'\/**\/node_modules\/**\/*'`
+   *
    * @see [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
+   *
    * @remarks
-   * 使用glob模式匹配需要忽略的路径 |
-   * Use glob patterns to match ignored paths
+   * 使用 glob 模式匹配需要忽略的路径 | Use glob patterns to match ignored paths
    */
   ignoreComponents?: string | string[];
 
   /**
    * 单次检查模式 | Single-inspection mode
    *
-   * @defaultValue `true`
+   * @default `true`
+   *
    * @remarks
    * 打开编辑器或组件树后自动退出检查状态 | Automatically exit inspection after opening editor or component tree
    */
   once?: boolean;
 
   /**
-   * 跨iframe交互支持 | Cross-iframe interaction
+   * 跨 iframe 交互支持 | Cross-iframe interaction
    *
-   * @defaultValue `true`
+   * @default `true`
+   *
    * @remarks
-   * 允许在子iframe中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
+   * 允许在子 iframe 中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
    */
   crossIframe?: boolean;
 
   /**
    * 自定义编辑器打开处理器 | Custom editor opening handler
    *
-   * @defaultValue `内置的launch-editor实现 | Built-in launch-editor implementation`
+   * @default `内置的 launch-editor 实现 | Built-in launch-editor implementation`
+   *
    * @remarks
    * 覆盖默认的文件打开逻辑 | Override default file opening behavior
    */
-  onOpenEditor?(file: string): void;
+  onOpenEditor?(file: string, errorCallback: (errorMessage: string) => void): void;
 }
 ````
 

@@ -16,13 +16,13 @@ import {
  * 工具提示组件元素引用集合
  */
 interface TooltipUIElements {
-  /** 根容器DOM元素 */
+  /** 根容器 DOM 元素 */
   root: HTMLElement;
-  /** 显示元素标签的DOM节点 */
+  /** 显示元素标签的 DOM 节点 */
   tag: HTMLElement;
-  /** 显示组件名称的DOM节点 */
+  /** 显示组件名称的 DOM 节点 */
   comp: HTMLElement;
-  /** 显示文件路径的DOM节点 */
+  /** 显示文件路径的 DOM 节点 */
   file: HTMLElement;
 }
 
@@ -35,7 +35,7 @@ interface TooltipUIState {
 }
 
 /**
- * 工具提示组件UI
+ * 工具提示组件 UI
  */
 export function TooltipUI() {
   // 样式常量（避免硬编码）
@@ -89,6 +89,7 @@ export function TooltipUI() {
 
   /**
    * 更新代码源信息
+   *
    * @param source 代码源数据，包含元素和元数据信息
    */
   function updateSource(source?: CodeSource) {
@@ -114,6 +115,7 @@ export function TooltipUI() {
 
   /**
    * 更新工具提示位置
+   *
    * @param rect 目标元素的边界矩形信息
    */
   function updateRect(rect: BoxRect) {

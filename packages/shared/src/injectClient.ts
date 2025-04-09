@@ -9,6 +9,7 @@ const useStrictPattern = /^['"]use strict['"];?/;
  *
  * @param code 原始代码内容
  * @param userOpts 注入配置选项
+ *
  * @returns 包含客户端初始化逻辑的完整代码
  */
 export function injectClient(code: string, userOpts: AnyObject): string {

@@ -6,6 +6,7 @@ import { type CodeSourceMeta } from '.';
 
 /**
  * 解析 React 15+ 实例的组件树结构
+ *
  * @param debug - 包含 React 实例的调试信息对象
  * @param tree - 组件树元数据存储数组
  * @param deep - 是否深度遍历子组件（默认false）
@@ -19,7 +20,7 @@ export function resolveReact15(
   tree: CodeSourceMeta[],
   deep = false,
 ) {
-  // 分支处理不同React版本的调试信息
+  // 分支处理不同 React 版本的调试信息
   if (instanceOrFiber && hasOwn(instanceOrFiber, '_debugOwner')) {
     // React 16+ 使用 Fiber 架构，调用专用解析器
     resolveForFiber(instanceOrFiber as any, tree, deep);
@@ -34,6 +35,7 @@ let resolver: ReactResolver;
 
 /**
  * 解析 React 15+ 组件实例
+ *
  * @param instance - React 组件实例
  * @param tree - 组件树元数据存储数组
  * @param deep - 是否深度遍历
@@ -48,8 +50,10 @@ export function resolveForInstance(
   tree: CodeSourceMeta[],
   deep?: boolean,
 ) {
-  initializeResolver(); // 确保解析器初始化
-  resolver(instance, tree, deep); // 执行实际解析逻辑
+  // 确保解析器初始化
+  initializeResolver();
+  // 执行实际解析逻辑
+  resolver(instance, tree, deep);
 }
 
 /**
@@ -68,8 +72,10 @@ function initializeResolver() {
       const element = owner?._currentElement;
       return (
         !!element &&
-        (isFn(element.type) || // 函数组件检查
-          isFn(element.type?.render)) // 高阶组件检查（如 forwardRef）
+        // 函数组件检查
+        (isFn(element.type) ||
+          // 高阶组件检查（如 forwardRef）
+          isFn(element.type?.render))
       );
     },
 
@@ -88,8 +94,10 @@ function initializeResolver() {
       const element = owner?._currentElement;
       if (element) {
         const component = isFn(element.type)
-          ? element.type // 普通函数组件
-          : element.type.render; // 高阶组件包装的 render 方法
+          ? // 普通函数组件
+            element.type
+          : // 高阶组件包装的 render 方法
+            element.type.render;
         return component?.displayName || component?.name;
       }
     },

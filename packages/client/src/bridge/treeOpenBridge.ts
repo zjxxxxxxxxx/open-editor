@@ -8,13 +8,11 @@ import { TREE_OPEN_CROSS_IFRAME } from '../constants';
 export type TreeOpenBridgeArgs = [CodeSource, boolean?];
 
 /**
- * 树形结构打开事件桥接器
- * 处理跨iframe的树形结构打开事件通信
+ * 树形结构打开事件桥接器，处理跨 iframe 的树形结构打开事件通信
  */
 export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
   /**
    * 初始化配置
-   * 监听打开事件并初始化资源
    */
   setup() {
     // 注册全局事件监听
@@ -24,7 +22,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
 
       // 顶层窗口处理逻辑
       if (isFromTopWindow) {
-        // 向所有iframe广播打开事件
+        // 向所有 iframe 广播打开事件
         postMessageAll(TREE_OPEN_CROSS_IFRAME, args);
         // 挂载事件遮罩层
         eventBlocker.activate();
@@ -36,21 +34,20 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
   },
 
   /**
-   * 消息发送中间件配置
-   * 包含资源解析和消息路由逻辑
+   * 消息发送中间件配置，包含组件解析和消息路由逻辑
    */
   emitMiddlewares: [
     /**
-     * 中间件逻辑：解析iframe资源
-     * @param source 代码资源对象
+     * 中间件逻辑：解析 iframe 组件
+     * @param source 代码组件对象
      * @param next 后续处理回调
      */
     ([source], next) => {
-      // 在iframe环境解析宿主元素
+      // 在 iframe 环境解析宿主元素
       if (window.frameElement) {
-        // 解析当前iframe的资源树
+        // 解析当前 iframe 的组件树
         const { tree } = resolveSource(window.frameElement as HTMLElement, true);
-        // 更新资源树结构
+        // 更新组件树结构
         source.tree.push(...tree);
       }
 
@@ -60,6 +57,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
 
     /**
      * 中间件逻辑：智能路由消息发送
+     *
      * @param args 事件参数数组
      */
     (args) => {
