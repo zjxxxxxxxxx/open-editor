@@ -14,39 +14,57 @@ interface TreeUIElements {
   popupBody: HTMLElement;
 }
 
-/** 组件树UI展示组件 */
+/**
+ * 组件树 UI 展示组件（基于自定义 JSX 实现，不依赖 React）
+ */
 export function TreeUI() {
-  // 样式常量（避免硬编码）
-  const LOCK_SCREEN_CLASS = 'oe-lock-screen';
+  // 样式常量统一管理
+  const STYLE_CONSTANTS = {
+    LOCK_SCREEN: 'oe-lock-screen',
+    ERROR: 'oe-tree-error',
+  };
 
+  // 从配置项中获取 once 模式选项
   const { once } = getOptions();
   const elements = {} as TreeUIElements;
 
   // 初始化桥接器事件监听
-  initBridgeListeners();
+  setupBridgeListeners();
 
-  /** 初始化所有桥接器事件监听 */
-  function initBridgeListeners() {
+  /**
+   * 注册桥接器事件监听
+   */
+  function setupBridgeListeners() {
     treeOpenBridge.on(handleTreeOpen);
     treeCloseBridge.on(handleTreeClose);
   }
 
-  /** 处理树形结构打开事件 */
+  /**
+   * 处理树形结构打开事件
+   *
+   * @param source 组件代码数据（包含组件树信息）
+   */
   function handleTreeOpen(source: CodeSource) {
-    renderTree(source);
+    renderTreeContent(source);
     applyStyle(elements.root, { display: 'block' });
-    addClass(document.body, LOCK_SCREEN_CLASS);
+    addClass(document.body, STYLE_CONSTANTS.LOCK_SCREEN);
   }
 
-  /** 处理树形结构关闭事件 */
+  /**
+   * 处理树形结构关闭事件
+   */
   function handleTreeClose() {
     applyStyle(elements.root, { display: 'none' });
-    removeClass(document.body, LOCK_SCREEN_CLASS);
+    removeClass(document.body, STYLE_CONSTANTS.LOCK_SCREEN);
   }
 
-  /** 渲染组件树内容 */
-  function renderTree(source: CodeSource) {
-    const hasTree = source.tree.length > 0;
+  /**
+   * 渲染组件树内容（包括标题和节点树或错误提示）
+   *
+   * @param source 组件代码数据
+   */
+  function renderTreeContent(source: CodeSource) {
+    const hasTreeData = source.tree.length > 0;
     const content = (
       <>
         <div className="oe-tree-title">
@@ -54,41 +72,50 @@ export function TreeUI() {
           {`<ComponentTree>`}
         </div>
         <div className="oe-tree-content">
-          {hasTree ? buildTree(source.tree) : '>> 未找到组件树 😭'}
+          {hasTreeData ? renderTreeNodes(source.tree) : '>> 未找到组件树 😭'}
         </div>
       </>
     );
 
-    // 根据是否有数据设置错误状态
-    const popupClass = hasTree ? 'oe-tree-error' : '';
-    hasTree ? removeClass(elements.popup, popupClass) : addClass(elements.popup, popupClass);
+    // 根据是否存在树数据设置错误样式
+    if (!hasTreeData) {
+      addClass(elements.popup, STYLE_CONSTANTS.ERROR);
+    } else {
+      removeClass(elements.popup, STYLE_CONSTANTS.ERROR);
+    }
 
+    // 更新弹出层内容区域
     replaceChildren(elements.popupBody, content);
   }
 
-  /** 递归构建树形结构 */
-  function buildTree(tree: CodeSourceMeta[]) {
-    const meta = tree.pop()!;
-    const tagName = `<${meta.name}>`;
-    const fileName = `${meta.file}:${meta.line}:${meta.column}`;
+  /**
+   * 递归渲染树节点
+   *
+   * @param nodes 节点数据数组
+   * @param index 当前处理节点的索引，默认从 0 开始
+   * @returns 构造好的 JSX 结构
+   */
+  function renderTreeNodes(nodes: CodeSourceMeta[], index: number = 0) {
+    const nodeMeta = nodes[index];
+    const tagName = `<${nodeMeta.name}>`;
+    const fileInfo = `${nodeMeta.file}:${nodeMeta.line}:${nodeMeta.column}`;
 
     return (
-      <div className="oe-tree-item" key={meta.name}>
-        {/* 树节点元素 */}
+      <div className="oe-tree-item">
+        {/* 树节点：点击后在编辑器中打开对应代码 */}
         <div
           className="oe-tree-node"
           title="点击在编辑器中打开"
-          onClick={() => handleNodeClick(meta)}
+          onClick={() => handleNodeClick(nodeMeta)}
         >
           {tagName}
-          <span className="oe-tree-file">{fileName}</span>
+          <span className="oe-tree-file">{fileInfo}</span>
         </div>
-
-        {/* 递归渲染子树 */}
-        {tree.length > 0 && (
+        {/* 如果后续还有节点，则递归渲染，并添加连接线和重复显示当前节点 */}
+        {index < nodes.length - 1 && (
           <>
             <div className="oe-tree-line" />
-            {buildTree(tree)}
+            {renderTreeNodes(nodes, index + 1)}
             <div className="oe-tree-node">{tagName}</div>
           </>
         )}
@@ -96,7 +123,14 @@ export function TreeUI() {
     );
   }
 
-  /** 处理节点点击事件 */
+  /**
+   * 处理节点点击事件
+   *
+   * 当节点被点击时，若 once 模式开启则关闭树视图，
+   * 同时通过 bridge 传递节点数据给编辑器打开对应文件。
+   *
+   * @param meta 当前节点的元数据信息
+   */
   function handleNodeClick(meta: CodeSourceMeta) {
     if (once) treeCloseBridge.emit();
     openEditorBridge.emit([meta]);
@@ -105,29 +139,28 @@ export function TreeUI() {
   return (
     <div
       className="oe-tree"
-      ref={(el) => (elements.root = el!)}
+      ref={(el) => (elements.root = el)}
       onClick={() => treeCloseBridge.emit()}
       onQuickExit={() => treeCloseBridge.emit()}
     >
       {/* 弹出层容器 */}
       <div
         className="oe-tree-popup"
-        ref={(el) => (elements.popup = el!)}
+        ref={(el) => (elements.popup = el)}
         onClick={(e) => e.stopPropagation()}
       >
         {/* 关闭按钮 */}
         <button
           className="oe-tree-close"
-          ref={(el) => (elements.popupClose = el!)}
+          ref={(el) => (elements.popupClose = el)}
           onClick={() => treeCloseBridge.emit()}
         >
           <svg viewBox="0 0 1024 1024" fill="currentColor">
             <path d="M569.02728271 509.40447998L877.59753418 817.97473145 820.57025146 872.40649414 512 563.83624268 198.23870849 882.78857422 141.21142578 823.16577148l313.76129151-318.95233154L146.40246582 195.64318847 203.42974854 141.21142578 512 449.78167724 820.57025146 141.21142578 877.59753418 200.83422852 569.02728271 509.40447998z" />
           </svg>
         </button>
-
         {/* 内容区域 */}
-        <div className="oe-tree-body" ref={(el) => (elements.popupBody = el!)} />
+        <div className="oe-tree-body" ref={(el) => (elements.popupBody = el)} />
       </div>
     </div>
   );

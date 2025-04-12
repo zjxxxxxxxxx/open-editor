@@ -63,27 +63,29 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
 function checkPortNumber(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     const server = net.createServer();
+
     // 解除进程强引用，避免阻止事件循环退出
     server.unref();
 
     // 错误处理（EADDRINUSE 或其他系统错误）
     server.on('error', () => {
-      resolve(false); // 明确不可用状态
+      // 明确不可用状态
+      resolve(false);
     });
 
     // 成功监听时的处理流程
     server.listen(port, () => {
       // 在验证后立即释放端口资源
       server.close(() => {
-        resolve(true); // 确认端口可用性
+        // 确认端口可用性
+        resolve(true);
       });
     });
   });
 }
 
 /**
- * 随机端口生成器（四位端口号
- * ）
+ * 随机端口生成器（四位端口号）
  * 安全策略：
  * - 范围限制：3000-9000 避免系统端口冲突
  * - 随机分布：均匀分布降低重复碰撞概率

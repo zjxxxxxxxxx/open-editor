@@ -12,8 +12,7 @@ import { inspectorState } from './inspectorState';
 /**
  * 监听器生命周期回调配置接口
  *
- * @remarks
- * 提供检查器不同阶段的回调方法，用于实现跨框架通信和状态更新
+ * @remarks 提供检查器不同阶段的回调方法，用于实现跨框架通信和状态更新
  */
 export interface SetupListenersOptions {
   /**
@@ -43,39 +42,28 @@ export interface SetupListenersOptions {
 /**
  * 需要静默处理的事件列表
  *
- * @remarks
- * 阻止这些事件的默认行为和冒泡，避免影响检查器操作：
- * - 覆盖鼠标/触摸/指针/拖拽/表单等 6 大类事件
- * - 特殊处理 Safari 的 touch 事件防止点击失效
+ * @remarks 阻止这些事件的默认行为和冒泡，避免影响检查器操作
  */
-const SILENT_EVENTS = // 鼠标事件（7个）
-  (
-    'mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,' +
-    // 触摸事件（4个）
-    'touchstart,touchend,touchcancel,touchmove,' +
-    // 指针事件（8个）
-    'pointercancel,pointerdown,pointerenter,pointerleave,pointermove,pointerout,pointerover,pointerup,' +
-    // 拖拽事件（7个）
-    'drag,dragend,dragenter,dragleave,dragover,dragstart,drop,' +
-    // 表单事件（7个）
-    'focus,blur,reset,submit,input,change,select,' +
-    // 特殊事件（1个）
-    'dblclick'
-  ).split(',');
+const SILENT_EVENTS = (
+  'mousedown,mouseenter,mouseleave,mousemove,mouseout,mouseover,mouseup,' +
+  'touchstart,touchend,touchcancel,touchmove,' +
+  'pointercancel,pointerdown,pointerenter,pointerleave,pointermove,pointerout,pointerover,pointerup,' +
+  'drag,dragend,dragenter,dragleave,dragover,dragstart,drop,' +
+  'focus,blur,reset,submit,input,change,select,' +
+  'dblclick'
+).split(',');
 
 /**
  * 点击关联事件白名单
  *
- * @remarks
- * Safari 特殊处理：阻止这些事件的默认行为会导致点击失效
+ * @remarks Safari 特殊处理：阻止这些事件的默认行为会导致点击失效
  */
 const CLICK_ATTACHMENT_EVENTS = new Set(['touchstart', 'touchend']);
 
 /**
  * 快捷键映射表
  *
- * @remarks
- * 支持通过键盘快速触发操作的按键集合
+ * @remarks 支持通过键盘快速触发操作的按键集合
  */
 const SHORTCUT_KEYS = new Set(['Enter', 'Space']);
 
@@ -86,27 +74,25 @@ const SHORTCUT_KEYS = new Set(['Enter', 'Space']);
  *
  * @returns 解除监听的清理函数
  *
- * @remarks
- * 核心功能：
+ * @remarks 核心功能：
  * 1. 实现跨框架的事件通信机制
  * 2. 管理检查器状态机（激活/禁用/元素树模式）
- * 3. 处理用户交互与视图更新的协同
+ * 3. 协调用户交互与视图更新
  */
 export function setupListeners(opts: SetupListenersOptions) {
   const { once, crossIframe } = getOptions();
 
-  // 封装带清理操作的回调函数
+  // 使用包装器包装所有回调，保证在执行前统一清理临时属性
   const wrappedCallbacks = {
-    onActiveElement: wrapWithCleanup(opts.onActiveElement),
-    onOpenTree: wrapWithCleanup(opts.onOpenTree),
-    onOpenEditor: wrapWithCleanup(opts.onOpenEditor),
-    onExitInspect: wrapWithCleanup(opts.onExitInspect),
+    onActiveElement: wrapCallbackWithCleanup(opts.onActiveElement),
+    onOpenTree: wrapCallbackWithCleanup(opts.onOpenTree),
+    onOpenEditor: wrapCallbackWithCleanup(opts.onOpenEditor),
+    onExitInspect: wrapCallbackWithCleanup(opts.onExitInspect),
   };
 
   /**
    * 核心事件处理器配置
    *
-   * @remarks
    * 每个配置项包含：
    * - type: 监听的事件类型
    * - handler: 事件处理函数
@@ -124,7 +110,7 @@ export function setupListeners(opts: SetupListenersOptions) {
     { type: 'keyup', handler: handleKeyUp },
   ];
 
-  // 事件控制器（注册/注销方法）
+  // 事件控制器，用于注册和注销监听器
   const eventController = {
     register: () => manageListeners(on),
     unregister: () => manageListeners(off),
@@ -139,8 +125,8 @@ export function setupListeners(opts: SetupListenersOptions) {
    * @param operation - 监听操作函数（on/off）
    */
   function manageListeners(operation: typeof on | typeof off) {
-    // 注册静默事件处理器（捕获阶段处理）
-    SILENT_EVENTS.forEach((event) => operation(event, handleSilentEvent, { capture: true }));
+    // 注册所有静默事件处理器（捕获阶段）
+    SILENT_EVENTS.forEach((event) => operation(event, processSilentEvent, { capture: true }));
 
     // 注册核心业务事件处理器
     coreHandlers.forEach(({ type, handler, target }) =>
@@ -167,27 +153,25 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   /**
-   * 获取有效 DOM 元素
+   * 获取经过校验的 DOM 元素
    *
    * @param e - 指针事件对象
-   *
    * @returns 通过校验的 HTMLElement 或 null
    */
   function getValidElement(e: PointerEvent) {
     const element = (
       e.pointerType === 'touch' ? document.elementFromPoint(e.clientX, e.clientY) : e.target
     ) as HTMLElement;
-
     return checkValidElement(element) ? element : null;
   }
 
-  /** 判断是否处理事件的通用条件 */
+  /** 判断是否满足处理事件的条件 */
   function shouldProcessEvent() {
     return inspectorState.isEnable && !inspectorState.isTreeOpen;
   }
 
   /**
-   * 处理触摸屏进入事件
+   * 处理触摸屏进入（指针进入屏幕）事件
    *
    * @param e - 指针事件对象
    */
@@ -205,7 +189,6 @@ export function setupListeners(opts: SetupListenersOptions) {
    */
   function handleLeaveScreen(e: PointerEvent) {
     if (crossIframe && !isTopWindow) return;
-
     // 仅处理鼠标离开视口的情况
     if (e.pointerType === 'mouse' && !e.relatedTarget) {
       inspectorState.activeEl = null;
@@ -220,9 +203,8 @@ export function setupListeners(opts: SetupListenersOptions) {
    */
   function handleKeyDown(e: KeyboardEvent) {
     if (!inspectorState.activeEl || !SHORTCUT_KEYS.has(e.code)) return;
-
-    // 动态修改事件属性以统一处理逻辑
-    modifyEventProperties(e, {
+    // 动态修改事件属性，以便统一转换为指针事件处理逻辑
+    overrideEventProperties(e, {
       type: () => `key${e.code}`.toLowerCase(),
       target: () => inspectorState.activeEl,
     });
@@ -232,7 +214,7 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   /**
-   * 处理按键释放事件
+   * 处理键盘释放事件
    *
    * @param e - 键盘事件对象
    */
@@ -244,12 +226,12 @@ export function setupListeners(opts: SetupListenersOptions) {
   }
 
   /**
-   * 元素检查主逻辑
+   * 元素检查处理逻辑
    *
    * @param e - 指针事件对象
    */
   function handleInspect(e: PointerEvent) {
-    handleSilentEvent(e);
+    processSilentEvent(e);
 
     const targetEl = e.target as HTMLElement;
     if (!checkClickedElement(targetEl)) return;
@@ -257,46 +239,46 @@ export function setupListeners(opts: SetupListenersOptions) {
     const finalEl = getFinalElement(targetEl);
     // 重置激活状态
     inspectorState.activeEl = null;
-
-    // 单次模式自动退出
+    // 单次模式下自动退出检查
     if (once) wrappedCallbacks.onExitInspect();
-    triggerCallback(e, finalEl);
+    triggerOpenHandler(e, finalEl);
   }
 
   /**
-   * 确定最终目标元素
+   * 获取最终确定的目标元素
    *
-   * @param fallback - 备选元素
-   *
-   * @returns 优先返回已激活的有效元素
+   * @param fallback - 备用元素
+   * @returns 若 inspectorState.activeEl 可用则返回之，否则返回 fallback
    */
   function getFinalElement(fallback: HTMLElement) {
     return inspectorState.activeEl?.isConnected ? inspectorState.activeEl : fallback;
   }
 
   /**
-   * 触发对应回调方法
+   * 触发打开回调处理
    *
    * @param e - 事件对象
    * @param el - 目标元素
    */
-  function triggerCallback(e: PointerEvent, el: HTMLElement) {
-    const isTreeOp = e.metaKey || e.type === 'longpress';
-    const callback = isTreeOp ? wrappedCallbacks.onOpenTree : wrappedCallbacks.onOpenEditor;
-    callback(el);
+  function triggerOpenHandler(e: PointerEvent, el: HTMLElement) {
+    const isTreeOpen = e.metaKey || e.type === 'longpress';
+    if (isTreeOpen) {
+      wrappedCallbacks.onOpenTree(el);
+    } else {
+      wrappedCallbacks.onOpenEditor(el);
+    }
   }
 }
 
 /**
- * 动态修改事件属性
+ * 重写事件属性的工具函数
  *
- * @remarks
- * 用于统一处理键盘事件到指针事件的转换
+ * @remarks 用于将键盘事件转换为指针事件样式
  *
  * @param e - 事件对象
- * @param properties - 需要修改的属性映射表
+ * @param properties - 属性映射表，指定需要重写的属性及其 getter
  */
-function modifyEventProperties(e: Event, properties: Record<string, () => any>) {
+function overrideEventProperties(e: Event, properties: Record<string, () => any>) {
   Object.entries(properties).forEach(([prop, getter]) => {
     Object.defineProperty(e, prop, { get: getter });
   });
@@ -304,15 +286,13 @@ function modifyEventProperties(e: Event, properties: Record<string, () => any>) 
 
 /**
  * 静默事件处理器
- * @remarks
- * 阻止事件传播和默认行为，但需注意：
- * - 在 Safari 中阻止 touch 事件默认行为会导致点击失效
+ *
+ * @remarks 阻止事件的默认行为与冒泡，但注意 Safari 下部分事件需保留默认行为
  *
  * @param e - 事件对象
  */
-function handleSilentEvent(e: Event) {
+function processSilentEvent(e: Event) {
   const isValidTarget = [e.target, (e as any).relatedTarget].some((el) => checkValidElement(el));
-
   if (isValidTarget) {
     const shouldPreventDefault = !CLICK_ATTACHMENT_EVENTS.has(e.type);
     if (shouldPreventDefault) e.preventDefault();
@@ -324,17 +304,10 @@ function handleSilentEvent(e: Event) {
  * 回调包装器（带清理功能）
  *
  * @param fn - 原始回调函数
- *
- * @returns 封装后的安全回调
- *
- * @remarks
- * 确保执行回调前清理元素临时属性
+ * @returns 包装后的回调函数，执行前会清理临时属性
  */
-function wrapWithCleanup<T extends (...args: any[]) => any>(
-  fn: T,
-): (...args: Parameters<T>) => ReturnType<T> {
+function wrapCallbackWithCleanup<T extends (...args: any[]) => any>(fn: T) {
   return function wrapped(...args: Parameters<T>): ReturnType<T> {
-    // 统一清理临时属性
     cleanClickedElementAttrs();
     return fn(...args);
   };

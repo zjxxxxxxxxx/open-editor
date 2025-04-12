@@ -12,68 +12,68 @@ import { OPEN_EDITOR_EVENT } from '../constants';
  * @param meta 源码元信息，包含文件路径、行列号等信息
  */
 export async function openEditor(meta?: CodeSourceMeta) {
-  // 生成编辑器打开 URL 并触发前置事件
-  const openURL = createOpenURL(meta);
-  if (!dispatchEvent(OPEN_EDITOR_EVENT, openURL)) return;
+  // 构造编辑器打开 URL 并触发打开前事件
+  const editorURL = generateEditorURL(meta);
+  if (!dispatchEvent(OPEN_EDITOR_EVENT, editorURL)) return;
 
-  // 元数据校验守卫语句
+  // 若未提供源码元信息，则立即触发错误处理
   if (!meta) {
-    return handleOpenError([], '文件未找到');
+    return triggerEditorLaunchError([], '文件未找到');
   }
 
   try {
-    // 通知编辑器启动事件
+    // 通知编辑器启动开始
     openEditorStartBridge.emit();
 
     // 发起打开编辑器请求
-    const response = await fetch(openURL);
+    const response = await fetch(editorURL);
     if (!response.ok) {
-      throw new Error(`HTTP错误状态: ${response.status}`);
+      throw new Error(`HTTP 错误状态: ${response.status}`);
     }
-  } catch (err) {
-    // 错误处理（包含网络错误和业务错误）
+  } catch (error) {
     const { file, line = 1, column = 1 } = meta;
-    return handleOpenError(err, `${file}:${line}:${column} 打开失败`);
+    return triggerEditorLaunchError(error, `${file}:${line}:${column} 打开失败`);
   } finally {
-    // 确保最终触发结束事件
+    // 确保不论成功与否均触发结束事件
     openEditorEndBridge.emit();
   }
 }
 
 /**
- * 生成编辑器打开的请求 URL
+ * 构造编辑器请求的 URL
  *
  * @param meta 源码元信息
- *
- * @returns 完整构造的 URL 对象
+ * @returns 完整的编辑器 URL 对象
  */
-export function createOpenURL(meta?: CodeSourceMeta) {
+export function generateEditorURL(meta?: CodeSourceMeta): URL {
   const opts = getOptions();
-  const { protocol, hostname, port } = location;
+  const { protocol, hostname, port } = window.location;
   const { file = '', line = 1, column = 1 } = meta ?? {};
 
   // 构造基础 URL
-  const openURL = new URL(`${protocol}//${hostname}`);
-  openURL.pathname = ServerApis.OPEN_EDITOR;
+  const editorURL = new URL(`${protocol}//${hostname}`);
+  editorURL.pathname = ServerApis.OPEN_EDITOR;
 
-  // 处理端口配置（优先使用配置项中的端口）
-  openURL.port = opts.port || port;
+  // 处理端口：优先使用配置项中指定的端口
+  editorURL.port = opts.port || port;
 
-  // 设置查询参数并编码处理
-  openURL.searchParams.set('f', encodeURIComponent(file));
-  openURL.searchParams.set('l', String(line));
-  openURL.searchParams.set('c', String(column));
+  // 设置查询参数（注意编码文件路径）
+  editorURL.searchParams.set('f', encodeURIComponent(file));
+  editorURL.searchParams.set('l', String(line));
+  editorURL.searchParams.set('c', String(column));
 
-  return openURL;
+  return editorURL;
 }
 
 /**
- * 统一错误处理函数
+ * 统一处理编辑器启动错误：
+ * 记录错误日志、触发错误事件，并返回一个拒绝的 Promise。
  *
- * @param error 原始错误对象
- * @param message 自定义错误信息
+ * @param error 原始错误对象（或错误信息）
+ * @param message 自定义错误消息
+ * @returns 返回一个拒绝的 Promise
  */
-function handleOpenError(error: unknown, message: string) {
+function triggerEditorLaunchError(error: unknown, message: string): Promise<never> {
   logError(message);
   openEditorErrorBridge.emit();
   return Promise.reject(error);

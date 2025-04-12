@@ -99,10 +99,7 @@
 /* ======================== 错误覆盖层模块 ======================== */
 .oe-error-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: var(--z-index-error-overlay);
 }
 
@@ -116,12 +113,9 @@
 }
 
 .oe-toggle-overlay {
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 100vw;
-  height: 100vh;
   display: none;
+  position: fixed;
+  inset: 0;
 }
 
 .oe-toggle-button {
@@ -165,10 +159,11 @@
 
 /* ======================== 布局覆盖层模块 ======================== */
 .oe-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-index-overlay);
   display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-index-overlay);
   width: 100vw;
   height: 100vh;
   pointer-events: none;
@@ -180,11 +175,11 @@
 
 /* ======================== 工具提示模块 ======================== */
 .oe-tooltip {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   z-index: var(--z-index-tooltip);
-  display: none;
   max-width: var(--w);
   visibility: hidden;
   backdrop-filter: var(--filter);
@@ -227,11 +222,8 @@
 .oe-tree {
   display: none;
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   z-index: var(--z-index-tree);
-  width: 100vw;
-  height: 100vh;
   backdrop-filter: var(--filter);
 }
 

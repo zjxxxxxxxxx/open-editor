@@ -1,11 +1,11 @@
 import { crossIframeBridge } from '../utils/crossIframeBridge';
 import { isTopWindow, whenTopWindow } from '../utils/topWindow';
 import { onMessage, postMessage } from '../utils/message';
-import { type BoxMetrics, type BoxRect, getBoxModel } from '../inspector/getBoxModel';
+import { type BoxMetrics, type BoxPosition, computedBoxModel } from '../inspector/computedBoxModel';
 import { inspectorState } from '../inspector/inspectorState';
 import { BOX_MODEL_CROSS_IFRAME } from '../constants';
 
-export type BoxModelBridgeArgs = [BoxRect, BoxMetrics];
+export type BoxModelBridgeArgs = [BoxPosition, BoxMetrics];
 
 /**
  * 跨 iframe 的盒模型计算桥接器
@@ -42,7 +42,7 @@ export const boxModelBridge = crossIframeBridge<BoxModelBridgeArgs>({
       // 仅在存在父 iframe 时执行计算
       if (window.frameElement) {
         // 获取当前 iframe 容器的盒模型数据
-        const [position, { margin, border, padding }] = getBoxModel(
+        const [position, { margin, border, padding }] = computedBoxModel(
           window.frameElement as HTMLElement,
         )!;
 

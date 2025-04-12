@@ -45,7 +45,8 @@ async function main() {
     // 异常处理
     console.log();
     consola.error('程序异常终止');
-    process.exit(1); // 非正常退出状态码
+    // 非正常退出状态码
+    process.exit(1);
   }
 }
 
@@ -125,12 +126,15 @@ function executePlaygroundScript(playground: string, script: string) {
  */
 async function selectPlayground(): Promise<string> {
   const response = await enquirer.prompt<{ playground: string }>({
-    type: 'select', // 选择器类型
-    name: 'playground', // 参数名称
+    // 选择器类型
+    type: 'select',
+    // 参数名称
+    name: 'playground',
     message: '请选择要操作的 playground 项目',
     choices: playgrounds.map((name) => ({
       name,
-      message: `项目名称: ${name}`, // 带格式的显示文本
+      // 带格式的显示文本
+      message: `项目名称: ${name}`,
     })),
   });
   return response.playground;

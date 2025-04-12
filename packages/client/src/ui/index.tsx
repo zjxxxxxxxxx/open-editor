@@ -32,7 +32,7 @@ export function setupUI() {
  * 职责：管理 Shadow DOM 及子组件生命周期
  */
 class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeof HTMLElement)) {
-  /** Shadow DOM根节点 */
+  /** Shadow DOM 根节点 */
   declare readonly shadowRoot: ShadowRoot;
 
   constructor() {
@@ -51,6 +51,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
 
   /**
    * 元素挂载回调
+   *
    * 职责：配置错误处理和子组件渲染
    */
   public connectedCallback() {

@@ -31,9 +31,14 @@ export interface BuildOutput {
 }
 
 /**
- * 开发环境标识，通过 webpack.DefinePlugin 等工具注入
+ * 开发环境标识
  *
  * @default false
+ *
+ * 通过启动脚本注入，如：
+ * ```json
+ * { "dev": "pnpm rollup -c --environment __DEV__" }
+ * ```
  */
 const IS_DEV = '__DEV__' in process.env;
 
@@ -42,7 +47,12 @@ const IS_DEV = '__DEV__' in process.env;
  *
  * @default 'es6'
  *
- * @example 'es2015' | 'esnext'
+ * @example `'es2015' | 'esnext'`
+ *
+ * 通过启动脚本注入，如：
+ * ```json
+ * { "build": "pnpm rollup -c --environment __TARGET__:es2020" }
+ * ```
  */
 const TARGET = process.env.__TARGET__ || 'es6';
 
@@ -94,8 +104,10 @@ function generateBuildConfig(
   outputConfig: BuildOutput | string,
 ): RollupOptions[] {
   return [
-    generateBundleConfig(inputPath, outputConfig), // 代码包构建配置
-    generateTypeDeclarationConfig(inputPath, outputConfig), // 类型声明配置
+    // 代码包构建配置
+    generateBundleConfig(inputPath, outputConfig),
+    // 类型声明配置
+    generateTypeDeclarationConfig(inputPath, outputConfig),
   ].filter(Boolean) as RollupOptions[];
 }
 
