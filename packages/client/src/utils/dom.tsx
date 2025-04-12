@@ -14,7 +14,8 @@ import { Fragment } from '../../jsx/jsx-runtime';
  * @example
  * applyAttrs(div, {
  *   'data-id': '123',
- *   title: null // 移除title属性
+ *   // 移除 title 属性
+ *   title: null
  * })
  */
 export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
@@ -30,7 +31,7 @@ export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
 
 // ====================== 子节点管理 ======================
 /**
- * 递归追加子节点（支持Fragment解构）
+ * 递归追加子节点（支持 Fragment 解构）
  *
  * @param el 父容器
  * @param children 子节点数组
@@ -40,7 +41,7 @@ export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
 export function appendChild(el: HTMLElement | ShadowRoot, ...children: HTMLElement[]) {
   for (const child of children) {
     if (child.tagName === Fragment) {
-      // Fragment解包：递归插入其子节点
+      // Fragment 解包：递归插入其子节点
       appendChild(el, ...(Array.from(child.children) as HTMLElement[]));
     } else {
       el.appendChild(child);

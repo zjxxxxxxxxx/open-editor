@@ -1,144 +1,154 @@
-// 定义支持手动控制的Promise扩展接口
-interface AsyncTask<T> extends Promise<T> {
-  resolve: (value: T | PromiseLike<T>) => void;
-  reject: (reason?: any) => void;
-}
+// 常量：关于伪类替换的正则表达式及替换标记
+const HOVER_REGEXP = {
+  normal: /:hover/g,
+  placeholder: /:oe-disable-hover/g,
+};
 
-// 样式替换相关常量
-// 匹配 :hover 伪类正则
-const HOVER_DISABLE_RE = /:hover/g;
-// 替换占位符
-const HOVER_DISABLE_TOKEN = ':oe-disable-hover';
-// 匹配 :oe-disable-hover 占位符正则
-const HOVER_ENABLE_RE = /:oe-disable-hover/g;
-// 恢复伪类
-const HOVER_ENABLE_TOKEN = ':hover';
+const HOVER_REPLACEMENTS = {
+  normal: ':hover',
+  placeholder: ':oe-disable-hover',
+};
 
-// 禁用所有 :hover 伪类样式
+// 激活状态的任务标识器，用于取消旧任务（当启动新任务时更新此值）
+let activeTaskId = 0;
+
+/**
+ * 禁用所有 :hover 伪类样式
+ *
+ * 通过将 ':hover' 替换为占位符，避免伪类样式影响交互效果
+ *
+ * @returns Promise，当所有任务完成更新后 resolve
+ */
 export function disableHoverCSS() {
-  return processCSSRules(HOVER_DISABLE_RE, HOVER_DISABLE_TOKEN);
+  return updateHoverCSS(HOVER_REGEXP.normal, HOVER_REPLACEMENTS.placeholder);
 }
 
-// 恢复被禁用的 :hover 伪类样式
+/**
+ * 恢复所有被禁用的 :hover 伪类样式
+ *
+ * 将占位符替换回 ':hover'，使样式恢复原状
+ *
+ * @returns Promise，当所有任务完成更新后 resolve
+ */
 export function enableHoverCSS() {
-  return processCSSRules(HOVER_ENABLE_RE, HOVER_ENABLE_TOKEN);
-}
-
-// 用于防止并发操作冲突的任务标识
-let taskID = 0;
-
-/**
- * 核心处理函数：遍历并修改 CSS 规则
- *
- * @param pattern 需要匹配的正则表达式
- * @param replacement 替换文本内容
- *
- * @returns 返回可手动控制的 Promise 任务
- */
-function processCSSRules(pattern: RegExp, replacement: string) {
-  // 每帧 16.6ms
-  const frameChecker = createFrameDurationChecker(1000 / 60);
-  // 创建可控 Promise
-  const asyncTask = createControllablePromise();
-  // 生成唯一任务 ID
-  const currentTaskID = ++taskID;
-
-  // 收集所有外部样式表规则
-  const externalRules = Array.from(document.styleSheets).flatMap((sheet) => {
-    if (sheet.ownerNode instanceof HTMLLinkElement) {
-      return Array.from(sheet.cssRules);
-    }
-    return [];
-  });
-
-  // 收集所有内联 <style> 标签
-  const inlineStyles = Array.from(document.querySelectorAll('style'));
-
-  let ruleIndex = 0;
-  let styleIndex = 0;
-
-  // 启动异步处理循环
-  void (function processNextItem() {
-    // 在每帧时间限制内批量处理
-    while (!frameChecker()) {
-      // 任务被新调用覆盖时终止当前任务
-      if (currentTaskID !== taskID) {
-        asyncTask.reject();
-        return;
-      }
-
-      // 优先处理外部样式表规则
-      if (ruleIndex < externalRules.length) {
-        const rule = externalRules[ruleIndex++];
-        updateStyleRule(rule.parentStyleSheet!, rule.cssText.replace(pattern, replacement));
-      }
-      // 处理内联样式内容
-      else if (styleIndex < inlineStyles.length) {
-        const style = inlineStyles[styleIndex++];
-        style.textContent = style.textContent!.replace(pattern, replacement);
-      }
-      // 所有处理完成
-      else {
-        asyncTask.resolve();
-        return;
-      }
-    }
-
-    // 下一帧继续处理
-    requestAnimationFrame(processNextItem);
-  })();
-
-  return asyncTask;
+  return updateHoverCSS(HOVER_REGEXP.placeholder, HOVER_REPLACEMENTS.normal);
 }
 
 /**
- * 安全更新样式规则
+ * 更新 CSS 样式规则
  *
- * @param sheet 目标样式表
- * @param newRuleText 新规则文本
+ * 生成更新任务并采用 async/await 分帧调度执行，以避免阻塞主线程
+ *
+ * @param pattern 用于匹配需要替换的正则表达式
+ * @param replacement 替换文本
+ *
+ * @returns Promise，当所有任务执行完毕后 resolve
  */
-function updateStyleRule(sheet: CSSStyleSheet, newRuleText: string) {
-  if (sheet.cssRules.length > 0) {
-    // 移除旧规则
-    sheet.deleteRule(0);
+async function updateHoverCSS(pattern: RegExp, replacement: string) {
+  // 启动新任务时更新全局任务 ID，之前的任务将失效
+  const taskId = ++activeTaskId;
+  const taskGenerator = createCSSTaskGenerator(pattern, replacement);
+
+  await executeTasksWithFrameScheduling(
+    taskGenerator,
+    // 如果任务 ID 不匹配则取消当前任务
+    () => taskId !== activeTaskId,
+  );
+}
+
+/**
+ * 生成器：按需创建 CSS 更新任务（包括外部样式表和内联样式）
+ *
+ * @param pattern 正则表达式，用于匹配 CSS 中的伪类
+ * @param replacement 替换文本
+ */
+function* createCSSTaskGenerator(pattern: RegExp, replacement: string) {
+  // 外部样式表（例如：通过 <link> 标签引入的样式表）
+  for (const styleSheet of Array.from(document.styleSheets)) {
+    if (styleSheet.ownerNode instanceof HTMLLinkElement) {
+      yield () => {
+        for (const rule of Array.from(styleSheet.cssRules)) {
+          updateCSSRule(styleSheet, rule.cssText.replace(pattern, replacement));
+        }
+      };
+    }
   }
-  // 插入新规则
-  sheet.insertRule(newRuleText, sheet.cssRules.length);
+  // 内联样式（例如：<style> 标签中的样式）
+  for (const style of Array.from(document.querySelectorAll('style'))) {
+    yield () => {
+      if (style.textContent) {
+        style.textContent = style.textContent.replace(pattern, replacement);
+      }
+    };
+  }
 }
 
 /**
- * 创建帧时长检查器（避免长时间阻塞主线程）
+ * 分帧执行任务生成器中的任务，以避免长时间阻塞主线程
  *
- * @param frameDuration 单帧最大时长(ms)
+ * 在每一帧开始时检测是否需要中断任务（例如被新任务替换），或当前帧执行时间是否超限，
+ * 超时则延迟到下一帧继续执行
  *
- * @returns 返回检查当前是否超过帧时长的函数
+ * @param taskGenerator 生成任务的迭代器，每次 yield 返回一个任务函数
+ * @param shouldCancel 一个回调函数，返回 true 时表示任务应被取消
+ *
+ * @returns Promise，当所有任务执行完毕时 resolve；若任务中途被取消则抛出异常
  */
-function createFrameDurationChecker(frameDuration: number) {
-  let lastCheckTime = performance.now();
+async function executeTasksWithFrameScheduling(
+  taskGenerator: Generator<() => void>,
+  shouldCancel: () => boolean,
+) {
+  // 单帧最大执行时间约为 16ms
+  const frameTimeChecker = createFrameDurationChecker(16);
+  const scheduleNextFrame = window.requestAnimationFrame;
+  let result = taskGenerator.next();
+
+  scheduleNextFrame(function processTasks() {
+    // 遍历生成器中的任务
+    while (!result.done) {
+      // 若检测到任务取消条件则中断任务执行
+      if (shouldCancel()) {
+        return;
+      }
+      // 如果当前帧超时，则等待下一帧继续处理任务
+      if (frameTimeChecker()) {
+        return scheduleNextFrame(processTasks);
+      }
+      // 执行当前任务
+      result.value();
+      result = taskGenerator.next();
+    }
+  });
+}
+
+/**
+ * 创建帧时长检查器，检测当前帧已执行时间是否超过设定的最大时长，避免长时间阻塞主线程
+ *
+ * @param maxFrameDuration 每帧最大允许执行时间（单位：毫秒）
+ *
+ * @returns 一个函数，调用时返回是否超过设定时长
+ */
+function createFrameDurationChecker(maxFrameDuration: number) {
+  let lastFrameTime = performance.now();
   return () => {
-    const currentTime = performance.now();
-    const shouldYield = currentTime - lastCheckTime > frameDuration;
-    if (shouldYield) lastCheckTime = currentTime;
-    return shouldYield;
+    const now = performance.now();
+    const exceeded = now - lastFrameTime > maxFrameDuration;
+    if (exceeded) {
+      lastFrameTime = now;
+    }
+    return exceeded;
   };
 }
 
 /**
- * 创建可手动控制的 Promise 对象
+ * 安全更新 CSS 规则：先删除旧规则，再插入更新后的规则文本
  *
- * @returns 返回带 resolve/reject 方法的 Promise
+ * @param styleSheet 目标 CSSStyleSheet 对象
+ * @param newRuleText 新的 CSS 规则文本
  */
-function createControllablePromise<T = void>() {
-  let resolve!: (value: T | PromiseLike<T>) => void;
-  let reject!: (reason?: any) => void;
-
-  const promise = new Promise<T>((_resolve, _reject) => {
-    resolve = _resolve;
-    reject = _reject;
-  }) as AsyncTask<T>;
-
-  promise.resolve = resolve;
-  promise.reject = reject;
-
-  return promise;
+function updateCSSRule(styleSheet: CSSStyleSheet, newRuleText: string) {
+  if (styleSheet.cssRules.length > 0) {
+    styleSheet.deleteRule(0);
+  }
+  styleSheet.insertRule(newRuleText, styleSheet.cssRules.length);
 }

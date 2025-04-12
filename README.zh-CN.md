@@ -50,7 +50,6 @@
     - Mozilla Firefox ≥ 85（2021/01 发布）
     - Microsoft Edge ≥ 90（2021/04 发布）
     - Apple Safari ≥ 14（2020/09 发布）
-- **安全协议**：强制启用 TLS 1.2/1.3 加密协议
 
 ## 🛠️ 快速入门
 

@@ -22,33 +22,29 @@ let cleanListeners: (() => void) | null = null;
  * - 应用样式覆盖
  */
 export async function inspectorEnable() {
-  try {
-    // 配置获取与状态初始化
-    const { disableHoverCSS: isDisableHoverCSS } = getOptions();
-    inspectorState.isEnable = true;
-    inspectorState.activeEl = getActiveElement();
+  // 配置获取与状态初始化
+  const { disableHoverCSS: isDisableHoverCSS } = getOptions();
+  inspectorState.isEnable = true;
+  inspectorState.activeEl = getActiveElement();
 
-    // 界面渲染
-    renderUI();
+  // 界面渲染
+  renderUI();
 
-    // 事件监听设置
-    cleanListeners = setupListeners({
-      onActiveElement: () => renderUI(),
-      onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
-      onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
-      onExitInspect: () => inspectorExitBridge.emit(),
-    });
+  // 事件监听设置
+  cleanListeners = setupListeners({
+    onActiveElement: () => renderUI(),
+    onOpenTree: (el) => treeOpenBridge.emit([resolveSource(el, true)]),
+    onOpenEditor: (el) => openEditorBridge.emit([resolveSource(el).meta]),
+    onExitInspect: () => inspectorExitBridge.emit(),
+  });
 
-    // 样式处理
-    if (isDisableHoverCSS) await disableHoverCSS();
-    overrideStyle.mount();
+  // 样式处理
+  if (isDisableHoverCSS) await disableHoverCSS();
+  overrideStyle.mount();
 
-    // 解除当前焦点状态
-    // @ts-ignore 主动解除焦点兼容处理
-    document.activeElement?.blur();
-  } catch {
-    // 静默处理初始化异常
-  }
+  // 解除当前焦点状态
+  // @ts-ignore 主动解除焦点兼容处理
+  document.activeElement?.blur();
 }
 
 /**
@@ -58,25 +54,21 @@ export async function inspectorEnable() {
  * - 恢复原始样式
  */
 export async function inspectorExit() {
-  try {
-    // 配置获取与状态重置
-    const { disableHoverCSS: isDisableHoverCSS } = getOptions();
-    Object.assign(inspectorState, {
-      isEnable: false,
-      isRendering: false,
-      activeEl: null,
-    });
+  // 配置获取与状态重置
+  const { disableHoverCSS: isDisableHoverCSS } = getOptions();
+  Object.assign(inspectorState, {
+    isEnable: false,
+    isRendering: false,
+    activeEl: null,
+  });
 
-    // 事件监听清理
-    if (cleanListeners) {
-      cleanListeners();
-      cleanListeners = null;
-    }
-
-    // 样式恢复
-    if (isDisableHoverCSS) await enableHoverCSS();
-    overrideStyle.unmount();
-  } catch {
-    // 静默处理关闭异常
+  // 事件监听清理
+  if (cleanListeners) {
+    cleanListeners();
+    cleanListeners = null;
   }
+
+  // 样式恢复
+  if (isDisableHoverCSS) await enableHoverCSS();
+  overrideStyle.unmount();
 }
