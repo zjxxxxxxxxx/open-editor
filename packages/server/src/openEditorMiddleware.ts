@@ -13,10 +13,10 @@ export interface OpenEditorMiddlewareOptions {
   /**
    * 项目根目录路径
    *
+   * @default process.cwd()
+   *
    * @remarks
    * 用于解析文件相对路径的基础目录
-   *
-   * @default process.cwd()
    */
   rootDir?: string;
 
@@ -35,7 +35,7 @@ export interface OpenEditorMiddlewareOptions {
  *
  * @param options - 中间件配置选项
  *
- * @returns connect中间件处理函数
+ * @returns connect 中间件处理函数
  */
 export function openEditorMiddleware(
   options: OpenEditorMiddlewareOptions = {},

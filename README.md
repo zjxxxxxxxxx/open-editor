@@ -50,7 +50,6 @@
     - Mozilla Firefox ≥ 85 (Released 01/2021)
     - Microsoft Edge ≥ 90 (Released 04/2021)
     - Apple Safari ≥ 14 (Released 09/2020)
-- **Security Protocol**: Enforced TLS 1.2/1.3 encryption
 
 ## 🛠️ Quick Start
 

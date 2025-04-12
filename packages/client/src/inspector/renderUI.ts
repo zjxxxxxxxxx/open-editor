@@ -1,6 +1,6 @@
 import { boxModelBridge, codeSourceBridge } from '../bridge';
 import { resolveSource } from '../resolve';
-import { getBoxModel } from './getBoxModel';
+import { computedBoxModel } from './computedBoxModel';
 import { inspectorState } from './inspectorState';
 
 /**
@@ -13,7 +13,7 @@ export function renderUI() {
 
   // 桥接通信：发送源码定位和盒模型数据
   codeSourceBridge.emit([resolveSource(inspectorState.activeEl)]);
-  boxModelBridge.emit(getBoxModel(inspectorState.activeEl));
+  boxModelBridge.emit(computedBoxModel(inspectorState.activeEl));
 
   // 启动渲染循环（幂等设计，避免重复启动）
   if (!inspectorState.isRendering) {
@@ -38,7 +38,7 @@ function renderNextFrame() {
   // 状态同步：处理元素变更或移除情况
   handleElementState(prevElement, currentElement);
   // 更新盒模型数据（空值处理）
-  boxModelBridge.emit(getBoxModel(currentElement));
+  boxModelBridge.emit(computedBoxModel(currentElement));
 
   inspectorState.prevActiveEl = currentElement;
 

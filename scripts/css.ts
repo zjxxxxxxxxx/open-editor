@@ -130,9 +130,12 @@ function createAstHandlers(
      */
     TaggedTemplateExpression({ node }: { node: t.TaggedTemplateExpression }) {
       if (t.isIdentifier(node.tag) && node.tag.name === TAG_NAME) {
-        const { raw } = node.quasi.quasis[0].value; // 获取原始 CSS 内容
-        const processed = processCssContent(raw, processor); // 处理后的 CSS
-        magicString.overwrite(node.start!, node.end!, processed); // 替换源码
+        // 获取原始 CSS 内容
+        const { raw } = node.quasi.quasis[0].value;
+        // 处理后的 CSS
+        const processed = processCssContent(raw, processor);
+        // 替换源码
+        magicString.overwrite(node.start!, node.end!, processed);
       }
     },
 
@@ -143,7 +146,9 @@ function createAstHandlers(
      */
     JSXOpeningElement(path: { node: t.JSXOpeningElement }) {
       const { node } = path;
-      if (!isJsxElementMatch(node, 'link')) return; // 过滤非 link 标签
+
+      // 过滤非 link 标签
+      if (!isJsxElementMatch(node, 'link')) return;
 
       let rel = '';
       let href = '';
@@ -151,16 +156,20 @@ function createAstHandlers(
       node.attributes.forEach((attr) => {
         if (t.isJSXAttribute(attr) && t.isStringLiteral(attr.value)) {
           if (isJsxElementMatch(attr, 'rel')) rel = attr.value.value;
-          if (isJsxElementMatch(attr, 'href')) href = join(id, '../', attr.value.value); // 解析相对路径
+          // 解析相对路径
+          if (isJsxElementMatch(attr, 'href')) href = join(id, '../', attr.value.value);
         }
       });
 
       // 处理样式表链接
       if (rel === 'stylesheet' && existsSync(href)) {
-        const rawCss = readFileSync(href, 'utf-8'); // 读取 CSS 文件内容
+        // 读取 CSS 文件内容
+        const rawCss = readFileSync(href, 'utf-8');
+        // 替换为 style 标签
         const processed = `<style type="text/css">{${processCssContent(rawCss, processor)}}</style>`;
-        magicString.overwrite(node.start!, node.end!, processed); // 替换为 style 标签
-        ctx.addWatchFile(href); // 添加文件监听依赖
+        magicString.overwrite(node.start!, node.end!, processed);
+        // 添加文件监听依赖
+        ctx.addWatchFile(href);
       }
     },
   };
