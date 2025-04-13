@@ -39,7 +39,7 @@
   "bugs": {
     "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
   },
-  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite#readme",
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor#readme",
   "dependencies": {
     "@open-editor/client": "workspace:*",
     "@open-editor/server": "workspace:*",

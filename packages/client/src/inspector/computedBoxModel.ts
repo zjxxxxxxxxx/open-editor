@@ -97,7 +97,7 @@ const EMPTY_BOX_MODEL: BoxModel = [EMPTY_BOX_EDGES, EMPTY_BOX_METRICS];
  *
  * 当元素未挂载、不可见或无效时，返回安全数据 EMPTY_BOX_MODEL。
  */
-export function computedBoxModel(element: HTMLElement | null): BoxModel {
+export function computedBoxModel(element: HTMLElement | null) {
   if (!checkValidElement(element) || !checkVisibility(element)) {
     return EMPTY_BOX_MODEL;
   }
@@ -120,7 +120,7 @@ export function computedBoxModel(element: HTMLElement | null): BoxModel {
     left: rect.left - margin.left,
   };
 
-  return [computedPosition, { margin, border, padding }];
+  return [computedPosition, { margin, border, padding }] as BoxModel;
 }
 
 /**

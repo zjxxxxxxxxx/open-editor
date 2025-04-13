@@ -121,7 +121,7 @@ export default function OpenEditorPlugin(options: Options = {}) {
      */
     configureServer(server: Pick<ViteDevServer, 'middlewares'>) {
       server.middlewares.use(
-        // API端点路径 | API endpoint path
+        // API 端点路径 | API endpoint path
         ServerApis.OPEN_EDITOR,
         openEditorMiddleware({
           // 项目根目录 | Project root directory
@@ -140,7 +140,7 @@ export default function OpenEditorPlugin(options: Options = {}) {
      */
     resolveId(id) {
       if (id === CLIENT_MODULE_ID) {
-        // 确保ES模块兼容性 | Ensure ES module compatibility
+        // 确保 ES 模块兼容性 | Ensure ES module compatibility
         return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(/\.js$/, '.mjs');
       }
     },
