@@ -72,7 +72,9 @@ export function TreeUI() {
           {`<ComponentTree>`}
         </div>
         <div className="oe-tree-content">
-          {hasTreeData ? renderTreeNodes(source.tree) : '>> 未找到组件树 😭'}
+          {hasTreeData
+            ? renderTreeNodes(source.tree, source.tree.length - 1)
+            : '>> 未找到组件树 😭'}
         </div>
       </>
     );
@@ -92,10 +94,10 @@ export function TreeUI() {
    * 递归渲染树节点
    *
    * @param nodes 节点数据数组
-   * @param index 当前处理节点的索引，默认从 0 开始
+   * @param index 当前处理节点的索引，从后向前 -1
    * @returns 构造好的 JSX 结构
    */
-  function renderTreeNodes(nodes: CodeSourceMeta[], index: number = 0) {
+  function renderTreeNodes(nodes: CodeSourceMeta[], index: number) {
     const nodeMeta = nodes[index];
     const tagName = `<${nodeMeta.name}>`;
     const fileInfo = `${nodeMeta.file}:${nodeMeta.line}:${nodeMeta.column}`;
@@ -112,10 +114,10 @@ export function TreeUI() {
           <span className="oe-tree-file">{fileInfo}</span>
         </div>
         {/* 如果后续还有节点，则递归渲染，并添加连接线和重复显示当前节点 */}
-        {index < nodes.length - 1 && (
+        {index > 0 && (
           <>
             <div className="oe-tree-line" />
-            {renderTreeNodes(nodes, index + 1)}
+            {renderTreeNodes(nodes, index - 1)}
             <div className="oe-tree-node">{tagName}</div>
           </>
         )}

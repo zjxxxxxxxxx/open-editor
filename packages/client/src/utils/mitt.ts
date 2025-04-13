@@ -35,7 +35,8 @@ export function mitt<T extends unknown[] = []>() {
      */
     once(handler: (...args: T) => void) {
       const wrapOnceFn = (...args: T) => {
-        listeners.delete(wrapOnceFn); // 执行后自动解除
+        // 自动解除
+        listeners.delete(wrapOnceFn);
         handler(...args);
       };
       listeners.add(wrapOnceFn);

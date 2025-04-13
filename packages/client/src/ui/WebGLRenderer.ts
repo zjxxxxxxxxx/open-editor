@@ -15,21 +15,21 @@ export type WebGLRenderer = ReturnType<typeof createWebGLRenderer>;
  *
  * 初始化步骤：
  * 1. 获取并配置 WebGL 上下文
- * 2. 编译并链接 GLSL 着色器程序
- * 3. 配置顶点缓冲区与属性指针
+ * 2. 构建着色器程序
+ * 3. 配置顶点属性
  * 4. 封装渲染操作方法
  */
 export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: number) {
   const pixelRatio = window.devicePixelRatio || 1;
-  const gl = createWebGLContext(canvas);
-  const program = buildShaderProgram(gl);
+  const gl = initWebGLContext(canvas);
+  const program = createShaderProgram(gl);
 
   // 激活初始着色器程序
   gl.useProgram(program);
 
-  // 配置顶点数据系统
-  const { buffer, vertexSize, u_resolution } = configureVertexBufferAttributes(gl, program, canvas);
-  let vertexArray: Float32Array | null;
+  // 配置顶点属性
+  const { buffer, vertexSize, u_resolution } = setupVertexAttributes(gl, program, canvas);
+  let vertexArray: Float32Array | null = null;
 
   return {
     gl,
@@ -74,7 +74,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
      * @param vertices - 扁平化顶点数组，格式为 [x, y, r, g, b, a, ...]
      */
     draw(vertices: number[]) {
-      vertexArray ||= new Float32Array(bufferSize);
+      vertexArray ??= new Float32Array(bufferSize);
       gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
       vertexArray.set(vertices);
       gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STREAM_DRAW);
@@ -94,7 +94,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
  *
  * @returns 配置完成的 WebGL 上下文
  */
-function createWebGLContext(canvas: HTMLCanvasElement) {
+function initWebGLContext(canvas: HTMLCanvasElement) {
   const gl = canvas.getContext('webgl', { preserveDrawingBuffer: true })!;
   gl.enable(gl.BLEND);
   gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
@@ -102,13 +102,13 @@ function createWebGLContext(canvas: HTMLCanvasElement) {
 }
 
 /**
- * 编译并链接 GLSL 着色器程序
+ * 构建并链接 GLSL 着色器程序
  *
  * @param gl - WebGL 渲染上下文
  *
  * @returns 链接成功的着色器程序
  */
-function buildShaderProgram(gl: WebGLRenderingContext) {
+function createShaderProgram(gl: WebGLRenderingContext) {
   const vertexShaderSource = `
     attribute vec2 a_position;
     attribute vec4 a_color;
@@ -132,14 +132,14 @@ function buildShaderProgram(gl: WebGLRenderingContext) {
     }
   `;
 
-  const vertexShader = compileShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
-  const fragmentShader = compileShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+  const vertexShader = compileShaderObject(gl, gl.VERTEX_SHADER, vertexShaderSource);
+  const fragmentShader = compileShaderObject(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
   return linkShaderProgram(gl, vertexShader, fragmentShader);
 }
 
 /**
- * 编译指定类型着色器
+ * 编译 GLSL 着色器对象
  *
  * @param gl - WebGL 渲染上下文
  * @param type - 着色器类型（VERTEX 或 FRAGMENT）
@@ -147,7 +147,7 @@ function buildShaderProgram(gl: WebGLRenderingContext) {
  *
  * @returns 编译后的着色器对象
  */
-function compileShader(gl: WebGLRenderingContext, type: number, source: string) {
+function compileShaderObject(gl: WebGLRenderingContext, type: number, source: string) {
   const shader = gl.createShader(type)!;
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
@@ -155,7 +155,7 @@ function compileShader(gl: WebGLRenderingContext, type: number, source: string) 
 }
 
 /**
- * 链接顶点和片段着色器生成程序
+ * 链接着色器程序
  *
  * @param gl - WebGL 渲染上下文
  * @param vertexShader - 编译后的顶点着色器
@@ -176,7 +176,7 @@ function linkShaderProgram(
 }
 
 /**
- * 配置顶点缓冲区与属性指针
+ * 设置顶点属性
  *
  * @param gl - WebGL 渲染上下文
  * @param program - 着色器程序
@@ -186,7 +186,7 @@ function linkShaderProgram(
  *
  * 顶点数据格式：[x, y, r, g, b, a] 共 6 个浮点数，每个顶点步长 24 字节
  */
-function configureVertexBufferAttributes(
+function setupVertexAttributes(
   gl: WebGLRenderingContext,
   program: WebGLProgram,
   canvas: HTMLCanvasElement,
