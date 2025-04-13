@@ -126,10 +126,11 @@ export function TooltipUI() {
       elements.tag.textContent = `${source.el} in `;
       elements.comp.textContent = `<${source.meta.name}>`;
       elements.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
+
+      // 解除挂起状态并执行 pending 中的任务
+      state.isPending = false;
+      pending.emit();
     }
-    // 无论是否更新到数据，都解除挂起状态并执行 pending 中的任务
-    state.isPending = false;
-    pending.emit();
   }
 
   /**

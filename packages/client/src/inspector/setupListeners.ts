@@ -96,7 +96,7 @@ export function setupListeners(opts: SetupListenersOptions) {
    * 每个配置项包含：
    * - type: 监听的事件类型
    * - handler: 事件处理函数
-   * - target: 事件监听目标（默认为 document）
+   * - target: 事件监听目标（默认为 window)
    */
   const coreHandlers = [
     { type: 'click', handler: handleInspect, target: document },

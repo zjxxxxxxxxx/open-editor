@@ -9,6 +9,9 @@ const HOVER_REPLACEMENTS = {
   placeholder: ':oe-disable-hover',
 };
 
+// 每批次处理的规则数量
+const CSS_RULES_CHUNK_SIZE = 200;
+
 // 激活状态的任务标识器，用于取消旧任务（当启动新任务时更新此值）
 let activeTaskId = 0;
 
@@ -63,23 +66,49 @@ async function updateHoverCSS(pattern: RegExp, replacement: string) {
  * @param replacement 替换文本
  */
 function* createCSSTaskGenerator(pattern: RegExp, replacement: string) {
-  // 外部样式表（例如：通过 <link> 标签引入的样式表）
   for (const styleSheet of Array.from(document.styleSheets)) {
-    if (styleSheet.ownerNode instanceof HTMLLinkElement) {
+    const { ownerNode } = styleSheet;
+
+    if (ownerNode instanceof HTMLLinkElement) {
+      yield* generateTasksForLink(styleSheet, pattern, replacement);
+    } else if (ownerNode instanceof HTMLStyleElement) {
+      if (ownerNode.textContent) {
+        yield () => {
+          ownerNode.textContent = ownerNode.textContent!.replace(pattern, replacement);
+        };
+      }
+    }
+  }
+}
+
+/**
+ * 生成器：为外部样式表（<link> 引入）生成分批替换规则的任务
+ *
+ * @param styleSheet 外部样式表的 CSSStyleSheet 对象
+ * @param pattern 正则表达式，用于匹配 CSS 中的伪类
+ * @param replacement 替换文本
+ */
+function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, replacement: string) {
+  try {
+    const rules = Array.from(styleSheet.cssRules);
+    const rulesSize = rules.length;
+
+    let index = 0;
+    while (index < rulesSize) {
+      // 分批次处理 cssRules，以避免一次性处理过多规则导致性能问题
+      const endIndex = Math.min(index + CSS_RULES_CHUNK_SIZE, rulesSize);
+
       yield () => {
-        for (const rule of Array.from(styleSheet.cssRules)) {
+        while (index < endIndex) {
+          const rule = rules[index];
           updateCSSRule(styleSheet, rule.cssText.replace(pattern, replacement));
+
+          index++;
         }
       };
     }
-  }
-  // 内联样式（例如：<style> 标签中的样式）
-  for (const style of Array.from(document.querySelectorAll('style'))) {
-    yield () => {
-      if (style.textContent) {
-        style.textContent = style.textContent.replace(pattern, replacement);
-      }
-    };
+  } catch {
+    // 静默处理潜在异常，如何跨域脚本访问异常
   }
 }
 
@@ -147,8 +176,6 @@ function createFrameDurationChecker(maxFrameDuration: number) {
  * @param newRuleText 新的 CSS 规则文本
  */
 function updateCSSRule(styleSheet: CSSStyleSheet, newRuleText: string) {
-  if (styleSheet.cssRules.length > 0) {
-    styleSheet.deleteRule(0);
-  }
+  styleSheet.deleteRule(0);
   styleSheet.insertRule(newRuleText, styleSheet.cssRules.length);
 }

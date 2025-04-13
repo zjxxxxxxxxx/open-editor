@@ -30,7 +30,7 @@
   "bugs": {
     "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
   },
-  "homepage": "https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/server#readme",
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor#readme",
   "dependencies": {
     "@open-editor/shared": "workspace:*",
     "connect": "^3.7.0",

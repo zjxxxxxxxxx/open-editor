@@ -77,7 +77,7 @@ function initializeResolver() {
      * 3. 组件自身的 __file 元数据
      */
     getSource(node) {
-      let current: ComponentInternalInstance | null = node;
+      let current = node;
       while (current) {
         // 处理 Suspense 包裹的异步组件
         const rawSource =

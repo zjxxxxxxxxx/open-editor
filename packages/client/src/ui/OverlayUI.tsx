@@ -1,8 +1,13 @@
-import { addClass, removeClass } from '../utils/dom';
-import { type BoxPosition, type BoxMetrics, type BoxEdges } from '../inspector/computedBoxModel';
-import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../bridge';
-import { createWebGLRenderer, type WebGLRenderer } from './WebGLRenderer';
 import { isObjectsEqual } from '@open-editor/shared';
+import { addClass, removeClass } from '../utils/dom';
+import {
+  type BoxModel,
+  type BoxPosition,
+  type BoxMetrics,
+  type BoxEdges,
+} from '../inspector/computedBoxModel';
+import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../bridge';
+import { type WebGLRenderer, createWebGLRenderer } from './WebGLRenderer';
 
 /**
  * Chromium DevTools 盒模型高亮配色方案（RGBA 预乘透明度通道）
@@ -23,13 +28,12 @@ const BOX_EDGES_COLORS = {
  *
  * @returns 初始化完成的 canvas 元素
  */
-export function OverlayUI(): HTMLCanvasElement {
+export function OverlayUI() {
   // 创建带有覆盖层样式的 Canvas 元素（此处 JSX 写法，若非 React 环境请替换为 document.createElement）
   const canvas = (<canvas className="oe-overlay" />) as HTMLCanvasElement;
 
   // 初始化 WebGL 渲染器，预留 512 个 float 的固定容量缓冲区（盒模型渲染所需为 468 个，余 44 个空闲）
   const renderer = createWebGLRenderer(canvas, 512);
-  renderer.updateViewport();
 
   // 使用 ResizeObserver 监听尺寸变化，并及时更新渲染器视口
   new ResizeObserver(() => renderer.updateViewport()).observe(canvas);
@@ -44,7 +48,7 @@ export function OverlayUI(): HTMLCanvasElement {
  * 建立外部事件与渲染逻辑的桥接系统
  *
  * 处理事件包括：
- * - 检查器启用：添加显示样式类名
+ * - 检查器启用：添加显示样式类名并更新视口
  * - 检查器退出：移除显示类名并清空渲染内容
  * - 盒模型更新：检查数据变化并触发重新绘制
  *
@@ -54,43 +58,42 @@ export function OverlayUI(): HTMLCanvasElement {
 function setupBridgeSystem(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
   const OVERLAY_SHOW_CLASS = 'oe-overlay-show';
   // 保存最后一次的盒模型数据，用于对比是否需要重新渲染
-  let prevBoxModel: [BoxPosition, BoxMetrics] | null = null;
+  let lastBoxModel: BoxModel | null = null;
 
-  // 当检查器启用时，添加显示类名
+  // 当检查器启用时，添加显示类名并更新视口
   inspectorEnableBridge.on(() => {
     addClass(canvas, OVERLAY_SHOW_CLASS);
+    renderer.updateViewport();
   });
 
   // 当退出检查器时，清理画布并重置盒模型数据
   inspectorExitBridge.on(() => {
     removeClass(canvas, OVERLAY_SHOW_CLASS);
     renderer.clear(true);
-    prevBoxModel = null;
+    lastBoxModel = null;
   });
 
   // 当盒模型数据更新时，检测数据是否有变更，若有则更新渲染
-  boxModelBridge.on((position: BoxPosition, metrics: BoxMetrics) => {
-    if (hasBoxModelChanged(position, metrics)) {
-      updateBoxModel(renderer, position, metrics);
+  boxModelBridge.on((...boxModel: BoxModel) => {
+    if (hasBoxModelChanged(boxModel)) {
+      updateBoxModel(renderer, ...boxModel);
     }
   });
 
   /**
    * 判断盒模型数据是否发生了变化
    *
-   * @param position - 元素的位置数据
-   * @param metrics - 盒模型各区域边缘数据
+   * @param boxModel - 盒模型数据
    * @returns 若数据没有变更则返回 false，否则更新 prevBoxModel 并返回 true
    */
-  function hasBoxModelChanged(position: BoxPosition, metrics: BoxMetrics): boolean {
+  function hasBoxModelChanged(boxModel: BoxModel) {
     if (
-      prevBoxModel &&
-      isObjectsEqual(position, prevBoxModel[0]) &&
-      isObjectsEqual(metrics, prevBoxModel[1])
+      isObjectsEqual(boxModel[0], lastBoxModel?.[0]) &&
+      isObjectsEqual(boxModel[1], lastBoxModel?.[1])
     ) {
       return false;
     }
-    prevBoxModel = [position, metrics];
+    lastBoxModel = boxModel;
     return true;
   }
 }
@@ -120,7 +123,7 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
 
   // 遍历 margin、border、padding 区域（对象 key 与 BOX_EDGES_COLORS 中的 key 保持一致）
   for (const [key, edges] of Object.entries(metrics)) {
-    processAreaEdges(vertices, bounds, edges, pr, BOX_EDGES_COLORS[key]);
+    processEdges(vertices, bounds, edges, pr, BOX_EDGES_COLORS[key]);
     updateBounds(bounds, edges);
   }
 
@@ -140,7 +143,7 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
 }
 
 /**
- * 处理单个区域边缘的顶点数据生成
+ * 处理单个边缘的顶点数据生成
  *
  * 按顺时针顺序处理四条边：上 → 右 → 下 → 左，
  * 每条边使用 rectangleVertices 生成顶点数据，并避免重叠绘制。
@@ -151,7 +154,7 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
  * @param pixelRatio - 设备像素比
  * @param color - 当前区域的预乘颜色值
  */
-function processAreaEdges(
+function processEdges(
   vertices: number[],
   bounds: BoxPosition,
   edges: BoxEdges,
@@ -170,7 +173,7 @@ function processAreaEdges(
       pixelRatio,
     );
   }
-  // 右边缘：保留上边缘宽度
+  // 右边缘：保留下边缘宽度
   if (edges.right) {
     rectangleVertices(
       vertices,
@@ -214,6 +217,10 @@ function processAreaEdges(
  * 将矩形拆分为两个三角形（每个三角形包含三个顶点），
  * 每个顶点数据由物理像素坐标（CSS 像素乘以 pixelRatio）和颜色信息组成。
  *
+ * 顶点顺序定义 (逆时针，用于正面渲染，并符合浏览器文档流坐标):
+ * 三角形 1: 左上, 右上, 左下
+ * 三角形 2: 右上, 右下, 左下
+ *
  * @param vertices - 用于保存生成顶点数据的数组
  * @param x - 矩形左上角 X 坐标（CSS 像素）
  * @param y - 矩形左上角 Y 坐标（CSS 像素）
@@ -235,16 +242,15 @@ function rectangleVertices(
   if (width <= 0 || height <= 0) return;
 
   const pr = pixelRatio;
-  const x1 = x * pr;
-  const y1 = y * pr;
-  const x2 = (x + width) * pr;
-  const y2 = (y + height) * pr;
+  const x1 = x * pr; // 左侧 X
+  const y1 = y * pr; // 顶部 Y
+  const x2 = (x + width) * pr; // 右侧 X
+  const y2 = (y + height) * pr; // 底部 Y
 
-  // 使用两个三角形组成一个矩形
-  // 三角形 1：左下 (x1, y1)、右下 (x2, y1)、左上 (x1, y2)
+  // 三角形 1 (左上, 右上, 左下): 逆时针
   vertices.push(x1, y1, ...color, x2, y1, ...color, x1, y2, ...color);
-  // 三角形 2：左上 (x1, y2)、右下 (x2, y1)、右上 (x2, y2)
-  vertices.push(x1, y2, ...color, x2, y1, ...color, x2, y2, ...color);
+  // 三角形 2 (右上, 右下, 左下): 逆时针
+  vertices.push(x2, y1, ...color, x2, y2, ...color, x1, y2, ...color);
 }
 
 /**

@@ -69,7 +69,7 @@ declare type ElementPropsTransformer<Props> = {
     ? ValidChildNode | ValidChildNode[]
     : // 处理 ref 回调函数
       K extends 'ref'
-      ? (instance: ExtractNativeElement<Props>) => void
+      ? (element: ExtractNativeElement<Props>) => void
       : // 处理 React 标准事件属性
         IsValidReactEventKey<K> extends true
         ? (event: MapReactEventToNative<K>) => void

@@ -12,17 +12,18 @@
     "clean": "rimraf -g {packages/**/.turbo,node_modules/.cache}",
     "dev": "turbo run dev --filter @open-editor/* --log-order stream",
     "start": "esno scripts/start.ts",
-    "play": "pnpm start --script=dev",
-    "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern='/playground/*'",
+    "play": "pnpm start --script dev",
+    "demo": "pnpm play --playground vite-react",
+    "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern '/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",
     "release": "run-s build publish:ci",
     "test": "turbo run test",
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
+    "install:ci": "pnpm install --ignore-scripts",
     "versions": "run-s version:ci format",
     "version:ci": "changeset version",
-    "publish:ci": "changeset publish",
-    "install:ci": "pnpm install --ignore-scripts"
+    "publish:ci": "changeset publish"
   },
   "engines": {
     "node": ">=18"

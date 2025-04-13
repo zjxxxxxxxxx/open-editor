@@ -48,7 +48,7 @@ function initializeResolver() {
      *
      * 原理：通过 $vnode 属性判断是否为真实 Vue 组件
      */
-    isValid(node) {
+    isValid(node): node is any {
       return !!node?.$vnode;
     },
 

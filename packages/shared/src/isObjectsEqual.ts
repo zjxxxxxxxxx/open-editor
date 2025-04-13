@@ -23,7 +23,7 @@ export function isObjectsEqual<T extends AnyObject>(
   }
 
   // 2. null 或 undefined 检查：如果只有一个对象是 null 或 undefined，它们肯定不相等。
-  if (obj1 === null || obj1 === undefined || obj2 === null || obj2 === undefined) {
+  if (obj1 == null || obj2 == null) {
     return false;
   }
 

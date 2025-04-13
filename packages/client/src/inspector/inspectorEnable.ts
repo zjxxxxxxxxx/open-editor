@@ -27,8 +27,8 @@ export async function inspectorEnable() {
   inspectorState.isEnable = true;
   inspectorState.activeEl = getActiveElement();
 
-  // 界面渲染
-  renderUI();
+  // 首次渲染需要采用异步的方式
+  requestAnimationFrame(renderUI);
 
   // 事件监听设置
   cleanListeners = setupListeners({
@@ -49,7 +49,7 @@ export async function inspectorEnable() {
 
 /**
  * 关闭检查器功能
- * - 重置状态机
+ * - 重置状态
  * - 清理事件监听
  * - 恢复原始样式
  */

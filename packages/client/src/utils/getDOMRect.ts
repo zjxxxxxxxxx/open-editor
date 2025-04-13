@@ -113,10 +113,15 @@ function computedDOMRect(target: HTMLElement, baseRect: DOMRect) {
     // 解构原始矩形参数（未缩放时的值）
     const { x, y, width, height } = baseRect;
 
-    // 计算原始矩形的几何中心坐标
-    // ██████████████
-    // █     ▶ centerX
-    // █▶元素原始位置
+    // 计算原始矩形的几何中心坐标 (符合浏览器文档流)
+    //
+    //  (x, y) █───────────────► X (centerX 向右增加)
+    //         █               █
+    //         █       ●       █  <-- 几何中心 (centerX, centerY)
+    //         █               █
+    //         █───────────────
+    //         ▼ Y (centerY 向下增加)
+    //
     const centerX = x + width / 2;
     const centerY = y + height / 2;
 
