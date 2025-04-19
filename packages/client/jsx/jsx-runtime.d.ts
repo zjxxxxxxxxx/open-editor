@@ -97,28 +97,46 @@ declare namespace EnhancedJSX {
 }
 
 /** 自定义 Fragment 组件标识 */
-declare const CustomFragment: string;
+declare const Fragment: Symbol;
 
 /**
- * 创建一个特定类型的 HTML 元素
+ * 创建一个指定类型的 HTML 元素。
  *
- * @param type - 元素类型，必须是 `HTMLElementTagNameMap` 中的键（即 HTML 标签名）
- * @param props - 元素的属性，类型为 `EnhancedJSX.IntrinsicElements` 中对应 `type` 的属性类型
+ * 通过传入 HTML 标签名作为 `type` 参数，并提供相应的属性 `props`，
+ * 此函数将创建一个具有所需类型和属性的 HTML 元素。
  *
- * @returns 返回一个对应 `type` 的 HTML 元素实例
+ * @param type - 要创建的 HTML 元素的标签名
+ * @param props - 元素的属性
+ *
+ * @returns 返回一个与传入 `type` 相对应的 HTML 元素实例
  */
 declare function jsx<Type extends keyof HTMLElementTagNameMap>(
   type: Type,
   props: EnhancedJSX.IntrinsicElements[Type],
 ): HTMLElementTagNameMap[Type];
 /**
- * 创建一个通用的 HTML 元素
+ * 创建一个通用的 DocumentFragment 元素。
  *
- * @param type - 元素类型，字符串类型，表示 HTML 标签名
- * @param props - 元素的属性，类型为 `unknown`，表示可以是任意类型
+ * DocumentFragment 是一种轻量级的文档对象，可以包含多个节点，
+ * 但自身不属于 DOM 树。这对于批量添加 DOM 节点非常有用。
  *
- * @returns 返回一个通用的 HTML 元素实例
+ * @param type - 始终为 `Fragment` 类型，用于标识创建的是 DocumentFragment
+ * @param props - DocumentFragment 的属性
+ *
+ * @returns 返回一个 `DocumentFragment` 实例
+ */
+declare function jsx(type: Fragment, props: unknown): DocumentFragment;
+/**
+ * 创建一个通用的 HTML 元素。
+ *
+ * 当传入一个字符串类型的 `type` 参数时，此函数将创建一个通用的 `HTMLElement` 实例。
+ * 这通常用于创建那些在 `HTMLElementTagNameMap` 中没有明确定义的自定义元素或处理某些特殊情况。
+ *
+ * @param type - 要创建的 HTML 元素的标签名，以字符串形式表示
+ * @param props - 元素的属性
+ *
+ * @returns 返回一个通用的 `HTMLElement` 实例
  */
 declare function jsx(type: string, props: unknown): HTMLElement;
 
-export { EnhancedJSX as JSX, CustomFragment as Fragment, jsx, jsx as jsxs };
+export { jsx, jsx as jsxs, Fragment, EnhancedJSX as JSX };

@@ -162,9 +162,8 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
    *
    * @example "src/components/Button.vue" → "Button"
    */
-  function extractFileName(filePath = '') {
-    const [, baseName] = filePath.match(/([^/]+)\.[^.]+$/) || [];
-    return baseName;
+  function extractFileName(filePath: string) {
+    return filePath.match(/([^/]+)\.[^.]+$/)?.[1];
   }
 
   return vueResolver;

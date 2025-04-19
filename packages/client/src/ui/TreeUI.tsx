@@ -1,4 +1,4 @@
-import { addClass, removeClass, replaceChildren, applyStyle } from '../utils/dom';
+import { addClass, removeClass, replaceChild, applyStyle } from '../utils/dom';
 import { treeCloseBridge, openEditorBridge, treeOpenBridge } from '../bridge';
 import { getOptions } from '../options';
 import { type CodeSource, type CodeSourceMeta } from '../resolve';
@@ -87,7 +87,7 @@ export function TreeUI() {
     }
 
     // 更新弹出层内容区域
-    replaceChildren(elements.popupBody, content);
+    replaceChild(elements.popupBody, content);
   }
 
   /**
