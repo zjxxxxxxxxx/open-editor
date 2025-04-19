@@ -1,7 +1,7 @@
 import { on } from '../src/event';
 
-// 虚拟节点类型常量（用于 Fragment 表示）
-const FRAGMENT_TYPE = 'INTERNAL_VIRTUAL_FRAGMENT';
+// 虚拟节点类型常量，用于创建 DocumentFragment
+const FRAGMENT_TYPE = Symbol('INTERNAL_VIRTUAL_FRAGMENT');
 // DOM 元素标记属性
 const JSX_MARK = '__oe_jsx';
 
@@ -36,7 +36,10 @@ function jsx(type, props) {
   }
 
   // 创建 DOM 元素
-  const element = createElement(type, { className, style });
+  const element =
+    type === FRAGMENT_TYPE
+      ? document.createDocumentFragment()
+      : createElement(type, { className, style });
 
   // 非 Fragment 元素：设置属性及 ref 回调
   if (type !== FRAGMENT_TYPE) {
@@ -46,7 +49,7 @@ function jsx(type, props) {
 
   // 处理子节点（支持数组、嵌套 Fragment、文本）
   if (children != null) {
-    appendChildren(element, Array.isArray(children) ? children : [children]);
+    appendChildren(element, children);
   }
 
   return element;
@@ -89,21 +92,17 @@ function applyAttributes(element, attrs) {
 /**
  * 递归追加子节点到指定父节点
  */
-function appendChildren(parent, children) {
-  for (const child of children) {
-    if (!child) continue;
-    if (child.tagName === FRAGMENT_TYPE) {
-      // 如果是 Fragment，递归处理其内部子节点
-      appendChildren(parent, Array.from(child.children));
-    } else if (child instanceof Element) {
-      parent.appendChild(child);
-    } else if (Array.isArray(child)) {
-      appendChildren(parent, child);
-    } else {
-      // 其它值转换为文本节点
-      const text = document.createTextNode(child);
-      parent.appendChild(text);
-    }
+function appendChildren(parent, childNodes) {
+  // 检查 childNodes 是否为数组
+  if (Array.isArray(childNodes)) {
+    // 如果是数组，遍历数组中的每个子节点并递归调用 appendChildren 函数
+    childNodes.forEach((childNode) => appendChildren(parent, childNode));
+  } else if (childNodes instanceof Element || childNodes instanceof DocumentFragment) {
+    // 如果 childNodes 是一个 HTML 元素或文档片段，直接将其追加到父节点
+    parent.appendChild(childNodes);
+  } else if (childNodes != null && childNodes !== false) {
+    // 如果 childNodes 不是 null 也不是 false，将其转换为文本节点并追加到父节点
+    parent.appendChild(document.createTextNode(childNodes));
   }
 }
 

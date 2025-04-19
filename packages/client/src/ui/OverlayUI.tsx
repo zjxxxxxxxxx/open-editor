@@ -29,7 +29,7 @@ const BOX_EDGES_COLORS = {
  * @returns 初始化完成的 canvas 元素
  */
 export function OverlayUI() {
-  // 创建带有覆盖层样式的 Canvas 元素（此处 JSX 写法，若非 React 环境请替换为 document.createElement）
+  // 创建带有覆盖层样式的 Canvas 元素
   const canvas = (<canvas className="oe-overlay" />) as HTMLCanvasElement;
 
   // 初始化 WebGL 渲染器，预留 512 个 float 的固定容量缓冲区（盒模型渲染所需为 468 个，余 44 个空闲）
@@ -114,10 +114,8 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
   renderer.clear();
   // 重用顶点数组，减少垃圾回收开销
   const vertices: number[] = [];
-
   // 浅拷贝初始边界，后续根据各区域数据向内收缩
   const bounds = { ...position };
-
   // 缓存设备像素比
   const pr = renderer.pixelRatio;
 
