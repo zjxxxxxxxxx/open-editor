@@ -1,5 +1,5 @@
 import { isTopWindow } from '../utils/topWindow';
-import { appendChild, replaceChildren } from '../utils/dom';
+import { appendChild, replaceChild } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
 import { on } from '../event';
 import { HTML_INSPECTOR_ELEMENT, IS_CLIENT } from '../constants';
@@ -92,7 +92,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   private renderUIComponents() {
     const { displayToggle } = getOptions();
 
-    replaceChildren(
+    replaceChild(
       this.shadowRoot,
       <>
         {/* 注入样式表 */}

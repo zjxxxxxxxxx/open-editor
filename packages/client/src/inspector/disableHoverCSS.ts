@@ -108,7 +108,7 @@ function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, repla
       };
     }
   } catch {
-    // 静默处理潜在异常，如何跨域脚本访问异常
+    // 静默处理潜在异常，如跨域脚本访问异常
   }
 }
 
