@@ -68,20 +68,40 @@ export interface BoxEdges {
 // Firefox 下边框尺寸计算已自动包含缩放因子，所以无需额外处理
 const IS_BORDER_WITH_ZOOM = !IS_FIREFOX;
 
-// 空盒模型单边尺寸数据，冻结后防止误修改
-const EMPTY_BOX_EDGES: BoxEdges = Object.freeze({
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-});
+// 空盒模型单边尺寸数据
+const EMPTY_BOX_EDGES: BoxEdges = {
+  get top() {
+    return 0;
+  },
+  set top(_) {
+    // 只读属性，禁止修改
+  },
+  get right() {
+    return 0;
+  },
+  set right(_) {
+    // 只读属性，禁止修改
+  },
+  get bottom() {
+    return 0;
+  },
+  set bottom(_) {
+    // 只读属性，禁止修改
+  },
+  get left() {
+    return 0;
+  },
+  set left(_) {
+    // 只读属性，禁止修改
+  },
+};
 
-// 空盒模型测量数据，冻结后防止误修改
-const EMPTY_BOX_METRICS: BoxMetrics = Object.freeze({
+// 空盒模型测量数据
+const EMPTY_BOX_METRICS: BoxMetrics = {
   margin: EMPTY_BOX_EDGES,
   border: EMPTY_BOX_EDGES,
   padding: EMPTY_BOX_EDGES,
-});
+};
 
 // 空盒模型数据，确保调用者无需进行空值检查
 const EMPTY_BOX_MODEL: BoxModel = [EMPTY_BOX_EDGES, EMPTY_BOX_METRICS];

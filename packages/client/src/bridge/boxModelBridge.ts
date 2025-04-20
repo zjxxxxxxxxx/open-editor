@@ -40,7 +40,7 @@ export const boxModelBridge = crossIframeBridge<BoxModel>({
       // 仅在存在父 iframe 时执行计算
       if (window.frameElement) {
         // 获取当前 iframe 容器的盒模型数据
-        const [position, metrics] = computedBoxModel(window.frameElement as HTMLElement)!;
+        const [position, metrics] = computedBoxModel(window.frameElement as HTMLElement);
         // 计算所有影响定位的差值
         const offsetDifference = [position, ...Object.values(metrics)];
 
