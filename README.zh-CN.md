@@ -19,7 +19,7 @@
 
 ## 🔍 项目简介
 
-`Open Editor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
+`OpenEditor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
 
 [▶▶▶ 立即体验 (Vite+React 示例)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![功能演示](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -32,13 +32,16 @@
 - **Vue 生态**：完整支持 Vue CLI/Nuxt.js/Vite 等开发方案
 - **构建工具**：全面兼容 Webpack 4+/Vite 2+/Rollup 2+ 体系
 
+### 集成能力
+
+- 🚫 零侵入设计（无需项目端导入 SDK 或配置）
+
 ### 调试能力
 
 - 🕵️ 多层级组件树追溯（支持跨 iframe 通信场景）
 - ⌨️ 快捷键驱动工作流（⌥⌘O 启动调试器，ESC 退出检查模式）
 - 📱 移动端远程调试支持（需与桌面端同局域网）
 - 🔍 智能编辑器探测（自动识别 VS Code/WebStorm 等本地 IDE）
-- 🚫 零侵入设计（无需项目端导入 SDK 或配置）
 
 ### 环境支持
 

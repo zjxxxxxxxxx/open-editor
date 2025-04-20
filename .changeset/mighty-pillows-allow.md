@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-perf: reduce OverlayUI layer update frequency
+perf(client/OverlayUI): reduce OverlayUI layer update frequency

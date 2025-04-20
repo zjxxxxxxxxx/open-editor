@@ -34,7 +34,7 @@
    * - 背景滤镜
    */
   --shadow: 0 0 1px var(--bg-color2);
-  --filter: blur(10px);
+  --filter: blur(20px);
 
   /**
    * 层级管理配置
@@ -97,10 +97,21 @@
 }
 
 /* ======================== 错误覆盖层模块 ======================== */
-.oe-error-overlay {
+.oe-error-message {
   position: fixed;
-  inset: 0;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: var(--z-index-error-overlay);
+  padding: 10px 20px;
+  max-width: min(380px, calc(100% - 56px));
+  font-size: 14px;
+  color: var(--red);
+  background: var(--red-light);
+  border: 1px solid var(--red);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px var(--red-light);
+  backdrop-filter: var(--filter);
 }
 
 /* ======================== 切换按钮模块 ======================== */
@@ -180,12 +191,14 @@
   top: 0;
   left: 0;
   z-index: var(--z-index-tooltip);
+  padding: 12px 20px;
   max-width: var(--w);
-  visibility: hidden;
+  background: var(--bg-color-opt);
   backdrop-filter: var(--filter);
-  box-shadow: var(--shadow);
   border-radius: 12px;
+  box-shadow: var(--shadow);
   overflow: hidden;
+  visibility: hidden;
   pointer-events: none;
   will-change: visibility, width, height, transform;
 }
@@ -195,17 +208,11 @@
   visibility: hidden;
 }
 
-.oe-tooltip-content {
-  padding: 12px 20px;
-  background: var(--bg-color-opt);
-  backdrop-filter: var(--filter);
-}
-
-.oe-tooltip-tag {
+.oe-tooltip-el {
   color: var(--text-color);
 }
 
-.oe-tooltip-comp {
+.oe-tooltip-name {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-color);
@@ -235,7 +242,6 @@
   transform: translate(-50%, -50%);
   color: var(--text-color);
   background: var(--bg-color-opt);
-  backdrop-filter: var(--filter);
   box-shadow: var(--shadow);
   border-radius: 16px;
 }
@@ -267,7 +273,7 @@
   }
 }
 
-.oe-tree-body {
+.oe-tree-content {
   padding: 20px 28px;
   overflow: hidden;
 }

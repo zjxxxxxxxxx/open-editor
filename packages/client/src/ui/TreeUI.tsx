@@ -9,13 +9,13 @@ interface TreeUIElements {
   /** 弹出层容器 */
   popup: HTMLElement;
   /** 关闭按钮元素 */
-  popupClose: HTMLElement;
+  close: HTMLElement;
   /** 弹出层内容区域 */
-  popupBody: HTMLElement;
+  content: HTMLElement;
 }
 
 /**
- * 组件树 UI 展示组件（基于自定义 JSX 实现，不依赖 React）
+ * 组件树 UI 展示组件
  */
 export function TreeUI() {
   // 样式常量统一管理
@@ -87,7 +87,7 @@ export function TreeUI() {
     }
 
     // 更新弹出层内容区域
-    replaceChild(elements.popupBody, content);
+    replaceChild(elements.content, content);
   }
 
   /**
@@ -98,9 +98,9 @@ export function TreeUI() {
    * @returns 构造好的 JSX 结构
    */
   function renderTreeNodes(nodes: CodeSourceMeta[], index: number) {
-    const nodeMeta = nodes[index];
-    const tagName = `<${nodeMeta.name}>`;
-    const fileInfo = `${nodeMeta.file}:${nodeMeta.line}:${nodeMeta.column}`;
+    const meta = nodes[index];
+    const name = `<${meta.name}>`;
+    const file = `${meta.file}:${meta.line}:${meta.column}`;
 
     return (
       <div className="oe-tree-item">
@@ -108,17 +108,17 @@ export function TreeUI() {
         <div
           className="oe-tree-node"
           title="点击在编辑器中打开"
-          onClick={() => handleNodeClick(nodeMeta)}
+          onClick={() => handleNodeClick(meta)}
         >
-          {tagName}
-          <span className="oe-tree-file">{fileInfo}</span>
+          {name}
+          <span className="oe-tree-file">{file}</span>
         </div>
         {/* 如果后续还有节点，则递归渲染，并添加连接线和重复显示当前节点 */}
         {index > 0 && (
           <>
             <div className="oe-tree-line" />
             {renderTreeNodes(nodes, index - 1)}
-            <div className="oe-tree-node">{tagName}</div>
+            <div className="oe-tree-node">{name}</div>
           </>
         )}
       </div>
@@ -154,7 +154,7 @@ export function TreeUI() {
         {/* 关闭按钮 */}
         <button
           className="oe-tree-close"
-          ref={(el) => (elements.popupClose = el)}
+          ref={(el) => (elements.close = el)}
           onClick={() => treeCloseBridge.emit()}
         >
           <svg viewBox="0 0 1024 1024" fill="currentColor">
@@ -162,7 +162,7 @@ export function TreeUI() {
           </svg>
         </button>
         {/* 内容区域 */}
-        <div className="oe-tree-body" ref={(el) => (elements.popupBody = el)} />
+        <div className="oe-tree-content" ref={(el) => (elements.content = el)} />
       </div>
     </div>
   );

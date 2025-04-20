@@ -1,7 +1,6 @@
 import { isTopWindow } from '../utils/topWindow';
 import { appendChild, replaceChild } from '../utils/dom';
 import { openEditorErrorBridge } from '../bridge';
-import { on } from '../event';
 import { HTML_INSPECTOR_ELEMENT, IS_CLIENT } from '../constants';
 import { getOptions } from '../options';
 import { ToggleUI } from './ToggleUI';
@@ -10,30 +9,38 @@ import { TooltipUI } from './TooltipUI';
 import { TreeUI } from './TreeUI';
 
 /**
- * 初始化编辑器 UI 系统
- *
- * 职责：注册自定义元素并挂载到文档主体
+ * 初始化编辑器 UI 系统。
+ * - 在跨 iframe 场景中，仅顶层窗口执行初始化。
+ * - 注册自定义元素并将其实例挂载到文档主体。
  */
 export function setupUI() {
   const { crossIframe } = getOptions();
-  // 跨 iframe 场景下非顶层窗口不初始化
-  if (crossIframe && !isTopWindow) return;
+  // 跨 iframe 且非顶层窗口，不初始化
+  if (crossIframe && !isTopWindow) {
+    return;
+  }
 
-  // 注册自定义元素
+  // 注册自定义元素标签
   customElements.define(HTML_INSPECTOR_ELEMENT, HTMLInspectorElement);
 
-  // 挂载到文档主体
+  // 创建并挂载检查器容器到页面主体
   appendChild(document.body, <HTML_INSPECTOR_ELEMENT />);
 }
 
 /**
- * 自定义元素类：编辑器检查器容器
+ * 自定义元素：HTML 检查器容器
  *
- * 职责：管理 Shadow DOM 及子组件生命周期
+ * 负责：
+ * - 管理 Shadow DOM，封装内部结构与样式隔离
+ * - 监听并展示编辑器错误消息
+ * - 渲染并维护子级 UI 组件生命周期
  */
 class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeof HTMLElement)) {
-  /** Shadow DOM 根节点 */
+  /** 封闭的 Shadow DOM 根，用于样式与脚本隔离 */
   declare readonly shadowRoot: ShadowRoot;
+
+  /** 当前活跃的错误消息元素引用 */
+  declare private errorMessage: HTMLElement | null;
 
   constructor() {
     super();
@@ -41,7 +48,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 初始化 Shadow DOM，模式设置为 closed 防止外部访问
+   * 在自定义元素上附加 closed 模式的 Shadow DOM，防止外部访问。
    */
   private initShadowDOM() {
     Object.defineProperty(this, 'shadowRoot', {
@@ -50,9 +57,9 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 元素挂载回调
-   *
-   * 职责：配置错误处理和子组件渲染
+   * 当元素插入文档后自动调用。
+   * - 配置错误处理机制
+   * - 渲染子级 UI 组件
    */
   public connectedCallback() {
     this.setupErrorHandling();
@@ -60,34 +67,83 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 配置错误可视化处理，创建动画警示层并在动画结束后自动移除
+   * 设置编辑器错误可视化处理。
+   *
+   * 每次收到新的错误消息时，都会：
+   * 1. 取消并移除旧的消息元素及其所有动画，保证不留残影；
+   * 2. 创建并插入一个新的错误消息元素，用于展示最新的提示；
+   * 3. 对新元素运行抖动 + 淡出动画（共 2000ms），动画结束后再将元素移除，保持界面整洁。
    */
   private setupErrorHandling() {
-    openEditorErrorBridge.on(() => {
-      const errorOverlay = <div className="oe-error-overlay" />;
+    openEditorErrorBridge.on(async (message) => {
+      // 1. 如果已有旧的错误提示，取消其所有动画并从 DOM 中移除
+      if (this.errorMessage) {
+        this.errorMessage.getAnimations().forEach((ani) => ani.cancel());
+        this.errorMessage.remove();
+      }
 
-      const animation = errorOverlay.animate(
-        [
-          {},
-          {
-            boxShadow: 'inset 0 0 20px 10px var(--red)',
-            background: 'var(--red-light)',
-          },
-          {},
-        ],
-        {
-          duration: 600,
-          easing: 'ease-out',
-        },
-      );
+      // 2. 创建并保存新的错误提示元素
+      this.errorMessage = <div className="oe-error-message">{message}</div>;
 
-      on('finish', () => errorOverlay.remove(), { target: animation });
-      appendChild(this.shadowRoot, errorOverlay);
+      // 3. 将新提示插入到 Shadow DOM 中
+      appendChild(this.shadowRoot, this.errorMessage);
+
+      // 4. 对新提示执行抖动 + 淡出动画，确保总时长 2000ms
+      await this.runAnimation(this.errorMessage);
+
+      // 5. 动画完毕后，移除提示并清空引用
+      this.errorMessage.remove();
+      this.errorMessage = null;
     });
   }
 
   /**
-   * 渲染子组件树，包含样式表注入和条件渲染控制
+   * 对目标元素执行一次完整关键帧动画：
+   * - 0–300ms：抖动反馈
+   * - 300–1900ms：保持静止且不透明
+   * - 1900–2000ms：淡出至透明
+   * 整体时长固定 2000ms，结束后保持最终帧状态。
+   *
+   * @param element 需要执行动画的 HTMLElement
+   * @returns Promise<Animation> 动画完成时的 Promise
+   */
+  private runAnimation(element: HTMLElement) {
+    const total = 2000;
+    const shakeDur = 300;
+    const fadeStart = 1900;
+
+    const keyframes: Keyframe[] = [
+      // 抖动阶段：0 → 300ms
+      { transform: 'translateX(-50%)', offset: 0 },
+      { transform: 'translateX(calc(-50% - 8px))', offset: (shakeDur * 0.1) / total },
+      { transform: 'translateX(calc(-50% + 8px))', offset: (shakeDur * 0.2) / total },
+      { transform: 'translateX(calc(-50% - 6px))', offset: (shakeDur * 0.35) / total },
+      { transform: 'translateX(calc(-50% + 6px))', offset: (shakeDur * 0.5) / total },
+      { transform: 'translateX(calc(-50% - 4px))', offset: (shakeDur * 0.65) / total },
+      { transform: 'translateX(calc(-50% + 4px))', offset: (shakeDur * 0.8) / total },
+      { transform: 'translateX(-50%)', offset: shakeDur / total },
+
+      // 保持阶段：300 → 1900ms
+      { transform: 'translateX(-50%)', opacity: 1, offset: fadeStart / total },
+
+      // 淡出阶段：1900 → 2000ms
+      { transform: 'translateX(-50%)', opacity: 0, offset: 1 },
+    ];
+
+    const animation = element.animate(keyframes, {
+      duration: total,
+      easing: 'ease-in-out',
+      fill: 'forwards',
+    });
+
+    return animation.finished;
+  }
+
+  /**
+   * 渲染并更新 Shadow DOM 内的子级 UI 组件。
+   * - 注入样式表
+   * - 可选渲染 ToggleUI
+   * - 渲染核心的 OverlayUI、TooltipUI、TreeUI
    */
   private renderUIComponents() {
     const { displayToggle } = getOptions();
@@ -95,13 +151,13 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
     replaceChild(
       this.shadowRoot,
       <>
-        {/* 注入样式表 */}
+        {/* 样式表注入 */}
         <link rel="stylesheet" href="./index.css" />
 
-        {/* 条件渲染切换按钮 */}
+        {/* 切换按钮（可选） */}
         {displayToggle && <ToggleUI />}
 
-        {/* 核心UI组件 */}
+        {/* 核心 UI 组件 */}
         <OverlayUI />
         <TooltipUI />
         <TreeUI />

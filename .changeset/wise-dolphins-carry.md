@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-perf: Split stylesheets into chunks for dynamic replacement
+perf(client/disableHoverCSS): Split stylesheets into chunks for dynamic replacement

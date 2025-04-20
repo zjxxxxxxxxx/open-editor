@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-perf(resolveSource): implement dual-layer caching for shallow resolution
+perf(client/resolveSource): implement dual-layer caching for shallow resolution

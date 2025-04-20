@@ -75,6 +75,6 @@ export function generateEditorURL(meta?: CodeSourceMeta): URL {
  */
 function triggerEditorLaunchError(error: unknown, message: string): Promise<never> {
   logError(message);
-  openEditorErrorBridge.emit();
+  openEditorErrorBridge.emit([message]);
   return Promise.reject(error);
 }
