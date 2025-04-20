@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-fix(client/zoom): correct compensation value calculation
+fix(zoom): correct compensation value calculation
