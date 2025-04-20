@@ -19,9 +19,9 @@ interface TooltipUIElements {
   /** 根容器 DOM 元素 */
   root: HTMLElement;
   /** 显示元素标签的 DOM 节点 */
-  tag: HTMLElement;
+  el: HTMLElement;
   /** 显示组件名称的 DOM 节点 */
-  comp: HTMLElement;
+  name: HTMLElement;
   /** 显示文件路径的 DOM 节点 */
   file: HTMLElement;
 }
@@ -123,8 +123,8 @@ export function TooltipUI() {
 
     if (source?.meta) {
       // 更新 DOM 内显示的文本内容
-      elements.tag.textContent = `${source.el} in `;
-      elements.comp.textContent = `<${source.meta.name}>`;
+      elements.el.textContent = `${source.el} in `;
+      elements.name.textContent = `<${source.meta.name}>`;
       elements.file.textContent = `${source.meta.file}:${source.meta.line}:${source.meta.column}`;
 
       // 解除挂起状态并执行 pending 中的任务
@@ -204,11 +204,9 @@ export function TooltipUI() {
   // 返回工具提示的自定义 JSX 结构，通过 ref 回调保存 DOM 元素引用
   return (
     <div className="oe-tooltip" ref={(el) => (elements.root = el)}>
-      <div className="oe-tooltip-content">
-        <span className="oe-tooltip-tag" ref={(el) => (elements.tag = el)} />
-        <span className="oe-tooltip-comp" ref={(el) => (elements.comp = el)} />
-        <span className="oe-tooltip-file" ref={(el) => (elements.file = el)} />
-      </div>
+      <span className="oe-tooltip-el" ref={(el) => (elements.el = el)} />
+      <span className="oe-tooltip-name" ref={(el) => (elements.name = el)} />
+      <span className="oe-tooltip-file" ref={(el) => (elements.file = el)} />
     </div>
   );
 }

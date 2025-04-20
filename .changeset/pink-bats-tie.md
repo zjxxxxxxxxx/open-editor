@@ -2,4 +2,4 @@
 '@open-editor/client': patch
 ---
 
-refactor(jsx): Use DocumentFragment for Fragment implementation
+refactor(client/jsx): Use DocumentFragment for Fragment implementation
