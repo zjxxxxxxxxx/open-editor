@@ -1,6 +1,5 @@
 import { checkValidElement } from '../utils/checkElement';
-import { IS_CLIENT } from '../constants';
-import { on } from '../event';
+import { on, onDocumentReady } from '../event';
 import { inspectorState } from './inspectorState';
 
 /**
@@ -28,10 +27,8 @@ const cursorState: CursorTracker = {
   viewportY: 0,
 };
 
-// 仅在浏览器环境初始化光标追踪（避免 SSR 问题）
-if (IS_CLIENT) {
-  initCursorTracking();
-}
+// 等待 DOM 就绪后执行初始化
+onDocumentReady(initCursorTracking);
 
 /**
  * 获取当前光标位置下的有效DOM元素
@@ -64,36 +61,33 @@ export function getActiveElement() {
  * - 使用 capture 阶段监听确保优先处理
  * - 选择 clientX/Y 而非 pageX/Y 避免滚动偏移
  * - 通过 mouseout 事件检测光标离开视口
- * - DOMContentLoaded 确保安全初始化
  */
 function initCursorTracking() {
-  on('DOMContentLoaded', () => {
-    // 实时更新光标坐标（高频事件）
-    on(
-      'mousemove',
-      (e: PointerEvent) => {
-        // 使用 client 坐标系保证视口相对性
-        cursorState.viewportX = e.clientX;
-        cursorState.viewportY = e.clientY;
-        // 重置视口状态（移动即代表在视口内）
-        cursorState.isOutsideViewport = false;
-      },
-      { capture: true },
-    );
+  // 实时更新光标坐标（高频事件）
+  on(
+    'mousemove',
+    (e: PointerEvent) => {
+      // 使用 client 坐标系保证视口相对性
+      cursorState.viewportX = e.clientX;
+      cursorState.viewportY = e.clientY;
+      // 重置视口状态（移动即代表在视口内）
+      cursorState.isOutsideViewport = false;
+    },
+    { capture: true },
+  );
 
-    // 检测光标离开视口边界
-    on(
-      'mouseout',
-      (e: PointerEvent) => {
-        /* 
+  // 检测光标离开视口边界
+  on(
+    'mouseout',
+    (e: PointerEvent) => {
+      /* 
           事件逻辑说明：
           - relatedTarget 为 null 表示移出文档
           - 非 null 时为移入的新元素（需额外判断文档根元素）
         */
-        cursorState.isOutsideViewport =
-          e.relatedTarget == null || e.relatedTarget === document.documentElement;
-      },
-      { capture: true },
-    );
-  });
+      cursorState.isOutsideViewport =
+        e.relatedTarget == null || e.relatedTarget === document.documentElement;
+    },
+    { capture: true },
+  );
 }

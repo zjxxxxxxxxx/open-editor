@@ -19,7 +19,7 @@
 
 ## 🔍 Project Overview
 
-`Open Editor` is a front-end debugging tool specifically designed for modern web development. By deeply integrating with build toolchains, it achieves precise two-way mapping between browser elements and source code. This solution not only enables developers to directly locate source code positions within React/Vue component trees, but also automatically launches local IDEs to open corresponding files. This innovative approach helps developers save over 90% of source code navigation time, significantly improving debugging efficiency.
+`OpenEditor` is a front-end debugging tool specifically designed for modern web development. By deeply integrating with build toolchains, it achieves precise two-way mapping between browser elements and source code. This solution not only enables developers to directly locate source code positions within React/Vue component trees, but also automatically launches local IDEs to open corresponding files. This innovative approach helps developers save over 90% of source code navigation time, significantly improving debugging efficiency.
 
 [▶▶▶ Live Demo (Vite+React Example)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![Feature Demo](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -32,13 +32,16 @@
 - **Vue Ecosystem**: Full support for development solutions like Vue CLI/Nuxt.js/Vite
 - **Build Tools**: Full compatibility with Webpack 4+/Vite 2+/Rollup 2+ systems
 
+### Integration Capabilities
+
+- 🚫 Zero‑intrusion design (no need to import an SDK or add any configuration on the project side)
+
 ### Debugging Capabilities
 
 - 🕵️ Multi-level component tree tracing (Supports cross-iframe communication scenarios)
 - ⌨️ Hotkey-driven workflow (⌥⌘O to launch debugger, ESC to exit inspection mode)
 - 📱 Mobile remote debugging (Requires same LAN as desktop)
 - 🔍 Intelligent IDE detection (Auto-recognizes local IDEs like VS Code/WebStorm)
-- 🚫 Zero-intrusion design (No SDK import or configuration required)
 
 ### Environment Support
 

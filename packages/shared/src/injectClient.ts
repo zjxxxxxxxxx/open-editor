@@ -28,9 +28,7 @@ export function injectClient(code: string, userOpts: AnyObject): string {
   const cleanedCode = code.replace(useStrictPattern, '');
 
   // 生成客户端初始化代码片段
-  const clientSetupCode = `\nif (typeof window !== "undefined") {
-  setupClient(${JSON.stringify(clientOptions)});
-}\n`;
+  const clientSetupCode = `\nsetupClient(${JSON.stringify(clientOptions)});\n`;
 
   // 组合所有代码片段形成最终结果
   return useStrictHeader + moduleImport + cleanedCode + clientSetupCode;

@@ -1,6 +1,5 @@
 import { createStyleController } from './createStyleController';
-import { on } from '../event';
-import { IS_CLIENT } from '../constants';
+import { on, onDocumentReady } from '../event';
 import { createStyleGetter } from './dom';
 import { mitt } from './mitt';
 
@@ -38,28 +37,23 @@ const safeAreaCSS = css`
 // 全局安全区域值存储
 export let safeArea: SafeArea;
 
-// 仅在浏览器环境初始化（兼容 SSR 场景）
-if (IS_CLIENT) {
-  initSafeAreaSystem();
-}
+// 等待 DOM 就绪后执行初始化
+onDocumentReady(initSafeAreaSystem);
 
 /**
  * 初始化安全区域监控系统
  * 包含样式注入、初始值计算、屏幕方向变化监听
  */
 function initSafeAreaSystem() {
-  // 等待 DOM 就绪后执行初始化
-  on('DOMContentLoaded', () => {
-    // 1. 注入全局 CSS 变量定义
-    createStyleController(safeAreaCSS).mount();
+  // 1. 注入全局 CSS 变量定义
+  createStyleController(safeAreaCSS).mount();
 
-    // 2. 计算初始安全区域值
-    refreshSafeAreaValues();
+  // 2. 计算初始安全区域值
+  refreshSafeAreaValues();
 
-    // 3. 监听屏幕方向变化（同时兼容设备旋转和折叠屏状态变化）
-    const orientationMedia = matchMedia('(orientation: portrait)');
-    on('change', refreshSafeAreaValues, { target: orientationMedia });
-  });
+  // 3. 监听屏幕方向变化（同时兼容设备旋转和折叠屏状态变化）
+  const orientationMedia = matchMedia('(orientation: portrait)');
+  on('change', refreshSafeAreaValues, { target: orientationMedia });
 }
 
 /**

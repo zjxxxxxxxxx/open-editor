@@ -1,3 +1,4 @@
+import { IS_CLIENT } from '../constants';
 import longpress from './longpress';
 import quickexit from './quickexit';
 import rightclick from './rightclick';
@@ -127,5 +128,37 @@ export function off(type: any, listener: any, options: any = {}) {
     default:
       // 处理标准 DOM 事件解绑
       options.target.removeEventListener(type, listener, options);
+  }
+}
+
+/**
+ * 在客户端环境中，当文档解析完成或触发 DOMContentLoaded 事件后执行回调。
+ *
+ * - 仅在浏览器环境（非 SSR）时生效，如果在服务端运行则直接返回。
+ * - 当 document.readyState 为 'loading' 时，表示 DOM 树尚未解析完毕，
+ *   此时会挂载一个一次性监听器，在 DOMContentLoaded 触发后执行回调。
+ * - 当 document.readyState 为 'interactive' 或 'complete' 时，DOM 已可交互，
+ *   回调会被立即执行，无需等待事件。
+ *
+ * @param listener - 文档可交互时执行的函数
+ *
+ * @example
+ * onDocumentReady(() => {
+ *   // 此处可安全访问 document.body 及其它 DOM 元素
+ *   initializeApp();
+ * });
+ */
+export function onDocumentReady(listener: () => void) {
+  // 仅在客户端环境生效，避免在服务端渲染时执行
+  if (!IS_CLIENT) {
+    return;
+  }
+
+  // 如果文档仍在解析中，监听一次性 DOMContentLoaded 事件
+  if (document.readyState === 'loading') {
+    on('DOMContentLoaded', listener, { once: true });
+  } else {
+    // 文档已处于 interactive 或 complete，直接执行回调
+    listener();
   }
 }
