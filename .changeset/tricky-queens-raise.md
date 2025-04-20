@@ -2,4 +2,4 @@
 '@open-editor/shared': patch
 ---
 
-feat(shared/injectClient): remove client detection
+feat(injectClient): remove client detection
