@@ -1,5 +1,14 @@
 # @open-editor/rollup
 
+## 0.9.4
+
+### Patch Changes
+
+- Updated dependencies [[`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072), [`0f150f8`](https://github.com/zjxxxxxxxxx/open-editor/commit/0f150f85253d0699bec4ea29af46db72af5a47eb), [`eba4a8f`](https://github.com/zjxxxxxxxxx/open-editor/commit/eba4a8f333ddaf3cbcee42dda4cc02238443fb96), [`e008c77`](https://github.com/zjxxxxxxxxx/open-editor/commit/e008c7776c62e3a0c7708668ad1e1230cd4f9673), [`ef57415`](https://github.com/zjxxxxxxxxx/open-editor/commit/ef574150b5ae6af6d3ae939358b4d41f487c2034), [`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072), [`3cf28ac`](https://github.com/zjxxxxxxxxx/open-editor/commit/3cf28ac883d1d82a47f070583b1dbf9d329aec91), [`e008c77`](https://github.com/zjxxxxxxxxx/open-editor/commit/e008c7776c62e3a0c7708668ad1e1230cd4f9673)]:
+  - @open-editor/client@0.9.4
+  - @open-editor/shared@0.9.4
+  - @open-editor/server@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes

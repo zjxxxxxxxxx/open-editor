@@ -1,5 +1,26 @@
 # @open-editor/client
 
+## 0.9.4
+
+### Patch Changes
+
+- [#323](https://github.com/zjxxxxxxxxx/open-editor/pull/323) [`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat(ui): display error message text
+
+- [#312](https://github.com/zjxxxxxxxxx/open-editor/pull/312) [`0f150f8`](https://github.com/zjxxxxxxxxx/open-editor/commit/0f150f85253d0699bec4ea29af46db72af5a47eb) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix(zoom): correct compensation value calculation
+
+- [#315](https://github.com/zjxxxxxxxxx/open-editor/pull/315) [`eba4a8f`](https://github.com/zjxxxxxxxxx/open-editor/commit/eba4a8f333ddaf3cbcee42dda4cc02238443fb96) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat(OverlayUI): render overlay using Canvas
+
+- [#321](https://github.com/zjxxxxxxxxx/open-editor/pull/321) [`e008c77`](https://github.com/zjxxxxxxxxx/open-editor/commit/e008c7776c62e3a0c7708668ad1e1230cd4f9673) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - perf(OverlayUI): reduce OverlayUI layer update frequency
+
+- [#322](https://github.com/zjxxxxxxxxx/open-editor/pull/322) [`ef57415`](https://github.com/zjxxxxxxxxx/open-editor/commit/ef574150b5ae6af6d3ae939358b4d41f487c2034) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - refactor(jsx): Use DocumentFragment for Fragment implementation
+
+- [#316](https://github.com/zjxxxxxxxxx/open-editor/pull/316) [`3cf28ac`](https://github.com/zjxxxxxxxxx/open-editor/commit/3cf28ac883d1d82a47f070583b1dbf9d329aec91) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - perf(resolveSource): implement dual-layer caching for shallow resolution
+
+- [#321](https://github.com/zjxxxxxxxxx/open-editor/pull/321) [`e008c77`](https://github.com/zjxxxxxxxxx/open-editor/commit/e008c7776c62e3a0c7708668ad1e1230cd4f9673) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - perf(disableHoverCSS): Split stylesheets into chunks for dynamic replacement
+
+- Updated dependencies [[`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072)]:
+  - @open-editor/shared@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes

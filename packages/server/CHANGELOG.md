@@ -1,5 +1,12 @@
 # @open-editor/server
 
+## 0.9.4
+
+### Patch Changes
+
+- Updated dependencies [[`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072)]:
+  - @open-editor/shared@0.9.4
+
 ## 0.9.3
 
 ### Patch Changes
