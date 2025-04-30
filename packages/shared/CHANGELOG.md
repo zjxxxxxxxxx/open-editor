@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 0.9.4
+
+### Patch Changes
+
+- [#323](https://github.com/zjxxxxxxxxx/open-editor/pull/323) [`1fd0a18`](https://github.com/zjxxxxxxxxx/open-editor/commit/1fd0a181e498e1e240eab0ed0bd0abd91e346072) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat(injectClient): remove client detection
+
 ## 0.9.3
 
 ## 0.9.2
