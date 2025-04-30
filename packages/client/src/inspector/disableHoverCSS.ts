@@ -89,26 +89,48 @@ function* createCSSTaskGenerator(pattern: RegExp, replacement: string) {
  * @param replacement 替换文本
  */
 function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, replacement: string) {
+  const rules = getSameOriginCSSRules(styleSheet);
+  const rulesSize = rules.length;
+
+  let index = 0;
+  while (index < rulesSize) {
+    // 分批次处理 cssRules，以避免一次性处理过多规则导致性能问题
+    const endIndex = Math.min(index + CSS_RULES_CHUNK_SIZE, rulesSize);
+
+    yield () => {
+      while (index < endIndex) {
+        const newRuleText = rules[index].cssText.replace(pattern, replacement);
+
+        styleSheet.deleteRule(0);
+        styleSheet.insertRule(newRuleText, rulesSize);
+
+        index++;
+      }
+    };
+  }
+}
+
+/**
+ * 安全获取与当前页面同源的外部样式表 CSS 规则
+ *
+ * 根据同源策略（Same-Origin Policy），仅当样式表的协议、域名和端口与当前页面一致时，
+ * 才会返回其 CSS 规则列表，否则返回空数组以避免跨域数据泄露风险。
+ *
+ * @param styleSheet - 目标样式表的 CSSStyleSheet 对象
+ * @returns 包含 CSSRule 对象的数组（同源时），或空数组（跨域或解析失败时）
+ */
+function getSameOriginCSSRules(styleSheet: CSSStyleSheet) {
   try {
-    const rules = Array.from(styleSheet.cssRules);
-    const rulesSize = rules.length;
-
-    let index = 0;
-    while (index < rulesSize) {
-      // 分批次处理 cssRules，以避免一次性处理过多规则导致性能问题
-      const endIndex = Math.min(index + CSS_RULES_CHUNK_SIZE, rulesSize);
-
-      yield () => {
-        while (index < endIndex) {
-          const rule = rules[index];
-          updateCSSRule(styleSheet, rule.cssText.replace(pattern, replacement));
-
-          index++;
-        }
-      };
+    const href = new URL(styleSheet.href!);
+    // 严格校验同源（协议+域名+端口）
+    if (href.origin === location.origin) {
+      // 使用 Array.from 保证返回标准数组（而非 CSSRuleList 类数组对象）
+      return Array.from(styleSheet.cssRules);
     }
+    return [];
   } catch {
-    // 静默处理潜在异常，如跨域脚本访问异常
+    // URL 解析失败或安全异常时静默返回空数组
+    return [];
   }
 }
 
@@ -167,15 +189,4 @@ function createFrameDurationChecker(maxFrameDuration: number) {
     }
     return exceeded;
   };
-}
-
-/**
- * 安全更新 CSS 规则：先删除旧规则，再插入更新后的规则文本
- *
- * @param styleSheet 目标 CSSStyleSheet 对象
- * @param newRuleText 新的 CSS 规则文本
- */
-function updateCSSRule(styleSheet: CSSStyleSheet, newRuleText: string) {
-  styleSheet.deleteRule(0);
-  styleSheet.insertRule(newRuleText, styleSheet.cssRules.length);
 }
