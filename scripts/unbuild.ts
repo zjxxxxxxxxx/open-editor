@@ -9,7 +9,9 @@ import esbuild from 'rollup-plugin-esbuild';
 import dts from 'rollup-plugin-dts';
 
 // 导入自定义模块
-import css from './css';
+import css from './rollup-plugins/css';
+import glsl from './rollup-plugins/glsl';
+import templateToString from './rollup-plugins/template-to-string';
 import { clientRoot, readJSON } from './utils';
 
 /**
@@ -170,7 +172,7 @@ function generateBundleConfig(
     external: (source) => /^@?[a-z]/.test(source),
     plugins: [
       // 客户端构建时添加 CSS 处理插件
-      ...(isClientBuild ? [css({ sourcemap: IS_DEV })] : []),
+      ...(isClientBuild ? [css({ sourcemap: IS_DEV }), glsl({ sourcemap: IS_DEV })] : []),
       // 模块解析插件（处理 node_modules 依赖）
       nodeResolve(),
       // CommonJS 转换插件
@@ -188,6 +190,7 @@ function generateBundleConfig(
         // 自定义 JSX 导入路径
         jsxImportSource: join(clientRoot, './jsx'),
       }),
+      templateToString({ sourcemap: IS_DEV }),
     ],
   };
 }

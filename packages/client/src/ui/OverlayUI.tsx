@@ -10,15 +10,18 @@ import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../b
 import { type WebGLRenderer, createWebGLRenderer } from './WebGLRenderer';
 
 /**
+ * 预乘颜色值 [r, g, b, a]
+ */
+type RGBA = [number, number, number, number];
+
+/**
  * Chromium DevTools 盒模型高亮配色方案（RGBA 预乘透明度通道）
- *
- * 每个区域的预乘颜色值（Float32Array 格式，归一化至 [0.0, 1.0]）：
  */
 const BOX_EDGES_COLORS = {
-  margin: new Float32Array([0.636, 0.46, 0.277, 0.66]),
-  border: new Float32Array([0.66, 0.592, 0.394, 0.66]),
-  padding: new Float32Array([0.295, 0.424, 0.27, 0.55]),
-  content: new Float32Array([0.287, 0.435, 0.57, 0.66]),
+  margin: [0.636, 0.46, 0.277, 0.66] as RGBA,
+  border: [0.66, 0.592, 0.394, 0.66] as RGBA,
+  padding: [0.295, 0.424, 0.27, 0.55] as RGBA,
+  content: [0.287, 0.435, 0.57, 0.66] as RGBA,
 };
 
 /**
@@ -74,26 +77,25 @@ function setupBridgeSystem(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
   });
 
   // 当盒模型数据更新时，检测数据是否有变更，若有则更新渲染
-  boxModelBridge.on((...boxModel: BoxModel) => {
-    if (hasBoxModelChanged(boxModel)) {
-      updateBoxModel(renderer, ...boxModel);
+  boxModelBridge.on((position: BoxPosition, metrics: BoxMetrics) => {
+    if (hasBoxModelChanged(position, metrics)) {
+      updateBoxModel(renderer, position, metrics);
     }
   });
 
   /**
    * 判断盒模型数据是否发生了变化
    *
-   * @param boxModel - 盒模型数据
-   * @returns 若数据没有变更则返回 false，否则更新 prevBoxModel 并返回 true
+   * @param position - 目标元素的边界位置信息
+   * @param metrics - 盒模型各区域的边缘宽度数据
+   * @returns 若数据没有变更则返回 false，否则更新 lastBoxModel 并返回 true
    */
-  function hasBoxModelChanged(boxModel: BoxModel) {
-    if (
-      isObjectsEqual(boxModel[0], lastBoxModel?.[0]) &&
-      isObjectsEqual(boxModel[1], lastBoxModel?.[1])
-    ) {
+  function hasBoxModelChanged(position: BoxPosition, metrics: BoxMetrics) {
+    const [lastPosition, lastMetrics] = lastBoxModel ?? [];
+    if (isObjectsEqual(position, lastPosition) && isObjectsEqual(metrics, lastMetrics)) {
       return false;
     }
-    lastBoxModel = boxModel;
+    lastBoxModel = [position, metrics];
     return true;
   }
 }
@@ -146,6 +148,15 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
  * 按顺时针顺序处理四条边：上 → 右 → 下 → 左，
  * 每条边使用 rectangleVertices 生成顶点数据，并避免重叠绘制。
  *
+ *       +-----------------+----+
+ *       |                 |    |
+ *       +----+------------+    |
+ *       |    |            |    |
+ *       |    |            |    |
+ *       |    +------------+----+
+ *       |    |                 |
+ *       +----+-----------------+
+ *
  * @param vertices - 顶点数据数组
  * @param bounds - 当前矩形边界，会根据当前区域数据收缩
  * @param edges - 当前区域对应的边缘宽度数据
@@ -157,7 +168,7 @@ function processEdges(
   bounds: BoxPosition,
   edges: BoxEdges,
   pixelRatio: number,
-  color: Float32Array,
+  color: RGBA,
 ) {
   // 上边缘：保留右侧边缘宽度
   if (edges.top) {
@@ -215,7 +226,7 @@ function processEdges(
  * 将矩形拆分为两个三角形（每个三角形包含三个顶点），
  * 每个顶点数据由物理像素坐标（CSS 像素乘以 pixelRatio）和颜色信息组成。
  *
- * 顶点顺序定义 (逆时针，用于正面渲染，并符合浏览器文档流坐标):
+ * 顶点顺序定义 (用于正面渲染，并符合浏览器文档流坐标):
  * 三角形 1: 左上, 右上, 左下
  * 三角形 2: 右上, 右下, 左下
  *
@@ -233,7 +244,7 @@ function rectangleVertices(
   y: number,
   width: number,
   height: number,
-  color: Float32Array,
+  color: RGBA,
   pixelRatio: number,
 ) {
   // 如果宽度或高度无效则直接返回
@@ -245,9 +256,9 @@ function rectangleVertices(
   const x2 = (x + width) * pr; // 右侧 X
   const y2 = (y + height) * pr; // 底部 Y
 
-  // 三角形 1 (左上, 右上, 左下): 逆时针
+  // 三角形 1 (左上, 右上, 左下)
   vertices.push(x1, y1, ...color, x2, y1, ...color, x1, y2, ...color);
-  // 三角形 2 (右上, 右下, 左下): 逆时针
+  // 三角形 2 (右上, 右下, 左下)
   vertices.push(x2, y1, ...color, x2, y2, ...color, x1, y2, ...color);
 }
 
