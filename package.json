@@ -60,7 +60,7 @@
     "concurrently": "^8.2.0",
     "consola": "^3.2.3",
     "enquirer": "^2.4.1",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.24.2",
     "esbuild-register": "^3.6.0",
     "eslint": "^8.47.0",
     "esno": "^4.8.0",
@@ -74,13 +74,13 @@
     "postcss-minify-selectors": "^6.0.0",
     "prettier": "^3.4.1",
     "rimraf": "^5.0.1",
-    "rollup": "^3.28.1",
+    "rollup": "^3.29.5",
     "rollup-plugin-dts": "^5.3.1",
     "rollup-plugin-esbuild": "^6.0.0",
     "simple-git-hooks": "^2.9.0",
-    "turbo": "^2.3.3",
+    "turbo": "^2.5.3",
     "typescript": "^5.1.6",
-    "vitest": "^0.34.3"
+    "vitest": "^0.34.6"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm exec lint-staged --concurrent false"

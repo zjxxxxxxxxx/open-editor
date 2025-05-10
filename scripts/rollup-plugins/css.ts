@@ -31,7 +31,7 @@ const BEFORE_SPACES_RE = /\s+([{};:!])/g; // 匹配符号前的多余空格（�
 const AFTER_SPACES_RE = /([{};:,])\s+/g; // 匹配符号后的多余空格（如 }  ; 后的空格）
 
 /* -------------------------- 类型定义 -------------------------- */
-export interface Options {
+export interface CssPluginOptions {
   /**
    * 是否生成 sourcemap（控制是否输出源码映射）
    *
@@ -48,7 +48,7 @@ export interface Options {
  *
  * @returns 符合 Rollup 规范的插件对象
  */
-export default function cssPlugin(options: Options): RollupPlugin {
+export default function cssPlugin(options: CssPluginOptions = {}): RollupPlugin {
   // 初始化 CSS 处理流水线
   const processor = createProcessor();
 
@@ -196,7 +196,7 @@ function isJsxElementMatch(node: Node & { name: any }, name: string) {
  */
 function processCssContent(raw: string, processor: postcss.Processor) {
   // 转换为模板字符串
-  return `\`${processor
+  return `'${processor
     .process(raw)
     // 移除所有换行符
     .css.replace(NEWLINE_RE, '')
@@ -205,5 +205,5 @@ function processCssContent(raw: string, processor: postcss.Processor) {
     // 清理符号后多余空格
     .replace(AFTER_SPACES_RE, '$1')
     // 去除首尾空格
-    .trim()}\``;
+    .trim()}'`;
 }

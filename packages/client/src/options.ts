@@ -71,9 +71,8 @@ export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>
  */
 export function getOptions() {
   if (!activeOptions) {
-    logError('配置项未初始化，请先调用 setOptions()', {
+    logError('配置项未初始化', {
       logLevel: 'throw',
-      code: 'CONFIG_NOT_INITIALIZED',
     });
   }
   return activeOptions;

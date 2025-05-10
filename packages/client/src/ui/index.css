@@ -171,7 +171,6 @@
 
 .oe-tooltip-show {
   display: inline-block;
-  visibility: hidden;
 }
 
 .oe-tooltip-el {
