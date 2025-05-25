@@ -1,5 +1,6 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+/* eslint-disable @typescript-eslint/no-var-requires */
 const OpenEditorWebpackPlugin = require('@open-editor/webpack');
+const ReactSourceWebpackPlugin = require('@open-editor/react-source/webpack');
 module.exports = {
   webpack: {
     configure: (config) => {
@@ -9,6 +10,7 @@ module.exports = {
           crossIframe: true,
         }),
       );
+      config.plugins.push(ReactSourceWebpackPlugin());
       return config;
     },
   },

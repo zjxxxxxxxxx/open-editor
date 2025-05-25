@@ -11,10 +11,10 @@ import Visitor from '@swc/core/Visitor';
 
 export interface CssPluginOptions {
   /**
-   * 是否为输出代码生成 SourceMap，用于在调试时将压缩／内联后的 CSS 映射回源文件位置。
+   * 是否为输出代码生成 sourceMap，用于在调试时将压缩／内联后的 CSS 映射回源文件位置。
    * @default false
    */
-  sourcemap?: boolean;
+  sourceMap?: boolean;
 }
 
 // 用于 CSS 压缩的正则表达式：匹配多余的换行符和符号周围的空格
@@ -118,10 +118,10 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
       // 如果 s 未被初始化，表示没有 CSS 相关内容被修改
       if (!s) return null;
 
-      // 返回转换后的代码和 Sourcemap
+      // 返回转换后的代码和 sourceMap
       return {
         code: s.toString(),
-        map: opts.sourcemap ? s.generateMap({ source: id, file: id }) : null,
+        map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
       };
     },
   };

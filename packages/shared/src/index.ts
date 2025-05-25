@@ -7,3 +7,4 @@ export * from './hasOwnProperty';
 export * from './injectClient';
 export * from './normalizePath';
 export * from './isObjectsEqual';
+export * from './debugSource';

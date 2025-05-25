@@ -29,7 +29,7 @@ export interface CodeSourceMeta {
   /**
    * 源码行号（符合 IDE 调试协议）
    *
-   * @remarks 生产环境需配合 sourcemap 使用
+   * @remarks 生产环境需配合 sourceMap 使用
    */
   line: number;
   /**

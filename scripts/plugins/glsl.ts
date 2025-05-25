@@ -3,10 +3,10 @@ import MagicString from 'magic-string';
 
 export interface GlslPluginOptions {
   /**
-   * 控制是否生成 SourceMap，用于调试时映射压缩后的代码到原始位置。
+   * 控制是否生成 sourceMap，用于调试时映射压缩后的代码到原始位置。
    * @default false
    */
-  sourcemap?: boolean;
+  sourceMap?: boolean;
 }
 
 // 匹配所有 glsl`...` 模板字符串，并捕获内部任意字符（包括换行）
@@ -45,10 +45,10 @@ export default function glslPlugin(opts: GlslPluginOptions = {}): Plugin {
       // 如果没有进行任何替换 (即 s 仍然是 undefined)，则返回 null
       if (!s) return null;
 
-      // 返回转换后的代码和 Sourcemap
+      // 返回转换后的代码和 sourceMap
       return {
         code: s.toString(),
-        map: opts.sourcemap ? s.generateMap({ source: id, file: id }) : null,
+        map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
       };
     },
   };

@@ -15,7 +15,8 @@
       "require": "./dist/transform.js",
       "import": "./dist/transform.mjs",
       "types": "./dist/transform.d.ts"
-    }
+    },
+    "./*": "./dist/*"
   },
   "files": [
     "dist"
