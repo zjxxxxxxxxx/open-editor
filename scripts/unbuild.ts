@@ -1,17 +1,14 @@
-// 导入 Node.js 核心模块
 import { join, resolve } from 'node:path';
-// 导入 Rollup 类型定义
+import { type JscTarget } from '@swc/core';
 import { type OutputOptions, type RollupOptions } from 'rollup';
-// 导入 Rollup 插件
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import esbuild from 'rollup-plugin-esbuild';
+import replace from '@rollup/plugin-replace';
+import swc from 'rollup-plugin-swc3';
 import dts from 'rollup-plugin-dts';
 
-// 导入自定义模块
-import css from './rollup-plugins/css';
-import glsl from './rollup-plugins/glsl';
-import templateToString from './rollup-plugins/template-to-string';
+import css from './plugins/css';
+import glsl from './plugins/glsl';
 import { clientRoot, readJSON } from './utils';
 
 /**
@@ -42,7 +39,7 @@ export interface BuildOutput {
  * { "dev": "pnpm rollup -c --environment __DEV__" }
  * ```
  */
-const IS_DEV = '__DEV__' in process.env;
+const __DEV__ = '__DEV__' in process.env;
 
 /**
  * 构建目标环境配置
@@ -56,7 +53,7 @@ const IS_DEV = '__DEV__' in process.env;
  * { "build": "pnpm rollup -c --environment __TARGET__:es2020" }
  * ```
  */
-const TARGET = process.env.__TARGET__ || 'es6';
+const __TARGET__ = (process.env.__TARGET__ || 'es6') as JscTarget;
 
 /**
  * 判断当前是否为客户端构建模式
@@ -138,7 +135,7 @@ function generateBundleConfig(
       file: outputConfig,
       // ESM 格式
       format: 'esm',
-      sourcemap: IS_DEV,
+      sourcemap: __DEV__,
     });
   } else {
     // 处理对象类型的输出配置
@@ -147,7 +144,7 @@ function generateBundleConfig(
         file: outputConfig.require,
         // CommonJS 格式
         format: 'cjs',
-        sourcemap: IS_DEV,
+        sourcemap: __DEV__,
       });
     }
 
@@ -156,7 +153,7 @@ function generateBundleConfig(
         file: outputConfig.import,
         // ESM 格式
         format: 'esm',
-        sourcemap: IS_DEV,
+        sourcemap: __DEV__,
       });
     }
   }
@@ -164,34 +161,45 @@ function generateBundleConfig(
   if (outputFormats.length === 0) return;
 
   return {
-    // 入口文件路径
     input: inputPath,
-    // 输出格式配置
     output: outputFormats,
-    // 外部依赖排除规则（匹配所有以字母开头或 @ 开头的依赖）
     external: (source) => /^@?[a-z]/.test(source),
     plugins: [
-      // 客户端构建时添加 CSS 处理插件
-      ...(isClientBuild ? [css({ sourcemap: IS_DEV }), glsl({ sourcemap: IS_DEV })] : []),
-      // 模块解析插件（处理 node_modules 依赖）
+      ...(isClientBuild ? [css({ sourcemap: __DEV__ }), glsl({ sourcemap: __DEV__ })] : []),
       nodeResolve(),
-      // CommonJS 转换插件
       commonjs(),
-      // ESBuild 插件配置
-      esbuild({
-        // 编译目标
-        target: TARGET,
-        // 生产环境启用语法简化
-        minifySyntax: !IS_DEV,
-        // 生产环境启用空格压缩
-        minifyWhitespace: !IS_DEV,
-        // 保持标识符不变
-        minifyIdentifiers: false,
-        // 自定义 JSX 导入路径
-        jsxImportSource: join(clientRoot, './jsx'),
+      replace({
+        __DEV__,
+        preventAssignment: true,
       }),
-      templateToString({ sourcemap: IS_DEV }),
+      swc({
+        sourceMaps: __DEV__,
+        jsc: {
+          target: __TARGET__,
+          transform: {
+            react: {
+              runtime: 'automatic',
+              importSource: join(clientRoot, './jsx'),
+            },
+          },
+          minify: {
+            compress: !__DEV__,
+            keep_fnames: true,
+          },
+        },
+      }),
     ],
+    onwarn(warning, warn) {
+      // 忽略特定的循环依赖警告
+      if (
+        warning.code === 'CIRCULAR_DEPENDENCY' &&
+        warning.message.includes('src/event/index.ts')
+      ) {
+        return; // 不打印此警告
+      }
+
+      warn(warning);
+    },
   };
 }
 
@@ -228,7 +236,7 @@ function generateTypeDeclarationConfig(
 /**
  * 标准化入口路径转换器
  *
- * @param rawPath - 原始路径
+ * @param path - 原始路径
  *
  * @returns 标准化后的路径
  *
@@ -237,9 +245,9 @@ function generateTypeDeclarationConfig(
  * 'utils'      => './src/utils.ts'
  * './lib/main' => './src/lib/main.ts'
  */
-function normalizeInputPath(rawPath: string) {
+function normalizeInputPath(path: string) {
   // 移除开头的 ./ 或 /，默认使用 index 作为文件名
-  const filename = rawPath.replace(/^\.\/?/, '') || 'index';
+  const filename = path.replace(/^\.\/?/, '') || 'index';
   // 转换为 src 目录下的 TypeScript 文件路径
   return `./src/${filename}.ts`;
 }
