@@ -6,6 +6,7 @@ import postcss from 'rollup-plugin-postcss';
 import svg from 'rollup-plugin-svg';
 import { liveServer } from 'rollup-plugin-live-server';
 import OpenEditor from '@open-editor/rollup';
+import ReactSource from '@open-editor/react-source/rollup';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
 
@@ -29,6 +30,7 @@ export default {
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
+    ReactSource(),
     babel({
       babelHelpers: 'bundled',
       extensions,

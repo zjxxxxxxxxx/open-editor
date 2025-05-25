@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const OpenEditorWebpackPlugin = require('@open-editor/webpack');
+const ReactSourceWebpackPlugin = require('@open-editor/react-source/webpack');
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack(config) {
@@ -8,6 +10,7 @@ const nextConfig = {
         crossIframe: true,
       }),
     );
+    config.plugins.push(ReactSourceWebpackPlugin());
     return config;
   },
 };

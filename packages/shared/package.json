@@ -15,7 +15,8 @@
       "require": "./dist/node.js",
       "import": "./dist/node.mjs",
       "types": "./dist/node.d.ts"
-    }
+    },
+    "./*": "./dist/*"
   },
   "files": [
     "dist"
