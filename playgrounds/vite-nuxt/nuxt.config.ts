@@ -1,5 +1,5 @@
 import OpenEditor from '@open-editor/vite';
-import VueSource from 'unplugin-vue-source/vite';
+import VueSource from '@open-editor/vue-source/vite';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({

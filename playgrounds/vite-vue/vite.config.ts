@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import VueSource from 'unplugin-vue-source/vite';
+import VueSource from '@open-editor/vue-source/vite';
 import OpenEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/

@@ -4,7 +4,7 @@ const OpenEditorWebpackPlugin = require('@open-editor/webpack');
 module.exports = defineConfig({
   configureWebpack: {
     plugins: [
-      require('unplugin-vue-source/webpack')(),
+      require('@open-editor/vue-source/webpack')(),
       new OpenEditorWebpackPlugin({
         once: true,
         crossIframe: true,
