@@ -14,7 +14,8 @@
       "@open-editor/webpack",
       "@open-editor/vite",
       "@open-editor/rollup",
-      "@open-editor/react-source"
+      "@open-editor/react-source",
+      "@open-editor/vue-source"
     ]
   ],
   "linked": [],

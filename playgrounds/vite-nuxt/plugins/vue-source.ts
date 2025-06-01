@@ -1,4 +1,4 @@
-import VueSource from 'unplugin-vue-source/vue';
+import VueSource from '@open-editor/vue-source/vue';
 
 export default defineNuxtPlugin({
   name: 'vue-source',

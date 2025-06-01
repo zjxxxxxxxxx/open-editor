@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "vue": "^3.3.4",
-    "unplugin-vue-source": "latest"
+    "@open-editor/vue-source": "workspace:^"
   },
   "devDependencies": {
     "@open-editor/vite": "latest",

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import VueSoucre from 'unplugin-vue-source/vue';
+import VueSoucre from '@open-editor/vue-source/vue';
 import App from './App.vue';
 
 Vue.use(VueSoucre);

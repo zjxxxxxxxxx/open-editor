@@ -3,7 +3,7 @@ import { createFilter } from '@rollup/pluginutils';
 import { normalizePath } from '@open-editor/shared';
 import { isDev } from '@open-editor/shared/node';
 import { type ResolvedOptions, type Options } from '../types';
-import { transform } from './transform';
+import { transformJSX } from './transformJSX';
 
 export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}) => {
   if (!isDev()) {
@@ -23,7 +23,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
       return filter(normalizePath(id));
     },
     transform(code, id) {
-      return transform(code, normalizePath(id), opts);
+      return transformJSX(code, normalizePath(id), opts);
     },
   };
 };
