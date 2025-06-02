@@ -1,3 +1,4 @@
+import { DS } from '@open-editor/shared/debugSource';
 import { type ComponentInternalInstance } from '@vue/runtime-core';
 import { type VueResolver, createVueResolver } from './createVueResolver';
 import { type ResolveDebug } from './resolveDebug';
@@ -80,9 +81,9 @@ function initializeResolver() {
       let current = node;
       while (current) {
         // 处理 Suspense 包裹的异步组件
-        const rawSource =
-          (current as any)?.suspense?.parent?.props?.__source || current.props?.__source;
-        if (rawSource) return String(rawSource);
+        const dsString =
+          (current as any)?.suspense?.parent?.props?.[DS.ID] || current.props?.[DS.ID];
+        if (dsString) return DS.parse(dsString);
 
         // 处理 Teleport 组件特殊情况
         current =

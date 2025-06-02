@@ -1,4 +1,4 @@
-import { hasOwn } from '@open-editor/shared';
+import { hasOwn } from '@open-editor/shared/object';
 import { checkValidElement } from '../utils/checkElement';
 
 /**

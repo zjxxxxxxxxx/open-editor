@@ -6,8 +6,8 @@ import OpenEditor from '@open-editor/vite';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VueSource(),
     vue(),
+    VueSource(),
     OpenEditor({
       once: true,
       crossIframe: true,

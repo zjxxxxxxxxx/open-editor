@@ -18,9 +18,13 @@ export default {
     format: 'esm',
   },
   plugins: [
-    VueSource(),
     vue({
       exposeFilename: true,
+    }),
+    VueSource(),
+    OpenEditor({
+      once: true,
+      crossIframe: true,
     }),
     commonjs(),
     resolve({
@@ -37,10 +41,6 @@ export default {
     }),
     postcss(),
     image(),
-    OpenEditor({
-      once: true,
-      crossIframe: true,
-    }),
     liveServer({
       port: 4001,
       wait: 1000,

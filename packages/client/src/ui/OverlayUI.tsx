@@ -1,4 +1,4 @@
-import { isObjectsEqual } from '@open-editor/shared';
+import { isObjectsEqual } from '@open-editor/shared/object';
 import { addClass, removeClass } from '../utils/dom';
 import {
   type BoxModel,
@@ -10,18 +10,13 @@ import { inspectorEnableBridge, inspectorExitBridge, boxModelBridge } from '../b
 import { type WebGLRenderer, createWebGLRenderer } from './WebGLRenderer';
 
 /**
- * 预乘颜色值 [r, g, b, a]
- */
-type RGBA = [number, number, number, number];
-
-/**
  * Chromium DevTools 盒模型高亮配色方案（RGBA 预乘透明度通道）
  */
 const BOX_EDGES_COLORS = {
-  margin: [0.636, 0.46, 0.277, 0.66] as RGBA,
-  border: [0.66, 0.592, 0.394, 0.66] as RGBA,
-  padding: [0.295, 0.424, 0.27, 0.55] as RGBA,
-  content: [0.287, 0.435, 0.57, 0.66] as RGBA,
+  margin: new Float32Array([0.636, 0.46, 0.277, 0.66]),
+  border: new Float32Array([0.66, 0.592, 0.394, 0.66]),
+  padding: new Float32Array([0.295, 0.424, 0.27, 0.55]),
+  content: new Float32Array([0.287, 0.435, 0.57, 0.66]),
 };
 
 /**
@@ -168,7 +163,7 @@ function processEdges(
   bounds: BoxPosition,
   edges: BoxEdges,
   pixelRatio: number,
-  color: RGBA,
+  color: Float32Array,
 ) {
   // 上边缘：保留右侧边缘宽度
   if (edges.top) {
@@ -244,7 +239,7 @@ function rectangleVertices(
   y: number,
   width: number,
   height: number,
-  color: RGBA,
+  color: Float32Array,
   pixelRatio: number,
 ) {
   // 如果宽度或高度无效则直接返回

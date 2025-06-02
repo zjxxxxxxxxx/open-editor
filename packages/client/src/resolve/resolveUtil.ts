@@ -1,34 +1,9 @@
 import { camelCase, normalizePath } from '@open-editor/shared';
 import outmatch from 'outmatch';
 import { getOptions } from '../options';
-import { CodeSourceMeta } from '.';
 
-const DEFAULT_COMPONENT_NAME = 'AnonymousComponent';
-const DEFAULT_COMPONENT_FILE = 'unknown';
-
-/**
- * 元数据标准化处理器
- *
- * @param meta - 原始元数据
- *
- * @returns 标准化后的元数据对象
- *
- * 处理逻辑：
- * 1. 组件名称驼峰化
- * 2. 文件路径校验
- * 3. 行列号默认值处理（源码行列号从 1 开始）
- */
-export function normalizeMeta(meta: Partial<CodeSourceMeta>): CodeSourceMeta {
-  return {
-    // 统一命名规范
-    name: meta.name ? camelCase(meta.name) : DEFAULT_COMPONENT_NAME,
-    // 文件路径兜底处理
-    file: meta.file || DEFAULT_COMPONENT_FILE,
-    // 确保最小行号为 1
-    line: meta.line || 1,
-    // 确保最小列号为 1
-    column: meta.column || 1,
-  };
+export function normalizeName(name?: string): string {
+  return name ? camelCase(name) : 'AnonymousComponent';
 }
 
 /**
@@ -39,14 +14,13 @@ export function normalizeMeta(meta: Partial<CodeSourceMeta>): CodeSourceMeta {
  */
 export function ensureFileName(filePath: string) {
   const { rootDir } = getOptions();
-  const normalizedRoot = normalizePath(rootDir);
   const normalizedPath = normalizePath(filePath);
 
   // 移除根目录前缀（使用字符串操作代替 Node.js 路径 API）
-  if (normalizedPath.startsWith(normalizedRoot)) {
+  if (normalizedPath.startsWith(rootDir)) {
     return (
       normalizedPath
-        .replace(normalizedRoot, '')
+        .replace(rootDir, '')
         // 移除前缀斜杠
         .replace(/^\/+/g, '')
         // 合并多余斜杠
@@ -65,7 +39,6 @@ export function ensureFileName(filePath: string) {
 
 // 系统级黑名单路径（参考 CI 环境路径限制）
 const SYSTEM_BLACKLIST = /^(\/home\/runner|\/tmp\/build)/;
-
 /**
  * 文件名安全校验（满足双重校验原则）
  * 1. 防止系统敏感路径访问
@@ -74,10 +47,29 @@ const SYSTEM_BLACKLIST = /^(\/home\/runner|\/tmp\/build)/;
 export function isValidFileName(filePath?: string | null): filePath is string {
   if (!filePath) return false;
 
-  const normalized = normalizePath(filePath);
-
   // 双重安全校验（黑名单 + 项目规则）
-  return !SYSTEM_BLACKLIST.test(normalized) && applyProjectIgnoreRules(normalized);
+  return !SYSTEM_BLACKLIST.test(filePath) && applyProjectIgnoreRules(filePath);
+}
+
+/**
+ * 项目级忽略规则处理器，结合 glob 模式和白名单字符校验
+ */
+let globMatcher: ReturnType<typeof outmatch> | null = null;
+function applyProjectIgnoreRules(path: string) {
+  // 基础字符白名单校验
+  if (!SAFE_CHAR_RE.test(path) || !hasValidBrackets(path)) return false;
+
+  const { ignoreComponents } = getOptions();
+
+  // 空配置默认放行
+  if (!ignoreComponents) return true;
+
+  // 惰性初始化 glob 匹配器（配置浏览器环境参数）
+  globMatcher ||= outmatch(ignoreComponents, {
+    separator: '/',
+    excludeDot: false,
+  });
+  return !globMatcher!(path);
 }
 
 // 安全字符白名单（参考文件上传过滤实践）
@@ -89,25 +81,4 @@ function hasValidBrackets(path: string) {
     (path.match(/$$/g) || []).length === (path.match(/$$/g) || []).length &&
     !/$$[^\w-]+$$/.test(path)
   );
-}
-
-/**
- * 项目级忽略规则处理器，结合 glob 模式和白名单字符校验
- */
-let globMatcher: ReturnType<typeof outmatch> | null = null;
-function applyProjectIgnoreRules(path: string) {
-  const { ignoreComponents } = getOptions();
-
-  // 基础字符白名单校验
-  if (!SAFE_CHAR_RE.test(path) || !hasValidBrackets(path)) return false;
-
-  // 空配置默认放行
-  if (!ignoreComponents) return true;
-
-  // 惰性初始化 glob 匹配器（配置浏览器环境参数）
-  globMatcher ||= outmatch(ignoreComponents, {
-    separator: '/',
-    excludeDot: false,
-  });
-  return !globMatcher!(path);
 }

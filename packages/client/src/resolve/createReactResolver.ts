@@ -1,6 +1,5 @@
-import { normalizePath } from '@open-editor/shared';
-import { type Source } from 'react-reconciler';
-import { ensureFileName, isValidFileName, normalizeMeta } from './resolveUtil';
+import { type DSValue } from '@open-editor/shared/debugSource';
+import { isValidFileName, normalizeName } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
 /**
@@ -33,7 +32,7 @@ export interface ReactResolverOptions<T = any> {
    *
    * @returns 返回包含文件名、行列号的源代码信息对象
    */
-  getSource(v: T): (Source & { columnNumber?: number }) | null | undefined;
+  getSource(v: T): DSValue | null | undefined;
 
   /**
    * 获取节点显示名称
@@ -101,54 +100,32 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
   ) {
     // 使用 while 循环遍历同级节点链
     while (currentNode) {
-      // 步骤1：标准化源码信息
-      const normalizedSource = normalizeSourceInfo(getSource(currentNode));
+      const dsValue = getSource(currentNode);
 
-      // 步骤2：获取下一个待处理节点（初始为当前节点的 next）
+      // 获取下一个待处理节点（初始为当前节点的 next）
       let nextNode = getNext(currentNode);
 
       // 判断是否为有效源代码路径
-      if (isValidFileName(normalizedSource?.fileName)) {
-        // 步骤3：获取最近的有效节点（跳过无效节点）
+      if (isValidFileName(dsValue?.file)) {
+        // 获取最近的有效节点（跳过无效节点）
         nextNode = getValidNextNode(nextNode);
 
-        // 终止条件：没有有效后续节点时退出
+        // 没有有效后续节点时退出
         if (!nextNode) return;
 
-        // 步骤4：构建元数据并存入结果树
-        addSourceMetadata(nextNode, normalizedSource!, tree);
+        // 构建元数据并存入结果树
+        tree.push({
+          name: normalizeName(getName(nextNode)),
+          ...dsValue,
+        } as CodeSourceMeta);
 
-        // 模式判断：非深度模式收集首个有效节点后退出
+        // 非深度模式收集首个有效节点后退出
         if (!deep) return;
       }
 
-      // 步骤5：移动到下一个节点继续处理
+      // 移动到下一个节点继续处理
       currentNode = nextNode;
     }
-  }
-
-  /**
-   * 源代码信息标准化处理器
-   *
-   * @param source 原始源码信息
-   *
-   * @returns 标准化后的源码信息对象
-   *
-   * --------------------------------------------------
-   * 处理逻辑：
-   * 1. 统一路径分隔符为斜杠(/)
-   * 2. 确保文件名有效性
-   * 3. 保留行列号信息
-   * --------------------------------------------------
-   */
-  function normalizeSourceInfo(source: (Source & { columnNumber?: number }) | null | undefined) {
-    if (!source) return source;
-
-    return {
-      ...source,
-      // 标准化文件路径：转换分隔符并验证文件名
-      fileName: ensureFileName(normalizePath(source.fileName)),
-    };
   }
 
   /**
@@ -172,35 +149,6 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
       node = getNext(node);
     }
     return node;
-  }
-
-  /**
-   * 元数据收集器
-   *
-   * @param node 目标节点
-   * @param source 标准化源码信息
-   * @param tree 结果树引用
-   *
-   * --------------------------------------------------
-   * 数据组装过程：
-   * 1. 从节点获取显示名称
-   * 2. 组合标准化后的源码定位信息
-   * 3. 推入结果树前进行数据规范化
-   * --------------------------------------------------
-   */
-  function addSourceMetadata(
-    node: T,
-    source: NonNullable<ReturnType<typeof normalizeSourceInfo>>,
-    tree: CodeSourceMeta[],
-  ) {
-    tree.push(
-      normalizeMeta({
-        name: getName(node),
-        file: source.fileName,
-        line: source.lineNumber,
-        column: source.columnNumber,
-      }),
-    );
   }
 
   return reactResolver;

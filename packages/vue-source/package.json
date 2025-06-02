@@ -31,11 +31,6 @@
       "import": "./dist/esbuild.mjs",
       "types": "./dist/index.d.ts"
     },
-    "./vue": {
-      "require": "./dist/vue.js",
-      "import": "./dist/vue.mjs",
-      "types": "./dist/vue.d.ts"
-    },
     "./*": "./dist/*"
   },
   "files": [

@@ -1,3 +1,4 @@
+import { DS } from '@open-editor/shared/debugSource';
 import { type VueResolver, createVueResolver } from './createVueResolver';
 import { type ResolveDebug } from './resolveDebug';
 import { type CodeSourceMeta } from '.';
@@ -71,8 +72,8 @@ function initializeResolver() {
       let current = node;
       while (current) {
         // JSX 编译注入的源码信息
-        const source = current.$props?.__source;
-        if (source) return source;
+        const dsString = current.$props?.[DS.ID];
+        if (dsString) return DS.parse(dsString);
         // 向上遍历继承链
         current = current.$parent;
       }

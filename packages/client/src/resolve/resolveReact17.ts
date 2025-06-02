@@ -1,8 +1,10 @@
-import { isFn } from '@open-editor/shared';
+import { isFn } from '@open-editor/shared/type';
+import { DS } from '@open-editor/shared/debugSource';
 import { type Fiber } from 'react-reconciler';
 import { type ReactResolver, createReactResolver } from './createReactResolver';
 import { type ResolveDebug } from './resolveDebug';
 import { type CodeSourceMeta } from '.';
+
 /**
  * React 17+ Fiber 架构核心调试解析器
  *
@@ -73,13 +75,21 @@ function initializeResolver() {
     },
 
     getSource(fiber) {
-      // 获取 Babel 编译时注入的源码元数据
-      // 包含 fileName/lineNumber/columnNumber 等定位信息
-      return fiber?._debugSource;
+      const dsString = fiber?.memoizedProps[DS.ID];
+      if (dsString) return DS.parse(dsString);
+
+      const babelSource = fiber?._debugSource;
+      if (babelSource) {
+        return {
+          file: babelSource.fileName,
+          line: babelSource.lineNumber,
+          column: (babelSource as AnyObject).columnNumber,
+        };
+      }
     },
 
     getName(owner) {
-      if (!owner) return undefined;
+      if (!owner) return;
 
       // 处理普通组件和高阶组件包装
       const component = isFn(owner.type)
