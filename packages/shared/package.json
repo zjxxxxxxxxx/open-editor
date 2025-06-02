@@ -16,6 +16,21 @@
       "import": "./dist/node.mjs",
       "types": "./dist/node.d.ts"
     },
+    "./type": {
+      "require": "./dist/type.js",
+      "import": "./dist/type.mjs",
+      "types": "./dist/type.d.ts"
+    },
+    "./object": {
+      "require": "./dist/object.js",
+      "import": "./dist/object.mjs",
+      "types": "./dist/object.d.ts"
+    },
+    "./debugSource": {
+      "require": "./dist/debugSource.js",
+      "import": "./dist/debugSource.mjs",
+      "types": "./dist/debugSource.d.ts"
+    },
     "./*": "./dist/*"
   },
   "files": [

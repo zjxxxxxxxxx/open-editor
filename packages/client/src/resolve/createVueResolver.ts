@@ -1,6 +1,7 @@
-import { isStr, normalizePath } from '@open-editor/shared';
+import { isStr } from '@open-editor/shared/type';
+import { type DSValue, DS } from '@open-editor/shared/debugSource';
 import { type ResolveDebug } from './resolveDebug';
-import { ensureFileName, isValidFileName, normalizeMeta } from './resolveUtil';
+import { ensureFileName, isValidFileName, normalizeName } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
 /**
@@ -14,7 +15,7 @@ export interface VueResolverOptions<T = any> {
   /** 获取下一个关联实例 */
   getNext(v: T): T | null | undefined;
   /** 获取源代码路径（含行列信息） */
-  getSource(v?: T | null): string | undefined;
+  getSource(v?: T | null): DSValue | undefined;
   /** 获取文件路径 */
   getFile(v: T): string | undefined;
   /** 获取实例名称 */
@@ -43,21 +44,21 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
    */
   function vueResolver(debug: ResolveDebug<T>, tree: CodeSourceMeta[], deep?: boolean) {
     const processedFiles = new Set<string>();
-    let [currentInstance, currentSource] = resolveAnchorPoint(debug);
+    let [node, dsValue] = resolveAnchorPoint(debug);
 
-    while (isValid(currentInstance)) {
-      const normalizedFile = normalizeSource(getFile(currentInstance));
+    while (isValid(node)) {
+      const file = ensureFileName(getFile(node) || '');
 
-      if (isValidFileName(normalizedFile)) {
-        const meta = currentSource
-          ? processSourceFile(currentInstance, normalizedFile, currentSource)
-          : processInstanceFile(currentInstance, normalizedFile);
+      if (isValidFileName(file)) {
+        const meta = dsValue
+          ? processSourceFile(node, file, dsValue)
+          : processInstanceFile(node, file);
 
         if (meta && !processedFiles.has(meta.file)) {
           processedFiles.add(meta.file);
           tree.push(meta);
           // 更新源码路径
-          currentSource = normalizeSource(getSource(currentInstance));
+          dsValue = getSource(node);
         }
 
         // 非深度模式，且成功处理文件后终止
@@ -66,7 +67,7 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
         }
       }
 
-      currentInstance = getNext(currentInstance);
+      node = getNext(node);
     }
   }
 
@@ -75,20 +76,17 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
    *
    * @param instance 当前组件实例
    * @param filePath 规范化后的文件路径（可能含行列号）
-   * @param currentSource 当前组件的源码路径
+   * @param dsValue 当前组件的源码路径
    *
    * @returns 返回解析后的元数据，或 null 如果文件不一致
    */
-  function processSourceFile(instance: T, filePath: string, currentSource: string) {
-    const sourceMeta = parseSourcePath(currentSource);
-    const instanceMeta = parseSourcePath(filePath);
-    if (sourceMeta.file === instanceMeta.file) {
-      return normalizeMeta({
-        name: getName(instance) ?? extractFileName(sourceMeta.file),
-        file: sourceMeta.file,
-        line: sourceMeta.line,
-        column: sourceMeta.column,
-      });
+  function processSourceFile(instance: T, filePath: string, dsValue: DSValue) {
+    const instanceMeta = DS.parse(filePath);
+    if (dsValue.file === instanceMeta.file) {
+      return {
+        name: normalizeName(getName(instance)),
+        ...dsValue,
+      };
     }
     return null;
   }
@@ -100,13 +98,11 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
    * @returns 返回解析后的元数据
    */
   function processInstanceFile(instance: T, filePath: string) {
-    const instanceMeta = parseSourcePath(filePath);
-    return normalizeMeta({
-      name: getName(instance) ?? extractFileName(instanceMeta.file),
-      file: instanceMeta.file,
-      line: instanceMeta.line,
-      column: instanceMeta.column,
-    });
+    const instanceMeta = DS.parse(filePath);
+    return {
+      name: normalizeName(getName(instance)),
+      ...instanceMeta,
+    };
   }
 
   /**
@@ -118,52 +114,12 @@ export function createVueResolver<T = any>(opts: VueResolverOptions<T>) {
    */
   function resolveAnchorPoint(debug: ResolveDebug<T>) {
     // 优先从DOM属性获取源码信息
-    const sourceFromAttr = normalizeSource(debug.el?.getAttribute('__source'));
+    const sourceFromAttr = debug.el?.getAttribute(DS.ID);
     if (isStr(sourceFromAttr)) {
-      return [debug.value, sourceFromAttr] as const;
+      return [debug.value, DS.parse(sourceFromAttr)] as const;
     }
     // 回退到组件实例的源码信息
-    return [debug.value, normalizeSource(getSource(debug.value))] as const;
-  }
-
-  /**
-   * 标准化文件路径（统一格式处理）
-   *
-   * @param source 原始路径字符串
-   *
-   * @returns 返回处理后的有效路径或 undefined
-   */
-  function normalizeSource(source?: string | null) {
-    if (source) {
-      return ensureFileName(normalizePath(source));
-    }
-  }
-
-  /**
-   * 解析路径字符串为结构化元数据
-   *
-   * @param source 原始路径（可能含行列号）
-   *
-   * @example "src/App.vue:12:8" → { file: 'src/App.vue', line: 12, column: 8 }
-   */
-  function parseSourcePath(source: string) {
-    const [file, line, column] = source.split(/:(?=\d)/);
-    return {
-      file,
-      line: Number(line),
-      column: Number(column),
-    };
-  }
-
-  /**
-   * 从文件路径提取显示名称
-   *
-   * @param filePath 完整文件路径
-   *
-   * @example "src/components/Button.vue" → "Button"
-   */
-  function extractFileName(filePath: string) {
-    return filePath.match(/([^/]+)\.[^.]+$/)?.[1];
+    return [debug.value, getSource(debug.value)] as const;
   }
 
   return vueResolver;

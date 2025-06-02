@@ -1,9 +1,10 @@
+import { normalizePath } from '@open-editor/shared';
+import { isDev } from '@open-editor/shared/node';
+import { DS } from '@open-editor/shared/debugSource';
 import { type UnpluginFactory, createUnplugin } from 'unplugin';
 import { createFilter } from '@rollup/pluginutils';
 import MagicString from 'magic-string';
-import { isDev } from '@open-editor/shared/node';
-import { DEBUG_SOURCE, normalizePath } from '@open-editor/shared';
-import { type ResolvedOptions, type Options } from '../types';
+import { type Options } from '../types';
 import { parseID } from './parseID';
 import { transformSFC } from './transformSFC';
 import { transformJSX } from './transformJSX';
@@ -15,8 +16,8 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
     };
   }
 
-  const opts = resolveOptions(options);
-  const filter = createFilter(opts.include, opts.exclude);
+  const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
+  const filter = createFilter(include, exclude);
   const isWebpack = meta.framework === 'webpack';
 
   return {
@@ -24,25 +25,25 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
     enforce: 'pre',
 
     transformInclude(id) {
-      const { file, query } = parseID(normalizePath(id));
+      const { file, query } = parseID(id, rootDir);
       return query.raw == null && filter(file);
     },
     transform(code, id) {
-      const s = new MagicString(code);
-
-      const parsed = parseID(id, opts.rootDir);
-      if (!isWebpack && parsed.query[DEBUG_SOURCE]) {
+      const { file, query, isSfc, ...jsxOpts } = parseID(id, rootDir);
+      if (!isWebpack && query[DS.ID]) {
         return;
       }
 
-      if (parsed.isSfc) {
-        transformSFC(code, replace);
-      } else {
-        transformJSX(code, replace, parsed);
-      }
+      const s = new MagicString(code);
 
       function replace(index: number, line: number, column: number) {
-        s.prependLeft(index, ` ${DEBUG_SOURCE}="${parsed.file}:${line}:${column}"`);
+        s.prependLeft(index, ` ${DS.ID}="${DS.stringify({ file, line, column })}"`);
+      }
+
+      if (isSfc) {
+        transformSFC(code, replace);
+      } else {
+        transformJSX(code, replace, jsxOpts);
       }
 
       if (!s.hasChanged()) return null;
@@ -50,13 +51,13 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
       // 返回转换后的代码和可选的 Source Map
       return {
         code: s.toString(),
-        map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
+        map: sourceMap ? s.generateMap({ source: file, file }) : null,
       };
     },
   };
 };
 
-function resolveOptions(opts: Options): ResolvedOptions {
+function resolveOptions(opts: Options) {
   return {
     rootDir: normalizePath(opts.rootDir ?? process.cwd()),
     sourceMap: opts.sourceMap ?? false,

@@ -1,4 +1,4 @@
-import { isStr } from '@open-editor/shared';
+import { isStr } from '@open-editor/shared/type';
 import { on } from '../event';
 
 /**

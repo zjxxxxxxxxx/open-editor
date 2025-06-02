@@ -12,7 +12,7 @@ export interface Options {
    */
   sourceMap?: boolean;
   /**
-   * @default /\.(jsx|tsx|mdx)$/
+   * @default /\.(jsx|tsx)$/
    */
   include?: string | RegExp | (string | RegExp)[];
   /**
@@ -20,5 +20,3 @@ export interface Options {
    */
   exclude?: string | RegExp | (string | RegExp)[];
 }
-
-export type ResolvedOptions = Required<Options>;

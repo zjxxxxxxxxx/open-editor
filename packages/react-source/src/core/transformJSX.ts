@@ -1,23 +1,20 @@
-import { DEBUG_SOURCE } from '@open-editor/shared';
-import MagicString from 'magic-string';
 import { type JSXOpeningElement, parseSync } from '@swc/core';
-import { Visitor } from '@swc/core/Visitor';
+import { Visitor } from '@swc/core/Visitor.js';
 import { LinesAndColumns } from 'lines-and-columns';
-import { type ResolvedOptions } from '../types';
-import { parseID } from './parseID';
 import { createOffset } from './offset';
 
-export function transformJSX(code: string, id: string, opts: ResolvedOptions) {
-  const { file, isJSX, isTsx } = parseID(id, opts.rootDir);
-
+export function transformJSX(
+  code: string,
+  cb: (index: number, line: number, column: number) => void,
+  opts: { isJSX: boolean; isTsx: boolean },
+) {
   const ast = parseSync(code, {
     target: 'esnext',
-    syntax: isTsx ? 'typescript' : 'ecmascript',
-    jsx: isJSX,
-    tsx: isTsx,
+    syntax: opts.isTsx ? 'typescript' : 'ecmascript',
+    jsx: opts.isJSX,
+    tsx: opts.isTsx,
   });
 
-  const s = new MagicString(code);
   const lc = new LinesAndColumns(code);
   const offset = createOffset(code, ast.span.start);
 
@@ -30,20 +27,11 @@ export function transformJSX(code: string, id: string, opts: ResolvedOptions) {
     visitJSXOpeningElement(node: JSXOpeningElement) {
       const index = offset(node.span.end) - (node.selfClosing ? 2 : 1);
       const { line, column } = lc.locationForIndex(offset(node.span.start))!;
-
-      s.prependLeft(index, ` ${DEBUG_SOURCE}="${file}:${line + 1}:${column + 1}"`);
+      cb(index, line + 1, column + 1);
 
       return node;
     }
   })();
 
   visitor.visitModule(ast); // 遍历 AST 并执行转换
-
-  if (!s.hasChanged()) return null;
-
-  // 返回转换后的代码和可选的 Source Map
-  return {
-    code: s.toString(),
-    map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
-  };
 }

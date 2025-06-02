@@ -1,4 +1,6 @@
-import { isFn, hasOwn } from '@open-editor/shared';
+import { isFn } from '@open-editor/shared/type';
+import { hasOwn } from '@open-editor/shared/object';
+import { DS } from '@open-editor/shared/debugSource';
 import { type ResolveDebug } from './resolveDebug';
 import { type ReactResolver, createReactResolver } from './createReactResolver';
 import { resolveForFiber } from './resolveReact17';
@@ -84,9 +86,18 @@ function initializeResolver() {
       return instance?._currentElement?._owner;
     },
 
-    // 提取源码元数据（Babel 编译时注入的 __source 属性）
     getSource(instance) {
-      return instance?._currentElement?._source;
+      const dsString = instance?._currentElement?.props[DS.ID];
+      if (dsString) return DS.parse(dsString);
+
+      const babelSource = instance?._currentElement?._source;
+      if (babelSource) {
+        return {
+          file: babelSource.fileName,
+          line: babelSource.lineNumber,
+          column: babelSource.columnNumber,
+        };
+      }
     },
 
     // 解析组件名称（优先使用 displayName，其次用函数名）
