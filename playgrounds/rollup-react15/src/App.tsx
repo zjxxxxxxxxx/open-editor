@@ -15,7 +15,7 @@ export default function App(): React.JSX.Element {
     <div className="app">
       <div>
         <a href="https://rollupjs.org" target="_blank">
-          <img src="../public/rollup.svg" className="logo" alt="Rollup logo" />
+          <img src="../public/rollup.svg" className="logo rollup" alt="Rollup logo" />
         </a>
         <a href="https://react.dev" target="_blank">
           <img src="../public/react.svg" className="logo react" alt="React logo" />

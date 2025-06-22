@@ -1,8 +1,7 @@
 import { isFn } from '@open-editor/shared/type';
 import { DS } from '@open-editor/shared/debugSource';
 import { type Fiber } from 'react-reconciler';
-import { type ReactResolver, createReactResolver } from './createReactResolver';
-import { type ResolveDebug } from './resolveDebug';
+import { type Resolver, createResolver } from './createResolver';
 import { type CodeSourceMeta } from '.';
 
 /**
@@ -12,16 +11,12 @@ import { type CodeSourceMeta } from '.';
  * - 通过 _debugSource 获取 Babel 编译时注入的源码定位信息
  * - 通过 _debugOwner 建立组件层级关系
  */
-export function resolveReact17(
-  { value: node }: ResolveDebug<Fiber>,
-  tree: CodeSourceMeta[],
-  deep?: boolean,
-) {
-  resolveForFiber(node, tree, deep);
+export function resolveReact17(fiber: Fiber, tree: CodeSourceMeta[], deep?: boolean) {
+  resolveForFiber(fiber, tree, deep);
 }
 
 // 解析器单例（惰性初始化）
-let resolver: ReactResolver<Fiber>;
+let resolver: Resolver<Fiber>;
 
 /**
  * 解析 Fiber 节点树结构
@@ -55,12 +50,12 @@ export function resolveForFiber(
  * - getName: 解析组件显示名称（支持高阶组件）
  */
 function initializeResolver() {
-  resolver ||= createReactResolver({
+  resolver ||= createResolver({
     isValid(owner) {
       // 存在 _debugSource 说明是开发者编写的组件节点
       // 过滤原生DOM节点（如 div/span 等宿主组件）
       return (
-        !!owner?._debugSource &&
+        !!owner &&
         // 函数组件检查
         (isFn(owner.type) ||
           // 类组件检查
@@ -75,17 +70,7 @@ function initializeResolver() {
     },
 
     getSource(fiber) {
-      const dsString = fiber?.memoizedProps[DS.ID];
-      if (dsString) return DS.parse(dsString);
-
-      const babelSource = fiber?._debugSource;
-      if (babelSource) {
-        return {
-          file: babelSource.fileName,
-          line: babelSource.lineNumber,
-          column: (babelSource as AnyObject).columnNumber,
-        };
-      }
+      return fiber?.memoizedProps[DS.ID];
     },
 
     getName(owner) {

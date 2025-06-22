@@ -6,7 +6,7 @@ import { type CodeSourceMeta } from '.';
  * React 解析器配置项
  * @template T 表示 React 节点类型，默认为任意类型
  */
-export interface ReactResolverOptions<T = any> {
+export interface ResolverOptions<T = any> {
   /**
    * 节点有效性验证函数
    *
@@ -44,12 +44,7 @@ export interface ReactResolverOptions<T = any> {
   getName(v: T): string | undefined;
 }
 
-/**
- * React 解析器类型
- *
- * @template T React 节点类型
- */
-export type ReactResolver<T = any> = ReturnType<typeof createReactResolver<T>>;
+export type Resolver<T = any> = ReturnType<typeof createResolver<T>>;
 
 /**
  * 创建 React 组件树解析器（工厂函数）
@@ -71,42 +66,20 @@ export type ReactResolver<T = any> = ReturnType<typeof createReactResolver<T>>;
  *    d. 根据模式决定遍历深度
  * --------------------------------------------------
  */
-export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
+export function createResolver<T = any>(opts: ResolverOptions<T>) {
   // 解构配置方法
   const { isValid, getNext, getSource, getName } = opts;
 
-  /**
-   * 核心解析函数
-   *
-   * @param currentNode 当前处理的节点（初始为根节点）
-   * @param tree 元数据存储树（用于收集结果）
-   * @param deep 是否启用深度遍历模式
-   *
-   * --------------------------------------------------
-   * 遍历逻辑：
-   * 1. 循环处理当前节点链
-   * 2. 对每个节点执行：
-   *    a. 获取标准化后的源码信息
-   *    b. 定位下一个有效节点
-   *    c. 有效文件路径节点处理：
-   *       - 非深度模式：收集元数据后立即返回
-   *       - 深度模式：继续遍历子节点
-   * --------------------------------------------------
-   */
-  function reactResolver(
-    currentNode: T | null | undefined,
-    tree: CodeSourceMeta[],
-    deep?: boolean,
-  ) {
+  function resolver(currentNode: T | null | undefined, tree: CodeSourceMeta[], deep?: boolean) {
     // 使用 while 循环遍历同级节点链
     while (currentNode) {
-      const dsValue = getSource(currentNode);
+      const source = getSource(currentNode);
 
       // 获取下一个待处理节点（初始为当前节点的 next）
       let nextNode = getNext(currentNode);
 
       // 判断是否为有效源代码路径
-      if (isValidFileName(dsValue?.file)) {
+      if (isValidFileName(source?.file)) {
         // 获取最近的有效节点（跳过无效节点）
         nextNode = getValidNextNode(nextNode);
 
@@ -116,7 +89,7 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
         // 构建元数据并存入结果树
         tree.push({
           name: normalizeName(getName(nextNode)),
-          ...dsValue,
+          ...source,
         } as CodeSourceMeta);
 
         // 非深度模式收集首个有效节点后退出
@@ -151,5 +124,5 @@ export function createReactResolver<T = any>(opts: ReactResolverOptions<T>) {
     return node;
   }
 
-  return reactResolver;
+  return resolver;
 }

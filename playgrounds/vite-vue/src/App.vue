@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref } from 'vue';
 import TestCrossIframe from './components/TestCrossIframe.vue';
 import TestComponentTree from './components/TestComponentTree.vue';
-import Notes from './components/Notes.vue';
+import Notes from './components/Notes.tsx';
 
 const pathname = ref(location.pathname);
 

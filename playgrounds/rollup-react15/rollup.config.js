@@ -4,9 +4,9 @@ import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import postcss from 'rollup-plugin-postcss';
 import svg from 'rollup-plugin-svg';
-import { liveServer } from 'rollup-plugin-live-server';
+import reactSource from '@open-editor/react-source/rollup';
 import OpenEditor from '@open-editor/rollup';
-import ReactSource from '@open-editor/react-source/rollup';
+import { liveServer } from 'rollup-plugin-live-server';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
 
@@ -22,6 +22,7 @@ export default {
     }
   },
   plugins: [
+    reactSource(),
     commonjs(),
     resolve({
       extensions,
@@ -30,7 +31,6 @@ export default {
       preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
-    ReactSource(),
     babel({
       babelHelpers: 'bundled',
       extensions,

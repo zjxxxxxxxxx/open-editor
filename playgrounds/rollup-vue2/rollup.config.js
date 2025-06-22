@@ -4,8 +4,8 @@ import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import image from '@rollup/plugin-image';
 import postcss from 'rollup-plugin-postcss';
-import VueSource from '@open-editor/vue-source/rollup';
 import vue from 'rollup-plugin-vue';
+import vueSource from '@open-editor/vue-source/rollup';
 import OpenEditor from '@open-editor/rollup';
 import { liveServer } from 'rollup-plugin-live-server';
 
@@ -18,14 +18,8 @@ export default {
     format: 'esm',
   },
   plugins: [
-    vue({
-      exposeFilename: true,
-    }),
-    VueSource(),
-    OpenEditor({
-      once: true,
-      crossIframe: true,
-    }),
+    vueSource(),
+    vue(),
     commonjs(),
     resolve({
       extensions,
@@ -41,6 +35,10 @@ export default {
     }),
     postcss(),
     image(),
+    OpenEditor({
+      once: true,
+      crossIframe: true,
+    }),
     liveServer({
       port: 4001,
       wait: 1000,

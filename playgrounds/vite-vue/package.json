@@ -11,12 +11,13 @@
     "node": ">=18"
   },
   "dependencies": {
-    "vue": "^3.3.4",
-    "@open-editor/vue-source": "workspace:^"
+    "@open-editor/vue-source": "workspace:^",
+    "vue": "^3.3.4"
   },
   "devDependencies": {
     "@open-editor/vite": "latest",
     "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue-jsx": "^4.2.0",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
   }

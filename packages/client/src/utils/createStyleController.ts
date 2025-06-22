@@ -56,11 +56,13 @@ const NULL_CONTROLLER = Object.freeze({
  * ### 浏览器兼容性
  * - 支持所有现代浏览器(Chrome/Firefox/Safari/Edge)
  */
-export function createStyleController(css: string, target: HTMLElement = document.body) {
+export function createStyleController(css: string, target?: HTMLElement) {
   // 非浏览器环境返回空操作控制器
   if (!IS_CLIENT) {
     return NULL_CONTROLLER;
   }
+
+  target ??= document.body;
 
   // 通过闭包维护样式节点引用
   let styleNode: HTMLStyleElement | null = null;
@@ -80,7 +82,7 @@ export function createStyleController(css: string, target: HTMLElement = documen
           type: 'text/css',
           children: css,
         });
-        appendChild(target, styleNode);
+        appendChild(target!, styleNode);
       }
     },
 
