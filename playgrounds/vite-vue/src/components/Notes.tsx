@@ -1,6 +1,6 @@
 export default function Notes() {
   return (
-    <div>
+    <>
       <div>
         <h2>Enable inspector</h2>
         <p>
@@ -14,6 +14,6 @@ export default function Notes() {
           key 2: ⌨️ <kbd>esc</kbd>, shortcut key 3: 🖱right click
         </p>
       </div>
-    </div>
+    </>
   );
 }

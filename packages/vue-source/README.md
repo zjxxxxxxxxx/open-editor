@@ -1,6 +1,6 @@
 # @open-editor/vue-source
 
-Add a \_\_source prop to all Elements.
+Add a \_debugSource prop to all Elements.
 
 - 🌈 Supports `Vue2` and `Vue3`.
 - 🪐 Support add to `<Component/>`.
@@ -25,7 +25,7 @@ with
 ```html
 <!-- src/App.vue -->
 <template>
-  <div data-debug-source="src/App.vue:3:3">hello word</div>
+  <div :_debugSource='{ "file": "src/App.vue", "line": 3, "column": 3 }'>hello word</div>
 </template>
 ```
 
@@ -45,7 +45,7 @@ with
 ```tsx
 // src/App.tsx
 export default function App() {
-  return <div data-debug-source="src/App.tsx:3:9">hello word</div>;
+  return <div _debugSource={{ file: 'src/App.vue', line: 3, column: 9 }}>hello word</div>;
 }
 ```
 
@@ -57,18 +57,18 @@ npm i @open-editor/vue-source
 
 ## Plugins
 
-You need to make sure that `VueSource` is executed before vue compiles the plugin for execution.
+You need to make sure that `vueSource` is executed before vue compiles the plugin for execution.
 
 <details>
 <summary>Vite</summary><br>
 
 ```ts
 // vite.config.ts
-import VueSource from '@open-editor/vue-source/vite';
+import vueSource from '@open-editor/vue-source/vite';
 
 export default defineConfig({
   plugins: [
-    VueSource({
+    vueSource({
       /* options */
     }),
     // other plugins
@@ -83,11 +83,11 @@ export default defineConfig({
 
 ```ts
 // rollup.config.js
-import VueSource from '@open-editor/vue-source/rollup';
+import vueSource from '@open-editor/vue-source/rollup';
 
 export default {
   plugins: [
-    VueSource({
+    vueSource({
       /* options */
     }),
     // other plugins
@@ -156,11 +156,11 @@ module.exports = {
 ```ts
 // esbuild.config.js
 import { build } from 'esbuild';
-import VueSource from '@open-editor/vue-source/esbuild';
+import vueSource from '@open-editor/vue-source/esbuild';
 
 build({
   plugins: [
-    VueSource({
+    vueSource({
       /* options */
     }),
     // other plugins

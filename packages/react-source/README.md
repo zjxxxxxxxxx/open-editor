@@ -1,6 +1,6 @@
 # @open-editor/react-source
 
-Add a \_\_source prop to all Elements.
+Add a \_debugSource prop to all Elements.
 
 - 🌈 Supports `React15+`.
 - 🪐 Support add to `<Component/>`.
@@ -25,7 +25,7 @@ with
 ```tsx
 // src/App.tsx
 export default function App() {
-  return <div data-debug-source="src/App.tsx:3:9">hello word</div>;
+  return <div _debugSource={{ file: 'src/App.vue', line: 3, column: 9 }}>hello word</div>;
 }
 ```
 
@@ -37,18 +37,18 @@ npm i @open-editor/react-source
 
 ## Plugins
 
-You need to make sure that `ReactSource` is executed before vue compiles the plugin for execution.
+You need to make sure that `reactSource` is executed before vue compiles the plugin for execution.
 
 <details>
 <summary>Vite</summary><br>
 
 ```ts
 // vite.config.ts
-import ReactSource from '@open-editor/react-source/vite';
+import reactSource from '@open-editor/react-source/vite';
 
 export default defineConfig({
   plugins: [
-    ReactSource({
+    reactSource({
       /* options */
     }),
     // other plugins
@@ -63,11 +63,11 @@ export default defineConfig({
 
 ```ts
 // rollup.config.js
-import ReactSource from '@open-editor/react-source/rollup';
+import reactSource from '@open-editor/react-source/rollup';
 
 export default {
   plugins: [
-    ReactSource({
+    reactSource({
       /* options */
     }),
     // other plugins
@@ -136,11 +136,11 @@ module.exports = {
 ```ts
 // esbuild.config.js
 import { build } from 'esbuild';
-import ReactSource from '@open-editor/react-source/esbuild';
+import reactSource from '@open-editor/react-source/esbuild';
 
 build({
   plugins: [
-    ReactSource({
+    reactSource({
       /* options */
     }),
     // other plugins

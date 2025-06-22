@@ -176,7 +176,7 @@ kbd {
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #fa383eaa);
 }
 
 .logo.vue:hover {

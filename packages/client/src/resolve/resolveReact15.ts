@@ -1,8 +1,7 @@
 import { isFn } from '@open-editor/shared/type';
 import { hasOwn } from '@open-editor/shared/object';
 import { DS } from '@open-editor/shared/debugSource';
-import { type ResolveDebug } from './resolveDebug';
-import { type ReactResolver, createReactResolver } from './createReactResolver';
+import { type Resolver, createResolver } from './createResolver';
 import { resolveForFiber } from './resolveReact17';
 import { type CodeSourceMeta } from '.';
 
@@ -17,15 +16,11 @@ import { type CodeSourceMeta } from '.';
  * - 实例通过 _currentElement 关联虚拟DOM元素
  * - 通过 _owner 属性实现组件树层级关联
  */
-export function resolveReact15(
-  { value: instanceOrFiber }: ResolveDebug,
-  tree: CodeSourceMeta[],
-  deep = false,
-) {
+export function resolveReact15(instanceOrFiber: any, tree: CodeSourceMeta[], deep = false) {
   // 分支处理不同 React 版本的调试信息
   if (instanceOrFiber && hasOwn(instanceOrFiber, '_debugOwner')) {
     // React 16+ 使用 Fiber 架构，调用专用解析器
-    resolveForFiber(instanceOrFiber as any, tree, deep);
+    resolveForFiber(instanceOrFiber, tree, deep);
   } else {
     // React 15 及更早版本处理逻辑
     resolveForInstance(instanceOrFiber, tree, deep);
@@ -33,7 +28,7 @@ export function resolveReact15(
 }
 
 // 解析器单例（惰性初始化）
-let resolver: ReactResolver;
+let resolver: Resolver;
 
 /**
  * 解析 React 15+ 组件实例
@@ -68,7 +63,7 @@ export function resolveForInstance(
  * - getName: 解析组件名称
  */
 function initializeResolver() {
-  resolver ||= createReactResolver({
+  resolver ||= createResolver({
     // 验证元素有效性（函数组件或类组件）
     isValid(owner) {
       const element = owner?._currentElement;
@@ -87,17 +82,7 @@ function initializeResolver() {
     },
 
     getSource(instance) {
-      const dsString = instance?._currentElement?.props[DS.ID];
-      if (dsString) return DS.parse(dsString);
-
-      const babelSource = instance?._currentElement?._source;
-      if (babelSource) {
-        return {
-          file: babelSource.fileName,
-          line: babelSource.lineNumber,
-          column: babelSource.columnNumber,
-        };
-      }
+      return instance?._currentElement?.props[DS.ID];
     },
 
     // 解析组件名称（优先使用 displayName，其次用函数名）

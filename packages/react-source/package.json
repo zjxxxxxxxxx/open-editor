@@ -1,35 +1,40 @@
 {
   "name": "@open-editor/react-source",
   "version": "0.9.4",
-  "description": "Add a data-debug-source prop to all Elements",
+  "description": "Add a _debugSource prop to all Elements",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
     "./rollup": {
       "require": "./dist/rollup.js",
       "import": "./dist/rollup.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/rollup.d.ts"
     },
     "./vite": {
       "require": "./dist/vite.js",
       "import": "./dist/vite.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/vite.d.ts"
     },
     "./webpack": {
       "require": "./dist/webpack.js",
       "import": "./dist/webpack.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/webpack.d.ts"
     },
     "./rspack": {
       "require": "./dist/rspack.js",
       "import": "./dist/rspack.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/rspack.d.ts"
     },
     "./esbuild": {
       "require": "./dist/esbuild.js",
       "import": "./dist/esbuild.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/esbuild.d.ts"
     },
     "./*": "./dist/*"
   },
@@ -53,9 +58,15 @@
   },
   "homepage": "https://github.com/zjxxxxxxxxx/open-editor#readme",
   "dependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/plugin-syntax-jsx": "^7.27.1",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1",
+    "@babel/preset-env": "^7.22.10",
     "@open-editor/shared": "workspace:*",
     "@rollup/pluginutils": "^5.1.4",
-    "@swc/core": "^1.11.24",
+    "@types/babel__core": "^7.20.5",
+    "magic-string": "^0.30.14",
     "unplugin": "^2.3.4"
   }
 }

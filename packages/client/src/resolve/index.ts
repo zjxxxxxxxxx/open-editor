@@ -1,4 +1,4 @@
-import { type DSValue } from '@open-editor/shared/debugSource';
+import { DS, type DSValue } from '@open-editor/shared/debugSource';
 import { CURRENT_INSPECT_ID } from '../constants';
 import { getCache, setCache } from './resolveCache';
 import { resolveReact17 } from './resolveReact17';
@@ -70,10 +70,10 @@ export interface CodeSource {
  * @remarks 使用 const 断言确保类型安全
  */
 const FRAME_RESOLVERS = {
-  __reactFiber: resolveReact17,
-  __reactInternal: resolveReact15,
-  __vueParent: resolveVue3,
-  __vue: resolveVue2,
+  [DS.REACT_17]: resolveReact17,
+  [DS.REACT_15]: resolveReact15,
+  [DS.VUE_3]: resolveVue3,
+  [DS.VUE_2]: resolveVue2,
 } as const;
 
 /**
@@ -155,7 +155,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
        * 2. 递归解析组件树（深度模式时）
        * 3. 填充 source.tree 数组
        */
-      FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
+      FRAME_RESOLVERS[resolverKey](debugInfo.value, source.tree, deep);
     }
 
     // 设置主元数据引用点（总是取当前组件）

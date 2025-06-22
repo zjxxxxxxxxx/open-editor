@@ -1,5 +1,5 @@
+import vueSource from '@open-editor/vue-source/vite';
 import OpenEditor from '@open-editor/vite';
-import VueSource from '@open-editor/vue-source/vite';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -18,7 +18,7 @@ export default defineNuxtConfig({
   css: ['~/assets/app.css'],
   vite: {
     plugins: [
-      VueSource(),
+      vueSource(),
       OpenEditor({
         once: true,
         crossIframe: true,

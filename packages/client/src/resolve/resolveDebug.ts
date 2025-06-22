@@ -1,4 +1,5 @@
 import { hasOwn } from '@open-editor/shared/object';
+import { DS } from '@open-editor/shared/debugSource';
 import { checkValidElement } from '../utils/checkElement';
 
 /**
@@ -24,12 +25,6 @@ export interface ResolveDebug<T = any> {
    */
   value?: T | null;
 }
-
-// 框架调试属性特征常量
-const REACT_FIBER_PREFIX = '__reactFiber$'; // React 17+ Fiber 节点属性前缀
-const REACT_INSTANCE_PREFIX = '__reactInternalInstance$'; // React 15-16 实例属性前缀
-const VUE3_COMPONENT_KEY = '__vueParentComponent'; // Vue3 组件实例属性键
-const VUE2_COMPONENT_KEY = '__vue__'; // Vue2 组件实例属性键
 
 /**
  * 解析 DOM 元素上的框架调试信息
@@ -81,22 +76,22 @@ function detectFrameworkKey(el: HTMLElement) {
 
 // Vue3 组件检测
 function detectVue3(el: HTMLElement) {
-  return hasOwn(el, VUE3_COMPONENT_KEY) ? VUE3_COMPONENT_KEY : undefined;
+  return hasOwn(el, DS.VUE_3) ? DS.VUE_3 : undefined;
 }
 
 // Vue2 组件检测
 function detectVue2(el: HTMLElement) {
-  return hasOwn(el, VUE2_COMPONENT_KEY) ? VUE2_COMPONENT_KEY : undefined;
+  return hasOwn(el, DS.VUE_2) ? DS.VUE_2 : undefined;
 }
 
 // React 17+ Fiber 节点检测
 function detectReact17(el: HTMLElement) {
-  return findFrameworkKey(el, REACT_FIBER_PREFIX);
+  return findFrameworkKey(el, DS.REACT_17);
 }
 
 // React 15-16 实例检测
 function detectReact15(el: HTMLElement) {
-  return findFrameworkKey(el, REACT_INSTANCE_PREFIX);
+  return findFrameworkKey(el, DS.REACT_15);
 }
 
 /**

@@ -2,4 +2,4 @@
 '@open-editor/vue-source': major
 ---
 
-feat: Add a data-debug-source prop to all Elements
+feat: Add a \_debugSource prop to all Elements
