@@ -2,4 +2,4 @@
 '@open-editor/client': minor
 ---
 
-feat(react-resolver): Parse debugSource
+feat(resolver): resolve debugSource

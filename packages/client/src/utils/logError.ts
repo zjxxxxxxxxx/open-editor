@@ -10,7 +10,7 @@
  * logError('网络请求超时', { logLevel: 'throw', code: 'NETWORK_ERROR' })
  */
 export function logError(
-  msg = '未知错误',
+  msg = 'unknown error',
   config: {
     logLevel?: 'log' | 'throw';
     errorType?: (errMsg: string) => Error;

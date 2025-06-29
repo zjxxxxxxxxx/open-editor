@@ -41,7 +41,7 @@ async function main() {
 
     // 步骤4: 执行目标脚本
     executePlaygroundScript(playground, script);
-  } catch (error) {
+  } catch {
     // 异常处理
     console.log();
     consola.error('程序异常终止');

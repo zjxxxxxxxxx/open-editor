@@ -4,8 +4,8 @@ import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
 import postcss from 'rollup-plugin-postcss';
 import svg from 'rollup-plugin-svg';
-import reactSource from '@open-editor/react-source/rollup';
-import OpenEditor from '@open-editor/rollup';
+import openEditorReact from '@open-editor/react/rollup';
+import openEditor from '@open-editor/rollup';
 import { liveServer } from 'rollup-plugin-live-server';
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.json'];
@@ -22,7 +22,7 @@ export default {
     }
   },
   plugins: [
-    reactSource(),
+    openEditorReact(),
     commonjs(),
     resolve({
       extensions,
@@ -50,7 +50,7 @@ export default {
     svg({
       base64: true,
     }),
-    OpenEditor({
+    openEditor({
       once: true,
       crossIframe: true,
     }),
