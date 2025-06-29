@@ -19,7 +19,7 @@
 
 ## 🔍 项目简介
 
-`OpenEditor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
+`openEditor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
 
 [▶▶▶ 立即体验 (Vite+React 示例)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![功能演示](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -60,21 +60,19 @@
 
 #### React 项目
 
-```bash
-# 验证 Babel 插件配置
-npm list @babel/plugin-transform-react-jsx-source
-```
+安装使用必要依赖 [@open-editor/react](./packages/react/README.md).
 
-> 若使用自定义 Babel 配置，请确保启用该插件
+```bash
+npm i @open-editor/react -D
+```
 
 #### Vue 项目
 
-```bash
-# 安装必要依赖
-npm install unplugin-vue-source -D
-```
+安装使用必要依赖 [@open-editor/vue](./packages/vue/README.md).
 
-> 缺少该插件将导致行列定位失效
+```bash
+npm i @open-editor/vue -D
+```
 
 ### 集成示例
 
@@ -85,7 +83,7 @@ npm install unplugin-vue-source -D
 ##### 1.安装插件
 
 ```bash
-npm i @open-editor/vite -D
+npm i @open-editor/vite @open-editor/react -D
 ```
 
 ##### 2.添加配置
@@ -94,12 +92,14 @@ npm i @open-editor/vite -D
 // vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import OpenEditor from '@open-editor/vite';
+import openEditorReact from '@open-editor/react/vite';
+import openEditor from '@open-editor/vite';
 
 export default defineConfig({
   plugins: [
     react(),
-    OpenEditor({
+    openEditorReact(),
+    openEditor({
       // options
     }),
   ],
@@ -188,6 +188,8 @@ window.addEventListener('openeditor', (e) => {
 | [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
 | [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
 | [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
+| [`@open-editor/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/react)     | [![NPM version](https://img.shields.io/npm/v/@open-editor/react?color=)](https://www.npmjs.com/package/@open-editor/react)     | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/react)](https://www.npmjs.com/package/@open-editor/react)     |
+| [`@open-editor/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vue)         | [![NPM version](https://img.shields.io/npm/v/@open-editor/vue?color=)](https://www.npmjs.com/package/@open-editor/vue)         | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vue)](https://www.npmjs.com/package/@open-editor/vue)         |
 
 ### 在线演练场
 

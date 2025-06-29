@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup lang="tsx">
 import { ref } from 'vue';
 import TestCrossIframe from './components/TestCrossIframe.vue';
 import TestComponentTree from './components/TestComponentTree.vue';
-import Notes from './components/Notes.vue';
+import Notes from './components/Notes.tsx';
 
 const pathname = ref(location.pathname);
 
@@ -23,7 +23,7 @@ defineExpose({
         <img src="/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
       <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-        <img src="/logo.png" class="logo open-editor" alt="OpenEditor logo" />
+        <img src="/logo.png" class="logo open-editor" alt="openEditor logo" />
       </a>
     </div>
     <h1>Vite + Vue</h1>

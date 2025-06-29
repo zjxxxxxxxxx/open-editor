@@ -17,11 +17,11 @@ npm i @open-editor/vite -D
 
 ```ts
 // vite.config.ts
-import OpenEditor from '@open-editor/vite';
+import openEditor from '@open-editor/vite';
 
 export default defineConfig({
   plugins: [
-    OpenEditor({
+    openEditor({
       /* options */
     }),
     // other plugins

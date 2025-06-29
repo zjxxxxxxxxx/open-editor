@@ -1,4 +1,4 @@
-export default function Notes(): React.JSX.Element {
+export default function Notes() {
   return (
     <div>
       <div>

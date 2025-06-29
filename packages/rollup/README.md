@@ -17,11 +17,11 @@ npm i @open-editor/rollup -D
 
 ```ts
 // rollup.config.ts
-import OpenEditor from '@open-editor/rollup';
+import openEditor from '@open-editor/rollup';
 
 export default defineConfig({
   plugins: [
-    OpenEditor({
+    openEditor({
       /* options */
     }),
     // other plugins

@@ -3,6 +3,8 @@ import { type Options, setOptions } from './options';
 import { setupBridge } from './bridge';
 import { setupInspector } from './inspector';
 import { setupUI } from './ui';
+import { isTopWindow } from './utils/topWindow';
+import { CURRENT_INSPECT_ID } from './constants';
 
 export { Options };
 
@@ -26,6 +28,9 @@ export function setupClient(opts: Options) {
       return;
     }
     window.__OPEN_EDITOR_SETUPED__ = true;
+    console.log(
+      '[open-editor] ' + (isTopWindow ? 'TopWindow ' : 'SubWindow ') + CURRENT_INSPECT_ID,
+    );
 
     // 配置注入阶段
     setOptions(opts);

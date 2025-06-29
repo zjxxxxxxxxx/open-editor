@@ -1,3 +1,4 @@
+import { DS, type DSValue } from '@open-editor/shared/debugSource';
 import { CURRENT_INSPECT_ID } from '../constants';
 import { getCache, setCache } from './resolveCache';
 import { resolveReact17 } from './resolveReact17';
@@ -11,7 +12,7 @@ import { resolveDebug } from './resolveDebug';
  *
  * @description 用于描述组件在源码中的精确位置信息，兼容多框架格式
  */
-export interface CodeSourceMeta {
+export interface CodeSourceMeta extends DSValue {
   /**
    * 组件规范化名称（框架无关格式）
    *
@@ -20,25 +21,6 @@ export interface CodeSourceMeta {
    * - Vue 组件: 'VueComponent'
    */
   name: string;
-  /**
-   * 源码映射路径（已解析 webpack/vite 路径别名）
-   *
-   * @example 'src/components/MyComponent.tsx'
-   */
-  file: string;
-  /**
-   * 源码行号（符合 IDE 调试协议）
-   *
-   * @remarks 生产环境需配合 sourcemap 使用
-   */
-  line: number;
-  /**
-   * 源码列号（JSX 元素精准定位）
-   *
-   * @example
-   * - JSX 开始标签: 列号对应'<'位置
-   */
-  column: number;
 }
 
 /**
@@ -88,10 +70,10 @@ export interface CodeSource {
  * @remarks 使用 const 断言确保类型安全
  */
 const FRAME_RESOLVERS = {
-  __reactFiber: resolveReact17,
-  __reactInternal: resolveReact15,
-  __vueParent: resolveVue3,
-  __vue: resolveVue2,
+  [DS.REACT_17]: resolveReact17,
+  [DS.REACT_15]: resolveReact15,
+  [DS.VUE_3]: resolveVue3,
+  [DS.VUE_2]: resolveVue2,
 } as const;
 
 /**
@@ -162,7 +144,6 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
      * 3. 返回第一个匹配成功的解析器
      */
     const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
-
     // 执行框架特定解析逻辑
     if (resolverKey) {
       /**
@@ -173,7 +154,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
        * 2. 递归解析组件树（深度模式时）
        * 3. 填充 source.tree 数组
        */
-      FRAME_RESOLVERS[resolverKey](debugInfo, source.tree, deep);
+      FRAME_RESOLVERS[resolverKey](debugInfo.value, source.tree, deep);
     }
 
     // 设置主元数据引用点（总是取当前组件）

@@ -9,14 +9,15 @@
     "node": ">=18"
   },
   "dependencies": {
-    "react": "^15.7.0",
-    "react-dom": "^15.7.0"
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.11",
+    "@open-editor/react": "workspace:^",
     "@open-editor/rollup": "latest",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.4",

@@ -18,7 +18,7 @@ export async function openEditor(meta?: CodeSourceMeta) {
 
   // 若未提供源码元信息，则立即触发错误处理
   if (!meta) {
-    return triggerEditorLaunchError([], '文件未找到');
+    return triggerEditorLaunchError([], 'file not found');
   }
 
   try {
@@ -32,7 +32,7 @@ export async function openEditor(meta?: CodeSourceMeta) {
     }
   } catch (error) {
     const { file, line = 1, column = 1 } = meta;
-    return triggerEditorLaunchError(error, `${file}:${line}:${column} 打开失败`);
+    return triggerEditorLaunchError(error, `${file}:${line}:${column} open failed`);
   } finally {
     // 确保不论成功与否均触发结束事件
     openEditorEndBridge.emit();

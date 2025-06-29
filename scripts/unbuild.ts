@@ -1,242 +1,265 @@
-// 导入 Node.js 核心模块
-import { join, resolve } from 'node:path';
-// 导入 Rollup 类型定义
-import { type OutputOptions, type RollupOptions } from 'rollup';
-// 导入 Rollup 插件
+/**
+ * Rollup 配置生成器
+ * ----------------
+ * 根据 package.json 的 exports 字段，生成 ESM、CJS 和 DTS 格式的多个构建配置。
+ */
+import { join, resolve, relative } from 'node:path';
+import type { JscTarget } from '@swc/core';
+import type { RollupOptions, Plugin, RollupLog } from 'rollup';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import esbuild from 'rollup-plugin-esbuild';
+import replace from '@rollup/plugin-replace';
+import swc from 'rollup-plugin-swc3';
 import dts from 'rollup-plugin-dts';
 
-// 导入自定义模块
-import css from './css';
+import css from './plugins/css';
+import glsl from './plugins/glsl';
 import { clientRoot, readJSON } from './utils';
 
 /**
- * 构建输出配置接口定义
+ * 构建输出路径定义接口
  */
 export interface BuildOutput {
   /**
-   * CommonJS 格式输出路径
+   * CommonJS 模块的输出路径，例如 'lib/index.js'
    */
   require?: string;
   /**
-   * ESM 格式输出路径
+   * ESM 模块的输出路径，例如 'es/index.mjs'
    */
   import?: string;
   /**
-   * 类型声明文件输出路径
+   * TypeScript 声明文件的输出路径，例如 'types/index.d.ts'
    */
   types?: string;
 }
 
 /**
- * 开发环境标识
- *
- * @default false
- *
- * 通过启动脚本注入，如：
- * ```json
- * { "dev": "pnpm rollup -c --environment __DEV__" }
- * ```
+ * 按模块格式分组的文件集合
  */
-const IS_DEV = '__DEV__' in process.env;
+export interface OutputGroup {
+  /** ESM 模块文件集合 */
+  esm: FileSet;
+  /** CommonJS 模块文件集合 */
+  cjs: FileSet;
+  /** DTS 声明文件集合 */
+  dts: FileSet;
+}
 
 /**
- * 构建目标环境配置
- *
- * @default 'es6'
- *
- * @example `'es2015' | 'esnext'`
- *
- * 通过启动脚本注入，如：
- * ```json
- * { "build": "pnpm rollup -c --environment __TARGET__:es2020" }
- * ```
+ * 单格式输入输出映射
  */
-const TARGET = process.env.__TARGET__ || 'es6';
+export interface FileSet {
+  /**
+   * 入口名称到源文件路径的映射，键为导出名称，值为源码路径
+   */
+  inputs: Record<string, string>;
+  /**
+   * 入口名称到构建输出路径的映射，键为导出名称，值为打包后文件路径
+   */
+  outputs: Record<string, string>;
+}
 
-/**
- * 判断当前是否为客户端构建模式
- *
- * @description 通过比较 clientRoot 与当前解析路径是否一致来判断
- */
+// 环境标志：是否开发模式
+const __DEV__ = '__DEV__' in process.env;
+// SWC 转译目标版本
+const __TARGET__ = (process.env.__TARGET__ || 'es6') as JscTarget;
+// 是否为客户端构建
 const isClientBuild = clientRoot === resolve();
 
 /**
- * 主入口函数：生成 Rollup 配置数组
- *
- * @returns Rollup 配置数组
- *
- * @description
- * 1. 读取 package.json 的 exports 配置
- * 2. 将 exports 转换为标准化的配置项数组
- * 3. 生成所有构建配置（包含代码包和类型声明）
+ * 主函数：生成所有 Rollup 配置
  */
-export default function createRollupConfigs(): RollupOptions[] {
-  // 解析 package.json 文件路径
-  const packageJsonPath = resolve('./package.json');
-  // 读取 package.json 中的 exports 配置
-  const { exports } = readJSON(packageJsonPath);
+export default function createConfigs(): RollupOptions[] {
+  const { exports: pkgExports } = readJSON(resolve('./package.json'));
+  // 合并客户端与核心插件
+  const sharedPlugins = [...getClientPlugins(), ...getCorePlugins()];
 
-  // 转换 exports 配置为标准化格式
-  const configEntries = Object.entries(exports).map(([inputPath, outputConfig]) => [
-    normalizeInputPath(inputPath),
-    outputConfig,
-  ]) as [string, BuildOutput][];
+  // 按输出目录和格式分组导出信息
+  const grouped = groupExportsByFolder(pkgExports);
+  const configs: RollupOptions[] = [];
 
-  // 生成所有构建配置并扁平化数组
-  return configEntries.flatMap(([inputPath, outputConfig]) =>
-    generateBuildConfig(inputPath, outputConfig),
-  );
+  // 遍历每个输出目录，生成对应格式的配置
+  for (const distDir of Object.keys(grouped)) {
+    configs.push(...buildFormatConfigs(distDir, grouped[distDir], sharedPlugins));
+  }
+
+  return configs;
 }
 
 /**
- * 生成单个构建配置（包含代码包和类型声明）
- *
- * @param inputPath - 入口文件路径
- * @param outputConfig - 输出配置
- *
- * @returns 包含代码包和类型声明的配置数组
+ * 根据目录和文件集合构建不同格式的 RollupOptions
  */
-function generateBuildConfig(
-  inputPath: string,
-  outputConfig: BuildOutput | string,
+function buildFormatConfigs(
+  outDir: string,
+  files: OutputGroup,
+  plugins: Plugin[],
 ): RollupOptions[] {
-  return [
-    // 代码包构建配置
-    generateBundleConfig(inputPath, outputConfig),
-    // 类型声明配置
-    generateTypeDeclarationConfig(inputPath, outputConfig),
-  ].filter(Boolean) as RollupOptions[];
-}
+  const configs: RollupOptions[] = [];
+  // 生成 entryFileNames 的函数
+  const makeEntryNames =
+    (mapName: Record<string, string>) =>
+    ({ name }: { name: string }) =>
+      relative(outDir, resolve(mapName[name]));
 
-/**
- * 生成代码包构建配置
- *
- * @param inputPath - 入口文件路径
- * @param outputConfig - 输出配置
- *
- * @returns Rollup 配置对象
- *
- * @description
- * 支持两种输出配置格式：
- * 1. 字符串形式：直接指定 ESM 输出路径
- * 2. 对象形式：可指定多种输出格式（cjs/esm）
- */
-function generateBundleConfig(
-  inputPath: string,
-  outputConfig: BuildOutput | string,
-): RollupOptions | undefined {
-  const outputFormats: OutputOptions[] = [];
-
-  // 处理字符串类型的输出配置
-  if (typeof outputConfig === 'string') {
-    outputFormats.push({
-      file: outputConfig,
-      // ESM 格式
-      format: 'esm',
-      sourcemap: IS_DEV,
-    });
-  } else {
-    // 处理对象类型的输出配置
-    if (outputConfig.require) {
-      outputFormats.push({
-        file: outputConfig.require,
-        // CommonJS 格式
-        format: 'cjs',
-        sourcemap: IS_DEV,
-      });
-    }
-
-    if (outputConfig.import) {
-      outputFormats.push({
-        file: outputConfig.import,
-        // ESM 格式
-        format: 'esm',
-        sourcemap: IS_DEV,
-      });
-    }
-  }
-
-  if (outputFormats.length === 0) return;
-
-  return {
-    // 入口文件路径
-    input: inputPath,
-    // 输出格式配置
-    output: outputFormats,
-    // 外部依赖排除规则（匹配所有以字母开头或 @ 开头的依赖）
-    external: (source) => /^@?[a-z]/.test(source),
-    plugins: [
-      // 客户端构建时添加 CSS 处理插件
-      ...(isClientBuild ? [css({ sourcemap: IS_DEV })] : []),
-      // 模块解析插件（处理 node_modules 依赖）
-      nodeResolve(),
-      // CommonJS 转换插件
-      commonjs(),
-      // ESBuild 插件配置
-      esbuild({
-        // 编译目标
-        target: TARGET,
-        // 生产环境启用语法简化
-        minifySyntax: !IS_DEV,
-        // 生产环境启用空格压缩
-        minifyWhitespace: !IS_DEV,
-        // 保持标识符不变
-        minifyIdentifiers: false,
-        // 自定义 JSX 导入路径
-        jsxImportSource: join(clientRoot, './jsx'),
-      }),
-    ],
-  };
-}
-
-/**
- * 生成类型声明文件配置
- *
- * @param inputPath - 入口文件路径
- * @param outputConfig - 输出配置
- *
- * @returns Rollup 配置对象
- */
-function generateTypeDeclarationConfig(
-  inputPath: string,
-  outputConfig: BuildOutput | string,
-): RollupOptions | undefined {
-  if (typeof outputConfig === 'object' && outputConfig.types) {
-    return {
-      input: inputPath,
+  // ESM 格式
+  if (Object.keys(files.esm.inputs).length) {
+    configs.push({
+      input: files.esm.inputs,
       output: {
-        file: outputConfig.types,
-        // 类型声明文件使用 ESM 格式
+        dir: outDir,
         format: 'esm',
-        // 类型声明不生成 sourcemap
-        sourcemap: false,
+        sourcemap: __DEV__,
+        entryFileNames: makeEntryNames(files.esm.outputs),
+        chunkFileNames: 'chunk-[hash].mjs',
       },
-      plugins: [
-        // 使用 dts 插件生成类型声明
-        dts(),
-      ],
-    };
+      external: isExternal,
+      plugins,
+      onwarn: onWarning,
+    });
   }
+
+  // CommonJS 格式
+  if (Object.keys(files.cjs.inputs).length) {
+    configs.push({
+      input: files.cjs.inputs,
+      output: {
+        dir: outDir,
+        format: 'cjs',
+        sourcemap: __DEV__,
+        entryFileNames: makeEntryNames(files.cjs.outputs),
+        chunkFileNames: 'chunk-[hash].cjs',
+      },
+      external: isExternal,
+      plugins,
+      onwarn: onWarning,
+    });
+  }
+
+  // DTS 声明文件格式
+  if (Object.keys(files.dts.inputs).length) {
+    configs.push({
+      input: files.dts.inputs,
+      output: {
+        dir: outDir,
+        format: 'esm',
+        sourcemap: false,
+        entryFileNames: makeEntryNames(files.dts.outputs),
+      },
+      plugins: [dts()],
+    });
+  }
+
+  return configs;
 }
 
 /**
- * 标准化入口路径转换器
- *
- * @param rawPath - 原始路径
- *
- * @returns 标准化后的路径
- *
- * @example
- * './index'    => './src/index.ts'
- * 'utils'      => './src/utils.ts'
- * './lib/main' => './src/lib/main.ts'
+ * 判断模块 ID 是否应视为外部模块
  */
-function normalizeInputPath(rawPath: string) {
-  // 移除开头的 ./ 或 /，默认使用 index 作为文件名
-  const filename = rawPath.replace(/^\.\/?/, '') || 'index';
-  // 转换为 src 目录下的 TypeScript 文件路径
-  return `./src/${filename}.ts`;
+function isExternal(source: string) {
+  // 以字母或 @ 开头的模块，视为外部依赖
+  return /^[a-z@]/i.test(source);
+}
+
+/**
+ * 屏蔽特定警告信息
+ */
+function onWarning(log: RollupLog, warn: (log: RollupLog) => void) {
+  // 忽略与 src/event/index.ts 循环依赖相关的提示
+  if (log.code === 'CIRCULAR_DEPENDENCY' && log.message.includes('src/event/index.ts')) return;
+  warn(log);
+}
+
+/**
+ * 读取 package.json exports 并按目录与格式分组
+ */
+function groupExportsByFolder(exports: Record<string, string | BuildOutput>) {
+  const groups: Record<string, OutputGroup> = {};
+
+  for (const specifier in exports) {
+    // 忽略通配符导出
+    if (specifier === './*') continue;
+
+    const entry = normalizeEntryName(specifier);
+    const src = `./src/${entry}.ts`;
+    const info: BuildOutput =
+      typeof exports[specifier] === 'string'
+        ? { import: exports[specifier] as string }
+        : (exports[specifier] as BuildOutput);
+
+    addToGroup(info.import, 'esm');
+    addToGroup(info.require, 'cjs');
+    addToGroup(info.types, 'dts');
+
+    /**
+     * 辅助：将指定路径添加到对应格式的分组
+     */
+    function addToGroup(targetPath: string | undefined, format: keyof OutputGroup) {
+      if (!targetPath) return;
+      const dir = resolve(targetPath, '..');
+      const group = (groups[dir] ??= createEmptyGroup());
+      group[format].inputs[normalizeEntryName(targetPath)] = src;
+      group[format].outputs[normalizeEntryName(targetPath)] = targetPath;
+    }
+  }
+
+  return groups;
+}
+
+/**
+ * 标准化导出名称：
+ * './' 或 '.' => 'index'，其他移除 './' 前缀
+ */
+function normalizeEntryName(spec: string) {
+  return spec.replace(/^\.\/?/, '') || 'index';
+}
+
+/**
+ * 创建一个空的 OutputGroup
+ */
+function createEmptyGroup() {
+  return {
+    esm: { inputs: {}, outputs: {} },
+    cjs: { inputs: {}, outputs: {} },
+    dts: { inputs: {}, outputs: {} },
+  } as OutputGroup;
+}
+
+/**
+ * 构建核心 Rollup 插件集合（TS/JS 转译、CommonJS、替换环境变量等）
+ */
+function getCorePlugins() {
+  return [
+    nodeResolve(),
+    commonjs(),
+    replace({
+      __DEV__,
+      preventAssignment: true,
+    }),
+    swc({
+      sourceMaps: __DEV__,
+      jsc: {
+        target: __TARGET__,
+        transform: {
+          react: {
+            runtime: 'automatic',
+            importSource: join(clientRoot, './jsx'),
+          },
+        },
+        minify: {
+          compress: !__DEV__,
+          keep_fnames: true,
+        },
+      },
+    }),
+  ] as Plugin[];
+}
+
+/**
+ * 构建客户端专属插件（CSS、GLSL），仅在客户端构建时启用
+ */
+function getClientPlugins() {
+  return (
+    isClientBuild ? [css({ sourceMap: __DEV__ }), glsl({ sourceMap: __DEV__ })] : []
+  ) as Plugin[];
 }
