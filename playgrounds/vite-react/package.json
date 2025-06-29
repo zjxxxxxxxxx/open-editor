@@ -15,7 +15,7 @@
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
-    "@open-editor/react": "workspace:^",
+    "@open-editor/react": "latest",
     "@open-editor/vite": "latest",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

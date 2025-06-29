@@ -17,7 +17,7 @@
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.11",
-    "@open-editor/react": "workspace:^",
+    "@open-editor/react": "latest",
     "@open-editor/rollup": "latest",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.4",
