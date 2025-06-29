@@ -1,5 +1,14 @@
 # @open-editor/webpack
 
+## 1.0.0-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea), [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea), [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea), [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea)]:
+  - @open-editor/client@1.0.0-beta.0
+  - @open-editor/shared@1.0.0-beta.0
+  - @open-editor/server@1.0.0-beta.0
+
 ## 0.9.4
 
 ### Patch Changes
