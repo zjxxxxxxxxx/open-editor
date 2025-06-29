@@ -10,5 +10,13 @@
     "@open-editor/rollup": "1.0.0",
     "@open-editor/react": "1.0.0",
     "@open-editor/vue": "1.0.0"
-  }
+  },
+  "changesets": [
+    "eager-baboons-shine",
+    "fancy-hornets-listen",
+    "rare-rivers-shave",
+    "rich-colts-help",
+    "tired-pears-win",
+    "tough-dodos-show"
+  ]
 }
