@@ -1,14 +1,16 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import VueSource from 'unplugin-vue-source/vite';
-import OpenEditor from '@open-editor/vite';
+import vueJsx from '@vitejs/plugin-vue-jsx';
+import openEditorVue from '@open-editor/vue/vite';
+import openEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    VueSource(),
+    openEditorVue(),
     vue(),
-    OpenEditor({
+    vueJsx(),
+    openEditor({
       once: true,
       crossIframe: true,
     }),

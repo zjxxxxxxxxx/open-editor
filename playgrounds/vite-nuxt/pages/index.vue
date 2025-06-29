@@ -16,7 +16,7 @@ defineOptions({
         <img src="/nuxt.svg" class="logo nuxt" alt="Nuxt logo" />
       </a>
       <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-        <img src="/logo.png" class="logo open-editor" alt="OpenEditor logo" />
+        <img src="/logo.png" class="logo open-editor" alt="openEditor logo" />
       </a>
     </div>
     <h1>Vite + Nuxt</h1>

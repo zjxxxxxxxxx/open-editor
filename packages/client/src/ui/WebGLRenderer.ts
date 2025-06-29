@@ -109,7 +109,7 @@ function initWebGLContext(canvas: HTMLCanvasElement) {
  * @returns 链接成功的着色器程序
  */
 function createShaderProgram(gl: WebGLRenderingContext) {
-  const vertexShaderSource = `
+  const vertexShaderSource = glsl`
     attribute vec2 a_position;
     attribute vec4 a_color;
     uniform vec2 u_resolution;
@@ -123,7 +123,7 @@ function createShaderProgram(gl: WebGLRenderingContext) {
     }
   `;
 
-  const fragmentShaderSource = `
+  const fragmentShaderSource = glsl`
     precision mediump float;
     varying vec4 v_color;
     

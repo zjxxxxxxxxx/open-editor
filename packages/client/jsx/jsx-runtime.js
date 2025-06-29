@@ -2,8 +2,6 @@ import { on } from '../src/event';
 
 // 虚拟节点类型常量，用于创建 DocumentFragment
 const FRAGMENT_TYPE = Symbol('INTERNAL_VIRTUAL_FRAGMENT');
-// DOM 元素标记属性
-const JSX_MARK = '__oe_jsx';
 
 // SVG 命名空间
 const SVG_NAMESPACE = 'http://www.w3.org/2000/svg';
@@ -63,8 +61,10 @@ function createElement(tagName, { className, style }) {
     ? document.createElementNS(SVG_NAMESPACE, tagName)
     : document.createElement(tagName);
 
-  // 设置内部标记属性，用以识别 JSX 创建的元素
-  element.setAttribute(JSX_MARK, '');
+  if (__DEV__) {
+    // 设置内部标记属性，用以识别 JSX 创建的元素
+    element.setAttribute('__oe_dev_jsx', '');
+  }
 
   if (className) element.className = className;
   if (style) Object.assign(element.style, style);

@@ -1,0 +1,62 @@
+{
+  "name": "@open-editor/vue",
+  "version": "0.9.4",
+  "description": "Add a _debugSource prop to all Elements",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./rollup": {
+      "require": "./dist/rollup.js",
+      "import": "./dist/rollup.mjs",
+      "types": "./dist/rollup.d.ts"
+    },
+    "./vite": {
+      "require": "./dist/vite.js",
+      "import": "./dist/vite.mjs",
+      "types": "./dist/vite.d.ts"
+    },
+    "./webpack": {
+      "require": "./dist/webpack.js",
+      "import": "./dist/webpack.mjs",
+      "types": "./dist/webpack.d.ts"
+    },
+    "./*": "./dist/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm rollup -c",
+    "dev": "pnpm build -w --environment __DEV__",
+    "check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
+    "directory": "packages/vue-source"
+  },
+  "author": "zjxxxxxxxxx <954270063@qq.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zjxxxxxxxxx/open-editor/issues"
+  },
+  "homepage": "https://github.com/zjxxxxxxxxx/open-editor#readme",
+  "dependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/parser": "^7.27.5",
+    "@babel/plugin-syntax-jsx": "^7.27.1",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
+    "@open-editor/shared": "workspace:*",
+    "@rollup/pluginutils": "^5.1.4",
+    "@types/babel__core": "^7.20.5",
+    "@vue/compiler-dom": "^3.5.16",
+    "magic-string": "^0.30.14",
+    "unplugin": "^2.3.5"
+  }
+}

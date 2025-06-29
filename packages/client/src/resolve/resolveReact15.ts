@@ -1,105 +1,91 @@
-import { isFn, hasOwn } from '@open-editor/shared';
-import { type ResolveDebug } from './resolveDebug';
-import { type ReactResolver, createReactResolver } from './createReactResolver';
+import { isFn } from '@open-editor/shared/type';
+import { hasOwn } from '@open-editor/shared/object';
+import { DS } from '@open-editor/shared/debugSource';
+import { type Resolver, createResolver } from './createResolver';
 import { resolveForFiber } from './resolveReact17';
+import { reactBabel2DSValue } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
+// 单例解析器，延迟初始化以减少重复开销
+let resolver: Resolver<any>;
+
 /**
- * 解析 React 15+ 实例的组件树结构
+ * 解析 React 15+ 组件实例或 Fiber，自动分流到对应版本的解析器
  *
- * @param debug - 包含 React 实例的调试信息对象
- * @param tree - 组件树元数据存储数组
- * @param deep - 是否深度遍历子组件（默认false）
- *
- * React 15 架构特点：
- * - 实例通过 _currentElement 关联虚拟DOM元素
- * - 通过 _owner 属性实现组件树层级关联
+ * @param instanceOrFiber - React 组件实例或 Fiber 节点
+ * @param tree             - 用于收集组件源码元信息的数组
+ * @param deep             - 是否递归向上遍历父组件（默认为 false）
  */
-export function resolveReact15(
-  { value: instanceOrFiber }: ResolveDebug,
-  tree: CodeSourceMeta[],
-  deep = false,
-) {
-  // 分支处理不同 React 版本的调试信息
+export function resolveReact15(instanceOrFiber: any, tree: CodeSourceMeta[], deep = false): void {
+  // React16+ 的 Fiber 架构在实例上包含 _debugOwner
   if (instanceOrFiber && hasOwn(instanceOrFiber, '_debugOwner')) {
-    // React 16+ 使用 Fiber 架构，调用专用解析器
-    resolveForFiber(instanceOrFiber as any, tree, deep);
+    // 委托给 Fiber 版解析器处理
+    resolveForFiber(instanceOrFiber, tree, deep);
   } else {
-    // React 15 及更早版本处理逻辑
+    // 走传统 React15 解析逻辑
     resolveForInstance(instanceOrFiber, tree, deep);
   }
 }
 
-// 解析器单例（惰性初始化）
-let resolver: ReactResolver;
-
 /**
- * 解析 React 15+ 组件实例
+ * 解析 React 15 及更早版本的组件实例
  *
- * @param instance - React 组件实例
- * @param tree - 组件树元数据存储数组
- * @param deep - 是否深度遍历
- *
- * 实现原理：
- * 1. 通过 _currentElement 获取虚拟DOM元素
- * 2. 通过 _owner 属性向上遍历组件层级
- * 3. 解析组件名称和源码位置信息
+ * @param instance - React 组件实例对象
+ * @param tree     - 接收组件源码元信息的数组
+ * @param deep     - 是否递归向上遍历父组件（默认为 false）
  */
 export function resolveForInstance(
   instance: any | null | undefined,
   tree: CodeSourceMeta[],
-  deep?: boolean,
-) {
-  // 确保解析器初始化
+  deep = false,
+): void {
+  // 确保解析器已初始化
   initializeResolver();
-  // 执行实际解析逻辑
+  // 执行解析，将结果推入 tree
   resolver(instance, tree, deep);
 }
 
 /**
- * 初始化 React 15 解析器配置
- *
- * 配置项说明：
- * - isValid: 验证是否为有效 React 元素
- * - getNext: 获取父级实例（通过 _owner 属性）
- * - getSource: 提取源码位置信息
- * - getName: 解析组件名称
+ * 初始化 React 15 组件解析器
  */
-function initializeResolver() {
-  resolver ||= createReactResolver({
-    // 验证元素有效性（函数组件或类组件）
-    isValid(owner) {
+function initializeResolver(): void {
+  resolver ??= createResolver<any>({
+    /**
+     * 判断实例是否为 React 组件实例节点：
+     * - _currentElement 必须存在
+     * - element.type 为函数或包装 render 方法
+     */
+    isValid(owner: any): boolean {
       const element = owner?._currentElement;
-      return (
-        !!element &&
-        // 函数组件检查
-        (isFn(element.type) ||
-          // 高阶组件检查（如 forwardRef）
-          isFn(element.type?.render))
-      );
+      return !!element && (isFn(element.type) || isFn((element.type as any)?.render));
     },
 
-    // 获取父级实例（React 15 通过 _owner 属性建立层级关系）
-    getNext(instance) {
-      return instance?._currentElement?._owner;
+    /**
+     * 获取父级组件实例，通过 _currentElement._owner 链接
+     */
+    getNext(owner: any): any {
+      return owner?._currentElement?._owner;
     },
 
-    // 提取源码元数据（Babel 编译时注入的 __source 属性）
-    getSource(instance) {
-      return instance?._currentElement?._source;
-    },
-
-    // 解析组件名称（优先使用 displayName，其次用函数名）
-    getName(owner) {
+    /**
+     * 提取源码定位信息：
+     * - 优先使用 props[DS.ID] 注入值
+     * - 回退到 Babel 编译注入的 _source
+     */
+    getSource(owner: any): CodeSourceMeta | undefined {
       const element = owner?._currentElement;
-      if (element) {
-        const component = isFn(element.type)
-          ? // 普通函数组件
-            element.type
-          : // 高阶组件包装的 render 方法
-            element.type.render;
-        return component?.displayName || component?.name;
-      }
+      return element?.props?.[DS.ID] ?? reactBabel2DSValue(element?._source);
+    },
+
+    /**
+     * 解析组件名称：
+     * - 函数组件直接使用 displayName 或 name
+     * - HOC 包装组件使用 render 方法上的 name
+     */
+    getName(owner: any): string {
+      const element = owner?._currentElement;
+      const comp = isFn(element.type) ? element.type : element.type.render;
+      return comp?.displayName ?? comp.name;
     },
   });
 }
