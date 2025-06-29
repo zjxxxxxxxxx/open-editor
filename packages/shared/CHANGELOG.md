@@ -1,5 +1,15 @@
 # @open-editor/shared
 
+## 1.0.0-beta.0
+
+### Minor Changes
+
+- [#333](https://github.com/zjxxxxxxxxx/open-editor/pull/333) [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Add type module
+
+- [#333](https://github.com/zjxxxxxxxxx/open-editor/pull/333) [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Add debugSource module
+
+- [#333](https://github.com/zjxxxxxxxxx/open-editor/pull/333) [`a5f19c4`](https://github.com/zjxxxxxxxxx/open-editor/commit/a5f19c4a317c840be44886980ba57598597715ea) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Add object module
+
 ## 0.9.4
 
 ### Patch Changes
