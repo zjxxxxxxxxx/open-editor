@@ -9,14 +9,14 @@
     "node": ">=18"
   },
   "dependencies": {
-    "vue": "^2.7.14",
-    "@open-editor/vue": "workspace:^"
+    "vue": "^2.7.14"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-typescript": "^7.22.11",
-    "@open-editor/rollup": "latest",
+    "@open-editor/vue": "beta",
+    "@open-editor/rollup": "beta",
     "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^25.0.4",
     "@rollup/plugin-image": "^3.0.3",

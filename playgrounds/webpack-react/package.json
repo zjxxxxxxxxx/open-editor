@@ -13,8 +13,8 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@open-editor/react": "workspace:^",
-    "@open-editor/webpack": "latest",
+    "@open-editor/react": "beta",
+    "@open-editor/webpack": "beta",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "craco": "^0.0.3",

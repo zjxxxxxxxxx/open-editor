@@ -287,11 +287,11 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.27.7)
       '@open-editor/react':
-        specifier: workspace:^
-        version: link:../../packages/react
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@3.29.5)
       '@open-editor/rollup':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.27.7)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -328,9 +328,6 @@ importers:
 
   playgrounds/rollup-vue2:
     dependencies:
-      '@open-editor/vue':
-        specifier: workspace:^
-        version: link:../../packages/vue
       vue:
         specifier: ^2.7.14
         version: 2.7.16
@@ -345,8 +342,11 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.27.7)
       '@open-editor/rollup':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
+      '@open-editor/vue':
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@3.29.5)
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.27.7)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -380,9 +380,6 @@ importers:
 
   playgrounds/vite-nuxt:
     dependencies:
-      '@open-editor/vue':
-        specifier: workspace:^
-        version: link:../../packages/vue
       nuxt:
         specifier: ^3.11.2
         version: 3.17.5(@parcel/watcher@2.5.1)(@types/node@20.5.6)(db0@0.3.2)(encoding@0.1.13)(eslint@9.30.0(jiti@2.4.2))(ioredis@5.6.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.44.1)(sass@1.89.2)(stylus@0.54.8)(terser@5.43.1)(tsx@4.20.3)(typescript@5.8.3)(vite@6.3.5(@types/node@20.5.6)(jiti@2.4.2)(sass@1.89.2)(stylus@0.54.8)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.0))(yaml@2.8.0)
@@ -394,8 +391,11 @@ importers:
         version: 4.5.1(vue@3.5.17(typescript@5.8.3))
     devDependencies:
       '@open-editor/vite':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
+      '@open-editor/vue':
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@4.44.1)
 
   playgrounds/vite-react:
     dependencies:
@@ -407,11 +407,11 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: workspace:^
-        version: link:../../packages/react
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@4.44.1)
       '@open-editor/vite':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
       '@types/react':
         specifier: ^18.2.15
         version: 18.3.23
@@ -430,16 +430,16 @@ importers:
 
   playgrounds/vite-vue:
     dependencies:
-      '@open-editor/vue':
-        specifier: workspace:^
-        version: link:../../packages/vue
       vue:
         specifier: ^3.3.4
         version: 3.5.17(typescript@5.2.2)
     devDependencies:
       '@open-editor/vite':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
+      '@open-editor/vue':
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@4.44.1)
       '@vitejs/plugin-vue':
         specifier: ^4.2.3
         version: 4.6.2(vite@4.5.14(@types/node@20.5.6)(less@3.13.1)(sass@1.89.2)(stylus@0.54.8)(terser@5.43.1))(vue@3.5.17(typescript@5.2.2))
@@ -466,11 +466,11 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: workspace:^
-        version: link:../../packages/react
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@4.44.1)
       '@open-editor/webpack':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
       '@types/node':
         specifier: 20.5.6
         version: 20.5.6
@@ -494,11 +494,11 @@ importers:
         version: 18.3.1(react@18.3.1)
     devDependencies:
       '@open-editor/react':
-        specifier: workspace:^
-        version: link:../../packages/react
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@2.79.2)
       '@open-editor/webpack':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.23
@@ -517,9 +517,6 @@ importers:
 
   playgrounds/webpack-vue:
     dependencies:
-      '@open-editor/vue':
-        specifier: workspace:^
-        version: link:../../packages/vue
       core-js:
         specifier: ^3.8.3
         version: 3.43.0
@@ -527,9 +524,12 @@ importers:
         specifier: ^3.2.13
         version: 3.5.17(typescript@5.0.4)
     devDependencies:
+      '@open-editor/vue':
+        specifier: beta
+        version: 1.0.0-beta.0(rollup@4.44.1)
       '@open-editor/webpack':
-        specifier: latest
-        version: 0.9.4
+        specifier: beta
+        version: 1.0.0-beta.0
       '@vue/cli-plugin-babel':
         specifier: ~5.0.0
         version: 5.0.8(@swc/core@1.12.7)(@vue/cli-service@5.0.8(@swc/core@1.12.7)(@vue/compiler-sfc@3.5.17)(ejs@3.1.10)(encoding@0.1.13)(lodash@4.17.21)(prettier@3.6.2)(pug@3.0.3)(underscore@1.12.1)(vue-template-compiler@2.7.16)(vue@3.5.17(typescript@5.0.4))(webpack-sources@3.3.3))(core-js@3.43.0)(encoding@0.1.13)(vue@3.5.17(typescript@5.0.4))
@@ -2254,23 +2254,29 @@ packages:
     peerDependencies:
       vue: ^3.3.4
 
-  '@open-editor/client@0.9.4':
-    resolution: {integrity: sha512-wg9rb203QGJ4DMnIu53710+RS6hyNDeaPYwglNSDKY2SI1zl+QmdtDla7ogH62r05jkAWYORGy4XvIrNNkuxRA==}
+  '@open-editor/client@1.0.0-beta.0':
+    resolution: {integrity: sha512-LbIEaP1jEsZlRnVfmurMsPRIyBV+Mweio8qFgSfRj/i+BGV+q88F6OaN+me2ha7qyur6ExNOlJ96A1lQLaCYRg==}
 
-  '@open-editor/rollup@0.9.4':
-    resolution: {integrity: sha512-0eDdbqVfEAAP9titvzujN3WbYUVOxgwup4az7775Nu7rSGLFiqQaS2Dtz2bryb/PYSep7HX/6/E7XEqWNHj+Cw==}
+  '@open-editor/react@1.0.0-beta.0':
+    resolution: {integrity: sha512-8NM2DQpYHNRuJcnczUMDSNGl4bDzyvYOXASEFMN/t8h4dkBz/6eUESJ/USpauVlQJCBmwrEucD4Y/rBWU7S5FA==}
 
-  '@open-editor/server@0.9.4':
-    resolution: {integrity: sha512-QqPFLI8N4FYCbsdS6/FKbUIZGn/N6kYvUjH8PA+/C25fIFUfMymMCxB5ZR6pOvQvkNb2fdMzbdl3su2uQ/DRNw==}
+  '@open-editor/rollup@1.0.0-beta.0':
+    resolution: {integrity: sha512-rWtOahuXT7af2dPsvJIrIIaEs7U6yV1cQ2M/xIjMO0ECbG12zZ1sgqB+ZpfR1XJwIsAcGG4sfZtDIGVhPYhThQ==}
 
-  '@open-editor/shared@0.9.4':
-    resolution: {integrity: sha512-/spnpBa/rpVz0H872KZ4Q6dJpDLDVajNeVu5GACeCuuEQWekMKk4mmkx8M0yvdWQejjcxXOf6koatl+cV2v/cg==}
+  '@open-editor/server@1.0.0-beta.0':
+    resolution: {integrity: sha512-N74uEnnbvomWsnRElrxaCrPDK0C0OhBcazYNzgGvmnzjxf1a87ZDiQvU39/zbrVYvNo+ofhgZnnj26bY9WpINw==}
 
-  '@open-editor/vite@0.9.4':
-    resolution: {integrity: sha512-EZwVpsuTd82ra8ajZyOmCbKVYaYRGpAPyXBUXmyyefPLz+RZVHJ8P7biywLPHgYJZxHLAFSRqyeNtozl2dpEiA==}
+  '@open-editor/shared@1.0.0-beta.0':
+    resolution: {integrity: sha512-/crqEa6ao7WipoXoB1CBGxAHhkC/l1y0D8+a/DcPXk0tPZU7poZWUcA4aEztVKKjfCq43XQPJDFklBUazQmVgw==}
 
-  '@open-editor/webpack@0.9.4':
-    resolution: {integrity: sha512-WMrxVMDaIY0sn2HrA+uC/v/oaw6W3Hj88S8JKujyofNioVFPmfTgOaH+j4uhQZhV9S88pVgHfMLqb7eWGrMkHQ==}
+  '@open-editor/vite@1.0.0-beta.0':
+    resolution: {integrity: sha512-pXEj0OhEyTWzCZMmxcSgpLAUNjrZ8N1QFTfWlKpzGOf8OgNwS4effXpPrxKOdt0esMePU1GXKGfnsXUoYYK4Lg==}
+
+  '@open-editor/vue@1.0.0-beta.0':
+    resolution: {integrity: sha512-NnnsdEu1NO/6RLxgr1ho51+0Skw4bJki4gj/oLjwRYwkaiwbK+yhn4rTemRK1E9ZmRisddzENx3yWF5fxPCyCg==}
+
+  '@open-editor/webpack@1.0.0-beta.0':
+    resolution: {integrity: sha512-1yZ4TYCr4zEZt/TtVh98venyjvEARs4jWALl8BX+3CkHDghKIkY6zCKc7letUqFNMZbTWW+XBuKbf4X3ZAQ/Zg==}
 
   '@oxc-parser/binding-darwin-arm64@0.72.3':
     resolution: {integrity: sha512-g6wgcfL7At4wHNHutl0NmPZTAju+cUSmSX5WGUMyTJmozRzhx8E9a2KL4rTqNJPwEpbCFrgC29qX9f4fpDnUpA==}
@@ -13994,43 +14000,120 @@ snapshots:
       - vue-tsc
       - yaml
 
-  '@open-editor/client@0.9.4':
+  '@open-editor/client@1.0.0-beta.0':
     dependencies:
-      '@open-editor/shared': 0.9.4
+      '@open-editor/shared': 1.0.0-beta.0
       outmatch: 1.0.0
 
-  '@open-editor/rollup@0.9.4':
+  '@open-editor/react@1.0.0-beta.0(rollup@2.79.2)':
     dependencies:
-      '@open-editor/client': 0.9.4
-      '@open-editor/server': 0.9.4
-      '@open-editor/shared': 0.9.4
+      '@babel/core': 7.27.7
+      '@babel/parser': 7.27.7
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
+      '@open-editor/shared': 1.0.0-beta.0
+      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
+      '@types/babel__core': 7.20.5
+      magic-string: 0.30.17
+      unplugin: 2.3.5
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
+  '@open-editor/react@1.0.0-beta.0(rollup@3.29.5)':
+    dependencies:
+      '@babel/core': 7.27.7
+      '@babel/parser': 7.27.7
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
+      '@open-editor/shared': 1.0.0-beta.0
+      '@rollup/pluginutils': 5.2.0(rollup@3.29.5)
+      '@types/babel__core': 7.20.5
+      magic-string: 0.30.17
+      unplugin: 2.3.5
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
+  '@open-editor/react@1.0.0-beta.0(rollup@4.44.1)':
+    dependencies:
+      '@babel/core': 7.27.7
+      '@babel/parser': 7.27.7
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
+      '@open-editor/shared': 1.0.0-beta.0
+      '@rollup/pluginutils': 5.2.0(rollup@4.44.1)
+      '@types/babel__core': 7.20.5
+      magic-string: 0.30.17
+      unplugin: 2.3.5
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
+  '@open-editor/rollup@1.0.0-beta.0':
+    dependencies:
+      '@open-editor/client': 1.0.0-beta.0
+      '@open-editor/server': 1.0.0-beta.0
+      '@open-editor/shared': 1.0.0-beta.0
     transitivePeerDependencies:
       - supports-color
 
-  '@open-editor/server@0.9.4':
+  '@open-editor/server@1.0.0-beta.0':
     dependencies:
-      '@open-editor/shared': 0.9.4
+      '@open-editor/shared': 1.0.0-beta.0
       connect: 3.7.0
       cors: 2.8.5
       launch-editor: 2.10.0
     transitivePeerDependencies:
       - supports-color
 
-  '@open-editor/shared@0.9.4': {}
+  '@open-editor/shared@1.0.0-beta.0': {}
 
-  '@open-editor/vite@0.9.4':
+  '@open-editor/vite@1.0.0-beta.0':
     dependencies:
-      '@open-editor/client': 0.9.4
-      '@open-editor/server': 0.9.4
-      '@open-editor/shared': 0.9.4
+      '@open-editor/client': 1.0.0-beta.0
+      '@open-editor/server': 1.0.0-beta.0
+      '@open-editor/shared': 1.0.0-beta.0
     transitivePeerDependencies:
       - supports-color
 
-  '@open-editor/webpack@0.9.4':
+  '@open-editor/vue@1.0.0-beta.0(rollup@3.29.5)':
     dependencies:
-      '@open-editor/client': 0.9.4
-      '@open-editor/server': 0.9.4
-      '@open-editor/shared': 0.9.4
+      '@babel/core': 7.27.7
+      '@babel/parser': 7.27.7
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
+      '@open-editor/shared': 1.0.0-beta.0
+      '@rollup/pluginutils': 5.2.0(rollup@3.29.5)
+      '@types/babel__core': 7.20.5
+      '@vue/compiler-dom': 3.5.17
+      magic-string: 0.30.17
+      unplugin: 2.3.5
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
+  '@open-editor/vue@1.0.0-beta.0(rollup@4.44.1)':
+    dependencies:
+      '@babel/core': 7.27.7
+      '@babel/parser': 7.27.7
+      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
+      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
+      '@open-editor/shared': 1.0.0-beta.0
+      '@rollup/pluginutils': 5.2.0(rollup@4.44.1)
+      '@types/babel__core': 7.20.5
+      '@vue/compiler-dom': 3.5.17
+      magic-string: 0.30.17
+      unplugin: 2.3.5
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
+  '@open-editor/webpack@1.0.0-beta.0':
+    dependencies:
+      '@open-editor/client': 1.0.0-beta.0
+      '@open-editor/server': 1.0.0-beta.0
+      '@open-editor/shared': 1.0.0-beta.0
     transitivePeerDependencies:
       - supports-color
 
@@ -14356,6 +14439,14 @@ snapshots:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.1
+      rollup: 2.79.2
+
+  '@rollup/pluginutils@5.2.0(rollup@2.79.2)':
+    dependencies:
+      '@types/estree': 1.0.8
+      estree-walker: 2.0.2
+      picomatch: 4.0.2
+    optionalDependencies:
       rollup: 2.79.2
 
   '@rollup/pluginutils@5.2.0(rollup@3.29.5)':
