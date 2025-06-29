@@ -23,7 +23,7 @@ defineExpose({
         <img src="/vue.svg" class="logo vue" alt="Vue logo" />
       </a>
       <a href="https://github.com/zjxxxxxxxxx/open-editor" target="_blank">
-        <img src="/logo.png" class="logo open-editor" alt="OpenEditor logo" />
+        <img src="/logo.png" class="logo open-editor" alt="openEditor logo" />
       </a>
     </div>
     <h1>Vite + Vue</h1>

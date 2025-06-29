@@ -19,7 +19,7 @@
 
 ## 🔍 Project Overview
 
-`OpenEditor` is a front-end debugging tool specifically designed for modern web development. By deeply integrating with build toolchains, it achieves precise two-way mapping between browser elements and source code. This solution not only enables developers to directly locate source code positions within React/Vue component trees, but also automatically launches local IDEs to open corresponding files. This innovative approach helps developers save over 90% of source code navigation time, significantly improving debugging efficiency.
+`openEditor` is a front-end debugging tool specifically designed for modern web development. By deeply integrating with build toolchains, it achieves precise two-way mapping between browser elements and source code. This solution not only enables developers to directly locate source code positions within React/Vue component trees, but also automatically launches local IDEs to open corresponding files. This innovative approach helps developers save over 90% of source code navigation time, significantly improving debugging efficiency.
 
 [▶▶▶ Live Demo (Vite+React Example)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
 [![Feature Demo](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
@@ -60,21 +60,19 @@
 
 #### React Projects
 
-```bash
-# Verify Babel plugin configuration
-npm list @babel/plugin-transform-react-jsx-source
-```
+Install and use necessary dependencies [@open-editor/react](./packages/react/README.md).
 
-> Ensure this plugin is enabled if using custom Babel config
+```bash
+npm i @open-editor/react -D
+```
 
 #### Vue Projects
 
-```bash
-# Install required dependency
-npm install unplugin-vue-source -D
-```
+Install and use necessary dependencies [@open-editor/vue](./packages/vue/README.md).
 
-> Required for accurate line/column positioning
+```bash
+npm i @open-editor/vue -D
+```
 
 ### Integration Example
 
@@ -85,7 +83,7 @@ npm install unplugin-vue-source -D
 ##### 1. Install Plugin
 
 ```bash
-npm i @open-editor/vite -D
+npm i @open-editor/vite @open-editor/react -D
 ```
 
 ##### 2. Add Configuration
@@ -94,12 +92,14 @@ npm i @open-editor/vite -D
 // vite.config.ts
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import OpenEditor from '@open-editor/vite';
+import openEditorReact from '@open-editor/react/vite';
+import openEditor from '@open-editor/vite';
 
 export default defineConfig({
   plugins: [
+    openEditorReact(),
     react(),
-    OpenEditor({
+    openEditor({
       // options
     }),
   ],
@@ -188,6 +188,8 @@ window.addEventListener('openeditor', (e) => {
 | [`@open-editor/rollup`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/rollup)   | [![NPM version](https://img.shields.io/npm/v/@open-editor/rollup?color=)](https://www.npmjs.com/package/@open-editor/rollup)   | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/rollup)](https://www.npmjs.com/package/@open-editor/rollup)   |
 | [`@open-editor/vite`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vite)       | [![NPM version](https://img.shields.io/npm/v/@open-editor/vite?color=)](https://www.npmjs.com/package/@open-editor/vite)       | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vite)](https://www.npmjs.com/package/@open-editor/vite)       |
 | [`@open-editor/webpack`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/webpack) | [![NPM version](https://img.shields.io/npm/v/@open-editor/webpack?color=)](https://www.npmjs.com/package/@open-editor/webpack) | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/webpack)](https://www.npmjs.com/package/@open-editor/webpack) |
+| [`@open-editor/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/react)     | [![NPM version](https://img.shields.io/npm/v/@open-editor/react?color=)](https://www.npmjs.com/package/@open-editor/react)     | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/react)](https://www.npmjs.com/package/@open-editor/react)     |
+| [`@open-editor/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/packages/vue)         | [![NPM version](https://img.shields.io/npm/v/@open-editor/vue?color=)](https://www.npmjs.com/package/@open-editor/vue)         | [![NPM downloads](https://img.shields.io/npm/dt/%40open-editor/vue)](https://www.npmjs.com/package/@open-editor/vue)         |
 
 ### Online Playgrounds
 

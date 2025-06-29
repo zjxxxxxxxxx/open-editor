@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import reactSource from '@open-editor/react-source/vite';
-import OpenEditor from '@open-editor/vite';
+import openEditorReact from '@open-editor/react/vite';
+import openEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    openEditorReact(),
     react(),
-    reactSource(),
-    OpenEditor({
+    openEditor({
       once: true,
       crossIframe: true,
     }),

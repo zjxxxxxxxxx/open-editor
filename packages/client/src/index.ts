@@ -28,8 +28,8 @@ export function setupClient(opts: Options) {
       return;
     }
     window.__OPEN_EDITOR_SETUPED__ = true;
-    console.info(
-      (isTopWindow ? '主窗口 ' : '子窗口 ') + CURRENT_INSPECT_ID + ' open-editor 已启动',
+    console.log(
+      '[open-editor] ' + (isTopWindow ? 'TopWindow ' : 'SubWindow ') + CURRENT_INSPECT_ID,
     );
 
     // 配置注入阶段

@@ -144,7 +144,6 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
      * 3. 返回第一个匹配成功的解析器
      */
     const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
-
     // 执行框架特定解析逻辑
     if (resolverKey) {
       /**

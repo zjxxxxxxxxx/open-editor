@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "nuxt": "^3.11.2",
-    "@open-editor/vue-source": "workspace:^",
+    "@open-editor/vue": "workspace:^",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },

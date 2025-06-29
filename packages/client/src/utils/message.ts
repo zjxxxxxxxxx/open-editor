@@ -28,8 +28,8 @@ function parseMessage(data: string) {
         args: JSON.parse(data.substring(typeEnd)),
       };
     }
-  } catch (e) {
-    console.error('消息解析失败', e);
+  } catch {
+    //
   }
   return null;
 }

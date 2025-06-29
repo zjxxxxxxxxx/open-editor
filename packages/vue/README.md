@@ -1,17 +1,41 @@
-# @open-editor/react-source
+# @open-editor/vue
 
 Add a \_debugSource prop to all Elements.
 
-- 🌈 Supports `React15+`.
+- 🌈 Supports `Vue2`, `Vue3`, `Nuxt`.
 - 🪐 Support add to `<Component/>`.
-- ✨ JSX support in `.jsx`, `.tsx`.
-- 😃 Supports `Vite`, `Webpack`, `Rspack`, `create-react-app`, `Rollup`, `esbuild`.
+- ✨ JSX support in `.vue`, `.jsx`, `.tsx`.
+- 😃 Supports `Vite`, `Webpack`, `Vue CLI`, `Rollup`.
 
 > For development only
 
 ---
 
-jsx without
+## SFC
+
+before
+
+```html
+<!-- src/App.vue -->
+<template>
+  <div>hello word</div>
+</template>
+```
+
+after
+
+```html
+<!-- src/App.vue -->
+<template>
+  <div :_debugSource='{ "file": "src/App.vue", "line": 3, "column": 3 }'>hello word</div>
+</template>
+```
+
+---
+
+## JSX
+
+before
 
 ```tsx
 // src/App.tsx
@@ -20,7 +44,7 @@ export default function App() {
 }
 ```
 
-with
+after
 
 ```tsx
 // src/App.tsx
@@ -32,23 +56,23 @@ export default function App() {
 ## Install
 
 ```bash
-npm i @open-editor/react-source
+npm i @open-editor/vue -D
 ```
 
 ## Plugins
 
-You need to make sure that `reactSource` is executed before vue compiles the plugin for execution.
+You need to make sure that `openEditorVue` is executed before vue compiles the plugin for execution.
 
 <details>
 <summary>Vite</summary><br>
 
 ```ts
 // vite.config.ts
-import reactSource from '@open-editor/react-source/vite';
+import openEditorVue from '@open-editor/vue/vite';
 
 export default defineConfig({
   plugins: [
-    reactSource({
+    openEditorVue({
       /* options */
     }),
     // other plugins
@@ -63,11 +87,11 @@ export default defineConfig({
 
 ```ts
 // rollup.config.js
-import reactSource from '@open-editor/react-source/rollup';
+import openEditorVue from '@open-editor/vue/rollup';
 
 export default {
   plugins: [
-    reactSource({
+    openEditorVue({
       /* options */
     }),
     // other plugins
@@ -84,68 +108,12 @@ export default {
 // webpack.config.js
 module.exports = {
   plugins: [
-    require('@open-editor/react-source/webpack')({
+    require('@open-editor/vue/webpack')({
       /* options */
     }),
     // other plugins
   ],
 };
-```
-
-<br></details>
-
-<details>
-<summary>Rspack</summary><br>
-
-```ts
-// rspack.config.js
-module.exports = {
-  plugins: [
-    require('@open-editor/react-source/rspack')({
-      /* options */
-    }),
-    // other plugins
-  ],
-};
-```
-
-<br></details>
-
-<details>
-<summary>Vue CLI</summary><br>
-
-```ts
-// vue.config.js
-module.exports = {
-  configureWebpack: {
-    plugins: [
-      require('@open-editor/react-source/webpack')({
-        /* options */
-      }),
-      // other plugins
-    ],
-  },
-};
-```
-
-<br></details>
-
-<details>
-<summary>esbuild</summary><br>
-
-```ts
-// esbuild.config.js
-import { build } from 'esbuild';
-import reactSource from '@open-editor/react-source/esbuild';
-
-build({
-  plugins: [
-    reactSource({
-      /* options */
-    }),
-    // other plugins
-  ],
-});
 ```
 
 <br></details>
@@ -169,7 +137,7 @@ export interface Options {
    */
   sourceMap?: boolean;
   /**
-   * @default /\.(vue|jsx|tsx|mdx)$/
+   * @default /\.(vue|jsx|tsx)$/
    */
   include?: string | RegExp | (string | RegExp)[];
   /**

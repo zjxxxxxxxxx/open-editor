@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vue": "^2.7.14",
-    "@open-editor/vue-source": "workspace:^"
+    "@open-editor/vue": "workspace:^"
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",

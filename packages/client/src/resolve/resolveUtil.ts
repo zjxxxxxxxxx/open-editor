@@ -1,4 +1,5 @@
 import { camelCase, normalizePath } from '@open-editor/shared';
+import { type DSValue } from '@open-editor/shared/debugSource';
 import outmatch from 'outmatch';
 import { getOptions } from '../options';
 
@@ -81,4 +82,19 @@ function hasValidBrackets(path: string) {
     (path.match(/$$/g) || []).length === (path.match(/$$/g) || []).length &&
     !/$$[^\w-]+$$/.test(path)
   );
+}
+
+/**
+ * 将 Babel 产生的调试源信息对象转换为 DSValue 格式
+ *
+ * @param source - Babel 生成的位置信息对象，包含 fileName, lineNumber, columnNumber
+ * @returns DSValue 对象或 undefined
+ */
+export function reactBabel2DSValue(source?: AnyObject | null): DSValue | undefined {
+  if (!source) return;
+  return {
+    file: source.fileName,
+    line: source.lineNumber,
+    column: source.columnNumber,
+  };
 }
