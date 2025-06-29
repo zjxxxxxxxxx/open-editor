@@ -1,0 +1,14 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@open-editor/client": "1.0.0",
+    "@open-editor/server": "1.0.0",
+    "@open-editor/shared": "1.0.0",
+    "@open-editor/webpack": "1.0.0",
+    "@open-editor/vite": "1.0.0",
+    "@open-editor/rollup": "1.0.0",
+    "@open-editor/react": "1.0.0",
+    "@open-editor/vue": "1.0.0"
+  }
+}
