@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
-    "vue": "^3.2.13",
-    "@open-editor/vue": "workspace:^"
+    "vue": "^3.2.13"
   },
   "devDependencies": {
-    "@open-editor/webpack": "latest",
+    "@open-editor/vue": "beta",
+    "@open-editor/webpack": "beta",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
