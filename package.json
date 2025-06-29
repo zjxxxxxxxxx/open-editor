@@ -22,7 +22,7 @@
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
     "install:ci": "pnpm install --ignore-scripts",
     "versions": "run-s version:ci format",
-    "version:ci": "changeset version",
+    "version:ci": "changeset version --pre beta",
     "publish:ci": "changeset publish"
   },
   "engines": {
