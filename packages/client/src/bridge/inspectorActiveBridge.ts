@@ -23,7 +23,7 @@ export const inspectorActiveBridge = crossIframeBridge<InspectorActiveBridgeArgs
    */
   emitMiddlewares: [
     (args) => {
-      // 中间件：向顶层窗口发送消息
+      // 向顶层窗口发送消息
       postMessage(INSPECTOR_ACTIVE_CROSS_IFRAME, args, topWindow);
     },
   ],

@@ -24,8 +24,8 @@ const TAG_TYPES = new Set([ElementTypes.ELEMENT, ElementTypes.COMPONENT]);
 // 忽略插桩的原生块级标签
 const IGNORE_TAGS = new Set(['template', 'script', 'style']);
 
-// 插件工厂：仅在开发模式注入源码位置信息
-export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
+// 仅在开发模式注入源码位置信息
+const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
   if (!isDev()) return { name: 'VueSourcePlugin' };
 
   const isVite = meta.framework === 'vite';
@@ -57,44 +57,38 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
     transform(code, id) {
       const { file, isSfc, ...jsxOpts } = parseID(id, rootDir);
 
-      // 运行时代码注入：针对 vnode/cloned/this.tag 等核心逻辑
+      // 针对 vnode/cloned/this.tag 等核心逻辑
       if (isRuntimeFile(file)) {
         const replacements = [
           {
             search: 'const vnode = {',
-            inject: genPropInject('props', 'const vnode = {'),
-          },
-          {
-            search: 'const cloned = {',
-            inject: genPropInject('mergedProps', 'const cloned = {', false),
+            inject: genVue3Inject(),
           },
           {
             search: 'this.tag = tag;',
             inject: genVue2Inject(),
           },
         ];
-        let injected = false;
         for (const { search, inject } of replacements) {
           if (code.includes(search)) {
-            injected = true;
-            code = code.replace(search, inject);
+            return code.replace(search, inject);
           }
         }
-        return injected ? code : null;
+        return null;
       }
 
       // 跳过已插桩文件
       if (code.includes(DS.INJECT_PROP)) return null;
       const magic = new MagicString(code);
 
-      // 回调：在标签闭合尖括号前插入属性
+      // 在标签闭合尖括号前插入属性
       const insertAttr = (idx, line, col, isTpl) => {
         const payload = JSON.stringify({ file, line, column: col });
         const attr = isTpl ? ` :${DS.INJECT_PROP}='${payload}'` : ` ${DS.INJECT_PROP}={${payload}}`;
         magic.prependLeft(idx, attr);
       };
 
-      // SFC 单文件组件：先处理模板，再提取并处理 <script> 中的 JSX/TSX
+      // 先处理模板，再提取并处理 <script> 中的 JSX/TSX
       if (isSfc) {
         const ast = vueParse(code);
         transformTemplate(ast, insertAttr);
@@ -125,7 +119,7 @@ function resolveOptions(opts: Options) {
 }
 
 // 从 id 提取路径、类型、查询参数
-export function parseID(id: string, rootDir: string) {
+function parseID(id: string, rootDir: string) {
   const [path, qs] = normalizePath(id).split('?', 2);
   const file = relative(rootDir, path);
   const ext = extname(file).slice(1);
@@ -140,20 +134,20 @@ export function parseID(id: string, rootDir: string) {
 }
 
 // 生成 Vue 3 运行时代码的属性注入片段
-function genPropInject(propsVar: string, startToken: string, assign = true) {
-  return `
-${assign ? `${propsVar} = Object.assign({}, ${propsVar});` : ''}
-var __debug = ${propsVar}.${DS.INJECT_PROP};
+function genVue3Inject() {
+  return code`
+props = Object.assign({}, props);
+var __debug = props.${DS.INJECT_PROP};
 if (__debug) {
-  delete ${propsVar}.${DS.INJECT_PROP};
-  Object.defineProperty(${propsVar}, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
+  delete props.${DS.INJECT_PROP};
+  Object.defineProperty(props, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
 }
-${startToken}`;
+const vnode = {`;
 }
 
 // 生成 Vue 2 运行时代码的属性+elm双向绑定片段
 function genVue2Inject() {
-  return `
+  return code`
 var __debug = data && data.attrs && data.attrs.${DS.INJECT_PROP};
 if (__debug) {
   delete data.attrs.${DS.INJECT_PROP};
@@ -164,7 +158,7 @@ Object.defineProperty(this, 'elm', { get() { return __elm; }, set(v) { __elm = v
 this.tag = tag;`;
 }
 
-// 转换 SFC 模板：对所有符合条件的元素节点插桩
+// 对所有符合条件的元素节点插桩
 function transformTemplate(
   ast: RootNode,
   cb: (idx: number, line: number, column: number, isTpl?: boolean) => void,
@@ -208,7 +202,7 @@ function extractScriptJsxOptions(ast: RootNode) {
 /**
  * 解析并遍历 JSX/TSX 代码，将每个 JSXOpeningElement 闭合符号前调用 cb
  */
-export function transformJSX(
+function transformJSX(
   code: string,
   cb: (idx: number, line: number, column: number, isTpl?: boolean) => void,
   options: Partial<NonNullable<ReturnType<typeof extractScriptJsxOptions>>>,

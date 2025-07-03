@@ -1,7 +1,7 @@
 /**
  * Rollup 配置生成器
  * ----------------
- * 根据 package.json 的 exports 字段，生成 ESM、CJS 和 DTS 格式的多个构建配置。
+ * 根据 package.json 的 exports 字段，生成 ESM、CJS 和 DTS 格式的多个构建配置
  */
 import { join, resolve, relative } from 'node:path';
 import type { JscTarget } from '@swc/core';
@@ -13,7 +13,7 @@ import swc from 'rollup-plugin-swc3';
 import dts from 'rollup-plugin-dts';
 
 import css from './plugins/css';
-import glsl from './plugins/glsl';
+import code from './plugins/code';
 import { clientRoot, readJSON } from './utils';
 
 /**
@@ -60,7 +60,7 @@ export interface FileSet {
   outputs: Record<string, string>;
 }
 
-// 环境标志：是否开发模式
+// 是否开发模式
 const __DEV__ = '__DEV__' in process.env;
 // SWC 转译目标版本
 const __TARGET__ = (process.env.__TARGET__ || 'es6') as JscTarget;
@@ -68,7 +68,7 @@ const __TARGET__ = (process.env.__TARGET__ || 'es6') as JscTarget;
 const isClientBuild = clientRoot === resolve();
 
 /**
- * 主函数：生成所有 Rollup 配置
+ * 生成所有 Rollup 配置
  */
 export default function createConfigs(): RollupOptions[] {
   const { exports: pkgExports } = readJSON(resolve('./package.json'));
@@ -192,7 +192,7 @@ function groupExportsByFolder(exports: Record<string, string | BuildOutput>) {
     addToGroup(info.types, 'dts');
 
     /**
-     * 辅助：将指定路径添加到对应格式的分组
+     * 将指定路径添加到对应格式的分组
      */
     function addToGroup(targetPath: string | undefined, format: keyof OutputGroup) {
       if (!targetPath) return;
@@ -207,8 +207,7 @@ function groupExportsByFolder(exports: Record<string, string | BuildOutput>) {
 }
 
 /**
- * 标准化导出名称：
- * './' 或 '.' => 'index'，其他移除 './' 前缀
+ * 标准化导出名称，'./' 或 '.' => 'index'，其他移除 './' 前缀
  */
 function normalizeEntryName(spec: string) {
   return spec.replace(/^\.\/?/, '') || 'index';
@@ -230,6 +229,7 @@ function createEmptyGroup() {
  */
 function getCorePlugins() {
   return [
+    code({ sourceMap: __DEV__ }),
     nodeResolve(),
     commonjs(),
     replace({
@@ -256,10 +256,8 @@ function getCorePlugins() {
 }
 
 /**
- * 构建客户端专属插件（CSS、GLSL），仅在客户端构建时启用
+ * 构建客户端专属插件，仅在客户端构建时启用
  */
 function getClientPlugins() {
-  return (
-    isClientBuild ? [css({ sourceMap: __DEV__ }), glsl({ sourceMap: __DEV__ })] : []
-  ) as Plugin[];
+  return (isClientBuild ? [css({ sourceMap: __DEV__ })] : []) as Plugin[];
 }

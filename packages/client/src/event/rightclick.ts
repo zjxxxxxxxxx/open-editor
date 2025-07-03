@@ -7,12 +7,6 @@ import { on, off } from '.';
 
 /**
  * 默认导出的右键点击事件分发器实例
- *
- * 特性：
- * - 事件类型：标准化 'rightclick' 事件
- * - 自动处理跨设备兼容性（鼠标/触控笔/触摸屏）
- * - 内置事件冒泡控制与内存泄漏防护
- * - 符合 W3C Pointer Events 规范的事件过滤机制
  */
 export default createCustomEventDispatcher('rightclick', setupRightclickDispatcher);
 

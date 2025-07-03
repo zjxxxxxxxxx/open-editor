@@ -61,7 +61,6 @@ export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>
   activeOptions = {
     ...DEFAULT_OPTIONS,
     ...userOpts,
-    // 数组类型特殊处理：合并默认值和用户值
     ignoreComponents: userOpts.ignoreComponents ?? DEFAULT_OPTIONS.ignoreComponents,
   };
 }
@@ -71,7 +70,7 @@ export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>
  */
 export function getOptions() {
   if (!activeOptions) {
-    logError('配置项未初始化', {
+    logError('options not initialized', {
       logLevel: 'throw',
     });
   }

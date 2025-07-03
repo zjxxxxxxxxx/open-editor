@@ -14,19 +14,13 @@ import { resolveDebug } from './resolveDebug';
  */
 export interface CodeSourceMeta extends DSValue {
   /**
-   * 组件规范化名称（框架无关格式）
-   *
-   * @example
-   * - React 组件: 'MyComponent'
-   * - Vue 组件: 'VueComponent'
+   * 组件名称
    */
   name: string;
 }
 
 /**
  * 调试会话上下文数据
- *
- * @description 包含完整的调试会话信息，支持多窗口隔离调试
  */
 export interface CodeSource {
   /**
@@ -81,19 +75,7 @@ const FRAME_RESOLVERS = {
  *
  * @param el 目标元素（需包含 __vue/__react 等调试属性）
  * @param deep 深度解析模式（默认 false）
- *
  * @returns 标准化调试数据
- *
- * @coreLogic
- * 1. 缓存优先策略 - 浅层模式直接读取 L1 缓存
- * 2. 元数据提取 - 通过 debug 属性标准化框架差异
- * 3. 动态适配 - 根据调试属性特征选择解析器
- * 4. 数据持久化 - 双缓存策略（闭包缓存 + WeakMap）
- *
- * @performance
- * - 浅层模式时间复杂度：O(1)（缓存直接命中）
- * - 深度模式时间复杂度：O(n)（n 为组件树深度）
- * - 内存管理：WeakMap 自动 GC 防止内存泄漏
  *
  * @example
  * // 快速获取组件元数据
@@ -117,10 +99,6 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
 
   /**
    * 快速返回路径（非深度模式）
-   *
-   * @condition 当满足以下条件时直接返回缓存：
-   * 1. deep 参数为 false 或 undefined
-   * 2. 缓存中存在有效数据
    */
   if (!deep) {
     const cached = getCache(el);
@@ -137,22 +115,12 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
   if (debugInfo) {
     /**
      * 框架类型自动检测算法
-     *
-     * @algorithm
-     * 1. 遍历所有已注册框架特征键
-     * 2. 使用 String.startsWith 进行前缀匹配
-     * 3. 返回第一个匹配成功的解析器
      */
     const resolverKey = Object.keys(FRAME_RESOLVERS).find((key) => debugInfo.key.startsWith(key));
     // 执行框架特定解析逻辑
     if (resolverKey) {
       /**
        * 框架适配器执行过程
-       *
-       * @process
-       * 1. 传入标准化调试信息
-       * 2. 递归解析组件树（深度模式时）
-       * 3. 填充 source.tree 数组
        */
       FRAME_RESOLVERS[resolverKey](debugInfo.value, source.tree, deep);
     }
@@ -163,11 +131,6 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
 
   /**
    * 缓存更新策略
-   *
-   * @strategy
-   * 1. 仅非深度模式更新缓存
-   * 2. 避免缓存大型组件树数据
-   * 3. 使用 WeakMap 自动内存管理
    */
   if (!deep) {
     setCache(el, { meta: source.meta });

@@ -49,8 +49,7 @@ export function resolveForFiber(
 function initializeResolver(): void {
   resolver ??= createResolver<Fiber>({
     /**
-     * 判断当前 Fiber 是否为开发者编写的组件节点：
-     * 1. 节点存在且类型为函数组件或类组件
+     * 判断当前 Fiber 是否为开发者编写的组件节点
      */
     isValid(node: Fiber | null | undefined): boolean {
       if (!node) return false;
@@ -65,18 +64,14 @@ function initializeResolver(): void {
     },
 
     /**
-     * 提取源码定位信息：
-     * - 优先读取 Babel 注入的 props[DS.ID]
-     * - 回退到 React 内部 _debugSource
+     * 提取源码定位信息
      */
     getSource(node: Fiber): CodeSourceMeta | undefined {
       return node.memoizedProps?.[DS.ID] ?? reactBabel2DSValue(node._debugSource);
     },
 
     /**
-     * 获取组件展示名称：
-     * - 对于高阶组件（HOC）优先使用 wrapped render 函数的 name
-     * - 函数组件或类组件直接使用 displayName 或 name
+     * 获取组件展示名称
      */
     getName(node: Fiber): string {
       const comp = isFn(node.type) ? node.type : node.type?.render;

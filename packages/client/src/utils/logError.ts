@@ -47,7 +47,6 @@ export function logError(
  * 统一错误消息生成器（支持环境检测）
  *
  * @param msg - 原始错误描述信息
- *
  * @returns 格式化后的错误消息字符串
  *
  * @example

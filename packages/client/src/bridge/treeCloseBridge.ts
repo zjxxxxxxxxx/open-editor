@@ -16,7 +16,7 @@ export const treeCloseBridge = crossIframeBridge<TreeCloseBridgeArgs>({
   setup() {
     // 注册全局事件监听
     onMessage<TreeCloseBridgeArgs>(TREE_CLOSE_CROSS_IFRAME, (args) => {
-      // 参数处理：判断事件来源层级
+      // 判断事件来源层级
       const isFromTopWindow = (args[0] ||= isTopWindow);
 
       // 顶层窗口处理逻辑

@@ -30,7 +30,7 @@ interface ToggleUIState {
  * ToggleUI 组件
  *
  * 该组件通过自定义的 JSX 返回一个包含按钮的视图，
- * 实现了拖拽调整位置、切换状态（启用/退出检查器）以及适配触摸屏的功能。
+ * 实现了拖拽调整位置、切换状态（启用/退出检查器）以及适配触摸屏的功能
  */
 export function ToggleUI() {
   // 定义拖拽过程中添加到组件上的 CSS 类名
@@ -52,9 +52,6 @@ export function ToggleUI() {
 
   /**
    * 初始化桥接器事件监听
-   *
-   * 当 inspectorEnableBridge 或 inspectorExitBridge 触发时分别更新按钮样式，
-   * 使用户可以直观地感知当前检查器的状态。
    */
   function initBridgeListeners() {
     inspectorEnableBridge.on(() => {
@@ -67,9 +64,6 @@ export function ToggleUI() {
 
   /**
    * 初始化全局事件监听
-   *
-   * 绑定安全区域观察者和窗口 resize 事件，
-   * 以便在这些外部因素变化时及时更新组件的位置和尺寸。
    */
   function initEventListeners() {
     safeAreaObserver.on(updatePosition);
@@ -79,9 +73,6 @@ export function ToggleUI() {
 
   /**
    * 切换检查器状态
-   *
-   * 当用户点击按钮时，如果不在拖拽状态中，
-   * 则根据当前检查器状态来触发启用或退出操作。
    */
   function toggleEnable() {
     if (!state.dragging) {
@@ -95,11 +86,6 @@ export function ToggleUI() {
 
   /**
    * 开始拖拽操作
-   *
-   * 当用户长按按钮触发拖拽操作时：
-   *  - 将状态设置为拖拽中
-   *  - 添加拖拽样式（以提示用户当前处于拖拽状态）
-   *  - 绑定全局 pointermove 和 pointerup 事件来更新位置和结束拖拽操作
    */
   function startDragging() {
     state.dragging = true;
@@ -110,11 +96,6 @@ export function ToggleUI() {
 
   /**
    * 结束拖拽操作
-   *
-   * 当用户松开鼠标或手指时结束拖拽操作：
-   *  - 使用 setTimeout 延迟状态修改，确保当前事件链内的点击事件不被误判
-   *  - 移除拖拽状态的 CSS 类
-   *  - 解绑之前绑定的 pointermove 和 pointerup 事件
    */
   function stopDragging() {
     setTimeout(() => (state.dragging = false), 0);
@@ -126,8 +107,6 @@ export function ToggleUI() {
   /**
    * 处理指针移动事件，更新按钮位置
    *
-   * 将当前指针的纵坐标缓存到 localStorage 中，并调用 updatePosition 更新组件位置。
-   *
    * @param e 指针事件对象，包含指针在窗口中的位置信息
    */
   function changePosition(e: PointerEvent) {
@@ -137,9 +116,6 @@ export function ToggleUI() {
 
   /**
    * 更新按钮尺寸（主要用于适配触摸设备）
-   *
-   * 判断当前设备是否支持触摸操作，如果状态变化则更新元素 CSS 类，
-   * 使组件在触摸设备上具有更适宜的展示和交互体验。
    */
   function updateSize() {
     const isTouchable =
@@ -156,9 +132,6 @@ export function ToggleUI() {
 
   /**
    * 更新按钮定位
-   *
-   * 根据窗口高度、按钮尺寸、存储的纵向位置和安全区域设置，
-   * 计算出按钮应处于的垂直位置，并通过 CSS 设置组件的 top 与 right 值。
    */
   function updatePosition() {
     const { innerHeight: winH } = window;
@@ -176,12 +149,6 @@ export function ToggleUI() {
     });
   }
 
-  /**
-   * 返回自定义 JSX 结构
-   *
-   * 利用 ref 回调保存 DOM 元素引用，并在首次渲染时更新按钮定位和尺寸。
-   * 同时禁用触控与右键菜单默认行为，确保拖拽操作流畅。
-   */
   return (
     <div
       className="oe-toggle"

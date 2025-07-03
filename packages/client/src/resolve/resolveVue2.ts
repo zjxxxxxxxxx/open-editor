@@ -40,9 +40,7 @@ function initializeResolver(): void {
     },
 
     /**
-     * 获取组件名称：
-     * - 首选 VNode 的 tag
-     * - 其次 Ctor.options.name
+     * 获取组件名称
      */
     getName(node: any): string | undefined {
       const opts = node?.componentOptions;

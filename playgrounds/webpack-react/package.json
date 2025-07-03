@@ -13,11 +13,11 @@
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@open-editor/react": "beta",
     "@open-editor/webpack": "beta",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
-    "craco": "^0.0.3",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5"
   },
