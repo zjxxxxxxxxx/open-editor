@@ -55,8 +55,6 @@ const SILENT_EVENTS = (
 
 /**
  * 点击关联事件白名单
- *
- * @remarks Safari 特殊处理：阻止这些事件的默认行为会导致点击失效
  */
 const CLICK_ATTACHMENT_EVENTS = new Set(['touchstart', 'touchend']);
 
@@ -71,13 +69,7 @@ const SHORTCUT_KEYS = new Set(['Enter', 'Space']);
  * 初始化全局事件监听系统
  *
  * @param opts - 生命周期回调配置
- *
  * @returns 解除监听的清理函数
- *
- * @remarks 核心功能：
- * 1. 实现跨框架的事件通信机制
- * 2. 管理检查器状态机（激活/禁用/元素树模式）
- * 3. 协调用户交互与视图更新
  */
 export function setupListeners(opts: SetupListenersOptions) {
   const { once, crossIframe } = getOptions();
@@ -92,11 +84,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 核心事件处理器配置
-   *
-   * 每个配置项包含：
-   * - type: 监听的事件类型
-   * - handler: 事件处理函数
-   * - target: 事件监听目标（默认为 window)
    */
   const coreHandlers = [
     { type: 'click', handler: handleInspect, target: document },

@@ -13,7 +13,6 @@ const BASE_EVENT_OPTIONS = {
  *
  * @param type - 事件类型标识符
  * @param detail - 事件携带数据（可选，需可序列化）
- *
  * @returns 事件是否被取消（true 表示未被取消）
  *
  * @example

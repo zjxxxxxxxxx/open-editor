@@ -17,7 +17,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
   setup() {
     // 注册全局事件监听
     onMessage<TreeOpenBridgeArgs>(TREE_OPEN_CROSS_IFRAME, (args) => {
-      // 参数处理：判断事件来源层级
+      // 判断事件来源层级
       const isFromTopWindow = (args[1] ||= isTopWindow);
 
       // 顶层窗口处理逻辑
@@ -38,7 +38,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
    */
   emitMiddlewares: [
     /**
-     * 中间件逻辑：解析 iframe 组件
+     * 解析 iframe 组件
      * @param source 代码组件对象
      * @param next 后续处理回调
      */
@@ -56,7 +56,7 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
     },
 
     /**
-     * 中间件逻辑：智能路由消息发送
+     * 智能路由消息发送
      *
      * @param args 事件参数数组
      */

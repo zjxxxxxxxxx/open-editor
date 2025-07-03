@@ -51,9 +51,7 @@ export function resolveForInstance(
 function initializeResolver(): void {
   resolver ??= createResolver<any>({
     /**
-     * 判断实例是否为 React 组件实例节点：
-     * - _currentElement 必须存在
-     * - element.type 为函数或包装 render 方法
+     * 判断实例是否为 React 组件实例节点
      */
     isValid(owner: any): boolean {
       const element = owner?._currentElement;
@@ -61,16 +59,14 @@ function initializeResolver(): void {
     },
 
     /**
-     * 获取父级组件实例，通过 _currentElement._owner 链接
+     * 获取父级组件实例
      */
     getNext(owner: any): any {
       return owner?._currentElement?._owner;
     },
 
     /**
-     * 提取源码定位信息：
-     * - 优先使用 props[DS.ID] 注入值
-     * - 回退到 Babel 编译注入的 _source
+     * 提取源码定位信息
      */
     getSource(owner: any): CodeSourceMeta | undefined {
       const element = owner?._currentElement;
@@ -78,9 +74,7 @@ function initializeResolver(): void {
     },
 
     /**
-     * 解析组件名称：
-     * - 函数组件直接使用 displayName 或 name
-     * - HOC 包装组件使用 render 方法上的 name
+     * 解析组件名称
      */
     getName(owner: any): string {
       const element = owner?._currentElement;

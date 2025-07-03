@@ -9,22 +9,16 @@ import rightclick from './rightclick';
 export interface HTMLElementEventWithCustomEventMap extends HTMLElementEventMap {
   /**
    * 长按事件，当元素被持续按压超过阈值时触发
-   *
-   * 关联模块：./longpress
    */
   longpress: PointerEvent;
 
   /**
    * 快速离开事件，当指针快速移出元素区域时触发
-   *
-   * 关联模块：./quickexit
    */
   quickexit: PointerEvent;
 
   /**
    * 右键点击事件，替代默认的 contextmenu 事件
-   *
-   * 关联模块：./rightclick
    */
   rightclick: PointerEvent;
 }
@@ -132,13 +126,13 @@ export function off(type: any, listener: any, options: any = {}) {
 }
 
 /**
- * 在客户端环境中，当文档解析完成或触发 DOMContentLoaded 事件后执行回调。
+ * 在客户端环境中，当文档解析完成或触发 DOMContentLoaded 事件后执行回调
  *
- * - 仅在浏览器环境（非 SSR）时生效，如果在服务端运行则直接返回。
+ * - 仅在浏览器环境（非 SSR）时生效，如果在服务端运行则直接返回
  * - 当 document.readyState 为 'loading' 时，表示 DOM 树尚未解析完毕，
- *   此时会挂载一个一次性监听器，在 DOMContentLoaded 触发后执行回调。
+ *   此时会挂载一个一次性监听器，在 DOMContentLoaded 触发后执行回调
  * - 当 document.readyState 为 'interactive' 或 'complete' 时，DOM 已可交互，
- *   回调会被立即执行，无需等待事件。
+ *   回调会被立即执行，无需等待事件
  *
  * @param listener - 文档可交互时执行的函数
  *

@@ -1,21 +1,25 @@
 export interface Options {
   /**
-   * source root path
+   * 源码根路径 | Source root path
    *
    * @default process.cwd()
    */
   rootDir?: string;
   /**
-   * generate sourceMap
+   * 是否生成 sourceMap | Generate sourceMap
    *
    * @default false
    */
   sourceMap?: boolean;
   /**
-   * @default /\.(vue|jsx|tsx)$/
+   * 包含的文件 | Files to include
+   *
+   * @default /\.(jsx|tsx)$/
    */
   include?: string | RegExp | (string | RegExp)[];
   /**
+   * 排除的文件 | Files to exclude
+   *
    * @default /\/node_modules\//
    */
   exclude?: string | RegExp | (string | RegExp)[];

@@ -10,7 +10,7 @@ export interface AttributeMapping {
 const FORM_CONTROL_TAGS = new Set([
   'BUTTON', // 按钮（所有类型，包括 submit、reset、button）
   'FIELDSET', // 表单字段集（禁用时内部表单控件继承禁用状态）
-  'INPUT', // 输入框（所有类型：text、checkbox、radio、file 等）
+  'INPUT', // 输入框（所有类型 text、checkbox、radio、file 等）
   'OPTGROUP', // 选项组（禁用时其下所有 OPTION 不可选）
   'OPTION', // 下拉选项（禁用后无法被选中）
   'SELECT', // 下拉选择框（禁用后无法展开）
@@ -24,7 +24,6 @@ let clickedElement: HTMLElement | null = null;
  * 判断指定元素是否为当前点击元素
  *
  * @param element 待校验元素
- *
  * @returns 是否为当前点击元素
  */
 export function checkClickedElement(element: HTMLElement) {
@@ -105,7 +104,6 @@ function swapElementAttributes(
  * 查找元素关联节点
  *
  * @param element 起始元素
- *
  * @returns 包含所有相关元素的集合
  *
  * @description 沿 DOM 树向上查找所有 <a> 标签和表单控件元素

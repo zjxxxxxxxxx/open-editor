@@ -55,7 +55,6 @@ function normalizePath(path: string) {
  * 正则表达式生成函数
  *
  * @param paths 经过标准化的路径数组
- *
  * @returns 合并后的正则表达式，用于匹配模块路径
  */
 function createMatchRE(paths: string[]) {

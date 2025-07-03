@@ -22,8 +22,7 @@ const BOX_EDGES_COLORS = {
 /**
  * 创建覆盖层 Canvas，并初始化 WebGL 渲染器、尺寸监听和事件桥接
  *
- * 使用 WebGL 绘制可以比 Canvas 2D 更高效地处理复杂图形与频繁更新场景。
- *
+ * 使用 WebGL 绘制可以比 Canvas 2D 更高效地处理复杂图形与频繁更新场景
  * @returns 初始化完成的 canvas 元素
  */
 export function OverlayUI() {
@@ -44,11 +43,6 @@ export function OverlayUI() {
 
 /**
  * 建立外部事件与渲染逻辑的桥接系统
- *
- * 处理事件包括：
- * - 检查器启用：添加显示样式类名并更新视口
- * - 检查器退出：移除显示类名并清空渲染内容
- * - 盒模型更新：检查数据变化并触发重新绘制
  *
  * @param canvas - 目标 canvas 元素
  * @param renderer - WebGLRenderer 实例
@@ -98,11 +92,6 @@ function setupBridgeSystem(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
 /**
  * 处理盒模型数据更新并渲染
  *
- * 渲染步骤：
- * 1. 清空上一帧绘制内容
- * 2. 依次为 margin、border、padding 区域生成顶点数据，再为 content 区域生成顶点数据
- * 3. 批量提交所有顶点数据进行渲染
- *
  * @param renderer - WebGLRenderer 实例
  * @param position - 目标元素的边界位置信息
  * @param metrics - 盒模型各区域的边缘宽度数据
@@ -141,7 +130,7 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
  * 处理单个边缘的顶点数据生成
  *
  * 按顺时针顺序处理四条边：上 → 右 → 下 → 左，
- * 每条边使用 rectangleVertices 生成顶点数据，并避免重叠绘制。
+ * 每条边使用 rectangleVertices 生成顶点数据，并避免重叠绘制
  *
  *       +-----------------+----+
  *       |                 |    |
@@ -219,7 +208,7 @@ function processEdges(
  * 生成矩形的顶点数据
  *
  * 将矩形拆分为两个三角形（每个三角形包含三个顶点），
- * 每个顶点数据由物理像素坐标（CSS 像素乘以 pixelRatio）和颜色信息组成。
+ * 每个顶点数据由物理像素坐标（CSS 像素乘以 pixelRatio）和颜色信息组成
  *
  * 顶点顺序定义 (用于正面渲染，并符合浏览器文档流坐标):
  * 三角形 1: 左上, 右上, 左下
@@ -261,7 +250,7 @@ function rectangleVertices(
  * 更新当前矩形边界（向内部收缩）
  *
  * 根据当前区域边缘宽度调整矩形边界，确保后续区域的绘制在剩余空间内进行，
- * 并防止边界交叉（例如 top 超过 bottom）。
+ * 并防止边界交叉（例如 top 超过 bottom）
  *
  * @param bounds - 当前矩形边界对象，原地修改
  * @param edges - 当前区域的边缘宽度数据

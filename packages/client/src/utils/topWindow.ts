@@ -2,8 +2,6 @@ import { IS_CLIENT } from '../constants';
 
 /**
  * 虚拟同源顶级窗口对象，用于实现同源策略下的跨 iframe 通信
- *
- * 注意：该对象可能与浏览器实际顶级窗口不同
  */
 export const topWindow = IS_CLIENT ? findTopWindow() : undefined;
 
@@ -17,10 +15,6 @@ export const isTopWindow = IS_CLIENT && topWindow === window;
  *
  * @param yes - 当处于顶级窗口时的回调函数
  * @param no - 非顶级窗口时的备用回调（可选）
- *
- * 使用场景：需要区分执行环境的逻辑操作，例如：
- * - 跨 iframe 的状态同步
- * - 安全敏感操作的分级执行
  */
 export function whenTopWindow(yes: () => void, no?: () => void) {
   if (isTopWindow) {
@@ -32,11 +26,7 @@ export function whenTopWindow(yes: () => void, no?: () => void) {
 
 /**
  * 获取虚拟同源顶级窗口对象
- *
  * @returns 当前 iframe 层级中的顶级窗口对象
- *
- * 实现原理：通过循环查找父级窗口，直到没有嵌套容器为止
- * 安全限制：受同源策略约束，仅能访问同源父级窗口
  */
 function findTopWindow() {
   let currentWindow: Window = window;

@@ -86,17 +86,10 @@ export interface Options {
 const CLIENT_ID = '/client.mjs'; // 客户端模块虚拟路径 | Client module virtual path
 
 /**
- * Vite 插件：开发环境下启用组件源码定位功能 | Vite Plugin: Enable component source code location in development
+ * 开发环境下启用组件源码定位功能 | Enable component source code location in development
  *
  * @param options - 插件配置选项 | Plugin configuration options
- *
  * @returns Vite 插件对象 | Vite plugin instance
- *
- * @remarks
- * 技术实现要点 | Technical highlights:
- * - 虚拟模块处理客户端配置注入 | Virtual module handling for client config injection
- * - 中间件处理编辑器打开请求 | Middleware handling editor opening requests
- * - 开发环境专属优化 | Development environment optimizations
  */
 export default function OpenEditorPlugin(options: Options = {}) {
   // 非开发环境返回空插件 | Return empty plugin in non-dev environments

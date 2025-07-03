@@ -1,4 +1,4 @@
-// 常量：关于伪类替换的正则表达式及替换标记
+// 关于伪类替换的正则表达式及替换标记
 const HOVER_REGEXP = {
   normal: /:hover/g,
   placeholder: /:oe-disable-hover/g,
@@ -19,7 +19,6 @@ let activeTaskId = 0;
  * 禁用所有 :hover 伪类样式
  *
  * 通过将 ':hover' 替换为占位符，避免伪类样式影响交互效果
- *
  * @returns Promise，当所有任务完成更新后 resolve
  */
 export function disableHoverCSS() {
@@ -30,7 +29,6 @@ export function disableHoverCSS() {
  * 恢复所有被禁用的 :hover 伪类样式
  *
  * 将占位符替换回 ':hover'，使样式恢复原状
- *
  * @returns Promise，当所有任务完成更新后 resolve
  */
 export function enableHoverCSS() {
@@ -44,7 +42,6 @@ export function enableHoverCSS() {
  *
  * @param pattern 用于匹配需要替换的正则表达式
  * @param replacement 替换文本
- *
  * @returns Promise，当所有任务执行完毕后 resolve
  */
 async function updateHoverCSS(pattern: RegExp, replacement: string) {
@@ -60,7 +57,7 @@ async function updateHoverCSS(pattern: RegExp, replacement: string) {
 }
 
 /**
- * 生成器：按需创建 CSS 更新任务（包括外部样式表和内联样式）
+ * 按需创建 CSS 更新任务（包括外部样式表和内联样式）
  *
  * @param pattern 正则表达式，用于匹配 CSS 中的伪类
  * @param replacement 替换文本
@@ -82,7 +79,7 @@ function* createCSSTaskGenerator(pattern: RegExp, replacement: string) {
 }
 
 /**
- * 生成器：为外部样式表（<link> 引入）生成分批替换规则的任务
+ * 为外部样式表（<link> 引入）生成分批替换规则的任务
  *
  * @param styleSheet 外部样式表的 CSSStyleSheet 对象
  * @param pattern 正则表达式，用于匹配 CSS 中的伪类
@@ -114,7 +111,7 @@ function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, repla
  * 安全获取与当前页面同源的外部样式表 CSS 规则
  *
  * 根据同源策略（Same-Origin Policy），仅当样式表的协议、域名和端口与当前页面一致时，
- * 才会返回其 CSS 规则列表，否则返回空数组以避免跨域数据泄露风险。
+ * 才会返回其 CSS 规则列表，否则返回空数组以避免跨域数据泄露风险
  *
  * @param styleSheet - 目标样式表的 CSSStyleSheet 对象
  * @returns 包含 CSSRule 对象的数组（同源时），或空数组（跨域或解析失败时）
@@ -142,7 +139,6 @@ function getSameOriginCSSRules(styleSheet: CSSStyleSheet) {
  *
  * @param taskGenerator 生成任务的迭代器，每次 yield 返回一个任务函数
  * @param shouldCancel 一个回调函数，返回 true 时表示任务应被取消
- *
  * @returns Promise，当所有任务执行完毕时 resolve；若任务中途被取消则抛出异常
  */
 async function executeTasksWithFrameScheduling(
@@ -175,8 +171,7 @@ async function executeTasksWithFrameScheduling(
 /**
  * 创建帧时长检查器，检测当前帧已执行时间是否超过设定的最大时长，避免长时间阻塞主线程
  *
- * @param maxFrameDuration 每帧最大允许执行时间（单位：毫秒）
- *
+ * @param maxFrameDuration 每帧最大允许执行时间（单位毫秒）
  * @returns 一个函数，调用时返回是否超过设定时长
  */
 function createFrameDurationChecker(maxFrameDuration: number) {

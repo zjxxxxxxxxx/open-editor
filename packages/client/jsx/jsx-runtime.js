@@ -39,7 +39,7 @@ function jsx(type, props) {
       ? document.createDocumentFragment()
       : createElement(type, { className, style });
 
-  // 非 Fragment 元素：设置属性及 ref 回调
+  // 非 Fragment 元素设置属性及 ref 回调
   if (type !== FRAGMENT_TYPE) {
     applyAttributes(element, attrs);
     if (ref) ref(element);

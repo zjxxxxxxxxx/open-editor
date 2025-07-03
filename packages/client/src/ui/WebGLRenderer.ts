@@ -10,14 +10,7 @@ export type WebGLRenderer = ReturnType<typeof createWebGLRenderer>;
  *
  * @param canvas - 目标渲染画布
  * @param bufferSize - 缓冲区大小
- *
  * @returns 完整渲染能力对象
- *
- * 初始化步骤：
- * 1. 获取并配置 WebGL 上下文
- * 2. 构建着色器程序
- * 3. 配置顶点属性
- * 4. 封装渲染操作方法
  */
 export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: number) {
   const pixelRatio = window.devicePixelRatio || 1;
@@ -39,10 +32,6 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
 
     /**
      * 更新视口
-     *
-     * 根据 Canvas 布局尺寸更新绘图缓冲区和投影参数：
-     * - 按设备像素比缩放物理尺寸
-     * - 更新 WebGL 视口和投影矩阵参数
      */
     updateViewport() {
       const rect = getDOMRect(canvas);
@@ -58,9 +47,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
     /**
      * 清空画布
      *
-     * @param clearBuffer - 可选，如果为 true，则释放用于存储顶点数据的 Float32Array 实例，将其设置为 null。
-     *
-     * 使用全透明颜色清除画布，为新帧绘制作准备。
+     * @param clearBuffer - 可选，如果为 true，则释放用于存储顶点数据的 Float32Array 实例，将其设置为 null
      */
     clear(clearBuffer?: boolean) {
       gl.clearColor(0, 0, 0, 0);
@@ -86,12 +73,7 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
 /**
  * 初始化并配置 WebGL 上下文
  *
- * 关键配置：
- * - preserveDrawingBuffer: 保持绘图缓冲，支持截屏
- * - 启用混合：使用 ONE 与 ONE_MINUS_SRC_ALPHA 进行预乘 Alpha 混合
- *
  * @param canvas - 目标画布元素
- *
  * @returns 配置完成的 WebGL 上下文
  */
 function initWebGLContext(canvas: HTMLCanvasElement) {
@@ -105,11 +87,10 @@ function initWebGLContext(canvas: HTMLCanvasElement) {
  * 构建并链接 GLSL 着色器程序
  *
  * @param gl - WebGL 渲染上下文
- *
  * @returns 链接成功的着色器程序
  */
 function createShaderProgram(gl: WebGLRenderingContext) {
-  const vertexShaderSource = glsl`
+  const vertexShaderSource = code`
     attribute vec2 a_position;
     attribute vec4 a_color;
     uniform vec2 u_resolution;
@@ -123,7 +104,7 @@ function createShaderProgram(gl: WebGLRenderingContext) {
     }
   `;
 
-  const fragmentShaderSource = glsl`
+  const fragmentShaderSource = code`
     precision mediump float;
     varying vec4 v_color;
     
@@ -144,7 +125,6 @@ function createShaderProgram(gl: WebGLRenderingContext) {
  * @param gl - WebGL 渲染上下文
  * @param type - 着色器类型（VERTEX 或 FRAGMENT）
  * @param source - GLSL 源码
- *
  * @returns 编译后的着色器对象
  */
 function compileShaderObject(gl: WebGLRenderingContext, type: number, source: string) {
@@ -160,7 +140,6 @@ function compileShaderObject(gl: WebGLRenderingContext, type: number, source: st
  * @param gl - WebGL 渲染上下文
  * @param vertexShader - 编译后的顶点着色器
  * @param fragmentShader - 编译后的片段着色器
- *
  * @returns 链接成功的着色器程序
  */
 function linkShaderProgram(
@@ -181,10 +160,7 @@ function linkShaderProgram(
  * @param gl - WebGL 渲染上下文
  * @param program - 着色器程序
  * @param canvas - 目标画布（用于初始投影设置）
- *
  * @returns 缓冲区及属性配置对象
- *
- * 顶点数据格式：[x, y, r, g, b, a] 共 6 个浮点数，每个顶点步长 24 字节
  */
 function setupVertexAttributes(
   gl: WebGLRenderingContext,

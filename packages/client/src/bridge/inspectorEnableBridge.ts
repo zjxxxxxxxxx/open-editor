@@ -10,11 +10,6 @@ import { ENABLE_INSPECTOR_EVENT, INSPECTOR_ENABLE_CROSS_IFRAME } from '../consta
 export const inspectorEnableBridge = crossIframeBridge({
   /**
    * 初始化桥接器
-   *
-   * 主要流程：
-   * 1. 监听启用指令消息
-   * 2. 根据窗口层级处理事件派发
-   * 3. 协调跨窗口消息同步
    */
   setup() {
     onMessage(INSPECTOR_ENABLE_CROSS_IFRAME, handleInspectorEnable);

@@ -10,16 +10,11 @@ import { renderUI } from './renderUI';
 
 /**
  * 事件监听器清理函数
- * - 用于卸载事件监听
- * - 置空表示未初始化状态
  */
 let cleanListeners: (() => void) | null = null;
 
 /**
  * 启用检查器功能
- * - 初始化状态
- * - 设置全局事件监听
- * - 应用样式覆盖
  */
 export async function inspectorEnable() {
   // 配置获取与状态初始化
@@ -42,16 +37,12 @@ export async function inspectorEnable() {
   if (isDisableHoverCSS) await disableHoverCSS();
   overrideStyle.mount();
 
-  // 解除当前焦点状态
   // @ts-ignore 主动解除焦点兼容处理
   document.activeElement?.blur();
 }
 
 /**
  * 关闭检查器功能
- * - 重置状态
- * - 清理事件监听
- * - 恢复原始样式
  */
 export async function inspectorExit() {
   // 配置获取与状态重置
