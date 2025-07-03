@@ -8,7 +8,7 @@ import { mitt } from './mitt';
  * 描述设备屏幕四周的安全内边距（如刘海屏、底部手势条区域）
  */
 export interface SafeArea {
-  // 顶部安全距离（单位：px）
+  // 顶部安全距离（单位 px）
   top: number;
   // 右侧安全距离
   right: number;

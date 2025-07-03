@@ -9,9 +9,9 @@ import { TooltipUI } from './TooltipUI';
 import { TreeUI } from './TreeUI';
 
 /**
- * 初始化编辑器 UI 系统。
- * - 在跨 iframe 场景中，仅顶层窗口执行初始化。
- * - 注册自定义元素并将其实例挂载到文档主体。
+ * 初始化编辑器 UI 系统
+ * - 在跨 iframe 场景中，仅顶层窗口执行初始化
+ * - 注册自定义元素并将其实例挂载到文档主体
  */
 export function setupUI() {
   const { crossIframe } = getOptions();
@@ -28,12 +28,7 @@ export function setupUI() {
 }
 
 /**
- * 自定义元素：HTML 检查器容器
- *
- * 负责：
- * - 管理 Shadow DOM，封装内部结构与样式隔离
- * - 监听并展示编辑器错误消息
- * - 渲染并维护子级 UI 组件生命周期
+ * 检查器元素
  */
 class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeof HTMLElement)) {
   /** 封闭的 Shadow DOM 根，用于样式与脚本隔离 */
@@ -48,7 +43,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 在自定义元素上附加 closed 模式的 Shadow DOM，防止外部访问。
+   * 在自定义元素上附加 closed 模式的 Shadow DOM，防止外部访问
    */
   private initShadowDOM() {
     Object.defineProperty(this, 'shadowRoot', {
@@ -57,7 +52,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 当元素插入文档后自动调用。
+   * 当元素插入文档后自动调用
    * - 配置错误处理机制
    * - 渲染子级 UI 组件
    */
@@ -67,42 +62,37 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 设置编辑器错误可视化处理。
-   *
-   * 每次收到新的错误消息时，都会：
-   * 1. 取消并移除旧的消息元素及其所有动画，保证不留残影；
-   * 2. 创建并插入一个新的错误消息元素，用于展示最新的提示；
-   * 3. 对新元素运行抖动 + 淡出动画（共 2000ms），动画结束后再将元素移除，保持界面整洁。
+   * 设置编辑器错误可视化处理
    */
   private setupErrorHandling() {
     openEditorErrorBridge.on(async (message) => {
-      // 1. 如果已有旧的错误提示，取消其所有动画并从 DOM 中移除
+      // 如果已有旧的错误提示，取消其所有动画并从 DOM 中移除
       if (this.errorMessage) {
         this.errorMessage.getAnimations().forEach((ani) => ani.cancel());
         this.errorMessage.remove();
       }
 
-      // 2. 创建并保存新的错误提示元素
+      // 创建并保存新的错误提示元素
       this.errorMessage = <div className="oe-error-message">{message}</div>;
 
-      // 3. 将新提示插入到 Shadow DOM 中
+      // 将新提示插入到 Shadow DOM 中
       appendChild(this.shadowRoot, this.errorMessage);
 
-      // 4. 对新提示执行抖动 + 淡出动画，确保总时长 2000ms
+      // 对新提示执行抖动 + 淡出动画，确保总时长 2000ms
       await this.runAnimation(this.errorMessage);
 
-      // 5. 动画完毕后，移除提示并清空引用
+      // 动画完毕后，移除提示并清空引用
       this.errorMessage.remove();
       this.errorMessage = null;
     });
   }
 
   /**
-   * 对目标元素执行一次完整关键帧动画：
+   * 对目标元素执行一次完整关键帧动画
    * - 0–300ms：抖动反馈
    * - 300–1900ms：保持静止且不透明
    * - 1900–2000ms：淡出至透明
-   * 整体时长固定 2000ms，结束后保持最终帧状态。
+   * 整体时长固定 2000ms，结束后保持最终帧状态
    *
    * @param element 需要执行动画的 HTMLElement
    * @returns Promise<Animation> 动画完成时的 Promise
@@ -140,7 +130,7 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
   }
 
   /**
-   * 渲染并更新 Shadow DOM 内的子级 UI 组件。
+   * 渲染并更新 Shadow DOM 内的子级 UI 组件
    * - 注入样式表
    * - 可选渲染 ToggleUI
    * - 渲染核心的 OverlayUI、TooltipUI、TreeUI

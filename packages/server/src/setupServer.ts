@@ -61,7 +61,6 @@ export interface Options {
  * 创建并启动应用服务器
  *
  * @param options - 服务器配置参数集
- *
  * @returns 返回包含实际监听端口的 Promise
  *
  * @technicalProcess
@@ -98,7 +97,6 @@ export function setupServer(options: Options = {}) {
  *
  * @param app - 已配置的 connect 应用实例
  * @param httpsConfig - TLS 安全配置参数
- *
  * @returns 返回 HTTP 或 HTTPS 服务器实例
  */
 function createHttpServer(app: ReturnType<typeof createApp>, httpsConfig?: Options['https']) {
@@ -120,7 +118,6 @@ function createHttpServer(app: ReturnType<typeof createApp>, httpsConfig?: Optio
  * 启动服务器并动态分配端口
  *
  * @param server - 已创建的服务器实例
- *
  * @returns 返回实际监听端口的 Promise
  */
 function startServer(server: http.Server) {

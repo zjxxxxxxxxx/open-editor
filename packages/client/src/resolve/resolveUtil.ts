@@ -1,11 +1,7 @@
-import { camelCase, normalizePath } from '@open-editor/shared';
+import { normalizePath } from '@open-editor/shared';
 import { type DSValue } from '@open-editor/shared/debugSource';
 import outmatch from 'outmatch';
 import { getOptions } from '../options';
-
-export function normalizeName(name?: string): string {
-  return name ? camelCase(name) : 'AnonymousComponent';
-}
 
 /**
  * 安全路径生成（防止路径遍历攻击）
@@ -76,7 +72,7 @@ function applyProjectIgnoreRules(path: string) {
 // 安全字符白名单（参考文件上传过滤实践）
 // 允许方括号用于动态路由参数，但限制其闭合结构
 const SAFE_CHAR_RE = /^[a-z0-9_\-./[\]]+$/i;
-// 增加闭合性校验：成对出现且内容合法
+// 成对出现且内容合法
 function hasValidBrackets(path: string) {
   return (
     (path.match(/$$/g) || []).length === (path.match(/$$/g) || []).length &&

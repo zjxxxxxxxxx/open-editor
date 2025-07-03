@@ -24,14 +24,10 @@ export const boxModelBridge = crossIframeBridge<BoxModel>({
 
   /**
    * 消息发送中间件处理管道
-   *
-   * 包含两个处理步骤：
-   * 1. 修正 iframe 嵌套时的坐标偏移
-   * 2. 在顶层窗口时向父窗口转发消息
    */
   emitMiddlewares: [
     /**
-     * 中间件：修正 iframe 嵌套时的坐标偏移
+     * 修正 iframe 嵌套时的坐标偏移
      *
      * @param args 包含矩形坐标和辅助线的参数数组
      * @param next 执行下一个中间件的回调
@@ -56,7 +52,7 @@ export const boxModelBridge = crossIframeBridge<BoxModel>({
     },
 
     /**
-     * 中间件：顶层窗口消息转发
+     * 顶层窗口消息转发
      *
      * @param args 需要转发的参数
      * @param next 执行后续处理的回调

@@ -48,7 +48,6 @@ export const playgrounds = readdirSync(resolve(projectRoot, 'playgrounds'));
  *
  * @param baseURL - 基准 URL 字符串
  * @param relativePath - 需要拼接的相对路径
- *
  * @returns 完整的本地文件系统路径
  */
 export function convertURLToPath(baseURL: string, relativePath: string) {
@@ -59,7 +58,6 @@ export function convertURLToPath(baseURL: string, relativePath: string) {
  * 读取并解析 JSON 文件
  *
  * @param filePath - 目标文件路径或文件描述符
- *
  * @returns 解析后的 JSON 对象
  */
 export function readJSON(filePath: PathOrFileDescriptor) {

@@ -11,13 +11,13 @@ import Visitor from '@swc/core/Visitor';
 
 export interface CssPluginOptions {
   /**
-   * 是否为输出代码生成 sourceMap，用于在调试时将压缩／内联后的 CSS 映射回源文件位置。
+   * 是否为输出代码生成 sourceMap，用于在调试时将压缩／内联后的 CSS 映射回源文件位置
    * @default false
    */
   sourceMap?: boolean;
 }
 
-// 用于 CSS 压缩的正则表达式：匹配多余的换行符和符号周围的空格
+// 匹配多余的换行符和符号周围的空格
 const CSS_COMPACT_RE = /[\n\r\f]+|\s+([{};:,!])|([{};:,!])\s+/g;
 
 // PostCSS 处理器
@@ -32,7 +32,7 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
     name: 'rollup:css',
 
     transform(this: TransformPluginContext, code: string, id: string) {
-      // 快速检查：如果代码不含 CSS 标记或链接，则跳过处理
+      // 如果代码不含 CSS 标记或链接，则跳过处理
       if (!code.includes('css`') && !code.includes('<link')) return null;
 
       // 解析代码为 AST
@@ -71,7 +71,7 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
             s.overwrite(
               toIdx(node.span.start),
               toIdx(node.span.end),
-              `'${minifyCss(node.template.quasis[0]?.cooked || '')}'`,
+              minifyCss(node.template.quasis[0]?.cooked || ''),
             );
           }
           return node;
@@ -102,7 +102,7 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
                 s.overwrite(
                   toIdx(node.span.start),
                   toIdx(node.span.end),
-                  `<style type="text/css">{'${minifyCss(readFileSync(path, 'utf-8'))}'}</style>`,
+                  `<style type="text/css">{${minifyCss(readFileSync(path, 'utf-8'))}}</style>`,
                 );
 
                 ctx.addWatchFile(path); // 告知 Rollup 监听此文件
@@ -128,25 +128,25 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
 }
 
 /**
- * 处理并压缩 CSS 内容，使用链式调用。
+ * 处理并压缩 CSS 内容，使用链式调用
  */
 function minifyCss(raw: string) {
-  if (!raw) return raw;
+  if (!raw) return `\`\``;
 
-  // 链式调用：先通过 PostCSS 处理，然后进行正则压缩，最后移除首尾空格
-  return processor
+  // 先通过 PostCSS 处理，然后进行正则压缩，最后移除首尾空格
+  return `\`${processor
     .process(raw)
     .css.replace(CSS_COMPACT_RE, (_, p1, p2) => {
       if (p1) return p1; // 匹配到符号前空格，只保留符号
       if (p2) return p2; // 匹配到符号后空格，只保留符号
       return ''; // 匹配到换行符，移除
     })
-    .trim();
+    .trim()}\``;
 }
 
 /**
- * 创建字节偏移量到字符偏移量的转换函数。
- * 解决 SWC 的 span 是字节偏移而 MagicString 是字符偏移的问题。
+ * 创建字节偏移量到字符偏移量的转换函数
+ * 解决 SWC 的 span 是字节偏移而 MagicString 是字符偏移的问题
  */
 function createByteToCharIndex(code: string, baseOffset: number) {
   const byteLens: number[] = [0]; // 累积字节长度数组
@@ -156,7 +156,7 @@ function createByteToCharIndex(code: string, baseOffset: number) {
 
   // 字节偏移 → 字符偏移（二分查找）
   function byteToChar(byteOffset: number): number {
-    // 关键步骤：将 SWC 返回的绝对字节偏移转换为相对于源代码开始的字节偏移
+    // 将 SWC 返回的绝对字节偏移转换为相对于源代码开始的字节偏移
     const offset = byteOffset - baseOffset; // 简化命名
     let low = 0;
     let high = byteLens.length - 1;

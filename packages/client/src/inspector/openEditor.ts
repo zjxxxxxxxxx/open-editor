@@ -54,7 +54,7 @@ export function generateEditorURL(meta?: CodeSourceMeta): URL {
   const editorURL = new URL(`${protocol}//${hostname}`);
   editorURL.pathname = ServerApis.OPEN_EDITOR;
 
-  // 处理端口：优先使用配置项中指定的端口
+  // 优先使用配置项中指定的端口
   editorURL.port = opts.port || port;
 
   // 设置查询参数（注意编码文件路径）
@@ -66,8 +66,7 @@ export function generateEditorURL(meta?: CodeSourceMeta): URL {
 }
 
 /**
- * 统一处理编辑器启动错误：
- * 记录错误日志、触发错误事件，并返回一个拒绝的 Promise。
+ * 记录错误日志、触发错误事件，并返回一个拒绝的 Promise
  *
  * @param error 原始错误对象（或错误信息）
  * @param message 自定义错误消息

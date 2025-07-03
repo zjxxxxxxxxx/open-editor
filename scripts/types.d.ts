@@ -1,2 +1,2 @@
-declare function css(template: readonly string[] | ArrayLike<string>): string;
-declare function glsl(template: readonly string[] | ArrayLike<string>): string;
+declare function css(...args: (readonly string[] | ArrayLike<string>)[]): string;
+declare function code(...args: (readonly string[] | ArrayLike<string>)[]): string;

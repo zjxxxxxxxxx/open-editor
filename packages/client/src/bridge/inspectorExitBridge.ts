@@ -14,11 +14,6 @@ export type InspectorExitBridgeArgs = [];
 export const inspectorExitBridge = crossIframeBridge({
   /**
    * 桥接初始化配置
-   *
-   * 功能说明：
-   * 1. 监听退出指令消息
-   * 2. 验证顶层窗口上下文
-   * 3. 分发事件并广播到所有 iframe
    */
   setup() {
     // 注册跨 iframe 消息监听

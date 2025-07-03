@@ -30,7 +30,6 @@ export type CrossIframeBridgeMiddleware<Args extends unknown[] = []> = (
  * 创建跨框架通信桥接器
  *
  * @param opts 配置选项
- *
  * @returns 增强型事件总线实例
  */
 export function crossIframeBridge<Args extends unknown[] = []>(

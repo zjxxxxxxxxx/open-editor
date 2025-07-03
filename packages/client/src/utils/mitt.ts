@@ -1,8 +1,6 @@
 /**
  * 轻量级事件总线实现（仿 mitt 设计）
  *
- * 核心功能：事件订阅/发布、一次性监听、批量清理
- *
  * @template T - 事件参数类型，默认为空数组（无参数事件）
  */
 export function mitt<T extends unknown[] = []>() {

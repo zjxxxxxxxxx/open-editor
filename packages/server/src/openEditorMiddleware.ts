@@ -34,7 +34,6 @@ export interface OpenEditorMiddlewareOptions {
  * 创建编辑器中间件
  *
  * @param options - 中间件配置选项
- *
  * @returns connect 中间件处理函数
  */
 export function openEditorMiddleware(

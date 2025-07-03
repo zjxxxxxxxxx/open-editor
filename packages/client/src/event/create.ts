@@ -76,7 +76,6 @@ export type SetupDispatcherCleanListener = () => void;
  *
  * @param type - 自定义事件类型名称
  * @param setupDispatcher - 事件分发设置函数
- *
  * @returns 包含事件监听管理方法的对象
  */
 export function createCustomEventDispatcher<

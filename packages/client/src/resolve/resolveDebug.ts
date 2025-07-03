@@ -30,13 +30,7 @@ export interface ResolveDebug<T = any> {
  * 解析 DOM 元素上的框架调试信息
  *
  * @param el 起始 DOM 元素
- *
  * @returns 包含调试信息的对象，未找到时返回 undefined
- *
- * 实现原理：
- * 1. 沿 DOM 树向上遍历父元素
- * 2. 在每个元素上检测主流框架的调试属性
- * 3. 找到第一个有效的调试属性后立即返回
  */
 export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
   while (checkValidElement(el)) {
@@ -63,12 +57,7 @@ export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
  * 检测元素上的框架调试属性
  *
  * @param el 待检测的 DOM 元素
- *
  * @returns 检测到的框架属性键名，未找到时返回 undefined
- *
- * 检测优先级：
- * 1. Vue3 -> Vue2 -> React17+ -> React15-16
- * 基于框架流行度和版本新旧排序
  */
 function detectFrameworkKey(el: HTMLElement) {
   return detectVue3(el) || detectVue2(el) || detectReact17(el) || detectReact15(el);
@@ -99,12 +88,7 @@ function detectReact15(el: HTMLElement) {
  *
  * @param el DOM 元素
  * @param prefix 目标属性前缀
- *
  * @returns 匹配的属性键名，未找到时返回 undefined
- *
- * 实现说明：
- * - 用于检测 React 的版本特定属性，这些属性带有随机哈希后缀
- * - 例如：__reactFiber$aj19x
  */
 function findFrameworkKey(el: HTMLElement, prefix: string) {
   return Object.keys(el).find((key) => key.startsWith(prefix));

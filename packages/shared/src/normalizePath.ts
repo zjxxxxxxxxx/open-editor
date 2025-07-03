@@ -24,14 +24,7 @@ export interface NormalizeOptions {
  *
  * @param path 原始路径字符串
  * @param options 标准化配置选项
- *
  * @returns 返回统一格式的标准化路径
- *
- * 功能说明：
- * 1. 转换 Windows 反斜杠路径为 POSIX 斜杠路径
- * 2. 自动去除首尾空白字符
- * 3. 可选合并连续斜杠（默认启用）
- * 4. 可选保留末尾斜杠（默认不保留）
  */
 export function normalizePath(path: string, options: NormalizeOptions = {}): string {
   // 配置参数解构与默认值设置

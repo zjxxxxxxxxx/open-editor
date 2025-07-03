@@ -13,7 +13,7 @@ import { type Options } from '../types';
  * React 源码调试信息注入插件工厂
  * 仅在开发模式下启用，对 React 运行时代码和用户 JSX/TSX 代码插入调试元数据
  */
-export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
+const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
   // 非开发环境直接返回空插件
   if (!isDev()) return { name: 'OpenEditorReactPlugin' };
 
@@ -33,7 +33,7 @@ export const unpluginFactory: UnpluginFactory<Options | undefined> = (options = 
   const isRuntimeFile = (file: string) => reactRuntimeFiles.some((p) => file.endsWith(p));
 
   // 通用属性注入逻辑
-  const propInjection = `
+  const propInjection = code`
 props = Object.assign({}, props);
 const __debug = props.${DS.INJECT_PROP};
 if (__debug) {
@@ -77,13 +77,14 @@ if (__debug) {
             return code.replace(search, inject);
           }
         }
+        return null;
       }
 
       // 对用户 JSX/TSX 文件插入调试属性
       if (code.includes(DS.INJECT_PROP)) return null; // 已处理过
       const magic = new MagicString(code);
 
-      // 回调函数：在 JSX 标签闭合符号前插入调试属性
+      // 在 JSX 标签闭合符号前插入调试属性
       const insertDebugAttr = (idx, line, col) => {
         const payload = JSON.stringify({ file, line, column: col });
         magic.prependLeft(idx, ` ${DS.INJECT_PROP}={${payload}}`);
@@ -128,7 +129,7 @@ function parseID(id, rootDir) {
  * @param cb 回调函数(idx: 插入位置, line, column)
  * @param isTsx 是否为 TSX
  */
-export function transformJSX(
+function transformJSX(
   code: string,
   cb: (idx: number, line: number, column: number) => void,
   isTsx = false,

@@ -98,12 +98,7 @@ export function TreeUI() {
 
     return (
       <div className="oe-tree-item">
-        {/* 树节点：点击后在编辑器中打开对应代码 */}
-        <div
-          className="oe-tree-node"
-          title="点击在编辑器中打开"
-          onClick={() => handleNodeClick(meta)}
-        >
+        <div className="oe-tree-node" onClick={() => handleNodeClick(meta)}>
           {name}
           <span className="oe-tree-file">{file}</span>
         </div>
@@ -123,7 +118,7 @@ export function TreeUI() {
    * 处理节点点击事件
    *
    * 当节点被点击时，若 once 模式开启则关闭树视图，
-   * 同时通过 bridge 传递节点数据给编辑器打开对应文件。
+   * 同时通过 bridge 传递节点数据给编辑器打开对应文件
    *
    * @param meta 当前节点的元数据信息
    */

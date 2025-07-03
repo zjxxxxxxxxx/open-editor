@@ -1,5 +1,5 @@
 import { type DSValue } from '@open-editor/shared/debugSource';
-import { isValidFileName, normalizeName } from './resolveUtil';
+import { isValidFileName } from './resolveUtil';
 import { type CodeSourceMeta } from '.';
 
 /**
@@ -46,25 +46,13 @@ export interface ResolverOptions<T = any> {
 
 export type Resolver<T = any> = ReturnType<typeof createResolver<T>>;
 
+const COMPONENT_NAME = 'AnonymousComponent';
+
 /**
  * 创建 React 组件树解析器（工厂函数）
  *
- * @template T React 节点类型
- *
  * @param opts 解析器配置项
- *
  * @returns 返回组件树解析函数
- *
- * --------------------------------------------------
- * 工作流程：
- * 1. 接收配置项初始化解析器
- * 2. 通过 reactResolver 函数遍历组件树
- * 3. 对每个节点执行：
- *    a. 标准化源代码路径
- *    b. 验证节点有效性
- *    c. 提取元数据
- *    d. 根据模式决定遍历深度
- * --------------------------------------------------
  */
 export function createResolver<T = any>(opts: ResolverOptions<T>) {
   // 解构配置方法
@@ -88,7 +76,7 @@ export function createResolver<T = any>(opts: ResolverOptions<T>) {
 
         // 构建元数据并存入结果树
         tree.push({
-          name: normalizeName(getName(nextNode)),
+          name: getName(nextNode) || COMPONENT_NAME,
           ...source,
         } as CodeSourceMeta);
 
@@ -107,13 +95,6 @@ export function createResolver<T = any>(opts: ResolverOptions<T>) {
    * @param initialNode 过滤起始节点
    *
    * @returns 第一个通过有效性验证的节点
-   *
-   * --------------------------------------------------
-   * 遍历逻辑：
-   * 1. 从初始节点开始遍历
-   * 2. 跳过无效节点直到找到第一个有效节点
-   * 3. 返回有效节点或undefined
-   * --------------------------------------------------
    */
   function getValidNextNode(initialNode: T | null | undefined) {
     let node = initialNode;

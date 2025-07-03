@@ -9,16 +9,9 @@ const MAX_PORT_NUMBER = 9000; // 最大探测端口（不超过 9000 的安全�
  *
  * @param concurrency - 并发探测数（默认 5，建议根据系统负载调整）
  * @param retries - 最大重试次数（默认 10，防止无限循环）
- *
  * @returns 首个可用的端口号
  *
  * @throws 当所有尝试失败时抛出错误
- *
- * 算法核心：
- * 1. 批量生成：每次循环生成 concurrency 个随机端口
- * 2. 竞争检测：使用 Promise.race 获取最快响应结果
- * 3. 超时熔断：100ms 未响应的端口视为不可用
- * 4. 重试机制：避免单次失败导致流程终止
  */
 export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
   // 重试循环保障基础可用性
@@ -37,7 +30,7 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
     // 竞争式响应处理（优先取最快成功结果）
     const result = await Promise.race([
       ...promises,
-      // 超时熔断保护：防止僵尸端口阻塞流程
+      // 防止僵尸端口阻塞流程
       new Promise((resolve) => {
         // 100ms 系统级超时阈值
         setTimeout(() => resolve(null), 100);
@@ -48,17 +41,13 @@ export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
     if (result) return result as number;
   }
   // 全重试周期失败后抛出业务异常
-  throw new Error(`端口探测失败，请检查系统资源。尝试次数：${retries}`);
+  throw new Error(
+    `port detection failed, please check system resources. number of attempts: ${retries}`,
+  );
 }
 
 /**
  * 端口可用性检测器
- *
- * 原理说明：
- * 1. 创建临时 TCP 服务尝试绑定端口
- * 2. 成功监听 → 端口可用
- * 3. 监听报错 → 端口被占用
- * 4. 使用 unref() 防止进程挂起
  */
 function checkPortNumber(port: number): Promise<boolean> {
   return new Promise((resolve) => {
@@ -86,12 +75,6 @@ function checkPortNumber(port: number): Promise<boolean> {
 
 /**
  * 随机端口生成器（四位端口号）
- * 安全策略：
- * - 范围限制：3000-9000 避免系统端口冲突
- * - 随机分布：均匀分布降低重复碰撞概率
- *
- * @optimizations
- * 可升级为基于历史记录的智能生成
  */
 function generatePort(): number {
   // 计算安全范围内的随机整数

@@ -23,29 +23,29 @@ export function resolveVue3(node: any, tree: CodeSourceMeta[], deep = false): vo
  */
 function initializeResolver(): void {
   resolver ||= createResolver({
-    /** 判断当前节点是否有效 */
+    /**
+     * 判断当前节点是否有效
+     */
     isValid(node: any): boolean {
       return node != null;
     },
 
-    /** 获取下一个要解析的节点：Vue3 中通过 ctx.vnode 访问父 vnode */
+    /**
+     * 获取下一个要解析的节点
+     */
     getNext(node: any): any {
       return node?.ctx?.vnode;
     },
 
     /**
-     * 获取已注入的调试源信息：
-     * DS.ID 属性挂在 props 上
+     * 获取已注入的调试源信息
      */
     getSource(node: any): CodeSourceMeta | undefined {
       return node?.props?.[DS.ID];
     },
 
     /**
-     * 获取组件名：
-     * - 首选组件选项中的 name
-     * - 其次 displayName
-     * - 最后内置 __name
+     * 获取组件名
      */
     getName(node: any): string | undefined {
       const type = node.type;

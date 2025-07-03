@@ -2,8 +2,9 @@ import { jsx } from '../../jsx/jsx-runtime';
 import { IS_CLIENT } from '../constants';
 import { appendChild, createStyleGetter, CssUtils } from './dom';
 
-// 判断是否支持 zoom 属性
-const SUPPORT_ZOOM = IS_CLIENT && 'zoom' in document.documentElement.style;
+// https://drafts.csswg.org/cssom-view/#dom-element-currentcsszoom
+const SUPPORT_CURRENT_CSS_ZOOM = IS_CLIENT && 'currentCSSZoom' in document.documentElement;
+const SUPPORT_CSS_ZOOM = IS_CLIENT && 'zoom' in document.documentElement.style;
 
 // 缓存检测结果，避免重复计算
 let NEED_COMPUTED: boolean;
@@ -12,7 +13,6 @@ let NEED_COMPUTED: boolean;
  * 获取经过 zoom 缩放校正后的元素边界矩形
  *
  * @param target - 目标 HTML 元素
- *
  * @returns 校正后的 DOMRect 对象（当浏览器不自动补偿 zoom 时返回计算后值）
  */
 export function getDOMRect(target: HTMLElement) {
@@ -30,28 +30,25 @@ export function getDOMRect(target: HTMLElement) {
  * 获取元素及其祖先链的复合 zoom 值
  *
  * @param target - 起始元素
- *
  * @returns 累积的缩放比例（例如祖先链有 zoom:1.2 和 zoom:1.5 则返回 1.8）
  */
-export function getCompositeZoom(target: HTMLElement) {
-  let zoom = 1;
+export function getCurrentCSSZoom(target: HTMLElement) {
+  if (SUPPORT_CURRENT_CSS_ZOOM) {
+    return target.currentCSSZoom;
+  }
 
+  let zoom = 1;
   // 不支持 zoom 直接返回 1
-  if (!SUPPORT_ZOOM) return zoom;
+  if (!SUPPORT_CSS_ZOOM) return zoom;
 
   let currentElement: HTMLElement | null = target;
-
   // 向上遍历祖先元素
   while (currentElement) {
     const zoomValue = createStyleGetter(currentElement)('zoom');
     // 空值时视为 1 倍缩放
     zoom *= zoomValue || 1;
-
     // 安全遍历父元素
     currentElement = currentElement.parentElement;
-
-    // 终止条件：到达 HTML 根元素或超出安全深度
-    if (currentElement?.tagName === 'HTML') break;
   }
 
   return zoom;
@@ -59,7 +56,6 @@ export function getCompositeZoom(target: HTMLElement) {
 
 /**
  * 动态检测浏览器是否需要手动补偿 zoom 缩放
- *
  * @returns 需要补偿时返回 true
  */
 function checkComputedNeeded() {
@@ -70,7 +66,7 @@ function checkComputedNeeded() {
     style: {
       position: 'fixed',
       // 移出可视区域
-      top: '-9999px',
+      top: '-999px',
       // 转换为 '100px'
       width: CssUtils.numberToPx(DETECT_SIZE),
       height: CssUtils.numberToPx(DETECT_SIZE),
@@ -96,19 +92,14 @@ function checkComputedNeeded() {
  *
  * @param target - 需要计算缩放的目标元素（用于遍历父元素链获取累积缩放率）
  * @param baseRect - 目标元素的原始矩形数据（未经缩放补偿的 DOMRect）
- *
  * @returns 校正后的 DOMRect，其位置和尺寸已精确反映 zoom 缩放效果
- *
- * 核心原理：以元素几何中心为基准进行缩放，避免传统左上角缩放导致的偏移问题
- *
- * 注意事项：此方法专门处理 CSS 的 zoom 属性缩放，与 transform:scale 的坐标系不同
  */
 function computedDOMRect(target: HTMLElement, baseRect: DOMRect) {
   // 获取元素及其所有祖先元素的累积缩放比例
   // 例如：父元素 zoom:1.5，当前元素 zoom:2 → 实际缩放 3 倍
-  const zoomRate = getCompositeZoom(target);
+  const zoomRate = getCurrentCSSZoom(target);
 
-  // 优化：无缩放时直接返回原矩形避免计算误差
+  // 无缩放时直接返回原矩形避免计算误差
   if (zoomRate !== 1) {
     // 解构原始矩形参数（未缩放时的值）
     const { x, y, width, height } = baseRect;

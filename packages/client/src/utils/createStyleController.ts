@@ -32,7 +32,6 @@ const NULL_CONTROLLER = Object.freeze({
  *
  * @param css - 需要注入的 CSS 样式规则字符串，需确保已正确转义特殊字符
  * @param target - 样式插入的目标容器节点，默认使用 document.body
- *
  * @returns 符合当前运行环境的样式控制器实例
  *
  * @example 基础用法
@@ -45,16 +44,6 @@ const NULL_CONTROLLER = Object.freeze({
  * const sidebarAnchor = document.querySelector('#sidebar-anchor');
  * const sidebarStyle = createStyleController(`.sidebar { width: 300px; }`, sidebarAnchor);
  * ```
- *
- * @remarks
- * ### 实现细节
- * 1. **环境自适应** - 服务端环境返回无害空操作实现
- * 2. **样式隔离** - 每个实例管理独立样式节点
- * 3. **引用安全** - 通过闭包隔离节点引用，防止外部篡改
- * 4. **DOM 操作优化** - 复用现有样式节点，避免重复插入
- *
- * ### 浏览器兼容性
- * - 支持所有现代浏览器(Chrome/Firefox/Safari/Edge)
  */
 export function createStyleController(css: string, target?: HTMLElement) {
   // 非浏览器环境返回空操作控制器
@@ -70,11 +59,6 @@ export function createStyleController(css: string, target?: HTMLElement) {
   return {
     /**
      * 挂载样式到文档
-     *
-     * @implementation
-     * 1. 幂等性检查：通过 styleNode 存在性判断
-     * 2. 节点创建：使用 JSX 运行时创建 <style> 元素
-     * 3. 安全插入：通过a ppendChild 保证插入顺序
      */
     mount() {
       if (!styleNode) {
@@ -88,11 +72,6 @@ export function createStyleController(css: string, target?: HTMLElement) {
 
     /**
      * 卸载样式节点
-     *
-     * @implementation
-     * 1. 安全移除：调用 remove() 代替 removeChild 提升性能
-     * 2. 引用清理：重置 styleNode 防止过时引用
-     * 3. 容错处理：在节点不存在时静默返回
      */
     unmount() {
       if (styleNode) {
