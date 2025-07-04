@@ -287,11 +287,11 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.27.7)
       '@open-editor/react':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@3.29.5)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/react
       '@open-editor/rollup':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/rollup
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.27.7)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -342,11 +342,11 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.27.7)
       '@open-editor/rollup':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/rollup
       '@open-editor/vue':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@3.29.5)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vue
       '@rollup/plugin-babel':
         specifier: ^6.0.3
         version: 6.0.4(@babel/core@7.27.7)(@types/babel__core@7.20.5)(rollup@3.29.5)
@@ -391,11 +391,11 @@ importers:
         version: 4.3.0(vue@3.4.21(typescript@5.8.3))
     devDependencies:
       '@open-editor/vite':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vite
       '@open-editor/vue':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@4.44.1)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vue
 
   playgrounds/vite-react:
     dependencies:
@@ -407,11 +407,11 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@4.44.1)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/react
       '@open-editor/vite':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vite
       '@types/react':
         specifier: ^18.2.15
         version: 18.3.23
@@ -435,11 +435,11 @@ importers:
         version: 3.5.17(typescript@5.2.2)
     devDependencies:
       '@open-editor/vite':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vite
       '@open-editor/vue':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@4.44.1)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vue
       '@vitejs/plugin-vue':
         specifier: ^4.2.3
         version: 4.6.2(vite@4.5.14(@types/node@20.5.6)(less@3.13.1)(sass@1.89.2)(stylus@0.54.8)(terser@5.43.1))(vue@3.5.17(typescript@5.2.2))
@@ -466,11 +466,11 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@4.44.1)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/react
       '@open-editor/webpack':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/webpack
       '@types/node':
         specifier: 20.5.6
         version: 20.5.6
@@ -497,11 +497,11 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(@swc/core@1.12.7)(@types/node@20.5.6)(postcss@8.5.6)(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.27.1(@babel/core@7.27.7))(@babel/plugin-transform-react-jsx@7.27.1(@babel/core@7.27.7))(@swc/core@1.12.7)(@types/babel__core@7.20.5)(@types/webpack@5.28.5(@swc/core@1.12.7))(eslint@9.30.0(jiti@2.4.2))(react@18.3.1)(sass@1.89.2)(ts-node@10.9.2(@swc/core@1.12.7)(@types/node@20.5.6)(typescript@4.9.5))(type-fest@4.41.0)(typescript@4.9.5)(vue-template-compiler@2.7.16))(typescript@4.9.5)
       '@open-editor/react':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@2.79.2)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/react
       '@open-editor/webpack':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/webpack
       '@types/react':
         specifier: ^18.3.1
         version: 18.3.23
@@ -525,11 +525,11 @@ importers:
         version: 3.5.17(typescript@5.0.4)
     devDependencies:
       '@open-editor/vue':
-        specifier: beta
-        version: 1.0.0-beta.0(rollup@4.44.1)
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/vue
       '@open-editor/webpack':
-        specifier: beta
-        version: 1.0.0-beta.0
+        specifier: 1.0.0-beta.0
+        version: link:../../packages/webpack
       '@vue/cli-plugin-babel':
         specifier: ~5.0.0
         version: 5.0.8(@swc/core@1.12.7)(@vue/cli-service@5.0.8(@swc/core@1.12.7)(@vue/compiler-sfc@3.5.17)(ejs@3.1.10)(encoding@0.1.13)(lodash@4.17.21)(prettier@3.6.2)(pug@3.0.3)(underscore@1.12.1)(vue-template-compiler@2.7.16)(vue@3.5.17(typescript@5.0.4))(webpack-sources@3.3.3))(core-js@3.43.0)(encoding@0.1.13)(vue@3.5.17(typescript@5.0.4))
@@ -2549,30 +2549,6 @@ packages:
     engines: {node: ^14.18.0 || >=16.10.0}
     peerDependencies:
       vue: ^3.3.4
-
-  '@open-editor/client@1.0.0-beta.0':
-    resolution: {integrity: sha512-LbIEaP1jEsZlRnVfmurMsPRIyBV+Mweio8qFgSfRj/i+BGV+q88F6OaN+me2ha7qyur6ExNOlJ96A1lQLaCYRg==}
-
-  '@open-editor/react@1.0.0-beta.0':
-    resolution: {integrity: sha512-8NM2DQpYHNRuJcnczUMDSNGl4bDzyvYOXASEFMN/t8h4dkBz/6eUESJ/USpauVlQJCBmwrEucD4Y/rBWU7S5FA==}
-
-  '@open-editor/rollup@1.0.0-beta.0':
-    resolution: {integrity: sha512-rWtOahuXT7af2dPsvJIrIIaEs7U6yV1cQ2M/xIjMO0ECbG12zZ1sgqB+ZpfR1XJwIsAcGG4sfZtDIGVhPYhThQ==}
-
-  '@open-editor/server@1.0.0-beta.0':
-    resolution: {integrity: sha512-N74uEnnbvomWsnRElrxaCrPDK0C0OhBcazYNzgGvmnzjxf1a87ZDiQvU39/zbrVYvNo+ofhgZnnj26bY9WpINw==}
-
-  '@open-editor/shared@1.0.0-beta.0':
-    resolution: {integrity: sha512-/crqEa6ao7WipoXoB1CBGxAHhkC/l1y0D8+a/DcPXk0tPZU7poZWUcA4aEztVKKjfCq43XQPJDFklBUazQmVgw==}
-
-  '@open-editor/vite@1.0.0-beta.0':
-    resolution: {integrity: sha512-pXEj0OhEyTWzCZMmxcSgpLAUNjrZ8N1QFTfWlKpzGOf8OgNwS4effXpPrxKOdt0esMePU1GXKGfnsXUoYYK4Lg==}
-
-  '@open-editor/vue@1.0.0-beta.0':
-    resolution: {integrity: sha512-NnnsdEu1NO/6RLxgr1ho51+0Skw4bJki4gj/oLjwRYwkaiwbK+yhn4rTemRK1E9ZmRisddzENx3yWF5fxPCyCg==}
-
-  '@open-editor/webpack@1.0.0-beta.0':
-    resolution: {integrity: sha512-1yZ4TYCr4zEZt/TtVh98venyjvEARs4jWALl8BX+3CkHDghKIkY6zCKc7letUqFNMZbTWW+XBuKbf4X3ZAQ/Zg==}
 
   '@oxc-resolver/binding-darwin-arm64@5.3.0':
     resolution: {integrity: sha512-hXem5ZAguS7IlSiHg/LK0tEfLj4eUo+9U6DaFwwBEGd0L0VIF9LmuiHydRyOrdnnmi9iAAFMAn/wl2cUoiuruA==}
@@ -14176,123 +14152,6 @@ snapshots:
       - vti
       - vue-tsc
 
-  '@open-editor/client@1.0.0-beta.0':
-    dependencies:
-      '@open-editor/shared': 1.0.0-beta.0
-      outmatch: 1.0.0
-
-  '@open-editor/react@1.0.0-beta.0(rollup@2.79.2)':
-    dependencies:
-      '@babel/core': 7.27.7
-      '@babel/parser': 7.27.7
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
-      '@open-editor/shared': 1.0.0-beta.0
-      '@rollup/pluginutils': 5.2.0(rollup@2.79.2)
-      '@types/babel__core': 7.20.5
-      magic-string: 0.30.17
-      unplugin: 2.3.5
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
-  '@open-editor/react@1.0.0-beta.0(rollup@3.29.5)':
-    dependencies:
-      '@babel/core': 7.27.7
-      '@babel/parser': 7.27.7
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
-      '@open-editor/shared': 1.0.0-beta.0
-      '@rollup/pluginutils': 5.2.0(rollup@3.29.5)
-      '@types/babel__core': 7.20.5
-      magic-string: 0.30.17
-      unplugin: 2.3.5
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
-  '@open-editor/react@1.0.0-beta.0(rollup@4.44.1)':
-    dependencies:
-      '@babel/core': 7.27.7
-      '@babel/parser': 7.27.7
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
-      '@open-editor/shared': 1.0.0-beta.0
-      '@rollup/pluginutils': 5.2.0(rollup@4.44.1)
-      '@types/babel__core': 7.20.5
-      magic-string: 0.30.17
-      unplugin: 2.3.5
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
-  '@open-editor/rollup@1.0.0-beta.0':
-    dependencies:
-      '@open-editor/client': 1.0.0-beta.0
-      '@open-editor/server': 1.0.0-beta.0
-      '@open-editor/shared': 1.0.0-beta.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/server@1.0.0-beta.0':
-    dependencies:
-      '@open-editor/shared': 1.0.0-beta.0
-      connect: 3.7.0
-      cors: 2.8.5
-      launch-editor: 2.10.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/shared@1.0.0-beta.0': {}
-
-  '@open-editor/vite@1.0.0-beta.0':
-    dependencies:
-      '@open-editor/client': 1.0.0-beta.0
-      '@open-editor/server': 1.0.0-beta.0
-      '@open-editor/shared': 1.0.0-beta.0
-    transitivePeerDependencies:
-      - supports-color
-
-  '@open-editor/vue@1.0.0-beta.0(rollup@3.29.5)':
-    dependencies:
-      '@babel/core': 7.27.7
-      '@babel/parser': 7.27.7
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
-      '@open-editor/shared': 1.0.0-beta.0
-      '@rollup/pluginutils': 5.2.0(rollup@3.29.5)
-      '@types/babel__core': 7.20.5
-      '@vue/compiler-dom': 3.5.17
-      magic-string: 0.30.17
-      unplugin: 2.3.5
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
-  '@open-editor/vue@1.0.0-beta.0(rollup@4.44.1)':
-    dependencies:
-      '@babel/core': 7.27.7
-      '@babel/parser': 7.27.7
-      '@babel/plugin-syntax-jsx': 7.27.1(@babel/core@7.27.7)
-      '@babel/plugin-syntax-typescript': 7.27.1(@babel/core@7.27.7)
-      '@open-editor/shared': 1.0.0-beta.0
-      '@rollup/pluginutils': 5.2.0(rollup@4.44.1)
-      '@types/babel__core': 7.20.5
-      '@vue/compiler-dom': 3.5.17
-      magic-string: 0.30.17
-      unplugin: 2.3.5
-    transitivePeerDependencies:
-      - rollup
-      - supports-color
-
-  '@open-editor/webpack@1.0.0-beta.0':
-    dependencies:
-      '@open-editor/client': 1.0.0-beta.0
-      '@open-editor/server': 1.0.0-beta.0
-      '@open-editor/shared': 1.0.0-beta.0
-    transitivePeerDependencies:
-      - supports-color
-
   '@oxc-resolver/binding-darwin-arm64@5.3.0':
     optional: true
 
@@ -14576,14 +14435,6 @@ snapshots:
       '@types/estree': 0.0.39
       estree-walker: 1.0.1
       picomatch: 2.3.1
-      rollup: 2.79.2
-
-  '@rollup/pluginutils@5.2.0(rollup@2.79.2)':
-    dependencies:
-      '@types/estree': 1.0.8
-      estree-walker: 2.0.2
-      picomatch: 4.0.2
-    optionalDependencies:
       rollup: 2.79.2
 
   '@rollup/pluginutils@5.2.0(rollup@3.29.5)':
