@@ -26,7 +26,7 @@ const IGNORE_TAGS = new Set(['template', 'script', 'style']);
 
 // 仅在开发模式注入源码位置信息
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
-  if (!isDev()) return { name: 'VueSourcePlugin' };
+  if (!isDev()) return { name: 'OpenEditorVuePlugin' };
 
   const isVite = meta.framework === 'vite';
   const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
@@ -44,7 +44,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
   const isRuntimeFile = (file: string) => vueRuntimeFiles.some((p) => file.endsWith(p));
 
   return {
-    name: 'VueSourcePlugin',
+    name: 'OpenEditorVuePlugin',
     enforce: 'pre',
 
     // 决定哪些文件参与 transform
@@ -142,7 +142,8 @@ if (__debug) {
   delete props.${DS.INJECT_PROP};
   Object.defineProperty(props, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
 }
-const vnode = {`;
+const vnode = {
+`;
 }
 
 // 生成 Vue 2 运行时代码的属性+elm双向绑定片段
@@ -155,7 +156,8 @@ if (__debug) {
 }
 var __elm;
 Object.defineProperty(this, 'elm', { get() { return __elm; }, set(v) { __elm = v; if (v) v.${DS.VUE_2} = this; }, enumerable: true });
-this.tag = tag;`;
+this.tag = tag;
+`;
 }
 
 // 对所有符合条件的元素节点插桩
