@@ -1,13 +1,8 @@
-// Node.js 路径解析模块
 import { resolve } from 'node:path';
-// 命令行日志输出工具
 import consola from 'consola';
-// 交互式命令行提示工具
 import enquirer from 'enquirer';
-// 命令行参数解析工具
 import minimist from 'minimist';
-// 工具函数导入
-import { executeCommand, playgrounds, readJSON } from './utils';
+import { executeCommand, playgrounds, playgroundsRoot, readJSON } from './utils';
 
 // 程序主入口
 main();
@@ -86,8 +81,8 @@ async function selectPlayground(): Promise<string> {
  */
 async function selectScript(playground: string): Promise<string> {
   // 读取目标项目的 package.json
-  const packageJsonPath = resolve('playgrounds', playground, 'package.json');
-  const { scripts } = readJSON(packageJsonPath);
+  const pkgPath = resolve(playgroundsRoot, playground, 'package.json');
+  const { scripts } = readJSON(pkgPath);
 
   const response = await enquirer.prompt<{ script: string }>({
     type: 'select',

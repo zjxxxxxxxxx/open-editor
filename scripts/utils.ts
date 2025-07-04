@@ -12,29 +12,44 @@ import { resolve } from 'node:path';
 export const projectRoot = convertURLToPath(import.meta.url, '../');
 
 /**
+ * packages 根目录路径
+ */
+export const packagesRoot = resolve(projectRoot, 'packages');
+
+/**
+ * playgrounds 根目录路径
+ */
+export const playgroundsRoot = resolve(projectRoot, 'playgrounds');
+
+/**
  * 客户端包根目录路径，基于项目根目录下的 packages/client 目录
  */
-export const clientRoot = resolve(projectRoot, 'packages/client');
+export const clientRoot = resolve(packagesRoot, 'client');
 
 /**
  * 共享代码包根目录路径，基于项目根目录下的 packages/shared 目录
  */
-export const sharedRoot = resolve(projectRoot, 'packages/shared');
+export const sharedRoot = resolve(packagesRoot, 'shared');
 
 /**
  * Rollup 包根目录路径，基于项目根目录下的 packages/rollup 目录
  */
-export const rollupRoot = resolve(projectRoot, 'packages/rollup');
+export const rollupRoot = resolve(packagesRoot, 'rollup');
 
 /**
  * Vite 包根目录路径，基于项目根目录下的 packages/vite 目录
  */
-export const viteRoot = resolve(projectRoot, 'packages/vite');
+export const viteRoot = resolve(packagesRoot, 'vite');
 
 /**
  * Webpack 包根目录路径，基于项目根目录下的 packages/webpack 目录
  */
-export const webpackRoot = resolve(projectRoot, 'packages/webpack');
+export const webpackRoot = resolve(packagesRoot, 'webpack');
+
+/**
+ * 所有 package 目录列表，读取项目根目录下 packages 文件夹中的内容
+ */
+export const packages = readdirSync(resolve(projectRoot, 'packages'));
 
 /**
  * 所有 playground 目录列表，读取项目根目录下 playgrounds 文件夹中的内容
@@ -94,11 +109,6 @@ export function executeCommand(command: string, options: ExecSyncOptions = {}) {
  * 安全执行函数并处理异常退出
  *
  * @param operation - 需要执行的操作函数
- *
- * @description
- * 1. 捕获同步代码异常
- * 2. 处理异步 Promise rejection
- * 3. 异常发生时以状态码1退出进程
  */
 export function safeExecute(operation: () => unknown | void) {
   try {

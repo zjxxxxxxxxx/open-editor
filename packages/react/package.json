@@ -41,6 +41,11 @@
     "url": "git+https://github.com/zjxxxxxxxxx/open-editor.git",
     "directory": "packages/react-source"
   },
+  "keywords": [
+    "open-editor",
+    "debug-source",
+    "react-source"
+  ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",
   "bugs": {

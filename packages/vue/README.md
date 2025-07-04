@@ -49,7 +49,7 @@ after
 ```tsx
 // src/App.tsx
 export default function App() {
-  return <div _debugSource={{ file: 'src/App.vue', line: 3, column: 9 }}>hello word</div>;
+  return <div _debugSource={{ file: 'src/App.tsx', line: 3, column: 9 }}>hello word</div>;
 }
 ```
 
@@ -127,7 +127,12 @@ import openEditorVue from '@open-editor/vue/vite';
 
 export default defineNuxtConfig({
   vite: {
-    plugins: [openEditorVue()],
+    plugins: [
+      openEditorVue({
+        /* options */
+      }),
+      // other plugins
+    ],
   },
 });
 ```

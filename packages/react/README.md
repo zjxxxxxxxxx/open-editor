@@ -25,7 +25,7 @@ after
 ```tsx
 // src/App.tsx
 export default function App() {
-  return <div _debugSource={{ file: 'src/App.vue', line: 3, column: 9 }}>hello word</div>;
+  return <div _debugSource={{ file: 'src/App.tsx', line: 3, column: 9 }}>hello word</div>;
 }
 ```
 
@@ -102,7 +102,11 @@ module.exports = {
 module.exports = {
   webpack(config, { isServer }) {
     if (!isServer) {
-      config.plugins.push(require('@open-editor/react/webpack')());
+      config.plugins.push(
+        require('@open-editor/react/webpack')({
+          /* options */
+        }),
+      );
     }
     return config;
   },

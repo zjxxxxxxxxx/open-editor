@@ -98,7 +98,7 @@ export function TreeUI() {
 
     return (
       <div className="oe-tree-item">
-        <div className="oe-tree-node" onClick={() => handleNodeClick(meta)}>
+        <div className="oe-tree-node" data-open onClick={() => handleNodeClick(meta)}>
           {name}
           <span className="oe-tree-file">{file}</span>
         </div>
@@ -107,7 +107,9 @@ export function TreeUI() {
           <>
             <div className="oe-tree-line" />
             {renderTreeNodes(nodes, index - 1)}
-            <div className="oe-tree-node">{name}</div>
+            <div className="oe-tree-node" data-close>
+              {name}
+            </div>
           </>
         )}
       </div>

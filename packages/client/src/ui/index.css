@@ -300,12 +300,12 @@
   color: var(--text-color);
   opacity: 0.6;
 
-  &[title]:hover,
-  &[title]:hover ~ .oe-tree-node {
+  &[data-open]:hover,
+  &[data-open]:hover ~ .oe-tree-node {
     opacity: 1;
   }
 
-  &[title]:hover ~ .oe-tree-line {
+  &[data-open]:hover ~ .oe-tree-line {
     opacity: 0.6;
   }
 }
