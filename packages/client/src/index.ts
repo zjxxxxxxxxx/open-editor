@@ -25,13 +25,10 @@ export function setupClient(opts: Options) {
 
     // 配置注入阶段
     setOptions(opts);
-
     // 通信层初始化
     setupBridge();
-
     // 调试工具初始化
     setupInspector();
-
     // 用户界面初始化
     setupUI();
   });
