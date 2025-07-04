@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/rollup",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "🚀 A rollup plugin for fast find source code.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

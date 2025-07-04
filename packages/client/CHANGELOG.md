@@ -1,5 +1,16 @@
 # @open-editor/client
 
+## 1.0.0-beta.1
+
+### Major Changes
+
+- [#337](https://github.com/zjxxxxxxxxx/open-editor/pull/337) [`60896ac`](https://github.com/zjxxxxxxxxx/open-editor/commit/60896acc3a6e771ea53936b03fffd72c433620c0) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Compatible with currentCSSZoom
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/shared@1.0.0-beta.1
+
 ## 1.0.0-beta.0
 
 ### Minor Changes
