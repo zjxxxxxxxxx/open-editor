@@ -17,13 +17,14 @@
     "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern '/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",
-    "release": "run-s build publish:ci",
     "test": "turbo run test",
     "check": "tsc --noEmit && turbo run check --filter @open-editor/* --log-order grouped",
-    "install:ci": "pnpm install --ignore-scripts",
-    "versions": "run-s version:ci format",
+    "install:ci": "pnpm install --ignore-scripts --recursive --filter '!./playgrounds/**'",
+    "versions": "run-s version:ci version:sync format",
     "version:ci": "changeset version --pre beta",
-    "publish:ci": "changeset publish"
+    "version:sync": "esno scripts/version.sync.ts",
+    "release": "run-s build release:ci",
+    "release:ci": "changeset publish"
   },
   "engines": {
     "node": ">=18"

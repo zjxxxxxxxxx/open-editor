@@ -32,16 +32,6 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
       ];
   const isRuntimeFile = (file: string) => reactRuntimeFiles.some((p) => file.endsWith(p));
 
-  // 通用属性注入逻辑
-  const propInjection = code`
-props = Object.assign({}, props);
-const __debug = props.${DS.INJECT_PROP};
-if (__debug) {
-  delete props.${DS.INJECT_PROP};
-  Object.defineProperty(props, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
-}
-`;
-
   return {
     name: 'OpenEditorReactPlugin',
     enforce: 'pre',
@@ -69,8 +59,8 @@ if (__debug) {
         }
         // 对运行时代码中的 element/type 对象注入属性
         const replacements = [
-          { search: 'var element = {', inject: `${propInjection}var element = {` },
-          { search: 'type = {', inject: `${propInjection}type = {` },
+          { search: 'var element = {', inject: genInject('var element = {') },
+          { search: 'type = {', inject: genInject('type = {') },
         ];
         for (const { search, inject } of replacements) {
           if (code.includes(search)) {
@@ -120,6 +110,24 @@ function parseID(id, rootDir) {
   const rel = relative(rootDir, normalized);
   const ext = extname(rel).slice(1);
   return { file: rel, isJsx: ext === 'jsx', isTsx: ext === 'tsx' };
+}
+
+/**
+ * 生成注入到 React 运行时代码的属性注入片段
+ *
+ * @param search - 要替换的原始字符串（如 "var element = {" 或 "type = {"）
+ * @returns 带有调试属性注入逻辑的完整替换文本
+ */
+function genInject(search: string) {
+  const propInject = code`
+props = Object.assign({}, props);
+const __debug = props.${DS.INJECT_PROP};
+if (__debug) {
+  delete props.${DS.INJECT_PROP};
+  Object.defineProperty(props, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
+}
+`;
+  return `${propInject}${search}`;
 }
 
 /**
