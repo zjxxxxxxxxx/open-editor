@@ -19,6 +19,9 @@ import {
 } from '@vue/compiler-dom';
 import { type Options } from '../types';
 
+// 插件名称
+const UN_PLUGIN_NAME = 'OpenEditorVueUnPlugin';
+
 // 支持的 Vue 标签类型集合
 const TAG_TYPES = new Set([ElementTypes.ELEMENT, ElementTypes.COMPONENT]);
 // 默认参数
@@ -28,7 +31,7 @@ const DEFAULT_QUERY = Object.freeze({
 
 // 仅在开发模式注入源码位置信息
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
-  if (!isDev()) return { name: 'OpenEditorVuePlugin' };
+  if (!isDev()) return { name: UN_PLUGIN_NAME };
 
   const isVite = meta.framework === 'vite';
   const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
@@ -46,7 +49,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
   const isRuntimeFile = (file: string) => vueRuntimeFiles.some((p) => file.endsWith(p));
 
   return {
-    name: 'OpenEditorVuePlugin',
+    name: UN_PLUGIN_NAME,
     enforce: 'pre',
 
     // 决定哪些文件参与 transform
