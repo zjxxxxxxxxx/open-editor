@@ -21,8 +21,10 @@ import { type Options } from '../types';
 
 // 支持的 Vue 标签类型集合
 const TAG_TYPES = new Set([ElementTypes.ELEMENT, ElementTypes.COMPONENT]);
-// 忽略插桩的原生块级标签
-const IGNORE_TAGS = new Set(['template', 'script', 'style']);
+// 默认参数
+const DEFAULT_QUERY = Object.freeze({
+  type: 'template',
+});
 
 // 仅在开发模式注入源码位置信息
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
@@ -50,15 +52,23 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
     // 决定哪些文件参与 transform
     transformInclude(id) {
       const { file, query } = parseID(id, rootDir);
-      return isRuntimeFile(file) || (query.raw == null && filter(file));
+      return (
+        isRuntimeFile(file) ||
+        (query.raw == null && query.type === DEFAULT_QUERY.type && filter(file))
+      );
     },
 
     // 对文件执行插桩
     transform(code, id) {
       const { file, isSfc, ...jsxOpts } = parseID(id, rootDir);
 
-      // 针对 vnode/cloned/this.tag 等核心逻辑
       if (isRuntimeFile(file)) {
+        // 处理 Vue 运行时代码，自动扩展 vite 下的 chunk 列表
+        if (isVite && file.endsWith('/vue.js')) {
+          const chunks = code.match(/\/[\w-]+\.js/g) || [];
+          vueRuntimeFiles.push(...chunks);
+        }
+        // 对运行时代码中的 vnode/VNode 对象注入属性
         const replacements = [
           {
             search: 'const vnode = {',
@@ -79,6 +89,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
 
       // 跳过已插桩文件
       if (code.includes(DS.INJECT_PROP)) return null;
+
       const magic = new MagicString(code);
 
       // 在标签闭合尖括号前插入属性
@@ -123,7 +134,9 @@ function parseID(id: string, rootDir: string) {
   const [path, qs] = normalizePath(id).split('?', 2);
   const file = relative(rootDir, path);
   const ext = extname(file).slice(1);
-  const query = qs ? Object.fromEntries(new URLSearchParams(qs)) : {};
+  const query = (
+    qs ? Object.fromEntries(new URLSearchParams(qs)) : DEFAULT_QUERY
+  ) as AnyObject<string>;
   return {
     file,
     isSfc: ext === 'vue',
@@ -168,11 +181,7 @@ function transformTemplate(
   vueTransform(ast, {
     nodeTransforms: [
       (node) => {
-        if (
-          node.type === NodeTypes.ELEMENT &&
-          TAG_TYPES.has(node.tagType) &&
-          !IGNORE_TAGS.has(node.tag)
-        ) {
+        if (node.type === NodeTypes.ELEMENT && TAG_TYPES.has(node.tagType)) {
           const hasAttrs = node.props.length > 0;
           const pos = hasAttrs
             ? Math.max(...node.props.map((p) => p.loc.end.offset))
