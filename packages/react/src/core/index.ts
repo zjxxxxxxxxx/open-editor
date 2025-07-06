@@ -55,12 +55,17 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         if (isVite && file.endsWith('/react.js')) {
           const chunks = code.match(/\/[\w-]+\.js/g) || [];
           reactRuntimeFiles.push(...chunks);
-          return null;
         }
         // 对运行时代码中的 element/type 对象注入属性
         const replacements = [
-          { search: 'var element = {', inject: genInject('var element = {') },
-          { search: 'type = {', inject: genInject('type = {') },
+          {
+            search: 'var element = {',
+            inject: genInject('var element = {'),
+          },
+          {
+            search: 'type = {',
+            inject: genInject('type = {'),
+          },
         ];
         for (const { search, inject } of replacements) {
           if (code.includes(search)) {
@@ -70,8 +75,9 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         return null;
       }
 
-      // 对用户 JSX/TSX 文件插入调试属性
-      if (code.includes(DS.INJECT_PROP)) return null; // 已处理过
+      // 跳过已插桩文件
+      if (code.includes(DS.INJECT_PROP)) return null;
+
       const magic = new MagicString(code);
 
       // 在 JSX 标签闭合符号前插入调试属性
