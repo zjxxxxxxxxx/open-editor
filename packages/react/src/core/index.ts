@@ -84,11 +84,11 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
       const magic = new MagicString(code);
 
       // 在 JSX 标签闭合符号前插入调试属性
-      const insertDebugAttr = (idx, line, col) => {
+      function insertDebugProp(idx, line, col) {
         const payload = JSON.stringify({ file, line, column: col });
         magic.prependLeft(idx, ` ${DS.INJECT_PROP}={${payload}}`);
-      };
-      transformJSX(code, insertDebugAttr, isTsx);
+      }
+      transformJSX(code, insertDebugProp, isTsx);
 
       if (!magic.hasChanged()) return null;
       return {

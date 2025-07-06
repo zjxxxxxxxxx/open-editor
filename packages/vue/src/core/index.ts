@@ -9,19 +9,18 @@ import { parse as babelParse, type ParserOptions } from '@babel/parser';
 import { traverse } from '@babel/core';
 import {
   parse as vueParse,
-  transform as vueTransform,
   NodeTypes,
   ElementTypes,
   type ElementNode,
   type TextNode,
   type AttributeNode,
   type RootNode,
+  type TemplateChildNode,
 } from '@vue/compiler-dom';
 import { type Options } from '../types';
 
 // 插件名称
 const UN_PLUGIN_NAME = 'OpenEditorVueUnPlugin';
-
 // 支持的 Vue 标签类型集合
 const TAG_TYPES = new Set([ElementTypes.ELEMENT, ElementTypes.COMPONENT]);
 // 默认参数
@@ -96,21 +95,21 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
       const magic = new MagicString(code);
 
       // 在标签闭合尖括号前插入属性
-      const insertAttr = (idx, line, col, isTpl) => {
+      function insertDebugProp(idx, line, col, isTpl) {
         const payload = JSON.stringify({ file, line, column: col });
-        const attr = isTpl ? ` :${DS.INJECT_PROP}='${payload}'` : ` ${DS.INJECT_PROP}={${payload}}`;
-        magic.prependLeft(idx, attr);
-      };
+        const prop = isTpl ? ` :${DS.INJECT_PROP}='${payload}'` : ` ${DS.INJECT_PROP}={${payload}}`;
+        magic.prependLeft(idx, prop);
+      }
 
       // 先处理模板，再提取并处理 <script> 中的 JSX/TSX
       if (isSfc) {
         const ast = vueParse(code);
-        transformTemplate(ast, insertAttr);
+        transformTemplate(ast, insertDebugProp);
         const jsxOpts = extractScriptJsxOptions(ast);
-        if (jsxOpts) transformJSX(jsxOpts.code, insertAttr, jsxOpts);
+        if (jsxOpts) transformJSX(jsxOpts.code, insertDebugProp, jsxOpts);
       } else {
         // 普通 JSX/TSX 文件
-        transformJSX(code, insertAttr, jsxOpts);
+        transformJSX(code, insertDebugProp, jsxOpts);
       }
 
       if (!magic.hasChanged()) return null;
@@ -138,7 +137,12 @@ function parseID(id: string, rootDir: string) {
   const file = relative(rootDir, path);
   const ext = extname(file).slice(1);
   const query = (
-    qs ? Object.fromEntries(new URLSearchParams(qs)) : DEFAULT_QUERY
+    qs
+      ? {
+          ...DEFAULT_QUERY,
+          ...Object.fromEntries(new URLSearchParams(qs)),
+        }
+      : DEFAULT_QUERY
   ) as AnyObject<string>;
   return {
     file,
@@ -170,8 +174,10 @@ if (__debug) {
   delete data.attrs.${DS.INJECT_PROP};
   Object.defineProperty(this, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
 }
-var __elm;
-Object.defineProperty(this, 'elm', { get() { return __elm; }, set(v) { __elm = v; if (v) v.${DS.VUE_2} = this; }, enumerable: true });
+if (!componentOptions) {
+ var __elm;
+ Object.defineProperty(this, 'elm', { get() { return __elm; }, set(v) { __elm = v; if (v) v.${DS.VUE_2} = this; }, enumerable: true });
+}
 this.tag = tag;
 `;
 }
@@ -181,19 +187,26 @@ function transformTemplate(
   ast: RootNode,
   cb: (idx: number, line: number, column: number, isTpl?: boolean) => void,
 ) {
-  vueTransform(ast, {
-    nodeTransforms: [
-      (node) => {
-        if (node.type === NodeTypes.ELEMENT && TAG_TYPES.has(node.tagType)) {
-          const hasAttrs = node.props.length > 0;
-          const pos = hasAttrs
-            ? Math.max(...node.props.map((p) => p.loc.end.offset))
-            : node.loc.start.offset + node.tag.length + 1;
-          cb(pos, node.loc.start.line, node.loc.start.column, true);
-        }
-      },
-    ],
+  walkNodes(ast.children, (node) => {
+    const hasAttrs = node.props.length > 0;
+    const pos = hasAttrs
+      ? Math.max(...node.props.map((p) => p.loc.end.offset))
+      : node.loc.start.offset + node.tag.length + 1;
+    cb(pos, node.loc.start.line, node.loc.start.column, true);
   });
+}
+
+function walkNodes(nodes: TemplateChildNode[], visitor: (node: ElementNode) => void) {
+  for (const node of nodes) {
+    if (node.type === NodeTypes.ELEMENT && TAG_TYPES.has(node.tagType)) {
+      if (TAG_TYPES.has(node.tagType)) {
+        visitor(node);
+      }
+      if (node.children.length) {
+        walkNodes(node.children, visitor);
+      }
+    }
+  }
 }
 
 // 提取 <script> 中的 JSX/TSX 信息

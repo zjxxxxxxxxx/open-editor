@@ -160,7 +160,7 @@ export interface Options {
   /**
    * 包含的文件 | Files to include
    *
-   * @default /\.(jsx|tsx)$/
+   * @default /\.(vue|jsx|tsx)$/
    */
   include?: string | RegExp | (string | RegExp)[];
   /**
