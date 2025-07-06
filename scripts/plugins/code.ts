@@ -22,13 +22,10 @@ export default function codePlugin(opts: CodePluginOptions = {}): Plugin {
       // 如果源码不包含 code`，则无需处理
       if (!code.includes('code`')) return null;
 
-      let s!: MagicString; // MagicString 实例，用于高效修改代码
+      const magic = new MagicString(code); // MagicString 实例，用于高效修改代码
 
       // 使用 matchAll 迭代所有匹配项，获取匹配内容和精确位置
       for (const match of code.matchAll(CODE_RE)) {
-        // 延迟初始化 MagicString 实例，仅在第一次替换时创建
-        s ??= new MagicString(code);
-
         const raw = match[0]; // 完整匹配的字符串，如 'code`...`'
         const content = match[1]; // 捕获组1的内容，即模板字符串内部
         const offset = match.index!; // 匹配项的起始索引
@@ -39,16 +36,13 @@ export default function codePlugin(opts: CodePluginOptions = {}): Plugin {
           .trim(); // 移除最终的首尾空白
 
         // 用处理后的单行字符串替换原始模板字面量部分
-        s.overwrite(offset, offset + raw.length, `\`${processedContent}\``);
+        magic.overwrite(offset, offset + raw.length, `\`${processedContent}\``);
       }
-
-      // 如果没有进行任何替换 (即 s 仍然是 undefined)，则返回 null
-      if (!s) return null;
 
       // 返回转换后的代码和 sourceMap
       return {
-        code: s.toString(),
-        map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
+        code: magic.toString(),
+        map: opts.sourceMap ? magic.generateMap({ source: id, file: id }) : null,
       };
     },
   };

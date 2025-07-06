@@ -43,15 +43,9 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
       });
 
       // MagicString 实例，用于代码修改
-      let s!: MagicString;
+      const magic = new MagicString(code);
       // 字节到字符索引转换器
-      let toIdx!: (val: number) => number;
-
-      // 延迟初始化 s 和 toIdx
-      function setupVars() {
-        s ??= new MagicString(code);
-        toIdx ??= createByteToCharIndex(code, ast.span.start);
-      }
+      const toIdx = createByteToCharIndex(code, ast.span.start);
 
       // eslint-disable-next-line @typescript-eslint/no-this-alias
       const ctx = this; // 捕获 Rollup 插件上下文
@@ -66,9 +60,7 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
         // 处理 css`...` 标签模板
         visitTaggedTemplateExpression(node: TaggedTemplateExpression) {
           if (node.tag.type === 'Identifier' && node.tag.value === 'css') {
-            setupVars();
-
-            s.overwrite(
+            magic.overwrite(
               toIdx(node.span.start),
               toIdx(node.span.end),
               minifyCss(node.template.quasis[0]?.cooked || ''),
@@ -97,9 +89,7 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
             if (rel === 'stylesheet' && href) {
               const path = join(dirname(id), href);
               if (existsSync(path)) {
-                setupVars();
-
-                s.overwrite(
+                magic.overwrite(
                   toIdx(node.span.start),
                   toIdx(node.span.end),
                   `<style type="text/css">{${minifyCss(readFileSync(path, 'utf-8'))}}</style>`,
@@ -115,13 +105,10 @@ export default function cssPlugin(opts: CssPluginOptions = {}): Plugin {
 
       visitor.visitModule(ast); // 遍历模块 AST
 
-      // 如果 s 未被初始化，表示没有 CSS 相关内容被修改
-      if (!s) return null;
-
       // 返回转换后的代码和 sourceMap
       return {
-        code: s.toString(),
-        map: opts.sourceMap ? s.generateMap({ source: id, file: id }) : null,
+        code: magic.toString(),
+        map: opts.sourceMap ? magic.generateMap({ source: id, file: id }) : null,
       };
     },
   };
