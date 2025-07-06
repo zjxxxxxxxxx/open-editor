@@ -290,10 +290,10 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.28.0)
       '@open-editor/react':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/react
       '@open-editor/rollup':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/rollup
       '@rollup/plugin-babel':
         specifier: ^6.0.3
@@ -345,10 +345,10 @@ importers:
         specifier: ^7.22.11
         version: 7.27.1(@babel/core@7.28.0)
       '@open-editor/rollup':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/rollup
       '@open-editor/vue':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vue
       '@rollup/plugin-babel':
         specifier: ^6.0.3
@@ -394,10 +394,10 @@ importers:
         version: 4.3.0(vue@3.4.21(typescript@5.8.3))
     devDependencies:
       '@open-editor/vite':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vite
       '@open-editor/vue':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vue
 
   playgrounds/vite-react:
@@ -410,10 +410,10 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/react
       '@open-editor/vite':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vite
       '@types/react':
         specifier: ^18.2.15
@@ -438,10 +438,10 @@ importers:
         version: 3.4.21(typescript@5.8.3)
     devDependencies:
       '@open-editor/vite':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vite
       '@open-editor/vue':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vue
       '@vitejs/plugin-vue':
         specifier: ^4.2.3
@@ -469,10 +469,10 @@ importers:
         version: 19.1.0(react@19.1.0)
     devDependencies:
       '@open-editor/react':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/react
       '@open-editor/webpack':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/webpack
       '@types/node':
         specifier: 20.5.6
@@ -500,10 +500,10 @@ importers:
         specifier: ^7.1.0
         version: 7.1.0(@swc/core@1.12.9)(@types/node@20.5.6)(postcss@8.5.6)(react-scripts@5.0.1(@babel/plugin-syntax-flow@7.27.1(@babel/core@7.28.0))(@babel/plugin-transform-react-jsx@7.27.1(@babel/core@7.28.0))(@swc/core@1.12.9)(@types/babel__core@7.20.5)(@types/webpack@5.28.5(@swc/core@1.12.9))(eslint@9.30.1(jiti@2.4.2))(react@18.3.1)(sass@1.89.2)(ts-node@10.9.2(@swc/core@1.12.9)(@types/node@20.5.6)(typescript@4.9.5))(type-fest@4.41.0)(typescript@4.9.5)(vue-template-compiler@2.7.16))(typescript@4.9.5)
       '@open-editor/react':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/react
       '@open-editor/webpack':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/webpack
       '@types/react':
         specifier: ^18.3.1
@@ -528,10 +528,10 @@ importers:
         version: 3.4.21(typescript@5.0.4)
     devDependencies:
       '@open-editor/vue':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/vue
       '@open-editor/webpack':
-        specifier: 1.0.0-beta.1
+        specifier: 1.0.0-beta.2
         version: link:../../packages/webpack
       '@vue/cli-plugin-babel':
         specifier: ~5.0.0
