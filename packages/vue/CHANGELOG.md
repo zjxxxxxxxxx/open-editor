@@ -1,5 +1,18 @@
 # @open-editor/vue
 
+## 1.0.0-beta.2
+
+### Major Changes
+
+- [#345](https://github.com/zjxxxxxxxxx/open-editor/pull/345) [`6d74508`](https://github.com/zjxxxxxxxxx/open-editor/commit/6d74508e5643ce2a18d97546b14d3c3c1d430fdf) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix: Fix redundant compilation
+
+- [#347](https://github.com/zjxxxxxxxxx/open-editor/pull/347) [`e3c54de`](https://github.com/zjxxxxxxxxx/open-editor/commit/e3c54dec378e74c9a1f0f154d1d763ea8d39681e) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Refactor plugin names to use "UnPlugin" suffix
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @open-editor/shared@1.0.0-beta.2
+
 ## 1.0.0-beta.1
 
 ### Major Changes

@@ -1,6 +1,6 @@
 {
   "name": "@open-editor/vue",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Add a _debugSource prop to all Elements",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
