@@ -6,15 +6,7 @@ import openEditor from '@open-editor/vite';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    openEditorVue(),
-    vue(),
-    vueJsx(),
-    openEditor({
-      once: true,
-      crossIframe: true,
-    }),
-  ],
+  plugins: [openEditorVue(), vue(), vueJsx(), openEditor()],
   server: {
     host: '0.0.0.0',
     port: 4004,

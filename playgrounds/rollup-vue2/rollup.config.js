@@ -35,10 +35,7 @@ export default {
     }),
     postcss(),
     image(),
-    openEditor({
-      once: true,
-      crossIframe: true,
-    }),
+    openEditor(),
     liveServer({
       port: 4001,
       wait: 1000,

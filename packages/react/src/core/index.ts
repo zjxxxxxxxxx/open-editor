@@ -9,13 +9,16 @@ import { parse } from '@babel/parser';
 import { traverse } from '@babel/core';
 import { type Options } from '../types';
 
+// 插件名称
+const UN_PLUGIN_NAME = 'OpenEditorReactUnPlugin';
+
 /**
  * React 源码调试信息注入插件工厂
  * 仅在开发模式下启用，对 React 运行时代码和用户 JSX/TSX 代码插入调试元数据
  */
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
   // 非开发环境直接返回空插件
-  if (!isDev()) return { name: 'OpenEditorReactPlugin' };
+  if (!isDev()) return { name: UN_PLUGIN_NAME };
 
   const isVite = meta.framework === 'vite';
   const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
@@ -33,7 +36,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
   const isRuntimeFile = (file: string) => reactRuntimeFiles.some((p) => file.endsWith(p));
 
   return {
-    name: 'OpenEditorReactPlugin',
+    name: UN_PLUGIN_NAME,
     enforce: 'pre',
 
     /**
