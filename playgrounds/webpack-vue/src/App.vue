@@ -4,6 +4,10 @@ import TestCrossIframe from './components/TestCrossIframe.vue';
 import TestComponentTree from './components/TestComponentTree.vue';
 import Notes from './components/Notes.vue';
 
+defineOptions({
+  name: 'App',
+});
+
 const pathname = ref(location.pathname);
 
 defineExpose({

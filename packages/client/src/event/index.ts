@@ -153,6 +153,6 @@ export function onDocumentReady(listener: () => void) {
     on('DOMContentLoaded', listener, { once: true });
   } else {
     // 文档已处于 interactive 或 complete，直接执行回调
-    listener();
+    setTimeout(listener, 0);
   }
 }

@@ -1,3 +1,8 @@
+<script setup lang="ts">
+defineOptions({
+  name: 'Notes',
+});
+</script>
 <template>
   <div>
     <h2>Enable inspector</h2>

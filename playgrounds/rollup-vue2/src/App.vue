@@ -5,6 +5,7 @@ import TestComponentTree from './components/TestComponentTree.vue';
 import Notes from './components/Notes.vue';
 
 export default Vue.extend({
+  name: 'App',
   components: {
     TestCrossIframe,
     TestComponentTree,
