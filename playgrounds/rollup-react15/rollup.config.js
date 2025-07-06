@@ -50,10 +50,7 @@ export default {
     svg({
       base64: true,
     }),
-    openEditor({
-      once: true,
-      crossIframe: true,
-    }),
+    openEditor(),
     liveServer({
       port: 4000,
       wait: 1000,
