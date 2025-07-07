@@ -12,7 +12,7 @@ export interface CodePluginOptions {
 // 匹配所有 code`...` 模板字符串，并捕获内部任意字符（包括换行）
 const CODE_RE = /code`([\s\S]*?)`/g;
 // 匹配所有换行符、符号前后的多余空格，用于一步到位地压缩 code 内容
-const CODE_COMPACT_RE = /[\n\r\f]+|\s*([{}()[\];,=+\-*/:&|])\s*|([=+\-*/:&|])\s+/g;
+const CODE_COMPACT_RE = /[\n\r\f]+|\s*([{}()[\];,=+\-*/:&|!])\s*|([=+\-*/:&|])\s+/g;
 
 export default function codePlugin(opts: CodePluginOptions = {}): Plugin {
   return {

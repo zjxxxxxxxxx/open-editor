@@ -131,7 +131,7 @@ export default function OpenEditorPlugin(options: Options = {}) {
      * @remarks
      * 处理客户端模块的虚拟路径映射 | Handle virtual path mapping for client module
      */
-    resolveId(id) {
+    resolveId(id: string) {
       if (id === CLIENT_MODULE_ID) {
         // 确保 ES 模块兼容性 | Ensure ES module compatibility
         return resolvePath(CLIENT_MODULE_ID, import.meta.url).replace(/\.js$/, '.mjs');

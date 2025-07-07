@@ -96,10 +96,14 @@ function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, repla
 
     yield () => {
       while (index < endIndex) {
-        const newRuleText = rules[index].cssText.replace(pattern, replacement);
+        try {
+          const newRuleText = rules[index].cssText.replace(pattern, replacement);
 
-        styleSheet.deleteRule(0);
-        styleSheet.insertRule(newRuleText, rulesSize);
+          styleSheet.deleteRule(0);
+          styleSheet.insertRule(newRuleText, rulesSize);
+        } catch {
+          //
+        }
 
         index++;
       }

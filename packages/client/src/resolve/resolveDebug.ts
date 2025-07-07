@@ -65,12 +65,12 @@ function detectFrameworkKey(el: HTMLElement) {
 
 // Vue3 组件检测
 function detectVue3(el: HTMLElement) {
-  return hasOwn(el, DS.VUE_3) ? DS.VUE_3 : undefined;
+  return hasOwn(el, DS.VUE_V3) ? DS.VUE_V3 : undefined;
 }
 
 // Vue2 组件检测
 function detectVue2(el: HTMLElement) {
-  return hasOwn(el, DS.VUE_2) ? DS.VUE_2 : undefined;
+  return hasOwn(el, DS.VUE_V2) ? DS.VUE_V2 : undefined;
 }
 
 // React 17+ Fiber 节点检测
