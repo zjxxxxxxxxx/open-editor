@@ -70,7 +70,7 @@ function initializeResolver(): void {
      */
     getSource(owner: any): CodeSourceMeta | undefined {
       const element = owner?._currentElement;
-      return element?.props?.[DS.ID] ?? reactBabel2DSValue(element?._source);
+      return element?.[DS.ID] ?? reactBabel2DSValue(element?._source);
     },
 
     /**

@@ -58,10 +58,10 @@ export class DS {
   /**
    * Vue 3 渲染节点上挂载的属性名
    */
-  static readonly VUE_3 = '__vnode';
+  static readonly VUE_V3 = '__vue_v3';
 
   /**
    * Vue 2 渲染节点上挂载的属性名
    */
-  static readonly VUE_2 = '__v2_vnode';
+  static readonly VUE_V2 = '__vue_v2';
 }
