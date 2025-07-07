@@ -33,25 +33,21 @@ export function getDOMRect(target: HTMLElement) {
  * @returns 累积的缩放比例（例如祖先链有 zoom:1.2 和 zoom:1.5 则返回 1.8）
  */
 export function getCurrentCSSZoom(target: HTMLElement) {
-  if (SUPPORT_CURRENT_CSS_ZOOM) {
-    return target.currentCSSZoom;
-  }
-
-  let zoom = 1;
+  // 支持 currentCSSZoom 直接返回结果
+  if (SUPPORT_CURRENT_CSS_ZOOM) return target.currentCSSZoom;
   // 不支持 zoom 直接返回 1
-  if (!SUPPORT_CSS_ZOOM) return zoom;
+  if (!SUPPORT_CSS_ZOOM) return 1;
 
+  let currentCSSZoom = 1;
   let currentElement: HTMLElement | null = target;
   // 向上遍历祖先元素
   while (currentElement) {
-    const zoomValue = createStyleGetter(currentElement)('zoom');
     // 空值时视为 1 倍缩放
-    zoom *= zoomValue || 1;
-    // 安全遍历父元素
+    const zoomValue = createStyleGetter(currentElement)('zoom') || 1;
+    currentCSSZoom *= zoomValue;
     currentElement = currentElement.parentElement;
   }
-
-  return zoom;
+  return currentCSSZoom;
 }
 
 /**

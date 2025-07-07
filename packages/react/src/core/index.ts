@@ -41,6 +41,8 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
 
     /**
      * 决定哪些文件参与 transform
+     * @param id - 文件 ID
+     * @returns 是否需要对文件进行转换
      */
     transformInclude(id) {
       const { file } = parseID(id, rootDir);
@@ -49,6 +51,9 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
 
     /**
      * 对符合条件的文件执行插桩
+     * @param code - 代码内容
+     * @param id - 文件 ID
+     * @returns 转换后的代码
      */
     transform(code, id) {
       const { file, isTsx } = parseID(id, rootDir);
@@ -59,20 +64,25 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
           const chunks = code.match(/\/[\w-]+\.js/g) || [];
           reactRuntimeFiles.push(...chunks);
         }
-        // 对运行时代码中的 element/type 对象注入属性
+
+        // 插入 React 15/19 运行时代码
         const replacements = [
           {
-            search: 'var element = {',
-            inject: genInject('var element = {'),
+            // React 15 匹配 var ReactElement = function 函数，并在 element 末尾插入代码
+            matchRE: /([\s\S]*?var\s+ReactElement\s*=\s*function[\s\S]*?\})([\s\S]*)/,
+            nodeVar: 'element',
           },
           {
-            search: 'type = {',
-            inject: genInject('type = {'),
+            // React 19 匹配 function ReactElement 函数，并在 type 末尾插入代码
+            matchRE: /([\s\S]*?function\s+ReactElement\b[\s\S]*?\})([\s\S]*)/,
+            nodeVar: 'type',
           },
         ];
-        for (const { search, inject } of replacements) {
-          if (code.includes(search)) {
-            return code.replace(search, inject);
+        for (const { matchRE, nodeVar } of replacements) {
+          const result = code.match(matchRE);
+          if (result) {
+            const [, before, after] = result;
+            return `${before}${genInjectCode(nodeVar)}${after}`;
           }
         }
         return null;
@@ -84,13 +94,14 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
       const magic = new MagicString(code);
 
       // 在 JSX 标签闭合符号前插入调试属性
-      function insertDebugProp(idx, line, col) {
-        const payload = JSON.stringify({ file, line, column: col });
+      function insertDebugProp(idx: number, line: number, column: number) {
+        const payload = JSON.stringify({ file, line, column });
         magic.prependLeft(idx, ` ${DS.INJECT_PROP}={${payload}}`);
       }
       transformJSX(code, insertDebugProp, isTsx);
 
       if (!magic.hasChanged()) return null;
+
       return {
         code: magic.toString(),
         map: sourceMap ? magic.generateMap({ source: file, file }) : null,
@@ -101,20 +112,25 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
 
 /**
  * 解析并规范化插件选项
+ * @param opts - 插件选项
+ * @returns 规范化后的选项
  */
-function resolveOptions(opts) {
+function resolveOptions(opts: Options) {
   return {
-    rootDir: normalizePath(opts.rootDir || process.cwd()),
-    sourceMap: opts.sourceMap ?? false,
-    include: opts.include ?? /\.(jsx|tsx)$/, // 匹配 JSX/TSX 文件
-    exclude: opts.exclude ?? /\/node_modules\//,
+    rootDir: normalizePath(opts.rootDir || process.cwd()), // 根目录路径
+    sourceMap: opts.sourceMap ?? false, // 是否生成 source map
+    include: opts.include ?? /\.(jsx|tsx)$/, // 支持的文件类型
+    exclude: opts.exclude ?? /\/node_modules\//, // 排除的文件类型
   };
 }
 
 /**
- * 从 id 中提取相对路径和文件类型信息
+ * 从文件 ID 中提取相对路径和类型信息
+ * @param id - 文件 ID
+ * @param rootDir - 根目录路径
+ * @returns 文件路径及类型信息（JSX 或 TSX）
  */
-function parseID(id, rootDir) {
+function parseID(id: string, rootDir: string) {
   const [normalized] = normalizePath(id).split('?', 2);
   const rel = relative(rootDir, normalized);
   const ext = extname(rel).slice(1);
@@ -123,33 +139,31 @@ function parseID(id, rootDir) {
 
 /**
  * 生成注入到 React 运行时代码的属性注入片段
- *
- * @param search - 要替换的原始字符串（如 "var element = {" 或 "type = {"）
+ * @param nodeVar - 节点变量名
  * @returns 带有调试属性注入逻辑的完整替换文本
  */
-function genInject(search: string) {
-  const propInject = code`
-props = Object.assign({}, props);
-const __debug = props.${DS.INJECT_PROP};
-if (__debug) {
-  delete props.${DS.INJECT_PROP};
-  Object.defineProperty(props, ${DS.SHADOW_PROP}, { get() { return __debug; }, enumerable: false });
+function genInjectCode(nodeVar: string) {
+  return code`;
+var _debug = ${nodeVar}.props && ${nodeVar}.props.${DS.INJECT_PROP};
+if (_debug) {
+  delete ${nodeVar}.props.${DS.INJECT_PROP};
+  function _def(_obj) {  Object.defineProperty(_obj, ${DS.SHADOW_PROP}, { get() { return _debug; }, enumerable: false }); };
+  _def(${nodeVar}.props);
+  _def(${nodeVar});
 }
-`;
-  return `${propInject}${search}`;
+;`;
 }
 
 /**
- * 对传入的 JSX/TSX 代码进行 AST 解析并遍历，
- * 在每个 JSXOpeningElement 闭合尖括号前调用回调
- * @param code 代码内容
- * @param cb 回调函数(idx: 插入位置, line, column)
- * @param isTsx 是否为 TSX
+ * 遍历 JSX/TSX 代码 AST，在每个 JSXOpeningElement 闭合前调用回调
+ * @param code - 代码内容
+ * @param cb - 回调函数，接收插入位置、行、列号
+ * @param isTsx - 是否为 TSX
  */
 function transformJSX(
   code: string,
   cb: (idx: number, line: number, column: number) => void,
-  isTsx = false,
+  isTsx: boolean = false,
 ) {
   const ast = parse(code, {
     sourceType: 'unambiguous',
@@ -160,7 +174,7 @@ function transformJSX(
     JSXOpeningElement({ node }) {
       const idx = node.selfClosing ? node.end! - 2 : node.end! - 1;
       const { line, column } = node.loc!.start;
-      cb(idx, line, column + 1);
+      cb(idx, line, column + 1); // 执行回调插入调试属性
     },
   });
 }

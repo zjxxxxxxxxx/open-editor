@@ -66,8 +66,8 @@ export interface CodeSource {
 const FRAME_RESOLVERS = {
   [DS.REACT_17]: resolveReact17,
   [DS.REACT_15]: resolveReact15,
-  [DS.VUE_3]: resolveVue3,
-  [DS.VUE_2]: resolveVue2,
+  [DS.VUE_V3]: resolveVue3,
+  [DS.VUE_V2]: resolveVue2,
 } as const;
 
 /**
@@ -112,6 +112,7 @@ export function resolveSource(el: HTMLElement, deep?: boolean): CodeSource {
 
   // 提取标准化调试信息（跨框架抽象层）
   const debugInfo = resolveDebug(el);
+
   if (debugInfo) {
     /**
      * 框架类型自动检测算法

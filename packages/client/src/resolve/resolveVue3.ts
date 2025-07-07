@@ -41,7 +41,7 @@ function initializeResolver(): void {
      * 获取已注入的调试源信息
      */
     getSource(node: any): CodeSourceMeta | undefined {
-      return node?.props?.[DS.ID];
+      return node?.[DS.ID];
     },
 
     /**
