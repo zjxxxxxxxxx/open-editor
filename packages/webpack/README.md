@@ -29,6 +29,22 @@ module.exports = {
 };
 ```
 
+compatible with rspack.
+
+```ts
+// rspack.config.js
+const OpenEditorWebpackPlugin = require('@open-editor/webpack');
+
+module.exports = {
+  plugins: [
+    new OpenEditorWebpackPlugin({
+      /* options */
+    }),
+    // other plugins
+  ],
+};
+```
+
 ## Options
 
 ````ts

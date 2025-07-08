@@ -1,4 +1,4 @@
-import type webpack from 'webpack';
+import type { Compiler as WebpackCompiler } from 'webpack';
 import {
   CLIENT_MODULE_ID,
   ENTRY_ESM_MATCH_RE,
@@ -14,9 +14,8 @@ import { setupServer } from '@open-editor/server';
 export interface Options {
   /**
    * 源代码根目录路径 | Source code root directory path
-   *
+
    * @default `process.cwd()`
-   *
    * @example
    * ```ts
    * rootDir: path.resolve(__dirname, 'src')
@@ -28,7 +27,6 @@ export interface Options {
    * 在浏览器显示切换按钮 | Display toggle button in browser
    *
    * @default `true`
-   *
    * @remarks
    * 控制是否在页面右下角显示调试开关 | Controls whether to show debug toggle at bottom-right corner
    */
@@ -38,7 +36,6 @@ export interface Options {
    * 禁用 CSS 悬停效果 | Disable CSS hover effects
    *
    * @default `true`
-   *
    * @remarks
    * 当检查器启用时禁用元素悬停高亮 | Disable element highlighting on hover when inspector is active
    */
@@ -48,9 +45,7 @@ export interface Options {
    * 忽略指定目录的组件 | Ignore components in specified directories
    *
    * @default `'\/**\/node_modules\/**\/*'`
-   *
    * @see [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
-   *
    * @remarks
    * 使用 glob 模式匹配需要忽略的路径 | Use glob patterns to match ignored paths
    */
@@ -60,7 +55,6 @@ export interface Options {
    * 单次检查模式 | Single-inspection mode
    *
    * @default `true`
-   *
    * @remarks
    * 打开编辑器或组件树后自动退出检查状态 | Automatically exit inspection after opening editor or component tree
    */
@@ -70,7 +64,6 @@ export interface Options {
    * 跨 iframe 交互支持 | Cross-iframe interaction
    *
    * @default `true`
-   *
    * @remarks
    * 允许在子 iframe 中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
    */
@@ -81,10 +74,12 @@ export interface Options {
    */
   server?: {
     /**
+     * 自定义端口号 | Custom port
+     */
+    port?: number;
+    /**
      * HTTPS 安全传输层配置 | HTTPS Secure Transport Layer Configuration
-     *
      * @see [TLS Context Options](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions)
-     *
      * @example
      * {
      *   key: '/path/to/private.key',
@@ -94,14 +89,12 @@ export interface Options {
     https?: {
       /**
        * PEM 格式的 SSL 私钥文件路径 | Path to PEM formatted SSL private key file
-       *
        * @fileMustExist 文件必须存在且可读 | File must exist and be readable
        */
       key: string;
 
       /**
        * PEM 格式的 SSL 证书文件路径 | Path to PEM formatted SSL certificate file
-       *
        * @fileMustExist 文件必须存在且可读 | File must exist and be readable
        */
       cert: string;
@@ -112,7 +105,6 @@ export interface Options {
    * 自定义编辑器打开处理器 | Custom editor opening handler
    *
    * @default `内置的 launch-editor 实现 | Built-in launch-editor implementation`
-   *
    * @remarks
    * 覆盖默认的文件打开逻辑 | Override default file opening behavior
    */
@@ -130,22 +122,16 @@ const LOADER_PATH = resolvePath('./transform');
 const portPromiseCache: Record<string, Promise<number>> = {};
 
 /**
- * 开发环境专用的 Webpack 插件 | Webpack plugin dedicated for development environment
- *
- * @remarks 该插件用于在开发环境下提供组件调试能力，自动注入调试客户端并启动调试服务器
- *
- * @description Provides component debugging capabilities in dev environment,
- *              auto-injects debug client and starts debug server
+ * 开发环境下启用组件源码定位功能 | Enable component source code location in development
  */
 export default class OpenEditorPlugin {
-  /**
-   * @internal
-   */
+  /** @internal */
   private options: Options & { port?: number };
+  /** @internal */
+  private NODE_MODULES_RE = /\/node_modules\//;
 
   /**
    * 构造函数 | Constructor
-   *
    * @param options 插件配置选项 | Plugin configuration options
    */
   constructor(options: Options = {}) {
@@ -157,76 +143,52 @@ export default class OpenEditorPlugin {
   }
 
   /**
-   * Webpack 插件入口方法 | Webpack plugin entry method
-   *
-   * @param compiler Webpack 编译器实例 | Webpack compiler instance
-   *
-   * @workflow
-   * 1. 配置模块解析规则 | Configure module resolution rules
-   * 2. 设置客户端模块别名 | Set client module alias
-   * 3. 启动调试服务器 | Start debug server
+   * 插件入口方法，兼容 Webpack 与 Rspack
+   * @param compiler Webpack.Compiler 或 Rspack.Compiler 实例
    */
-  apply(compiler: webpack.Compiler) {
+  apply(compiler: WebpackCompiler) {
     if (!isDev()) return;
 
     // 环境准备完成后配置模块规则 | Configure module rules after environment setup
     compiler.hooks.afterEnvironment.tap(PLUGIN_NAME, () => {
       compiler.options.module.rules.push({
-        test: /[\\/]node_modules[\\/]/,
-        include: ENTRY_MATCH_RE,
-        use: (data: any) => this.handleLoaderConfiguration(data),
+        include: (id) => this.NODE_MODULES_RE.test(id) && ENTRY_MATCH_RE.test(id),
+        use: (data) => ({
+          options: {
+            ...this.options,
+            isCommonjs: !ENTRY_ESM_MATCH_RE.test(data.resource!),
+          },
+          loader: LOADER_PATH,
+        }),
+        type: 'javascript/auto',
       });
 
-      // 配置客户端模块别名 | Configure client module alias
-      compiler.options.resolve.alias ||= {};
-      compiler.options.resolve.alias[CLIENT_MODULE_ID] = resolvePath(CLIENT_MODULE_ID);
+      const resolve = compiler.options.resolve;
+      const clientPath = resolvePath(CLIENT_MODULE_ID);
+      if (Array.isArray(resolve.alias)) {
+        resolve.alias.push({
+          name: CLIENT_MODULE_ID,
+          alias: clientPath,
+          onlyModule: true,
+        });
+      } else {
+        resolve.alias ||= {};
+        resolve.alias[CLIENT_MODULE_ID] = clientPath;
+      }
     });
 
     // 编译开始时启动调试服务器 | Start debug server when compilation begins
     compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
-      await this.startDebugServer();
-    });
-  }
+      // 生成配置缓存键 | Generate config cache key
+      const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
 
-  /**
-   * 处理加载器配置 | Handle loader configuration
-   *
-   * @internal
-   *
-   * @param data 加载器配置数据 | Loader configuration data
-   *
-   * @returns 处理后的加载器配置 | Processed loader configuration
-   */
-  private handleLoaderConfiguration(data: any) {
-    const { resource, compiler } = data;
-
-    // 仅处理客户端编译 | Only process client compilation
-    if (!compiler || compiler === 'client') {
-      return {
-        options: {
+      // 重用或创建新的服务器实例 | Reuse or create new server instance
+      this.options.port = await (portPromiseCache[cacheKey] ||=
+        // 启动调试服务器 | Start debug server
+        setupServer({
           ...this.options,
-          isCommonjs: !ENTRY_ESM_MATCH_RE.test(resource),
-        },
-        loader: LOADER_PATH,
-      };
-    }
-
-    return [];
-  }
-
-  /**
-   * 启动调试服务器 | Start debug server
-   *
-   * @internal
-   */
-  private async startDebugServer() {
-    // 生成配置缓存键 | Generate config cache key
-    const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
-
-    // 重用或创建新的服务器实例 | Reuse or create new server instance
-    this.options.port = await (portPromiseCache[cacheKey] ||= setupServer({
-      ...this.options,
-      ...(this.options.server ?? {}),
-    }));
+          ...(this.options.server ?? {}),
+        }));
+    });
   }
 }

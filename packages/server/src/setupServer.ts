@@ -20,6 +20,10 @@ export interface Options {
    * @securityNote 需确保该路径具备可读权限
    */
   rootDir?: string;
+  /**
+   * 自定义端口号
+   */
+  port?: number;
 
   /**
    * HTTPS 安全传输层配置
@@ -81,7 +85,7 @@ export interface Options {
  * ```
  */
 export function setupServer(options: Options = {}) {
-  const { rootDir, https: httpsConfig } = options;
+  const { rootDir, port, https: httpsConfig } = options;
 
   // 初始化基础应用实例(含路由和中间件)
   const app = createApp({ rootDir });
@@ -89,7 +93,7 @@ export function setupServer(options: Options = {}) {
   // 根据安全配置创建服务器实例
   const server = createHttpServer(app, httpsConfig);
 
-  return startServer(server);
+  return startServer(server, port);
 }
 
 /**
@@ -118,11 +122,12 @@ function createHttpServer(app: ReturnType<typeof createApp>, httpsConfig?: Optio
  * 启动服务器并动态分配端口
  *
  * @param server - 已创建的服务器实例
+ * @param customPort - 自定义端口号
  * @returns 返回实际监听端口的 Promise
  */
-function startServer(server: http.Server) {
+function startServer(server: http.Server, customPort?: number) {
   return new Promise<number>((resolve, reject) => {
-    getAvailablePort()
+    getAvailablePort(customPort)
       .then((port) => {
         server
           .listen(port)
