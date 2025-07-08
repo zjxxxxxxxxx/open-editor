@@ -77,6 +77,10 @@ export interface Options {
    */
   server?: {
     /**
+     * 自定义端口号 | Custom port
+     */
+    port?: number;
+    /**
      * HTTPS 安全传输层配置 | HTTPS Secure Transport Layer Configuration
      *
      * @see [TLS Context Options](https://nodejs.org/api/tls.html#tlscreatesecurecontextoptions)
@@ -121,10 +125,7 @@ export interface Options {
 const portPromiseCache: Record<string, Promise<number>> = {};
 
 /**
- * 开发环境专用编辑器调试插件 | Dev-only Editor Debugging Plugin
- *
- * @remarks
- * 仅在开发模式下生效 | Only active in development mode
+ * 开发环境下启用组件源码定位功能 | Enable component source code location in development
  */
 export default function OpenEditorPlugin(options: Options = {}): Plugin | undefined {
   // 非开发环境返回空插件 | Return empty plugin in non-dev environments
@@ -160,9 +161,7 @@ export default function OpenEditorPlugin(options: Options = {}): Plugin | undefi
 
     /**
      * 解析客户端模块 ID | Resolve client module ID
-     *
      * @param id - 模块标识符 | Module identifier
-     *
      * @returns 处理后的模块路径 | Processed module path
      */
     resolveId(id: string) {
@@ -174,10 +173,8 @@ export default function OpenEditorPlugin(options: Options = {}): Plugin | undefi
 
     /**
      * 转换入口文件注入客户端代码 | Transform entry files to inject client code
-     *
      * @param code - 原始代码内容 | Original code content
      * @param id - 文件路径标识 | File path identifier
-     *
      * @returns 转换后的代码 | Transformed code
      */
     transform(code: string, id: string) {

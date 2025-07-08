@@ -6,14 +6,15 @@ const MAX_PORT_NUMBER = 9000; // 最大探测端口（不超过 9000 的安全�
 
 /**
  * 智能端口探测控制器
- *
- * @param concurrency - 并发探测数（默认 5，建议根据系统负载调整）
- * @param retries - 最大重试次数（默认 10，防止无限循环）
+ * @param customPort - 自定义端口号
  * @returns 首个可用的端口号
- *
  * @throws 当所有尝试失败时抛出错误
  */
-export async function getAvailablePort({ concurrency = 5, retries = 10 } = {}) {
+export async function getAvailablePort(customPort?: number) {
+  if (customPort) return Promise.resolve(customPort);
+
+  const concurrency = 5;
+  const retries = 10;
   // 重试循环保障基础可用性
   for (let i = 0; i < retries; i++) {
     // 生成候选端口池（规避单一顺序导致的端口冲突）
