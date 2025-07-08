@@ -9,7 +9,7 @@
   "description": "🚀 A web devtools for fast find source code.",
   "scripts": {
     "build": "concurrently --success all -r -m 1 'turbo run build --filter @open-editor/* --log-order grouped'",
-    "clean": "rimraf -g {.turbo,packages/**/.turbo,node_modules/.cache,packages/**/dist,playgrounds/**/dist}",
+    "clean": "rimraf -g {.turbo,node_modules/.cache,packages/*/.turbo,packages/*/dist,playgrounds/*/dist}",
     "dev": "turbo run dev --filter @open-editor/* --log-order stream",
     "start": "esno scripts/start.ts",
     "play": "pnpm start --script dev",

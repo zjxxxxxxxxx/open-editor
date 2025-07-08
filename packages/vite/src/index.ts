@@ -87,9 +87,6 @@ const CLIENT_ID = '/client.mjs'; // 客户端模块虚拟路径 | Client module 
 
 /**
  * 开发环境下启用组件源码定位功能 | Enable component source code location in development
- *
- * @param options - 插件配置选项 | Plugin configuration options
- * @returns Vite 插件对象 | Vite plugin instance
  */
 export default function OpenEditorPlugin(options: Options = {}) {
   // 非开发环境返回空插件 | Return empty plugin in non-dev environments
@@ -108,9 +105,6 @@ export default function OpenEditorPlugin(options: Options = {}) {
 
     /**
      * 开发服务器配置 | Dev server configuration
-     *
-     * @remarks
-     * 注册中间件处理编辑器打开请求 | Register middleware to handle editor opening requests
      */
     configureServer(server: Pick<ViteDevServer, 'middlewares'>) {
       server.middlewares.use(
@@ -127,9 +121,6 @@ export default function OpenEditorPlugin(options: Options = {}) {
 
     /**
      * 模块解析逻辑 | Module resolution logic
-     *
-     * @remarks
-     * 处理客户端模块的虚拟路径映射 | Handle virtual path mapping for client module
      */
     resolveId(id: string) {
       if (id === CLIENT_MODULE_ID) {
@@ -140,9 +131,6 @@ export default function OpenEditorPlugin(options: Options = {}) {
 
     /**
      * 代码转换逻辑 | Code transformation
-     *
-     * @remarks
-     * 向客户端注入运行时配置 | Inject runtime configuration into client code
      */
     transform(code: string, id: string) {
       if (id.endsWith(CLIENT_ID)) {
