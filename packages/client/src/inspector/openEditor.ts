@@ -8,7 +8,6 @@ import { OPEN_EDITOR_EVENT } from '../constants';
 
 /**
  * 启动编辑器并处理相关生命周期事件
- *
  * @param meta 源码元信息，包含文件路径、行列号等信息
  */
 export async function openEditor(meta?: CodeSourceMeta) {
@@ -41,7 +40,6 @@ export async function openEditor(meta?: CodeSourceMeta) {
 
 /**
  * 构造编辑器请求的 URL
- *
  * @param meta 源码元信息
  * @returns 完整的编辑器 URL 对象
  */
@@ -67,7 +65,6 @@ export function generateEditorURL(meta?: CodeSourceMeta): URL {
 
 /**
  * 记录错误日志、触发错误事件，并返回一个拒绝的 Promise
- *
  * @param error 原始错误对象（或错误信息）
  * @param message 自定义错误消息
  * @returns 返回一个拒绝的 Promise

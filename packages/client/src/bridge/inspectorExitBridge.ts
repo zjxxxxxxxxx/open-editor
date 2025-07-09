@@ -33,7 +33,6 @@ export const inspectorExitBridge = crossIframeBridge({
 
 /**
  * 处理退出事件的核心逻辑
- *
  * @param args 事件参数对象
  */
 function handleExitEvent(args: InspectorExitBridgeArgs) {
@@ -65,7 +64,6 @@ function executeInSubWindow(args: InspectorExitBridgeArgs) {
 
 /**
  * 全局事件广播操作
- *
  * @param args 需要广播的事件参数
  */
 function broadcastExitEvent(args: InspectorExitBridgeArgs) {

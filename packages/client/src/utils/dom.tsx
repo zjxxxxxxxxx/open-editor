@@ -1,9 +1,7 @@
 /**
  * 安全设置元素属性（支持空值自动移除）
- *
  * @param el 目标元素
  * @param attrs 属性键值对
- *
  * @example
  * applyAttrs(div, {
  *   'data-id': '123',
@@ -24,7 +22,6 @@ export function applyAttrs(el: HTMLElement, attrs: Record<string, unknown>) {
 
 /**
  * 追加子节点
- *
  * @param el 父容器，类型为 HTMLElement 或 ShadowRoot
  * @param children 要追加的子节点数组，类型为 HTMLElement
  */
@@ -36,7 +33,6 @@ export function appendChild(el: HTMLElement | ShadowRoot, ...children: HTMLEleme
 
 /**
  * 安全替换子节点（兼容 Shadow DOM）
- *
  * @remarks 手动实现而非使用原生 replaceChildren，确保更好的浏览器兼容性，尤其是在 Shadow DOM 环境下
  * @param el 父容器，类型为 HTMLElement 或 ShadowRoot
  * @param children 用于替换父容器现有子节点的新子节点数组，类型为 HTMLElement
@@ -51,7 +47,6 @@ export function replaceChild(el: HTMLElement | ShadowRoot, ...children: HTMLElem
 
 /**
  * 检测元素可见性（DOM 树连接性 + display 继承链）
- *
  * @remarks
  * 实现与官方草案差异：忽略 visibility/content-visibility，专注 display 检测
  */
@@ -70,7 +65,6 @@ export function checkVisibility(el: HTMLElement) {
 
 /**
  * CSS 单位转换工具集
- *
  * @remarks 数值转换避免样式字符串拼接错误
  */
 export const CssUtils = {
@@ -92,7 +86,6 @@ export const CssUtils = {
 
 /**
  * 批量应用样式对象
- *
  * @remarks 使用 Object.assign 优化多次样式操作
  */
 export function applyStyle(
@@ -104,7 +97,6 @@ export function applyStyle(
 
 /**
  * 创建计算样式获取器
- *
  * @param toNumber 是否自动转换为数值类型
  */
 export function createStyleGetter(el: HTMLElement) {

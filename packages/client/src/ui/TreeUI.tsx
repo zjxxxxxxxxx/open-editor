@@ -40,7 +40,6 @@ export function TreeUI() {
 
   /**
    * 处理树形结构打开事件
-   *
    * @param source 组件代码数据（包含组件树信息）
    */
   function handleTreeOpen(source: CodeSource) {
@@ -59,7 +58,6 @@ export function TreeUI() {
 
   /**
    * 渲染组件树内容（包括标题和节点树或错误提示）
-   *
    * @param source 组件代码数据
    */
   function renderTreeContent(source: CodeSource) {
@@ -86,7 +84,6 @@ export function TreeUI() {
 
   /**
    * 递归渲染树节点
-   *
    * @param nodes 节点数据数组
    * @param index 当前处理节点的索引，从后向前 -1
    * @returns 构造好的 JSX 结构
@@ -121,7 +118,6 @@ export function TreeUI() {
    *
    * 当节点被点击时，若 once 模式开启则关闭树视图，
    * 同时通过 bridge 传递节点数据给编辑器打开对应文件
-   *
    * @param meta 当前节点的元数据信息
    */
   function handleNodeClick(meta: CodeSourceMeta) {

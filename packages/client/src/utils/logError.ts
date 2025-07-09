@@ -1,11 +1,9 @@
 /**
  * 增强型错误记录器（支持跨环境栈追踪）
- *
  * @param msg - 错误描述信息
  * @param config - 高级配置项
  * @param config.logLevel - 处理方式：'log' 记录到控制台，'throw' 抛出异常
  * @param config.errorType - 自定义错误类型（默认使用Error类）
- *
  * @example
  * logError('网络请求超时', { logLevel: 'throw', code: 'NETWORK_ERROR' })
  */
@@ -45,10 +43,8 @@ export function logError(
 
 /**
  * 统一错误消息生成器（支持环境检测）
- *
  * @param msg - 原始错误描述信息
  * @returns 格式化后的错误消息字符串
- *
  * @example
  * errMsg("组件初始化失败")
  * // 返回 "[@open-editor/client][CLIENT_ERROR] 组件初始化失败 (2025-03-28T08:30:00Z)"

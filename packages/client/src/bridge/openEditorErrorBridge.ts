@@ -26,7 +26,6 @@ export const openEditorErrorBridge = crossIframeBridge<OpenEditorErrorBridgeArgs
   emitMiddlewares: [
     /**
      * 窗口状态校验
-     *
      * @param args 事件参数对象
      * @param next 后续处理回调
      */

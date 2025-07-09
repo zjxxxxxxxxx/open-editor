@@ -7,7 +7,6 @@ export type WebGLRenderer = ReturnType<typeof createWebGLRenderer>;
 
 /**
  * 初始化 WebGL 渲染器实例
- *
  * @param canvas - 目标渲染画布
  * @param bufferSize - 缓冲区大小
  * @returns 完整渲染能力对象
@@ -46,7 +45,6 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
 
     /**
      * 清空画布
-     *
      * @param clearBuffer - 可选，如果为 true，则释放用于存储顶点数据的 Float32Array 实例，将其设置为 null
      */
     clear(clearBuffer?: boolean) {
@@ -57,7 +55,6 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
 
     /**
      * 绘制顶点数据
-     *
      * @param vertices - 扁平化顶点数组，格式为 [x, y, r, g, b, a, ...]
      */
     draw(vertices: number[]) {
@@ -72,7 +69,6 @@ export function createWebGLRenderer(canvas: HTMLCanvasElement, bufferSize: numbe
 
 /**
  * 初始化并配置 WebGL 上下文
- *
  * @param canvas - 目标画布元素
  * @returns 配置完成的 WebGL 上下文
  */
@@ -85,7 +81,6 @@ function initWebGLContext(canvas: HTMLCanvasElement) {
 
 /**
  * 构建并链接 GLSL 着色器程序
- *
  * @param gl - WebGL 渲染上下文
  * @returns 链接成功的着色器程序
  */
@@ -121,7 +116,6 @@ function createShaderProgram(gl: WebGLRenderingContext) {
 
 /**
  * 编译 GLSL 着色器对象
- *
  * @param gl - WebGL 渲染上下文
  * @param type - 着色器类型（VERTEX 或 FRAGMENT）
  * @param source - GLSL 源码
@@ -136,7 +130,6 @@ function compileShaderObject(gl: WebGLRenderingContext, type: number, source: st
 
 /**
  * 链接着色器程序
- *
  * @param gl - WebGL 渲染上下文
  * @param vertexShader - 编译后的顶点着色器
  * @param fragmentShader - 编译后的片段着色器
@@ -156,7 +149,6 @@ function linkShaderProgram(
 
 /**
  * 设置顶点属性
- *
  * @param gl - WebGL 渲染上下文
  * @param program - 着色器程序
  * @param canvas - 目标画布（用于初始投影设置）

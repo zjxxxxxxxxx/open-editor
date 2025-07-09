@@ -12,7 +12,6 @@ let resolver: Resolver<Fiber>;
  * 解析 React 17+ Fiber 节点，抽取组件层级与源码定位信息
  *
  * 此函数为主入口，会调用 resolveForFiber 以支持在多处复用同一逻辑
- *
  * @param fiber - 当前 Fiber 节点（可能为 null 或 undefined）
  * @param tree  - 用于收集所有组件源信息的数组
  * @param deep  - 是否递归向上遍历所有父组件，默认为 false
@@ -27,7 +26,6 @@ export function resolveReact17(
 
 /**
  * 解析 Fiber 树中所有相关节点，支持在其他场景复用
- *
  * @param fiber - 起始 Fiber 节点
  * @param tree  - 组件源码元信息集合
  * @param deep  - 是否深度遍历组件层级，默认为 false

@@ -21,7 +21,6 @@ export interface NormalizeOptions {
 
 /**
  * 标准化处理文件路径
- *
  * @param path 原始路径字符串
  * @param options 标准化配置选项
  * @returns 返回统一格式的标准化路径

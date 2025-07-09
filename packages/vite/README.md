@@ -38,9 +38,7 @@ export default defineConfig({
 export interface Options {
   /**
    * 源代码根目录路径 | Source code root directory path
-   *
    * @default `process.cwd()`
-   *
    * @example
    * ```ts
    * rootDir: path.resolve(__dirname, 'src')
@@ -50,9 +48,7 @@ export interface Options {
 
   /**
    * 在浏览器显示切换按钮 | Display toggle button in browser
-   *
    * @default `true`
-   *
    * @remarks
    * 控制是否在页面右下角显示调试开关 | Controls whether to show debug toggle at bottom-right corner
    */
@@ -60,9 +56,7 @@ export interface Options {
 
   /**
    * 禁用 CSS 悬停效果 | Disable CSS hover effects
-   *
    * @default `true`
-   *
    * @remarks
    * 当检查器启用时禁用元素悬停高亮 | Disable element highlighting on hover when inspector is active
    */
@@ -70,11 +64,8 @@ export interface Options {
 
   /**
    * 忽略指定目录的组件 | Ignore components in specified directories
-   *
-   * @default `'\/**\/node_modules\/**\/*'`
-   *
+   * @default `\/**\/node_modules\/**\/*`
    * @see [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
-   *
    * @remarks
    * 使用 glob 模式匹配需要忽略的路径 | Use glob patterns to match ignored paths
    */
@@ -82,9 +73,7 @@ export interface Options {
 
   /**
    * 单次检查模式 | Single-inspection mode
-   *
    * @default `true`
-   *
    * @remarks
    * 打开编辑器或组件树后自动退出检查状态 | Automatically exit inspection after opening editor or component tree
    */
@@ -92,9 +81,7 @@ export interface Options {
 
   /**
    * 跨 iframe 交互支持 | Cross-iframe interaction
-   *
    * @default `true`
-   *
    * @remarks
    * 允许在子 iframe 中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
    */
@@ -102,9 +89,7 @@ export interface Options {
 
   /**
    * 自定义编辑器打开处理器 | Custom editor opening handler
-   *
-   * @default `内置的 launch-editor 实现 | Built-in launch-editor implementation`
-   *
+   * @default `launch-editor`
    * @remarks
    * 覆盖默认的文件打开逻辑 | Override default file opening behavior
    */

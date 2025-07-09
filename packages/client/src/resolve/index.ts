@@ -9,7 +9,6 @@ import { resolveDebug } from './resolveDebug';
 
 /**
  * 组件级源码定位元数据
- *
  * @description 用于描述组件在源码中的精确位置信息，兼容多框架格式
  */
 export interface CodeSourceMeta extends DSValue {
@@ -29,7 +28,6 @@ export interface CodeSource {
   id: string;
   /**
    * 目标元素标签名（保留 XML 命名空间）
-   *
    * @example
    * - 'div'
    * - 'svg:path'
@@ -41,7 +39,6 @@ export interface CodeSource {
   meta?: CodeSourceMeta;
   /**
    * 完整组件调用链路（支持树形可视化）
-   *
    * @remarks
    * - [0]: 当前组件
    * - [n]: 根组件
@@ -51,7 +48,6 @@ export interface CodeSource {
 
 /**
  * 框架调试适配器注册表
- *
  * @description 实现框架调试协议自动检测，支持主流框架版本
  *
  * | 特征属性         | 框架版本      | 适配器       |
@@ -60,7 +56,6 @@ export interface CodeSource {
  * | __reactInternal  | React 15-16 | resolveReact15 |
  * | __vueParent      | Vue 3       | resolveVue3   |
  * | __vue            | Vue 2       | resolveVue2   |
- *
  * @remarks 使用 const 断言确保类型安全
  */
 const FRAME_RESOLVERS = {
@@ -72,11 +67,9 @@ const FRAME_RESOLVERS = {
 
 /**
  * 解析 DOM 元素的源码映射信息
- *
  * @param el 目标元素（需包含 __vue/__react 等调试属性）
  * @param deep 深度解析模式（默认 false）
  * @returns 标准化调试数据
- *
  * @example
  * // 快速获取组件元数据
  * const meta = resolveSource(document.getElementById('app')).meta;

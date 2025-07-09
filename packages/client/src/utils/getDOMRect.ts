@@ -11,24 +11,20 @@ let NEED_COMPUTED: boolean;
 
 /**
  * 获取经过 zoom 缩放校正后的元素边界矩形
- *
  * @param target - 目标 HTML 元素
  * @returns 校正后的 DOMRect 对象（当浏览器不自动补偿 zoom 时返回计算后值）
  */
 export function getDOMRect(target: HTMLElement) {
   // 获取原始边界矩形
   const rect = target.getBoundingClientRect();
-
   // 懒检测浏览器是否需要手动补偿
   NEED_COMPUTED ??= checkComputedNeeded();
-
   // 根据检测结果决定是否补偿
   return NEED_COMPUTED ? computedDOMRect(target, rect) : rect;
 }
 
 /**
  * 获取元素及其祖先链的复合 zoom 值
- *
  * @param target - 起始元素
  * @returns 累积的缩放比例（例如祖先链有 zoom:1.2 和 zoom:1.5 则返回 1.8）
  */
@@ -85,7 +81,6 @@ function checkComputedNeeded() {
 
 /**
  * 计算经过 zoom 缩放后的精确矩形（几何中心变换法）
- *
  * @param target - 需要计算缩放的目标元素（用于遍历父元素链获取累积缩放率）
  * @param baseRect - 目标元素的原始矩形数据（未经缩放补偿的 DOMRect）
  * @returns 校正后的 DOMRect，其位置和尺寸已精确反映 zoom 缩放效果

@@ -6,7 +6,6 @@ const useStrictPattern = /^['"]use strict['"];?/;
 
 /**
  * 向目标代码中注入客户端初始化逻辑
- *
  * @param code 原始代码内容
  * @param userOpts 注入配置选项
  * @returns 包含客户端初始化逻辑的完整代码

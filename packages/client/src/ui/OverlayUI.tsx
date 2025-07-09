@@ -43,7 +43,6 @@ export function OverlayUI() {
 
 /**
  * 建立外部事件与渲染逻辑的桥接系统
- *
  * @param canvas - 目标 canvas 元素
  * @param renderer - WebGLRenderer 实例
  */
@@ -74,7 +73,6 @@ function setupBridgeSystem(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
 
   /**
    * 判断盒模型数据是否发生了变化
-   *
    * @param position - 目标元素的边界位置信息
    * @param metrics - 盒模型各区域的边缘宽度数据
    * @returns 若数据没有变更则返回 false，否则更新 lastBoxModel 并返回 true
@@ -91,7 +89,6 @@ function setupBridgeSystem(canvas: HTMLCanvasElement, renderer: WebGLRenderer) {
 
 /**
  * 处理盒模型数据更新并渲染
- *
  * @param renderer - WebGLRenderer 实例
  * @param position - 目标元素的边界位置信息
  * @param metrics - 盒模型各区域的边缘宽度数据
@@ -140,7 +137,6 @@ function updateBoxModel(renderer: WebGLRenderer, position: BoxPosition, metrics:
  *       |    +------------+----+
  *       |    |                 |
  *       +----+-----------------+
- *
  * @param vertices - 顶点数据数组
  * @param bounds - 当前矩形边界，会根据当前区域数据收缩
  * @param edges - 当前区域对应的边缘宽度数据
@@ -213,7 +209,6 @@ function processEdges(
  * 顶点顺序定义 (用于正面渲染，并符合浏览器文档流坐标):
  * 三角形 1: 左上, 右上, 左下
  * 三角形 2: 右上, 右下, 左下
- *
  * @param vertices - 用于保存生成顶点数据的数组
  * @param x - 矩形左上角 X 坐标（CSS 像素）
  * @param y - 矩形左上角 Y 坐标（CSS 像素）
@@ -251,7 +246,6 @@ function rectangleVertices(
  *
  * 根据当前区域边缘宽度调整矩形边界，确保后续区域的绘制在剩余空间内进行，
  * 并防止边界交叉（例如 top 超过 bottom）
- *
  * @param bounds - 当前矩形边界对象，原地修改
  * @param edges - 当前区域的边缘宽度数据
  */

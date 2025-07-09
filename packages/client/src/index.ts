@@ -10,7 +10,6 @@ export { Options };
 
 /**
  * 初始化编辑器客户端
- *
  * @param opts - 编辑器配置对象，包含各子系统所需参数
  */
 export function setupClient(opts: Options) {

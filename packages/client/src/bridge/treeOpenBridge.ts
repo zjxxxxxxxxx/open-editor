@@ -57,7 +57,6 @@ export const treeOpenBridge = crossIframeBridge<TreeOpenBridgeArgs>({
 
     /**
      * 智能路由消息发送
-     *
      * @param args 事件参数数组
      */
     (args) => {

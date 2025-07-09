@@ -11,7 +11,6 @@ let resolver: Resolver<any>;
 
 /**
  * 解析 React 15+ 组件实例或 Fiber，自动分流到对应版本的解析器
- *
  * @param instanceOrFiber - React 组件实例或 Fiber 节点
  * @param tree             - 用于收集组件源码元信息的数组
  * @param deep             - 是否递归向上遍历父组件（默认为 false）
@@ -29,7 +28,6 @@ export function resolveReact15(instanceOrFiber: any, tree: CodeSourceMeta[], dee
 
 /**
  * 解析 React 15 及更早版本的组件实例
- *
  * @param instance - React 组件实例对象
  * @param tree     - 接收组件源码元信息的数组
  * @param deep     - 是否递归向上遍历父组件（默认为 false）

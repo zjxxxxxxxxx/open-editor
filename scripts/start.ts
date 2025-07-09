@@ -42,7 +42,6 @@ async function parseArguments() {
 
 /**
  * 执行 playground 脚本
- *
  * @param playground - 项目名称
  * @param script - 要执行的脚本名称
  */
@@ -75,7 +74,6 @@ async function selectPlayground(): Promise<string> {
 
 /**
  * 交互式选择执行脚本
- *
  * @param playground - 已选择的项目名称
  * @returns 用户选择的脚本名称
  */

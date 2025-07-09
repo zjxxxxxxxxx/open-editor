@@ -11,25 +11,21 @@ import { inspectorState } from './inspectorState';
 
 /**
  * 监听器生命周期回调配置接口
- *
  * @remarks 提供检查器不同阶段的回调方法，用于实现跨框架通信和状态更新
  */
 export interface SetupListenersOptions {
   /**
    * 元素激活回调
-   *
    * @param el - 当前激活的 DOM 元素（null 表示无激活元素）
    */
   onActiveElement: (el: HTMLElement | null) => void;
   /**
    * 打开组件树回调
-   *
    * @param el - 需要展示在元素树中的根元素
    */
   onOpenTree: (el: HTMLElement) => void;
   /**
    * 打开编辑器回调
-   *
    * @param el - 需要编辑的目标元素
    */
   onOpenEditor: (el: HTMLElement) => void;
@@ -41,7 +37,6 @@ export interface SetupListenersOptions {
 
 /**
  * 需要静默处理的事件列表
- *
  * @remarks 阻止这些事件的默认行为和冒泡，避免影响检查器操作
  */
 const SILENT_EVENTS = (
@@ -60,14 +55,12 @@ const CLICK_ATTACHMENT_EVENTS = new Set(['touchstart', 'touchend']);
 
 /**
  * 快捷键映射表
- *
  * @remarks 支持通过键盘快速触发操作的按键集合
  */
 const SHORTCUT_KEYS = new Set(['Enter', 'Space']);
 
 /**
  * 初始化全局事件监听系统
- *
  * @param opts - 生命周期回调配置
  * @returns 解除监听的清理函数
  */
@@ -108,7 +101,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 事件监听管理器
-   *
    * @param operation - 监听操作函数（on/off）
    */
   function manageListeners(operation: typeof on | typeof off) {
@@ -126,7 +118,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理活动元素变化
-   *
    * @param e - 指针事件对象
    */
   function handleActiveElement(e: PointerEvent) {
@@ -141,7 +132,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 获取经过校验的 DOM 元素
-   *
    * @param e - 指针事件对象
    * @returns 通过校验的 HTMLElement 或 null
    */
@@ -159,7 +149,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理触摸屏进入（指针进入屏幕）事件
-   *
    * @param e - 指针事件对象
    */
   function handleEnterScreen(e: PointerEvent) {
@@ -171,7 +160,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理离开屏幕事件
-   *
    * @param e - 指针事件对象
    */
   function handleLeaveScreen(e: PointerEvent) {
@@ -185,7 +173,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理键盘按下事件
-   *
    * @param e - 键盘事件对象
    */
   function handleKeyDown(e: KeyboardEvent) {
@@ -202,7 +189,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 处理键盘释放事件
-   *
    * @param e - 键盘事件对象
    */
   function handleKeyUp(e: KeyboardEvent) {
@@ -214,7 +200,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 元素检查处理逻辑
-   *
    * @param e - 指针事件对象
    */
   function handleInspect(e: PointerEvent) {
@@ -233,7 +218,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 获取最终确定的目标元素
-   *
    * @param fallback - 备用元素
    * @returns 若 inspectorState.activeEl 可用则返回之，否则返回 fallback
    */
@@ -243,7 +227,6 @@ export function setupListeners(opts: SetupListenersOptions) {
 
   /**
    * 触发打开回调处理
-   *
    * @param e - 事件对象
    * @param el - 目标元素
    */
@@ -259,9 +242,7 @@ export function setupListeners(opts: SetupListenersOptions) {
 
 /**
  * 重写事件属性的工具函数
- *
  * @remarks 用于将键盘事件转换为指针事件样式
- *
  * @param e - 事件对象
  * @param properties - 属性映射表，指定需要重写的属性及其 getter
  */
@@ -273,9 +254,7 @@ function overrideEventProperties(e: Event, properties: Record<string, () => any>
 
 /**
  * 静默事件处理器
- *
  * @remarks 阻止事件的默认行为与冒泡，但注意 Safari 下部分事件需保留默认行为
- *
  * @param e - 事件对象
  */
 function processSilentEvent(e: Event) {
@@ -289,7 +268,6 @@ function processSilentEvent(e: Event) {
 
 /**
  * 回调包装器（带清理功能）
- *
  * @param fn - 原始回调函数
  * @returns 包装后的回调函数，执行前会清理临时属性
  */

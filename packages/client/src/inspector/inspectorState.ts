@@ -4,42 +4,36 @@
 export interface InspectorState {
   /**
    * 是否启用元素检测功能
-   *
    * @default false
    */
   isEnable: boolean;
 
   /**
    * 检测工具当前是否处于激活状态
-   *
    * @default false
    */
   isActive: boolean;
 
   /**
    * 是否正在执行元素渲染操作
-   *
    * @default false
    */
   isRendering: boolean;
 
   /**
    * 元素结构树面板是否展开
-   *
    * @default false
    */
   isTreeOpen: boolean;
 
   /**
    * 当前激活的页面元素引用
-   *
    * @default null
    */
   activeEl: HTMLElement | null;
 
   /**
    * 上一个被激活的页面元素引用，用于状态回退或对比操作
-   *
    * @default null
    */
   prevActiveEl: HTMLElement | null;

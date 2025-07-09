@@ -20,7 +20,7 @@ import {
 import { type Options } from '../types';
 
 // 插件名称
-const UN_PLUGIN_NAME = 'OpenEditorVueUnPlugin';
+const UNPLUGIN_NAME = 'OpenEditorVueUnplugin';
 // 支持的 Vue 标签类型
 const TAG_TYPES = new Set([ElementTypes.ELEMENT, ElementTypes.COMPONENT]);
 // 默认查询参数
@@ -30,14 +30,14 @@ const DEFAULT_QUERY = Object.freeze({
 
 // 插件工厂，注入源码位置信息（仅开发模式）
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
-  if (!isDev()) return { name: UN_PLUGIN_NAME };
+  if (!isDev()) return { name: UNPLUGIN_NAME };
 
   const isVite = meta.framework === 'vite';
   const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
   const filter = createFilter(include, exclude);
 
   // 运行时代码文件判断
-  const vueRuntimeFiles = isVite
+  const runtimeFiles = isVite
     ? ['/runtime-core.esm-bundler.js', '/deps/vue.js']
     : [
         '/runtime-core.cjs.js',
@@ -45,10 +45,10 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         '/vue.runtime.esm.js',
         '/vue.runtime.js',
       ];
-  const isRuntimeFile = (file: string) => vueRuntimeFiles.some((p) => file.endsWith(p));
+  const isRuntimeFile = (file: string) => runtimeFiles.some((p) => file.endsWith(p));
 
   return {
-    name: UN_PLUGIN_NAME,
+    name: UNPLUGIN_NAME,
     enforce: 'pre',
 
     // 判断文件是否参与 transform
@@ -68,7 +68,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         // 处理 Vue 运行时代码，自动扩展 vite 下的 chunk 列表
         if (isVite && file.endsWith('/vue.js')) {
           const chunks = code.match(/\/[\w-]+\.js/g) || [];
-          vueRuntimeFiles.push(...chunks);
+          runtimeFiles.push(...chunks);
         }
 
         // 插入 Vue 3/2 运行时代码
@@ -172,16 +172,16 @@ function parseID(id: string, rootDir: string) {
  * @returns Vue 3 运行时代码的属性注入
  */
 function genVue3Inject() {
+  const { defineDebug, defineVNode } = genDefineCodes('vnode', 'el', DS.VUE_V3);
   return code`;
 const _debug = vnode.props && vnode.props.${DS.INJECT_PROP};
 if (_debug) {
   delete vnode.props.${DS.INJECT_PROP};
   vnode.dynamicProps = vnode.dynamicProps && vnode.dynamicProps.filter((prop) => prop !== '${DS.INJECT_PROP}');
-  Object.defineProperty(vnode, ${DS.SHADOW_PROP}, { get() { return _debug; }, enumerable: false });
+  ${defineDebug}
 }
 if (typeof vnode.type === 'string') {
- let _el = vnode.el;
- Object.defineProperty(vnode, 'el', { get() { return _el; }, set(el) { _el = el; if (el) el.${DS.VUE_V3} = vnode; }, enumerable: true });
+  ${defineVNode}
 }
 ;`;
 }
@@ -191,17 +191,42 @@ if (typeof vnode.type === 'string') {
  * @returns Vue 2 运行时代码的属性和 elm 双向绑定注入
  */
 function genVue2Inject() {
+  const { defineDebug, defineVNode } = genDefineCodes('this', 'elm', DS.VUE_V2);
   return code`;
 var _debug = this.data && this.data.attrs && this.data.attrs.${DS.INJECT_PROP};
 if (_debug) {
   delete this.data.attrs.${DS.INJECT_PROP};
-  Object.defineProperty(this, ${DS.SHADOW_PROP}, { get() { return _debug; }, enumerable: false });
+  ${defineDebug}
 }
 if (!this.componentOptions) {
- var _elm = this.elm;
- Object.defineProperty(this, 'elm', { get() { return _elm; }, set(elm) { _elm = elm; if (elm) elm.${DS.VUE_V2} = this; }, enumerable: true });
+  ${defineVNode}
 }
 ;`;
+}
+
+/**
+ * 生成属性注入与调试挂载辅助代码片段
+ * @param nodeVar - 要操作的节点对象变量名
+ * @param elVar - 要注入元素引用属性的变量名
+ * @param debugProp - 用于标记调试信息的属性名
+ * @returns 代码片段
+ */
+function genDefineCodes(nodeVar: string, elVar: string, debugProp: string) {
+  const defineDebug = code`;
+Object.defineProperty(${nodeVar}, ${DS.SHADOW_PROP}, {
+  get() { return _debug; },
+  enumerable: false,
+})
+;`;
+  const defineVNode = code`;
+${debugProp === DS.VUE_V2 ? 'var ' : 'let '} _${elVar} = ${nodeVar}.${elVar};
+Object.defineProperty(${nodeVar}, '${elVar}', {
+  get() { return _${elVar}; },
+  set(${elVar}) { _${elVar} = ${elVar}; if (${elVar}) ${elVar}.${debugProp} = ${nodeVar}; },
+})
+;`;
+
+  return { defineDebug, defineVNode };
 }
 
 /**

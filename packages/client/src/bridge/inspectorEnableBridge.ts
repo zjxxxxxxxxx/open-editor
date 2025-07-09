@@ -16,7 +16,6 @@ export const inspectorEnableBridge = crossIframeBridge({
 
     /**
      * 处理检查器启用指令
-     *
      * @param args - 消息参数对象
      */
     function handleInspectorEnable(args) {
@@ -36,7 +35,6 @@ export const inspectorEnableBridge = crossIframeBridge({
 
     /**
      * 广播启用指令消息
-     *
      * @param args - 消息参数对象
      */
     function broadcastEnableMessage(args) {

@@ -10,7 +10,7 @@ import { traverse } from '@babel/core';
 import { type Options } from '../types';
 
 // 插件名称
-const UN_PLUGIN_NAME = 'OpenEditorReactUnPlugin';
+const UNPLUGIN_NAME = 'OpenEditorReactUnplugin';
 
 /**
  * React 源码调试信息注入插件工厂
@@ -18,14 +18,14 @@ const UN_PLUGIN_NAME = 'OpenEditorReactUnPlugin';
  */
 const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, meta) => {
   // 非开发环境直接返回空插件
-  if (!isDev()) return { name: UN_PLUGIN_NAME };
+  if (!isDev()) return { name: UNPLUGIN_NAME };
 
   const isVite = meta.framework === 'vite';
   const { rootDir, sourceMap, include, exclude } = resolveOptions(options);
   const filter = createFilter(include, exclude);
 
   // 定义需要拦截的 React 运行时代码路径后缀列表
-  const reactRuntimeFiles = isVite
+  const runtimeFiles = isVite
     ? ['/deps/react.js', '/deps/react_jsx-runtime.js', '/deps/react_jsx-dev-runtime.js']
     : [
         '/react.development.js',
@@ -33,10 +33,10 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         '/react-jsx-dev-runtime.development.js',
         '/lib/ReactElement.js',
       ];
-  const isRuntimeFile = (file: string) => reactRuntimeFiles.some((p) => file.endsWith(p));
+  const isRuntimeFile = (file: string) => runtimeFiles.some((p) => file.endsWith(p));
 
   return {
-    name: UN_PLUGIN_NAME,
+    name: UNPLUGIN_NAME,
     enforce: 'pre',
 
     /**
@@ -62,7 +62,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
       if (isRuntimeFile(file)) {
         if (isVite && file.endsWith('/react.js')) {
           const chunks = code.match(/\/[\w-]+\.js/g) || [];
-          reactRuntimeFiles.push(...chunks);
+          runtimeFiles.push(...chunks);
         }
 
         // 插入 React 15/19 运行时代码
@@ -146,8 +146,13 @@ function genInjectCode(nodeVar: string) {
   return code`;
 var _debug = ${nodeVar}.props && ${nodeVar}.props.${DS.INJECT_PROP};
 if (_debug) {
+  function _def(_obj) {
+    Object.defineProperty(_obj, ${DS.SHADOW_PROP}, {
+      get() { return _debug; },
+      enumerable: false,
+    });
+  }
   delete ${nodeVar}.props.${DS.INJECT_PROP};
-  function _def(_obj) {  Object.defineProperty(_obj, ${DS.SHADOW_PROP}, { get() { return _debug; }, enumerable: false }); };
   _def(${nodeVar}.props);
   _def(${nodeVar});
 }
