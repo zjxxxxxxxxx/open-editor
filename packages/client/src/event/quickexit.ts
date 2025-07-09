@@ -57,7 +57,6 @@ function setupQuickexitDispatcher(
 
   /**
    * 统一事件触发器（事件总线）
-   *
    * @param e - 原始事件对象
    */
   function trigger(e: Event) {

@@ -39,7 +39,6 @@ export function enableHoverCSS() {
  * 更新 CSS 样式规则
  *
  * 生成更新任务并采用 async/await 分帧调度执行，以避免阻塞主线程
- *
  * @param pattern 用于匹配需要替换的正则表达式
  * @param replacement 替换文本
  * @returns Promise，当所有任务执行完毕后 resolve
@@ -58,7 +57,6 @@ async function updateHoverCSS(pattern: RegExp, replacement: string) {
 
 /**
  * 按需创建 CSS 更新任务（包括外部样式表和内联样式）
- *
  * @param pattern 正则表达式，用于匹配 CSS 中的伪类
  * @param replacement 替换文本
  */
@@ -80,7 +78,6 @@ function* createCSSTaskGenerator(pattern: RegExp, replacement: string) {
 
 /**
  * 为外部样式表（<link> 引入）生成分批替换规则的任务
- *
  * @param styleSheet 外部样式表的 CSSStyleSheet 对象
  * @param pattern 正则表达式，用于匹配 CSS 中的伪类
  * @param replacement 替换文本
@@ -116,7 +113,6 @@ function* generateTasksForLink(styleSheet: CSSStyleSheet, pattern: RegExp, repla
  *
  * 根据同源策略（Same-Origin Policy），仅当样式表的协议、域名和端口与当前页面一致时，
  * 才会返回其 CSS 规则列表，否则返回空数组以避免跨域数据泄露风险
- *
  * @param styleSheet - 目标样式表的 CSSStyleSheet 对象
  * @returns 包含 CSSRule 对象的数组（同源时），或空数组（跨域或解析失败时）
  */
@@ -140,7 +136,6 @@ function getSameOriginCSSRules(styleSheet: CSSStyleSheet) {
  *
  * 在每一帧开始时检测是否需要中断任务（例如被新任务替换），或当前帧执行时间是否超限，
  * 超时则延迟到下一帧继续执行
- *
  * @param taskGenerator 生成任务的迭代器，每次 yield 返回一个任务函数
  * @param shouldCancel 一个回调函数，返回 true 时表示任务应被取消
  * @returns Promise，当所有任务执行完毕时 resolve；若任务中途被取消则抛出异常
@@ -174,7 +169,6 @@ async function executeTasksWithFrameScheduling(
 
 /**
  * 创建帧时长检查器，检测当前帧已执行时间是否超过设定的最大时长，避免长时间阻塞主线程
- *
  * @param maxFrameDuration 每帧最大允许执行时间（单位毫秒）
  * @returns 一个函数，调用时返回是否超过设定时长
  */

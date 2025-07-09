@@ -54,7 +54,6 @@ let activeOptions: Options;
 
 /**
  * 设置调试器全局配置
- *
  * @param userOpts 用户配置项
  */
 export function setOptions(userOpts: Partial<Options> & Pick<Options, 'rootDir'>) {

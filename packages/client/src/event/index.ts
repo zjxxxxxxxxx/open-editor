@@ -25,7 +25,6 @@ export interface HTMLElementEventWithCustomEventMap extends HTMLElementEventMap 
 
 /**
  * 通用事件绑定函数
- *
  * @param type 事件类型，支持标准 DOM 事件和自定义事件
  * @param listener 事件监听回调函数
  * @param opts 事件配置选项
@@ -43,7 +42,6 @@ export function on<K extends keyof HTMLElementEventWithCustomEventMap>(
 
 /**
  * 通用事件绑定函数（动态事件类型版本）
- *
  * @param type 任意事件类型字符串
  * @param listener 事件监听回调函数
  * @param opts 事件配置选项
@@ -76,7 +74,6 @@ export function on(type: any, listener: any, options: any = {}) {
 
 /**
  * 通用事件解绑函数
- *
  * @param type 事件类型，支持标准 DOM 事件和自定义事件
  * @param listener 已注册的事件监听回调
  * @param opts 事件配置选项
@@ -94,7 +91,6 @@ export function off<K extends keyof HTMLElementEventWithCustomEventMap>(
 
 /**
  * 通用事件解绑函数（动态事件类型版本）
- *
  * @param type 任意事件类型字符串
  * @param listener 已注册的事件监听回调
  * @param opts 事件配置选项
@@ -133,9 +129,7 @@ export function off(type: any, listener: any, options: any = {}) {
  *   此时会挂载一个一次性监听器，在 DOMContentLoaded 触发后执行回调
  * - 当 document.readyState 为 'interactive' 或 'complete' 时，DOM 已可交互，
  *   回调会被立即执行，无需等待事件
- *
  * @param listener - 文档可交互时执行的函数
- *
  * @example
  * onDocumentReady(() => {
  *   // 此处可安全访问 document.body 及其它 DOM 元素

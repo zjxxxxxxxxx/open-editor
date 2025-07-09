@@ -7,7 +7,6 @@ let resolver: Resolver<any>;
 
 /**
  * 解析 Vue 3 组件实例的调试元数据，并将结果注入到组件树数组中
- *
  * @param node  - Vue 3 组件实例（setup 返回对象或 vnode.proxy）
  * @param tree  - 接收所有组件源码元信息的数组
  * @param deep  - 是否向上递归遍历祖先组件（默认为 false）

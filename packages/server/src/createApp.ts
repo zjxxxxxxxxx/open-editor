@@ -24,7 +24,6 @@ interface CreateAppOptions {
 
 /**
  * 创建中间件应用
- *
  * @param options 应用配置选项
  * @returns 配置完成的 Connect 应用实例
  */

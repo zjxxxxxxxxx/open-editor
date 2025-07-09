@@ -14,7 +14,6 @@ import { setupServer } from '@open-editor/server';
 export interface Options {
   /**
    * 源代码根目录路径 | Source code root directory path
-
    * @default `process.cwd()`
    * @example
    * ```ts
@@ -25,7 +24,6 @@ export interface Options {
 
   /**
    * 在浏览器显示切换按钮 | Display toggle button in browser
-   *
    * @default `true`
    * @remarks
    * 控制是否在页面右下角显示调试开关 | Controls whether to show debug toggle at bottom-right corner
@@ -34,7 +32,6 @@ export interface Options {
 
   /**
    * 禁用 CSS 悬停效果 | Disable CSS hover effects
-   *
    * @default `true`
    * @remarks
    * 当检查器启用时禁用元素悬停高亮 | Disable element highlighting on hover when inspector is active
@@ -43,8 +40,7 @@ export interface Options {
 
   /**
    * 忽略指定目录的组件 | Ignore components in specified directories
-   *
-   * @default `'\/**\/node_modules\/**\/*'`
+   * @default `\/**\/node_modules\/**\/*`
    * @see [Glob Pattern Syntax](https://en.wikipedia.org/wiki/Glob_(programming))
    * @remarks
    * 使用 glob 模式匹配需要忽略的路径 | Use glob patterns to match ignored paths
@@ -53,7 +49,6 @@ export interface Options {
 
   /**
    * 单次检查模式 | Single-inspection mode
-   *
    * @default `true`
    * @remarks
    * 打开编辑器或组件树后自动退出检查状态 | Automatically exit inspection after opening editor or component tree
@@ -62,7 +57,6 @@ export interface Options {
 
   /**
    * 跨 iframe 交互支持 | Cross-iframe interaction
-   *
    * @default `true`
    * @remarks
    * 允许在子 iframe 中提升操作到父窗口（仅限同源）| Enable elevating operations from child iframes to parent window (same-origin only)
@@ -103,8 +97,7 @@ export interface Options {
 
   /**
    * 自定义编辑器打开处理器 | Custom editor opening handler
-   *
-   * @default `内置的 launch-editor 实现 | Built-in launch-editor implementation`
+   * @default `launch-editor`
    * @remarks
    * 覆盖默认的文件打开逻辑 | Override default file opening behavior
    */
@@ -113,7 +106,7 @@ export interface Options {
 
 const resolvePath = (path: string) => _resolvePath(path, import.meta.url);
 
-/** 插件名称常量 | Plugin name constant */
+// 插件名称 | Plugin name
 const PLUGIN_NAME = 'OpenEditorPlugin';
 /** 加载器路径 (通过 resolvePath 解析) | Loader path (resolved via resolvePath) */
 const LOADER_PATH = resolvePath('./transform');
@@ -181,7 +174,6 @@ export default class OpenEditorPlugin {
     compiler.hooks.make.tapPromise(PLUGIN_NAME, async () => {
       // 生成配置缓存键 | Generate config cache key
       const cacheKey = `${this.options.rootDir}${this.options.onOpenEditor}`;
-
       // 重用或创建新的服务器实例 | Reuse or create new server instance
       this.options.port = await (portPromiseCache[cacheKey] ||=
         // 启动调试服务器 | Start debug server

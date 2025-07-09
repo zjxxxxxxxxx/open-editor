@@ -12,9 +12,7 @@ const DEFAULE_OPEN_DDITOR = (file: string, errorCallback: (errorMessage: string)
 export interface OpenEditorMiddlewareOptions {
   /**
    * 项目根目录路径
-   *
    * @default process.cwd()
-   *
    * @remarks
    * 用于解析文件相对路径的基础目录
    */
@@ -22,7 +20,6 @@ export interface OpenEditorMiddlewareOptions {
 
   /**
    * 自定义编辑器打开处理器
-   *
    * @remarks
    * 默认使用 launch-editor 库实现
    * 可通过此参数覆盖默认行为
@@ -32,7 +29,6 @@ export interface OpenEditorMiddlewareOptions {
 
 /**
  * 创建编辑器中间件
- *
  * @param options - 中间件配置选项
  * @returns connect 中间件处理函数
  */

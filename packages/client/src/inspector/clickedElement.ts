@@ -22,7 +22,6 @@ let clickedElement: HTMLElement | null = null;
 
 /**
  * 判断指定元素是否为当前点击元素
- *
  * @param element 待校验元素
  * @returns 是否为当前点击元素
  */
@@ -32,9 +31,7 @@ export function checkClickedElement(element: HTMLElement) {
 
 /**
  * 设置被点击元素的属性映射
- *
  * @param event 点击事件对象
- *
  * @description
  * 1. 修改链接元素的 href 属性为临时属性，阻止默认跳转行为
  * 2. 修改表单元素的 disabled 属性为临时属性，避免阻止触发点击事件
@@ -73,10 +70,8 @@ export function cleanClickedElementAttrs() {
 
 /**
  * 核心属性切换逻辑
- *
  * @param element 目标元素
  * @param attributeMap 属性映射配置
- *
  * @description
  * 1. 遍历父链查找所有相关元素（防止嵌套元素场景）
  * 2. 批量执行属性切换减少 DOM 操作次数
@@ -102,10 +97,8 @@ function swapElementAttributes(
 
 /**
  * 查找元素关联节点
- *
  * @param element 起始元素
  * @returns 包含所有相关元素的集合
- *
  * @description 沿 DOM 树向上查找所有 <a> 标签和表单控件元素
  */
 function findRelatedElements(element: HTMLElement | null) {
@@ -126,11 +119,9 @@ function findRelatedElements(element: HTMLElement | null) {
 
 /**
  * 执行单个属性切换
- *
  * @param element 目标元素
  * @param sourceAttr 原始属性名
  * @param targetAttr 目标属性名
- *
  * @description
  * 1. 使用 null 清除原属性避免残留
  * 2. 批量应用属性减少重绘次数

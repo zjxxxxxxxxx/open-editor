@@ -92,7 +92,6 @@ export function TooltipUI() {
    *
    * 当盒子模型数据更新时，检测当前是否处于 pending 状态，
    * 如果是，则挂起此次更新，否则直接更新提示位置
-   *
    * @param position 目标元素的边界信息
    */
   function handlePositionUpdate(position: BoxPosition) {
@@ -110,7 +109,6 @@ export function TooltipUI() {
    *
    * 根据传入的数据更新提示内部显示的文本内容，同时临时隐藏提示（保留边距）
    * 无论是否传入有效数据，都在更新完成后解除挂起状态并执行挂起任务
-   *
    * @param source 代码源数据，包含元素和元数据信息
    */
   function updateSource(source?: CodeSource) {
@@ -138,7 +136,6 @@ export function TooltipUI() {
    *
    * 根据目标元素的边界数据、提示元素尺寸以及窗口与安全区域限制，
    * 计算出提示应显示的位置，并将提示设置为可见
-   *
    * @param position 目标元素的边界信息
    */
   function updatePosition(position: BoxPosition) {
@@ -164,7 +161,6 @@ export function TooltipUI() {
    *
    * 根据目标元素左侧位置、提示宽度、窗口尺寸以及安全区域边距，
    * 使用 clamp 限制显示位置不超出范围
-   *
    * @param winWidth 窗口宽度
    * @param rootWidth 提示元素宽度
    * @param position 目标元素的边界信息
@@ -181,7 +177,6 @@ export function TooltipUI() {
    *
    * 根据目标元素的位置及尺寸、提示高度、窗口尺寸以及安全区域边距，
    * 判断是向上显示还是向下显示，并使用 clamp 限制显示区域
-   *
    * @param winHeight 窗口高度
    * @param rootHeight 提示元素高度
    * @param position 目标元素的边界信息

@@ -60,7 +60,6 @@ export const playgrounds = readdirSync(resolve(projectRoot, 'playgrounds'));
 
 /**
  * 将 URL 转换为本地文件路径并拼接相对路径
- *
  * @param baseURL - 基准 URL 字符串
  * @param relativePath - 需要拼接的相对路径
  * @returns 完整的本地文件系统路径
@@ -71,7 +70,6 @@ export function convertURLToPath(baseURL: string, relativePath: string) {
 
 /**
  * 读取并解析 JSON 文件
- *
  * @param filePath - 目标文件路径或文件描述符
  * @returns 解析后的 JSON 对象
  */
@@ -81,7 +79,6 @@ export function readJSON(filePath: PathOrFileDescriptor) {
 
 /**
  * 将数据写入 JSON 文件（自动格式化）
- *
  * @param filePath - 目标文件路径或文件描述符
  * @param payload - 要写入的数据，支持对象或已格式化的字符串
  */
@@ -93,7 +90,6 @@ export function writeJSON(filePath: PathOrFileDescriptor, payload: object | stri
 
 /**
  * 同步执行命令行指令
- *
  * @param command - 需要执行的命令字符串
  * @param options - 执行配置项（可选）
  */
@@ -107,7 +103,6 @@ export function executeCommand(command: string, options: ExecSyncOptions = {}) {
 
 /**
  * 安全执行函数并处理异常退出
- *
  * @param operation - 需要执行的操作函数
  */
 export function safeExecute(operation: () => unknown | void) {

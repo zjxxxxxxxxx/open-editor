@@ -4,7 +4,6 @@ import { checkValidElement } from '../utils/checkElement';
 
 /**
  * 调试信息解析结果类型
- *
  * @template T 调试值的类型
  */
 export interface ResolveDebug<T = any> {
@@ -28,7 +27,6 @@ export interface ResolveDebug<T = any> {
 
 /**
  * 解析 DOM 元素上的框架调试信息
- *
  * @param el 起始 DOM 元素
  * @returns 包含调试信息的对象，未找到时返回 undefined
  */
@@ -55,7 +53,6 @@ export function resolveDebug(el: HTMLElement): ResolveDebug | undefined {
 
 /**
  * 检测元素上的框架调试属性
- *
  * @param el 待检测的 DOM 元素
  * @returns 检测到的框架属性键名，未找到时返回 undefined
  */
@@ -85,7 +82,6 @@ function detectReact15(el: HTMLElement) {
 
 /**
  * 查找元素上以指定前缀开头的属性键
- *
  * @param el DOM 元素
  * @param prefix 目标属性前缀
  * @returns 匹配的属性键名，未找到时返回 undefined
