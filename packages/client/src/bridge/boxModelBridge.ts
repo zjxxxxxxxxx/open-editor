@@ -28,7 +28,6 @@ export const boxModelBridge = crossIframeBridge<BoxModel>({
   emitMiddlewares: [
     /**
      * 修正 iframe 嵌套时的坐标偏移
-     *
      * @param args 包含矩形坐标和辅助线的参数数组
      * @param next 执行下一个中间件的回调
      */
@@ -53,7 +52,6 @@ export const boxModelBridge = crossIframeBridge<BoxModel>({
 
     /**
      * 顶层窗口消息转发
-     *
      * @param args 需要转发的参数
      * @param next 执行后续处理的回调
      */

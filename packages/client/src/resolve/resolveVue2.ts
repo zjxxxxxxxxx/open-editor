@@ -7,7 +7,6 @@ let resolver: Resolver;
 
 /**
  * 解析 Vue 2 组件的调试元数据，并将结果推入组件树数组
- *
  * @param node - Vue 2 组件实例或 VNode
  * @param tree - 存储所有组件源码元信息的数组
  * @param deep - 是否递归向上查找祖先组件，默认为 false

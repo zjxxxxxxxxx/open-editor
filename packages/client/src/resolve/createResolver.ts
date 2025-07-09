@@ -9,36 +9,28 @@ import { type CodeSourceMeta } from '.';
 export interface ResolverOptions<T = any> {
   /**
    * 节点有效性验证函数
-   *
    * @param v 待验证的节点
-   *
    * @returns 返回该节点是否有效的布尔值
    */
   isValid(v?: T): boolean;
 
   /**
    * 获取后续关联节点
-   *
    * @param v 当前节点
-   *
    * @returns 返回下一个关联节点或 null/undefined
    */
   getNext(v: T): T | null | undefined;
 
   /**
    * 获取源代码定位信息
-   *
    * @param v 当前节点
-   *
    * @returns 返回包含文件名、行列号的源代码信息对象
    */
   getSource(v: T): DSValue | null | undefined;
 
   /**
    * 获取节点显示名称
-   *
    * @param v 当前节点
-   *
    * @returns 返回组件的展示名称
    */
   getName(v: T): string | undefined;
@@ -50,7 +42,6 @@ const COMPONENT_NAME = 'AnonymousComponent';
 
 /**
  * 创建 React 组件树解析器（工厂函数）
- *
  * @param opts 解析器配置项
  * @returns 返回组件树解析函数
  */
@@ -91,9 +82,7 @@ export function createResolver<T = any>(opts: ResolverOptions<T>) {
 
   /**
    * 有效节点过滤器
-   *
    * @param initialNode 过滤起始节点
-   *
    * @returns 第一个通过有效性验证的节点
    */
   function getValidNextNode(initialNode: T | null | undefined) {

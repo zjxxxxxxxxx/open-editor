@@ -12,7 +12,6 @@ export default createCustomEventDispatcher('rightclick', setupRightclickDispatch
 
 /**
  * 配置右键点击事件分发器核心逻辑
- *
  * @param listener 符合 W3C 标准的指针事件处理回调
  * @param opts     符合 DOM Level3 的事件监听配置项
  */

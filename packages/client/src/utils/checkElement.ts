@@ -24,7 +24,6 @@ const ELEMENT_VALIDATION_RULES = {
 
 /**
  * 验证元素有效性
- *
  * @param el - 待校验的 DOM 元素
  * @returns 是否通过有效性校验
  */

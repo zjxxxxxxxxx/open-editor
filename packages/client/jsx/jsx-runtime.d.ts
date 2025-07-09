@@ -1,6 +1,5 @@
 /**
  * 将字符串类型解构为单个字符的联合类型
- *
  * @example
  * StringToCharUnion<'ABC'> → 'A' | 'B' | 'C'
  */
@@ -13,7 +12,6 @@ declare type UppercaseLetters = StringToCharUnion<'ABCDEFGHIJKLMNOPQRSTUVWXYZ'>;
 
 /**
  * 从 React 元素属性中提取对应的原生 DOM 元素类型
- *
  * @example
  * ExtractNativeElement<ButtonHTMLAttributes<HTMLButtonElement>> → HTMLButtonElement
  */
@@ -22,7 +20,6 @@ declare type ExtractNativeElement<Props> =
 
 /**
  * 判断属性名是否符合 React 事件命名规范（onXxx 形式且X大写）
- *
  * @example
  * IsValidReactEventKey<'onClick'> → true
  */
@@ -34,7 +31,6 @@ declare type IsValidReactEventKey<Key extends string> = Key extends `on${infer H
 
 /**
  * 从 React 事件属性名中提取浏览器原生事件类型名
- *
  * @example
  * ExtractNativeEventType<'onClick'> → 'click'
  */
@@ -44,7 +40,6 @@ declare type ExtractNativeEventType<Key extends string> = Key extends `on${infer
 
 /**
  * 根据 React 事件属性名映射到对应的原生 DOM 事件类型
- *
  * @example
  * MapReactEventToNative<'onClick'> → MouseEvent
  */
@@ -104,7 +99,6 @@ declare const Fragment: Symbol;
  *
  * 通过传入 HTML 标签名作为 `type` 参数，并提供相应的属性 `props`，
  * 此函数将创建一个具有所需类型和属性的 HTML 元素
- *
  * @param type - 要创建的 HTML 元素的标签名
  * @param props - 元素的属性
  * @returns 返回一个与传入 `type` 相对应的 HTML 元素实例
@@ -118,7 +112,6 @@ declare function jsx<Type extends keyof HTMLElementTagNameMap>(
  *
  * DocumentFragment 是一种轻量级的文档对象，可以包含多个节点，
  * 但自身不属于 DOM 树这对于批量添加 DOM 节点非常有用
- *
  * @param type - 始终为 `Fragment` 类型，用于标识创建的是 DocumentFragment
  * @param props - DocumentFragment 的属性
  * @returns 返回一个 `DocumentFragment` 实例
@@ -129,7 +122,6 @@ declare function jsx(type: Fragment, props: unknown): DocumentFragment;
  *
  * 当传入一个字符串类型的 `type` 参数时，此函数将创建一个通用的 `HTMLElement` 实例
  * 这通常用于创建那些在 `HTMLElementTagNameMap` 中没有明确定义的自定义元素或处理某些特殊情况
- *
  * @param type - 要创建的 HTML 元素的标签名，以字符串形式表示
  * @param props - 元素的属性
  * @returns 返回一个通用的 `HTMLElement` 实例

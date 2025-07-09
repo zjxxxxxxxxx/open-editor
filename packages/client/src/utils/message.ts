@@ -3,7 +3,6 @@ import { on } from '../event';
 
 /**
  * 创建带类型标识的消息字符串
- *
  * @example createMessage('LOG', ['error']) => "@LOG["error"]"
  */
 function createMessage(type: string, args: any[]) {
@@ -31,7 +30,6 @@ function parseMessage(data: string) {
 
 /**
  * 注册消息监听器
- *
  * @example onMessage('UPDATE', (args) => console.log(args))
  */
 export function onMessage<Args extends any[] = []>(type: string, callback: (args: Args) => void) {

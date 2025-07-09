@@ -5,7 +5,6 @@ import { getOptions } from '../options';
 
 /**
  * 安全路径生成（防止路径遍历攻击）
- *
  * @example
  * ensureFileName('/project/src/../../secret.txt') => 'secret.txt'
  */
@@ -82,7 +81,6 @@ function hasValidBrackets(path: string) {
 
 /**
  * 将 Babel 产生的调试源信息对象转换为 DSValue 格式
- *
  * @param source - Babel 生成的位置信息对象，包含 fileName, lineNumber, columnNumber
  * @returns DSValue 对象或 undefined
  */

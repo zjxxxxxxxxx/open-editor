@@ -73,7 +73,6 @@ export type SetupDispatcherCleanListener = () => void;
 
 /**
  * 创建自定义事件分发器
- *
  * @param type - 自定义事件类型名称
  * @param setupDispatcher - 事件分发设置函数
  * @returns 包含事件监听管理方法的对象
@@ -86,7 +85,6 @@ export function createCustomEventDispatcher<
 
   /**
    * 添加事件监听
-   *
    * @param cb - 事件回调函数
    * @param opts - 事件配置选项
    */
@@ -129,7 +127,6 @@ export function createCustomEventDispatcher<
 
   /**
    * 移除事件监听
-   *
    * @param cb - 要移除的回调函数
    * @param opts - 对应的事件配置
    */
@@ -146,7 +143,6 @@ export function createCustomEventDispatcher<
 
   /**
    * 判断是否为相同监听器
-   *
    * @param cache - 缓存对象
    * @param cb - 回调函数
    * @param opts - 配置选项

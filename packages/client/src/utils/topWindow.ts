@@ -12,7 +12,6 @@ export const isTopWindow = IS_CLIENT && topWindow === window;
 
 /**
  * 在顶级窗口环境下执行操作
- *
  * @param yes - 当处于顶级窗口时的回调函数
  * @param no - 非顶级窗口时的备用回调（可选）
  */

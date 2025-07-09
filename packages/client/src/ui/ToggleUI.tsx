@@ -106,7 +106,6 @@ export function ToggleUI() {
 
   /**
    * 处理指针移动事件，更新按钮位置
-   *
    * @param e 指针事件对象，包含指针在窗口中的位置信息
    */
   function changePosition(e: PointerEvent) {

@@ -2,7 +2,6 @@ const _ = Object.prototype.hasOwnProperty;
 
 /**
  * 类型安全的属性存在性检查函数
- *
  * @param obj - 需要检查的目标对象
  * @param prop - 需要检查的属性名称
  */
@@ -22,7 +21,6 @@ export function hasOwn<Obj extends object, Prop extends PropertyKey>(
  * - 对于包含循环引用的对象，此函数可能会导致栈溢出
  * - 数组会被视为对象进行比较，比较的是它们的属性（索引）和值，而不是像专门的数组比较那样只关注元素和顺序
  * - 只比较对象自身的可枚举属性，不会比较原型链上的属性、不可枚举属性或 Symbol 属性
- *
  * @param obj1 第一个要比较的对象可以是任何对象、null 或 undefined
  * @param obj2 第二个要比较的对象可以是任何对象、null 或 undefined
  * @returns 如果两个对象完全相等（包括嵌套对象的所有可枚举属性值），则返回 true；否则返回 false

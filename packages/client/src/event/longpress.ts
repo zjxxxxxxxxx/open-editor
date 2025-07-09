@@ -12,7 +12,6 @@ export default createCustomEventDispatcher('longpress', setupLongpressDispatcher
 
 /**
  * 初始化长按事件处理系统
- *
  * @param listener - 事件触发回调函数，接收原始指针事件
  * @param opts - 配置选项集
  * @returns 返回事件监听器的卸载函数，用于安全释放资源
@@ -66,7 +65,6 @@ function setupLongpressDispatcher(
 
   /**
    * 处理按压起始事件
-   *
    * @param e - 指针事件对象
    * @see https://w3c.github.io/pointerevents/#the-button-property
    *

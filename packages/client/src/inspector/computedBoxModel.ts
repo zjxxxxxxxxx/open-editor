@@ -111,7 +111,6 @@ const EMPTY_BOX_MODEL: BoxModel = [EMPTY_BOX_EDGES, EMPTY_BOX_METRICS];
  * 计算目标 HTML 元素的完整盒模型测量数据
  *
  * 当元素未挂载、不可见或无效时，返回安全数据 EMPTY_BOX_MODEL
- *
  * @param element - 目标 HTML 元素节点
  * @returns 盒模型
  */
@@ -143,7 +142,6 @@ export function computedBoxModel(element: HTMLElement | null) {
 
 /**
  * 构建一个生成四边测量数据的函数
- *
  * @param element - 目标 HTML 元素
  * @returns 返回一个函数，该函数接受样式属性前缀（如 "margin"、"border"、"padding"）及是否应用缩放（默认为 true）
  *          并生成包含 top, right, bottom, left 四个方向的测量值
@@ -154,7 +152,6 @@ function createEdgesBuilder(element: HTMLElement) {
 
   /**
    * 根据属性名称获取经过缩放校正后的数值
-   *
    * @param prop - CSS 属性名称（例如 "margin-top"）
    * @param useZoom - 是否应用缩放校正
    * @returns 经过缩放（如果需要）的属性值

@@ -20,7 +20,6 @@ export const codeSourceBridge = crossIframeBridge<CodeSourceBridgeArgs>({
       CODE_SOURCE_CROSS_IFRAME,
       /**
        * 处理接收到的消息
-       *
        * @param args 包含代码源信息的参数数组
        */
       (args) => {

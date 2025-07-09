@@ -27,7 +27,6 @@ export const openEditorStartBridge = crossIframeBridge({
   emitMiddlewares: [
     /**
      * 向顶层窗口发送启动事件
-     *
      * @param args 事件参数对象
      */
     (args) => {

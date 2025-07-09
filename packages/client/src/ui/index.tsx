@@ -93,7 +93,6 @@ class HTMLInspectorElement extends (IS_CLIENT ? HTMLElement : (class {} as typeo
    * - 300–1900ms：保持静止且不透明
    * - 1900–2000ms：淡出至透明
    * 整体时长固定 2000ms，结束后保持最终帧状态
-   *
    * @param element 需要执行动画的 HTMLElement
    * @returns Promise<Animation> 动画完成时的 Promise
    */
