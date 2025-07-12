@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Notes from '../components/Notes.vue';
+import Notes from '../components/Notes';
 
 defineOptions({
   name: 'App',

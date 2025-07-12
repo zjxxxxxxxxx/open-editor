@@ -35,12 +35,10 @@
     "rollup-plugin",
     "vite-plugin",
     "webpack-plugin",
-    "nextjs-devtools",
     "react-devtools",
-    "nuxt-devtools",
     "vue-devtools",
-    "web-devtools",
-    "devtools"
+    "react-source",
+    "vue-source"
   ],
   "author": "zjxxxxxxxxx <954270063@qq.com>",
   "license": "MIT",

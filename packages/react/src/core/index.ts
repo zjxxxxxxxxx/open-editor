@@ -69,7 +69,7 @@ const unpluginFactory: UnpluginFactory<Options | undefined> = (options = {}, met
         const replacements = [
           {
             // React 15 匹配 var ReactElement = function 函数，并在 element 末尾插入代码
-            matchRE: /([\s\S]*?var\s+ReactElement\s*=\s*function[\s\S]*?\})([\s\S]*)/,
+            matchRE: /([\s\S]*?var\s+ReactElement\s*=\s*function\b[\s\S]*?\})([\s\S]*)/,
             nodeVar: 'element',
           },
           {
