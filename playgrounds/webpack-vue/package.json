@@ -13,8 +13,8 @@
     "vue": "^3.2.13"
   },
   "devDependencies": {
-    "@open-editor/vue": "1.0.0-beta.2",
-    "@open-editor/webpack": "1.0.0-beta.2",
+    "@open-editor/vue": "1.0.0-beta.3",
+    "@open-editor/webpack": "1.0.0-beta.3",
     "@vue/babel-plugin-jsx": "~1.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-typescript": "~5.0.0",

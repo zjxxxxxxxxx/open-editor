@@ -1,5 +1,20 @@
 # @open-editor/vue
 
+## 1.0.0-beta.3
+
+### Major Changes
+
+- [#350](https://github.com/zjxxxxxxxxx/open-editor/pull/350) [`0df209e`](https://github.com/zjxxxxxxxxx/open-editor/commit/0df209eca0f157c2330e8151dea36b2b8d1325c0) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Handle runtime
+
+- [#348](https://github.com/zjxxxxxxxxx/open-editor/pull/348) [`8803dfa`](https://github.com/zjxxxxxxxxx/open-editor/commit/8803dfaa8f87dae33095bf6f7abce62d76f5e180) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - fix: Vue2 runtime injection exception
+
+- [#348](https://github.com/zjxxxxxxxxx/open-editor/pull/348) [`8803dfa`](https://github.com/zjxxxxxxxxx/open-editor/commit/8803dfaa8f87dae33095bf6f7abce62d76f5e180) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - perf: Improve traversal performance
+
+### Patch Changes
+
+- Updated dependencies [[`0df209e`](https://github.com/zjxxxxxxxxx/open-editor/commit/0df209eca0f157c2330e8151dea36b2b8d1325c0)]:
+  - @open-editor/shared@1.0.0-beta.3
+
 ## 1.0.0-beta.2
 
 ### Major Changes
