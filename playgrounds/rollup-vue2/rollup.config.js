@@ -18,20 +18,20 @@ export default {
     format: 'esm',
   },
   plugins: [
-    openEditorVue(),
-    vue(),
     commonjs(),
     resolve({
       extensions,
     }),
     replace({
-      preventAssignment: true,
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
+    openEditorVue(),
+    vue(),
     babel({
       babelHelpers: 'bundled',
       extensions,
       presets: ['@babel/preset-env', '@babel/preset-typescript'],
+      plugins: ['babel-plugin-transform-vue-jsx'],
     }),
     postcss(),
     image(),

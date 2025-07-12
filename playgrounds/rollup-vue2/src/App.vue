@@ -2,7 +2,7 @@
 import Vue from 'vue';
 import TestCrossIframe from './components/TestCrossIframe.vue';
 import TestComponentTree from './components/TestComponentTree.vue';
-import Notes from './components/Notes.vue';
+import Notes from './components/Notes';
 
 export default Vue.extend({
   name: 'App',

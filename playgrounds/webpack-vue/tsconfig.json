@@ -4,6 +4,7 @@
     "module": "esnext",
     "strict": true,
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "moduleResolution": "bundler",
     "skipLibCheck": true,
     "esModuleInterop": true,
