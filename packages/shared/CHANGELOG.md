@@ -1,5 +1,11 @@
 # @open-editor/shared
 
+## 1.0.0-beta.3
+
+### Major Changes
+
+- [#350](https://github.com/zjxxxxxxxxx/open-editor/pull/350) [`0df209e`](https://github.com/zjxxxxxxxxx/open-editor/commit/0df209eca0f157c2330e8151dea36b2b8d1325c0) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Modify DS handling
+
 ## 1.0.0-beta.2
 
 ## 1.0.0-beta.1

@@ -1,5 +1,18 @@
 # @open-editor/rollup
 
+## 1.0.0-beta.3
+
+### Major Changes
+
+- [#351](https://github.com/zjxxxxxxxxx/open-editor/pull/351) [`ff81987`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff81987750e3f1597eb445e3138f2d8b050dcc91) Thanks [@zjxxxxxxxxx](https://github.com/zjxxxxxxxxx)! - feat: Add support for custom port configuration
+
+### Patch Changes
+
+- Updated dependencies [[`0df209e`](https://github.com/zjxxxxxxxxx/open-editor/commit/0df209eca0f157c2330e8151dea36b2b8d1325c0), [`ff81987`](https://github.com/zjxxxxxxxxx/open-editor/commit/ff81987750e3f1597eb445e3138f2d8b050dcc91)]:
+  - @open-editor/client@1.0.0-beta.3
+  - @open-editor/shared@1.0.0-beta.3
+  - @open-editor/server@1.0.0-beta.3
+
 ## 1.0.0-beta.2
 
 ### Patch Changes
