@@ -13,7 +13,7 @@
     "dev": "turbo run dev --filter @open-editor/* --log-order stream",
     "start": "esno scripts/start.ts",
     "play": "pnpm start --script dev",
-    "demo": "pnpm play --playground vite-react",
+    "demo": "pnpm play --playground vite-react19",
     "lint": "pnpm eslint . --ext .ts,.tsx --ignore-pattern '/playground/*'",
     "format": "prettier --write '**/*.{vue,ts,tsx,json,md}'",
     "postinstall": "simple-git-hooks",

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@playground/webpack-nextjs",
+  "name": "@playground/webpack-next15",
   "scripts": {
     "dev": "next dev -p 4005",
     "build": "next build",

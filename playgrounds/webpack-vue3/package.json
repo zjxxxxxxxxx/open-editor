@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@playground/webpack-vue",
+  "name": "@playground/webpack-vue3",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build"

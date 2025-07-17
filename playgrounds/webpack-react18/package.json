@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@playground/webpack-react",
+  "name": "@playground/webpack-react18",
   "scripts": {
     "dev": "craco start",
     "build": "craco build"

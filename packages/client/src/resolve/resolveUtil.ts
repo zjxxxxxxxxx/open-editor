@@ -1,37 +1,6 @@
-import { normalizePath } from '@open-editor/shared';
 import { type DSValue } from '@open-editor/shared/debugSource';
 import outmatch from 'outmatch';
 import { getOptions } from '../options';
-
-/**
- * 安全路径生成（防止路径遍历攻击）
- * @example
- * ensureFileName('/project/src/../../secret.txt') => 'secret.txt'
- */
-export function ensureFileName(filePath: string) {
-  const { rootDir } = getOptions();
-  const normalizedPath = normalizePath(filePath);
-
-  // 移除根目录前缀（使用字符串操作代替 Node.js 路径 API）
-  if (normalizedPath.startsWith(rootDir)) {
-    return (
-      normalizedPath
-        .replace(rootDir, '')
-        // 移除前缀斜杠
-        .replace(/^\/+/g, '')
-        // 合并多余斜杠
-        .replace(/\/{2,}/g, '/')
-    );
-  }
-
-  // 防御相对路径攻击（参考 Path Manipulation 漏洞处理）
-  return (
-    normalizedPath
-      // 移除父目录标识
-      .replace(/\.\.\//g, '')
-      .replace(/\/+/g, '/')
-  );
-}
 
 // 系统级黑名单路径（参考 CI 环境路径限制）
 const SYSTEM_BLACKLIST = /^(\/home\/runner|\/tmp\/build)/;

@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "@playground/vite-vue",
+  "name": "@playground/vite-vue3",
   "type": "module",
   "scripts": {
     "dev": "vite",

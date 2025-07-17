@@ -19,7 +19,7 @@ defineOptions({
         <img src="/logo.png" class="logo open-editor" alt="openEditor logo" />
       </a>
     </div>
-    <h1>Vite + Nuxt</h1>
+    <h1>Vite + Nuxt3</h1>
     <iframe scrolling="no" src="/test-cross-iframe" />
     <div class="card">
       <Notes />

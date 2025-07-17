@@ -19,10 +19,10 @@
 
 ## 🔍 项目简介
 
-`openEditor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
+`OpenEditor` 是一款专为现代 Web 开发打造的前端调试工具。通过深度集成构建工具链，该工具实现了「浏览器元素 ↔ 源代码」的双向精准映射，不仅支持开发者直接在 React/Vue 组件树中定位源码位置，还能自动唤醒本地 IDE 打开对应文件。这一创新方案可帮助开发者节省超过 90% 的源码定位时间，显著提升调试效率。
 
-[▶▶▶ 立即体验 (Vite+React 示例)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)  
-[![功能演示](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react?embed=1&file=vite.config.ts&hideExplorer=1)
+[▶▶▶ 立即体验 (Vite+React 示例)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react19?embed=1&file=vite.config.ts&hideExplorer=1)  
+[![功能演示](./public/demo.gif)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react19?embed=1&file=vite.config.ts&hideExplorer=1)
 
 ## 🚀 核心功能
 
@@ -60,7 +60,7 @@
 
 #### React 项目
 
-安装使用必要依赖 [@open-editor/react](./packages/react/README.md).
+安装并使用必要依赖项 [@open-editor/react](./packages/react/README.md)，该插件用于向 `React Element` 注入源码位置信息
 
 ```bash
 npm i @open-editor/react -D
@@ -68,7 +68,7 @@ npm i @open-editor/react -D
 
 #### Vue 项目
 
-安装使用必要依赖 [@open-editor/vue](./packages/vue/README.md).
+安装并使用必要依赖项 [@open-editor/vue](./packages/vue/README.md)，该插件用于向 `Vue VNode` 注入源码位置信息
 
 ```bash
 npm i @open-editor/vue -D
@@ -76,7 +76,7 @@ npm i @open-editor/vue -D
 
 ### 集成示例
 
-> 本示例采用 [`Vite+React`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react) 框架进行演示，其他技术栈仅需调整对应配置项即可，核心使用逻辑保持完全一致。
+> 本示例采用 [`Vite+React`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react19) 框架进行演示，其他技术栈仅需调整对应配置项即可，核心使用逻辑保持完全一致。
 
 #### 工具集成
 
@@ -193,16 +193,16 @@ window.addEventListener('openeditor', (e) => {
 
 ### 在线演练场
 
-| 源代码                                                                                              | 在线试玩                                                                                                                                                                         |
-| --------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`rollup/react15`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15) |
-| [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)    |
-| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react)         | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react)     |
-| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-vue)             | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-vue)       |
-| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-nuxt)           | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-nuxt)      |
-| [`webpack/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-react)   | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-react)  |
-| [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-nextjs) |
-| [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue)    |
+| 源代码                                                                                              | 在线试玩                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`rollup/react15`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-react15)  |
+| [`rollup/vue2`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/rollup-vue2)     |
+| [`vite/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react19)       | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-react19)    |
+| [`vite/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-vue3)            | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-vue3)       |
+| [`vite/nuxt`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-nuxt3)          | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/vite-nuxt3)      |
+| [`webpack/react`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-react18) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-react18) |
+| [`webpack/nextjs`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-next15) | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-next15)  |
+| [`webpack/vue`](https://github.com/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue3)      | [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/zjxxxxxxxxx/open-editor/tree/main/playgrounds/webpack-vue3)    |
 
 ## 特别致谢
 

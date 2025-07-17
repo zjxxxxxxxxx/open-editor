@@ -1,6 +1,6 @@
 # @open-editor/vue
 
-Add a \_debugSource prop to all Elements.
+Add a \_debugSource prop to all Elements
 
 - 🌈 Supports `Vue2`, `Vue3`, `Nuxt`.
 - 🪐 Support add to `<Component/>`.
@@ -61,7 +61,7 @@ npm i @open-editor/vue -D
 
 ## Plugins
 
-You need to make sure that `openEditorVue` is executed before vue compiles the plugin for execution.
+You need to make sure that `openEditorVue` is executed before vue compiles the plugin for execution
 
 <details>
 <summary>Vite</summary><br>
@@ -106,6 +106,20 @@ export default {
 
 ```ts
 // webpack.config.js
+module.exports = {
+  plugins: [
+    require('@open-editor/vue/webpack')({
+      /* options */
+    }),
+    // other plugins
+  ],
+};
+```
+
+compatible with rspack.
+
+```ts
+// rspack.config.js
 module.exports = {
   plugins: [
     require('@open-editor/vue/webpack')({

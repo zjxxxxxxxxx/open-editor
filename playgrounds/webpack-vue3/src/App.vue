@@ -1,8 +1,8 @@
-<script setup lang="tsx">
+<script setup lang="ts">
 import { ref } from 'vue';
 import TestCrossIframe from './components/TestCrossIframe.vue';
 import TestComponentTree from './components/TestComponentTree.vue';
-import Notes from './components/Notes.tsx';
+import Notes from './components/Notes';
 
 defineOptions({
   name: 'App',
@@ -20,8 +20,8 @@ defineExpose({
   <TestComponentTree v-else-if="pathname === '/test-component-tree'" />
   <div class="app" v-else>
     <div>
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo" alt="Vite logo" />
+      <a href="https://webpack.js.org" target="_blank">
+        <img src="/webpack.svg" class="logo" alt="Vite logo" />
       </a>
       <a href="https://vuejs.org" target="_blank">
         <img src="/vue.svg" class="logo vue" alt="Vue logo" />
@@ -30,7 +30,7 @@ defineExpose({
         <img src="/logo.png" class="logo open-editor" alt="openEditor logo" />
       </a>
     </div>
-    <h1>Vite + Vue</h1>
+    <h1>Webpack + Vue3</h1>
     <iframe scrolling="no" src="/test-cross-iframe" />
     <div class="card">
       <Notes />
@@ -84,6 +84,14 @@ a:hover {
   color: #535bf2;
 }
 
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
@@ -105,6 +113,27 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+  zoom: 2;
+}
+
+.card > div {
+  zoom: 0.5;
+}
+
+.app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-flow: column;
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 1280px;
+  min-height: calc(100vh - 4rem);
+  text-align: center;
 }
 
 kbd {
@@ -139,27 +168,6 @@ kbd {
   }
 }
 
-.app {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: column;
-  margin: 0 auto;
-  padding: 2rem;
-  max-width: 1280px;
-  min-height: calc(100vh - 4rem);
-  text-align: center;
-}
-
-.card {
-  padding: 2em;
-  zoom: 2;
-}
-
-.card > div {
-  zoom: 0.5;
-}
-
 .logo {
   width: 6em;
   height: 6em;
@@ -171,7 +179,7 @@ kbd {
 }
 
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #1d78c1aa);
 }
 
 .logo.vue:hover {

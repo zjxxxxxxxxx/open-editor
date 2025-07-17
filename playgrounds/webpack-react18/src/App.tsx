@@ -14,9 +14,10 @@ export default function App() {
   return (
     <div className="app">
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
+        <a href="https://webpack.js.org" target="_blank">
+          <img src="/webpack.svg" className="logo" alt="Webpack logo" />
         </a>
+
         <a href="https://react.dev" target="_blank">
           <img src="/react.svg" className="logo react" alt="React logo" />
         </a>
@@ -24,7 +25,7 @@ export default function App() {
           <img src="/logo.png" className="logo open-editor" alt="openEditor logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
+      <h1>Webpack + React18</h1>
       <iframe scrolling="no" src="/test-cross-iframe" />
       <div className="card">
         <Notes />

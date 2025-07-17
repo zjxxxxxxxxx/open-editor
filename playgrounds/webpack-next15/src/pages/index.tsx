@@ -24,7 +24,7 @@ export default function App() {
           <img src="/logo.png" className="logo open-editor" alt="openEditor logo" />
         </a>
       </div>
-      <h1>Webpack + Nextjs</h1>
+      <h1>Webpack + Next15</h1>
       <iframe scrolling="no" src="/test-cross-iframe" />
       <div className="card">
         <Notes />
